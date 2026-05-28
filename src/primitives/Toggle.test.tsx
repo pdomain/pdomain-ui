@@ -44,4 +44,20 @@ describe('Toggle', () => {
     );
     expect(container.querySelector('.custom')).toBeTruthy();
   });
+
+  it('forwards data-testid to the switch DOM element', () => {
+    render(<Toggle checked={false} onCheckedChange={() => {}} data-testid="my-toggle" />);
+    expect(screen.getByTestId('my-toggle')).toBeTruthy();
+    expect(screen.getByTestId('my-toggle').getAttribute('role')).toBe('switch');
+  });
+
+  it('forwards aria-label to the switch DOM element', () => {
+    render(<Toggle checked={false} onCheckedChange={() => {}} aria-label="Enable notifications" />);
+    expect(screen.getByRole('switch', { name: 'Enable notifications' })).toBeTruthy();
+  });
+
+  it('forwards arbitrary data-* attributes to the switch DOM element', () => {
+    render(<Toggle checked={false} onCheckedChange={() => {}} data-analytics-id="toggle-42" />);
+    expect(screen.getByRole('switch').getAttribute('data-analytics-id')).toBe('toggle-42');
+  });
 });
