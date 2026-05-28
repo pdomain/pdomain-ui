@@ -46,8 +46,6 @@ interface MismatchRowProps {
 function MismatchRow({ item, onResolve }: MismatchRowProps): React.ReactElement {
   const { id, word, decisions, reason } = item;
 
-  const decisionsSummary = decisions.map((d) => `${d.source} → ${d.choice}`).join(', ');
-
   return (
     <tr className="hyphen-mismatch__row" data-testid={hyphenMismatchRowTestId(id)}>
       {/* Word column */}
@@ -55,8 +53,17 @@ function MismatchRow({ item, onResolve }: MismatchRowProps): React.ReactElement 
         <code className="hyphen-mismatch__word-code">{word}</code>
       </td>
 
-      {/* Decisions summary column */}
-      <td className="hyphen-mismatch__cell hyphen-mismatch__cell--decisions">{decisionsSummary}</td>
+      {/* Decisions summary column — structured spans for each source/choice pair */}
+      <td className="hyphen-mismatch__cell hyphen-mismatch__cell--decisions">
+        <dl className="hyphen-mismatch__decisions-list">
+          {decisions.map((d, i) => (
+            <div key={i} className="hyphen-mismatch__decision-entry">
+              <dt className="hyphen-mismatch__decision-source">{d.source}</dt>
+              <dd className="hyphen-mismatch__decision-choice">{d.choice}</dd>
+            </div>
+          ))}
+        </dl>
+      </td>
 
       {/* Conflict reason column */}
       <td className="hyphen-mismatch__cell hyphen-mismatch__cell--reason">

@@ -8,7 +8,7 @@ import { HJ_STATUS_PILL } from '../../testids/index.js';
 /**
  * Visual status for a hyphen-join decision row.
  *
- * - `cross-page`  — hyphen spans a page boundary; routed to special handling (purple/ocr)
+ * - `cross-page`  — hyphen spans a page boundary; routed to special handling (ocr/blue tone)
  * - `validated`   — human-confirmed join (green/exact, filled)
  * - `auto-joined` — auto-joined by rule, awaiting human check (green/exact, dashed border)
  * - `undecided`   — no rule matched; flagged for review (amber/fuzzy)
@@ -26,7 +26,7 @@ export interface HJStatusPillProps extends Omit<React.HTMLAttributes<HTMLSpanEle
 // ─── Mappings ─────────────────────────────────────────────────────────────────
 
 const STATUS_TONE: Record<HJStatus, BadgeTone> = {
-  'cross-page': 'ocr', // purple — special cross-page route
+  'cross-page': 'ocr', // blue (ocr tone) — special cross-page route
   validated: 'exact', // green — human-confirmed
   'auto-joined': 'exact', // green — auto-joined (dashed via modifier)
   undecided: 'fuzzy', // amber — no rule match

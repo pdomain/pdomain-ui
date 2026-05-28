@@ -78,13 +78,15 @@ export function CandidateDetail({
   'data-testid': testId = SCANNO_CANDIDATE_DETAIL,
 }: CandidateDetailProps) {
   const [suggested, setSuggested] = React.useState(candidate.suggested);
+  const [showAll, setShowAll] = React.useState(false);
 
-  // Reset edited value when the candidate changes
+  // Reset edited value and showAll when the candidate changes
   React.useEffect(() => {
     setSuggested(candidate.suggested);
+    setShowAll(false);
   }, [candidate.id, candidate.suggested]);
 
-  const visibleContexts = contexts.slice(0, MAX_VISIBLE_CONTEXTS);
+  const visibleContexts = showAll ? contexts : contexts.slice(0, MAX_VISIBLE_CONTEXTS);
   const hasMore = contexts.length > MAX_VISIBLE_CONTEXTS;
 
   function handlePromote() {
@@ -128,8 +130,12 @@ export function CandidateDetail({
             </div>
           ))}
         </div>
-        {hasMore && (
-          <button type="button" className="scanno-candidate-detail__show-all">
+        {hasMore && !showAll && (
+          <button
+            type="button"
+            className="scanno-candidate-detail__show-all"
+            onClick={() => setShowAll(true)}
+          >
             Show all {contexts.length}
           </button>
         )}

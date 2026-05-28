@@ -203,4 +203,55 @@ describe('InlineMarkPopover', () => {
     // No ruleId text — just verify token renders without crash
     expect(screen.getByText('the')).toBeInTheDocument();
   });
+
+  // ─ Disabled state when callbacks absent ─────────────────────────────────
+
+  it('Accept button is disabled when onAccept is not provided', () => {
+    render(
+      <Wrapper>
+        <InlineMarkPopover token={ruleToken} open onClose={vi.fn()} />
+      </Wrapper>,
+    );
+    expect(screen.getByTestId(SCANNO_INLINE_MARK_POPOVER_ACCEPT)).toBeDisabled();
+  });
+
+  it('Dismiss button is disabled when onDismiss is not provided', () => {
+    render(
+      <Wrapper>
+        <InlineMarkPopover token={ruleToken} open onClose={vi.fn()} />
+      </Wrapper>,
+    );
+    expect(screen.getByTestId(SCANNO_INLINE_MARK_POPOVER_DISMISS)).toBeDisabled();
+  });
+
+  it('Promote button is disabled when onPromote is not provided', () => {
+    render(
+      <Wrapper>
+        <InlineMarkPopover token={ruleToken} open onClose={vi.fn()} />
+      </Wrapper>,
+    );
+    expect(screen.getByTestId(SCANNO_INLINE_MARK_POPOVER_PROMOTE)).toBeDisabled();
+  });
+
+  it('Accept button is not disabled when onAccept is provided', () => {
+    render(
+      <Wrapper>
+        <InlineMarkPopover token={ruleToken} open onClose={vi.fn()} onAccept={vi.fn()} />
+      </Wrapper>,
+    );
+    expect(screen.getByTestId(SCANNO_INLINE_MARK_POPOVER_ACCEPT)).not.toBeDisabled();
+  });
+
+  // ─ Children as trigger ───────────────────────────────────────────────────
+
+  it('renders children as trigger when provided', () => {
+    render(
+      <Wrapper>
+        <InlineMarkPopover token={ruleToken} open={false} onClose={vi.fn()}>
+          <button type="button">token</button>
+        </InlineMarkPopover>
+      </Wrapper>,
+    );
+    expect(screen.getByText('token')).toBeInTheDocument();
+  });
 });

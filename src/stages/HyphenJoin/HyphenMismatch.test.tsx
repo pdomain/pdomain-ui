@@ -53,13 +53,12 @@ describe('HyphenMismatch', () => {
 
   it('renders decisions summary for each mismatch row', () => {
     render(<HyphenMismatch mismatches={[baseMismatch]} />);
-    // decisions: dictionary→join, user→keep — both appear in the decisions cell summary
-    const matches = screen.getAllByText(/dictionary/i);
-    expect(matches.length).toBeGreaterThan(0);
-    // The decisions cell should contain a summary with source → choice pairs
-    const decisionsCell = screen.getByText(/dictionary → join/i);
-    expect(decisionsCell).toBeTruthy();
-    expect(decisionsCell.textContent).toContain('user → keep');
+    // decisions: dictionary→join, user→keep — each rendered as structured <dt>/<dd> pair
+    // source appears as a <dt>, choice as a <dd>
+    expect(screen.getByText('dictionary')).toBeTruthy();
+    expect(screen.getByText('join')).toBeTruthy();
+    expect(screen.getByText('user')).toBeTruthy();
+    expect(screen.getByText('keep')).toBeTruthy();
   });
 
   it('renders reason when provided', () => {

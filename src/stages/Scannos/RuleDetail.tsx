@@ -31,6 +31,8 @@ export interface RuleDetailProps {
   rule: RuleDetailRule;
   /** Fired when the user clicks the auto-apply toggle. Receives the NEW boolean state. */
   onToggleAutoApply: (next: boolean) => void;
+  /** Override root testid; defaults to `SCANNO_RULE_DETAIL`. */
+  'data-testid'?: string;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -43,7 +45,11 @@ export interface RuleDetailProps {
  *
  * Design source: wf05b/scanno-configure.jsx lines 290-406.
  */
-export function RuleDetail({ rule, onToggleAutoApply }: RuleDetailProps): React.ReactElement {
+export function RuleDetail({
+  rule,
+  onToggleAutoApply,
+  'data-testid': testId = SCANNO_RULE_DETAIL,
+}: RuleDetailProps): React.ReactElement {
   const hasConflicts = rule.conflicts != null && rule.conflicts.length > 0;
 
   function handleToggle(next: boolean): void {
@@ -51,7 +57,7 @@ export function RuleDetail({ rule, onToggleAutoApply }: RuleDetailProps): React.
   }
 
   return (
-    <div className="rule-detail" data-testid={SCANNO_RULE_DETAIL}>
+    <div className="rule-detail" data-testid={testId}>
       {/* ── Pattern header ──────────────────────────────────────────────── */}
       <div className="rule-detail__header">
         <div className="rule-detail__label">{rule.label}</div>

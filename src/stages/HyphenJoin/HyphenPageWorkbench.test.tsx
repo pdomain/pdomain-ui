@@ -6,7 +6,7 @@
  *   - Viewer testid HYPHEN_PAGE_WORKBENCH_VIEWER present
  *   - Decisions testid HYPHEN_PAGE_WORKBENCH_DECISIONS present
  *   - Page image URL passed to ArtifactViewer
- *   - Cases list renders one card per case (role=application)
+ *   - Cases list renders one card per case (via testid)
  *   - EmptyCases: decisions container present, no cards
  *   - onDecide fires with caseId + 'accept' when Accept clicked on undecided case
  *   - onDecide fires with caseId + 'keep' when Keep clicked
@@ -43,6 +43,7 @@ import {
   HYPHEN_PAGE_WORKBENCH,
   HYPHEN_PAGE_WORKBENCH_VIEWER,
   HYPHEN_PAGE_WORKBENCH_DECISIONS,
+  HJ_DECISION_CARD,
 } from '../../testids/index.js';
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -104,16 +105,18 @@ describe('HyphenPageWorkbench', () => {
     expect(artifactMock.getAttribute('data-src')).toBe(MOCK_PAGE.imageUrl);
   });
 
-  it('renders one HJDecisionCard per case (role=application)', () => {
+  it('renders one HJDecisionCard per case (via testid)', () => {
     render(<HyphenPageWorkbench page={MOCK_PAGE} cases={MOCK_CASES} onDecide={onDecide} />);
-    const cards = screen.getAllByRole('application');
+    // Each HJDecisionCard renders with the HJ_DECISION_CARD base testid by default —
+    // but since there are two cards both render with the same default testid, use getAllByTestId.
+    const cards = screen.getAllByTestId(HJ_DECISION_CARD);
     expect(cards).toHaveLength(2);
   });
 
   it('EmptyCases: decisions container present, no cards', () => {
     render(<HyphenPageWorkbench page={MOCK_PAGE} cases={[]} onDecide={onDecide} />);
     expect(screen.getByTestId(HYPHEN_PAGE_WORKBENCH_DECISIONS)).toBeInTheDocument();
-    expect(screen.queryAllByRole('application')).toHaveLength(0);
+    expect(screen.queryAllByTestId(HJ_DECISION_CARD)).toHaveLength(0);
   });
 
   it('onDecide fires with caseId + accept when Accept clicked on undecided case', () => {
@@ -168,5 +171,43 @@ describe('HyphenPageWorkbench', () => {
       />,
     );
     expect(screen.getByTestId('custom-hpw')).toBeInTheDocument();
+  });
+
+  it('threads onNext to each HJDecisionCard so J key fires it', () => {
+    const onNext = vi.fn();
+    render(
+      <HyphenPageWorkbench
+        page={MOCK_PAGE}
+        cases={MOCK_CASES}
+        onDecide={onDecide}
+        onNext={onNext}
+      />,
+    );
+    const cards = screen.getAllByTestId(HJ_DECISION_CARD);
+    fireEvent.keyDown(cards[0]!, { key: 'j' });
+    expect(onNext).toHaveBeenCalledOnce();
+  });
+
+  it('threads onPrev to each HJDecisionCard so K key fires it', () => {
+    const onPrev = vi.fn();
+    render(
+      <HyphenPageWorkbench
+        page={MOCK_PAGE}
+        cases={MOCK_CASES}
+        onDecide={onDecide}
+        onPrev={onPrev}
+      />,
+    );
+    const cards = screen.getAllByTestId(HJ_DECISION_CARD);
+    fireEvent.keyDown(cards[0]!, { key: 'k' });
+    expect(onPrev).toHaveBeenCalledOnce();
+  });
+
+  it('does not thread onNext/onPrev when not provided', () => {
+    // Should render without error when onNext/onPrev are absent
+    render(<HyphenPageWorkbench page={MOCK_PAGE} cases={MOCK_CASES} onDecide={onDecide} />);
+    const cards = screen.getAllByTestId(HJ_DECISION_CARD);
+    // J key with no onNext handler should not throw
+    expect(() => fireEvent.keyDown(cards[0]!, { key: 'j' })).not.toThrow();
   });
 });

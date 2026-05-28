@@ -85,6 +85,7 @@ export function HyphenUndecided({
         }}
       >
         <ul
+          role="listbox"
           aria-label="Cases"
           style={{
             listStyle: 'none',
@@ -96,16 +97,16 @@ export function HyphenUndecided({
           {cases.map((c) => {
             const isSelected = c.id === selectedId;
             return (
-              <li key={c.id}>
+              <li key={c.id} role="option" aria-selected={isSelected}>
                 <button
                   type="button"
                   data-testid={hyphenUndecidedItemTestId(c.id)}
-                  aria-pressed={isSelected}
+                  aria-current={isSelected ? 'true' : undefined}
                   onClick={() => onSelect(c.id)}
                   style={{
                     width: '100%',
                     textAlign: 'left',
-                    background: isSelected ? 'var(--bg-surface-2)' : 'transparent',
+                    background: isSelected ? 'var(--bg-raised)' : 'transparent',
                     border: 'none',
                     borderBottom: '1px solid var(--border-1)',
                     padding: '8px 12px',

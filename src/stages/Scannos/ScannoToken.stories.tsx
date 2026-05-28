@@ -41,7 +41,7 @@ export const Paragraph: Story = {
         fontSize: '1rem',
         lineHeight: 1.7,
         maxWidth: '42rem',
-        color: 'var(--fg-base)',
+        color: 'var(--ink-2)',
       }}
     >
       The <ScannoToken token="recieve" source="rule" onClick={() => undefined} /> function was added

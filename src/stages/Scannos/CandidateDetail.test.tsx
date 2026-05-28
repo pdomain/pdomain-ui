@@ -183,4 +183,37 @@ describe('CandidateDetail', () => {
     render(<CandidateDetail candidate={candidate} contexts={fewContexts} />);
     expect(screen.getByTestId(SCANNO_CANDIDATE_DETAIL_SUGGESTED_INPUT)).toBeInTheDocument();
   });
+
+  // ─ Show-all toggle ────────────────────────────────────────────────────────
+
+  it('clicking Show-all expands to show all contexts', async () => {
+    const user = userEvent.setup();
+    render(<CandidateDetail candidate={candidate} contexts={manyContexts} />);
+    // Initially 4th context hidden
+    expect(screen.queryByText('tbe last one')).toBeNull();
+    await user.click(screen.getByText(/show all 4/i));
+    // After clicking, 4th context visible
+    expect(screen.getByText('tbe last one')).toBeInTheDocument();
+  });
+
+  it('Show-all button disappears after click', async () => {
+    const user = userEvent.setup();
+    render(<CandidateDetail candidate={candidate} contexts={manyContexts} />);
+    const btn = screen.getByText(/show all 4/i);
+    await user.click(btn);
+    expect(screen.queryByText(/show all/i)).toBeNull();
+  });
+
+  it('showAll state resets when candidate changes', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<CandidateDetail candidate={candidate} contexts={manyContexts} />);
+    await user.click(screen.getByText(/show all 4/i));
+    expect(screen.getByText('tbe last one')).toBeInTheDocument();
+
+    // Re-render with a different candidate
+    rerender(<CandidateDetail candidate={candidateNoConf} contexts={manyContexts} />);
+    // showAll is reset — 4th context hidden again, show-all button re-appears
+    expect(screen.queryByText('tbe last one')).toBeNull();
+    expect(screen.getByText(/show all 4/i)).toBeInTheDocument();
+  });
 });
