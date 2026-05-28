@@ -50,4 +50,29 @@ describe('theme/primitives.css', () => {
   it('contains .key class selector', () => {
     expect(primitivesCss).toMatch(/\.key[\s{,]/);
   });
+
+  // Molecule selectors (fix: missing CSS batch)
+  it('contains .banner class selector', () => {
+    expect(primitivesCss).toMatch(/\.banner[\s{,]/);
+  });
+
+  it('contains .color-field class selector', () => {
+    expect(primitivesCss).toMatch(/\.color-field[\s{,]/);
+  });
+
+  it('contains .filter-toolbar class selector', () => {
+    expect(primitivesCss).toMatch(/\.filter-toolbar[\s{,]/);
+  });
+
+  it('contains .page-chip class selector', () => {
+    expect(primitivesCss).toMatch(/\.page-chip[\s{,]/);
+  });
+
+  it('contains .run-all-dirty-panel class selector', () => {
+    expect(primitivesCss).toMatch(/\.run-all-dirty-panel[\s{,]/);
+  });
+
+  it('contains .build-package-panel class selector', () => {
+    expect(primitivesCss).toMatch(/\.build-package-panel[\s{,]/);
+  });
 });
