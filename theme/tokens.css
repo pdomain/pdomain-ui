@@ -81,7 +81,7 @@
   --overlay-scrim: rgba(0, 0, 0, 0.55);
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   --bg-page: #f6f4ef;
   --bg-surface: #ffffff;
   --bg-raised: #ecebe5;
