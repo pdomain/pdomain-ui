@@ -11,12 +11,14 @@ export interface StatusPipProps extends React.HTMLAttributes<HTMLDivElement> {
 // Map status to the CSS custom property token used for color.
 // The .pip class uses `color` to drive both bg (at 10%) and border (at 33%)
 // via color-mix — so a single CSS variable drives all three.
+// WS4 fix: ocr → --ocr (blue, ground-truth layer), gt → --gt (ground-truth accent).
+// Previously both were wrongly mapped (ocr→--fuzzy amber, gt→--accent orange).
 const statusToken: Record<StatusPipStatus, string> = {
   exact: 'var(--exact)',
   fuzzy: 'var(--fuzzy)',
   mismatch: 'var(--mismatch)',
-  ocr: 'var(--fuzzy)',
-  gt: 'var(--accent)',
+  ocr: 'var(--ocr)',
+  gt: 'var(--gt)',
 };
 
 export const StatusPip = React.forwardRef<HTMLDivElement, StatusPipProps>(function StatusPip(
@@ -37,7 +39,7 @@ export const StatusPip = React.forwardRef<HTMLDivElement, StatusPipProps>(functi
       }}
       {...props}
     >
-      <span className="dot" style={{ background: token }} />
+      <span className="dot" style={{ background: token }} aria-hidden="true" />
       {label !== undefined && <span>{label}</span>}
     </div>
   );

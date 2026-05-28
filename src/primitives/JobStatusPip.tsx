@@ -37,7 +37,8 @@ export const JobStatusPip = React.forwardRef<HTMLDivElement, JobStatusPipProps>(
         }}
         {...props}
       >
-        <span className="dot" style={{ background: token }} />
+        {/* WS6: decorative dot is aria-hidden; the label text conveys state */}
+        <span className="dot" style={{ background: token }} aria-hidden="true" />
         <span>{displayLabel}</span>
       </div>
     );
