@@ -121,13 +121,15 @@ export function UIPrefsApplicator() {
   }, [gtColor]);
 
   // Apply accent color overrides.
+  // getAccentColor returns { fg: accentInkColor, bg: accentColor } — so the
+  // accent *background* is bg and the ink/text on it is fg.
   React.useEffect(() => {
-    applyVar('--accent', accentColors.fg);
-  }, [accentColors.fg]);
+    applyVar('--accent', accentColors.bg);
+  }, [accentColors.bg]);
 
   React.useEffect(() => {
-    applyVar('--accent-ink', accentColors.bg);
-  }, [accentColors.bg]);
+    applyVar('--accent-ink', accentColors.fg);
+  }, [accentColors.fg]);
 
   return null;
 }
