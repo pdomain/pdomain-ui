@@ -3760,6 +3760,59 @@ button.page-chip:hover {
   color: var(--ink-4);
   padding: var(--space-2) 0;
 }
+.crop-overview__head {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.crop-overview__label {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+.crop-overview__stat {
+  font-size: var(--text-sm);
+  color: var(--ink-1);
+  font-weight: 600;
+}
+.crop-overview__activity-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.crop-overview__activity-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+.crop-overview__activity-row--bordered {
+  border-top: 1px solid var(--border-1);
+}
+.crop-overview__activity-time {
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+  flex-shrink: 0;
+}
+.crop-overview__activity-msg {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--ink-1);
+}
+.crop-overview__activity-actor {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+
+/* ─── stage-strip__track-item — ARIA listitem wrapper (audit wave 2) ─ */
+.stage-strip__track-item {
+  display: contents;
+}
 
 /* ─── shortcuts__* — added 2026-05-28 (registry) ────────────────── */
 /* ShortcutsCheatsheet currently uses inline styles;
