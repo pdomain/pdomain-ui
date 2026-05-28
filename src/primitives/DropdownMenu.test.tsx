@@ -6,6 +6,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from './DropdownMenu.js';
 
 describe('DropdownMenu', () => {
@@ -40,5 +42,26 @@ describe('DropdownMenu', () => {
     await user.click(screen.getByText('Open Menu'));
     const item = await screen.findByText('Item One');
     expect(item.classList.contains('dropdown-item')).toBe(true);
+  });
+
+  it('label and separator render with their primitive classes', async () => {
+    const user = userEvent.setup();
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>Open Menu</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Section</DropdownMenuLabel>
+          <DropdownMenuItem>Item One</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Item Two</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>,
+    );
+    await user.click(screen.getByText('Open Menu'));
+    const label = await screen.findByText('Section');
+    expect(label.classList.contains('dropdown-label')).toBe(true);
+    const menu = screen.getByRole('menu');
+    const separator = menu.querySelector('.dropdown-separator');
+    expect(separator).not.toBeNull();
   });
 });
