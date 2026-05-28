@@ -107,7 +107,11 @@
       "types": "./dist/stages/Upload/index.d.ts"
     },
     "./theme/tokens.css": "./theme/tokens.css",
-    "./theme/primitives.css": "./theme/primitives.css"
+    "./theme/primitives.css": "./theme/primitives.css",
+    "./hooks": {
+      "import": "./dist/hooks.js",
+      "types": "./dist/hooks.d.ts"
+    }
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

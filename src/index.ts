@@ -233,6 +233,14 @@ export type {
   ThumbGridProps,
 } from './primitives/index.js';
 
+// ─── Shortcuts cheatsheet (from primitives) ───────────────────────────────────
+export { ShortcutsCheatsheet } from './primitives/index.js';
+export type { ShortcutsCheatsheetProps } from './primitives/index.js';
+
+// ─── Hooks ────────────────────────────────────────────────────────────────────
+export { useShortcuts, formatShortcut } from './hooks/index.js';
+export type { ShortcutBinding, UseShortcutsOptions } from './hooks/index.js';
+
 // ─── Templates ───────────────────────────────────────────────────────────────
 export { StageStrip, PIPELINE_STAGES } from './templates/index.js';
 export type { StageStripProps, StageDef } from './templates/index.js';

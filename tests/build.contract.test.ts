@@ -24,6 +24,7 @@ describe('vite.config.ts contract', () => {
       'stores',
       'testids',
       'templates',
+      'hooks',
     ];
     for (const entry of entries) {
       expect(content, `entry '${entry}' must be declared in vite.config.ts`).toContain(entry);
@@ -54,6 +55,7 @@ describe('dist/ output completeness', () => {
     'stores',
     'testids',
     'templates',
+    'hooks',
   ] as const;
 
   it('dist/ directory exists after build', () => {
