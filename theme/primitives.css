@@ -3667,33 +3667,34 @@ button.page-chip:hover {
     border-color var(--transition-fast),
     color var(--transition-fast);
 }
-.step-dot.t-active {
+.step-dot--active {
   background: var(--accent);
   color: var(--accent-ink);
   border: none;
 }
-.step-dot.t-done {
+.step-dot--done {
   background: var(--exact);
   color: var(--accent-ink);
   border: none;
 }
-.step-dot.t-pending {
+.step-dot--pending {
   background: var(--bg-raised);
   color: var(--ink-3);
   border: 1px solid var(--border-2);
+}
+.step-item--clickable {
+  cursor: pointer;
 }
 .step-label {
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--ink-3);
 }
-.step-dot.t-active + .step-label,
-.step-item:has(.t-active) .step-label {
+.step-label--active {
   color: var(--ink-1);
   font-weight: 600;
 }
-.step-dot.t-done + .step-label,
-.step-item:has(.t-done) .step-label {
+.step-label--done {
   color: var(--ink-2);
 }
 
@@ -3792,6 +3793,13 @@ button.page-chip:hover {
 }
 .shortcuts__row:last-child {
   border-bottom: none;
+}
+.shortcuts__rows {
+  display: flex;
+  flex-direction: column;
+}
+.shortcuts__label {
+  color: var(--ink-2);
 }
 
 /* ─── check-row* / download-footer* / panel-toolbar* — added 2026-05-28 (registry) ─ */
