@@ -14,6 +14,7 @@
 
 import { Rect } from 'react-konva';
 import type { CoordContext } from '../../canvas/types.js';
+import { resolveToken } from '../../canvas/resolveToken.js';
 
 export interface WordBbox {
   id: string;
@@ -44,8 +45,14 @@ export function WordBboxOverlay({ coords, wordBboxes, onWordClick }: WordBboxOve
 
         const isSelected = wb.selected === true;
         // Konva renders to Canvas; CSS vars / color-mix() are unparseable here.
-        const strokeColor = isSelected ? 'rgba(239,68,68,1)' : 'rgba(34,197,94,0.7)';
-        const fillColor = isSelected ? 'rgba(239,68,68,0.18)' : 'rgba(34,197,94,0.12)';
+        // Resolve design-system tokens to concrete color strings at render time.
+        // --accent (selected) and --exact (unselected, was --clean).
+        const strokeColor = isSelected
+          ? resolveToken('--accent', 'rgba(239,68,68,1)')
+          : resolveToken('--exact', 'rgba(34,197,94,0.7)');
+        const fillColor = isSelected
+          ? resolveToken('--accent-subtle', 'rgba(239,68,68,0.18)')
+          : resolveToken('--exact-subtle', 'rgba(34,197,94,0.12)');
 
         return (
           <Rect

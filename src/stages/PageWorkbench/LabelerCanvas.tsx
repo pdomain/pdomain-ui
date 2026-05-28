@@ -23,6 +23,7 @@ import { useMemo } from 'react';
 import { Rect, Circle } from 'react-konva';
 import { PageImageCanvas } from '../../canvas/PageImageCanvas.js';
 import { LayerToggle } from './LayerToggle.js';
+import { resolveToken } from '../../canvas/resolveToken.js';
 
 // ── Public types ──────────────────────────────────────────────────────────────
 
@@ -59,7 +60,9 @@ export interface LabelerCanvasProps {
   blocks: ReadonlyArray<LabelerBlock>;
   /**
    * Called when the user adds/edits/removes a block.
-   * M2 ships rendering only — mutation is a follow-on.
+   * @note M2 ships rendering only. This prop is accepted in the type contract
+   * but intentionally not called — bbox drag-to-create and handle dragging are
+   * explicit Phase 2 follow-ons. Treat as a no-op until that milestone lands.
    */
   onBlocksChange?: (blocks: ReadonlyArray<LabelerBlock>) => void;
   /** Currently-selected block id (controlled). */
@@ -73,31 +76,37 @@ export interface LabelerCanvasProps {
   'data-testid'?: string;
 }
 
-// ── Tone → CSS custom property ────────────────────────────────────────────────
+// ── Tone → resolved canvas color ──────────────────────────────────────────────
+// Konva renders to <canvas>; CSS var() strings and color-mix() are not
+// evaluated by the Canvas API. Resolve tokens to concrete color strings at
+// render time via resolveToken. Remap deprecated --brand→--accent,
+// --clean→--exact per §0.2 color-remap table.
 
 function toneStroke(tone: string | undefined): string {
   switch (tone) {
     case 'brand':
-      return 'var(--brand)';
+      // --brand remapped to --accent per §0.2
+      return resolveToken('--accent', 'rgba(93,159,223,1)');
     case 'ocr':
-      return 'var(--ocr)';
+      return resolveToken('--ocr', 'rgba(14,165,233,1)');
     case 'clean':
-      return 'var(--clean)';
+      // --clean remapped to --exact per §0.2
+      return resolveToken('--exact', 'rgba(34,197,94,1)');
     default:
-      return 'var(--accent)';
+      return resolveToken('--accent', 'rgba(93,159,223,1)');
   }
 }
 
 function toneFill(tone: string | undefined): string {
   switch (tone) {
     case 'brand':
-      return 'color-mix(in oklab, var(--brand) 12%, transparent)';
+      return resolveToken('--accent-subtle', 'rgba(93,159,223,0.12)');
     case 'ocr':
-      return 'color-mix(in oklab, var(--ocr) 12%, transparent)';
+      return resolveToken('--ocr-subtle', 'rgba(14,165,233,0.12)');
     case 'clean':
-      return 'color-mix(in oklab, var(--clean) 12%, transparent)';
+      return resolveToken('--exact-subtle', 'rgba(34,197,94,0.12)');
     default:
-      return 'color-mix(in oklab, var(--accent) 12%, transparent)';
+      return resolveToken('--accent-subtle', 'rgba(93,159,223,0.12)');
   }
 }
 
@@ -200,10 +209,13 @@ export function LabelerCanvas(props: LabelerCanvasProps) {
                   const h = nh * coords.pageHeight;
                   const isSelected = block.id === selectedBlockId;
                   const stroke = isSelected
-                    ? 'var(--accent-strong, var(--accent))'
+                    ? resolveToken(
+                        '--accent-strong',
+                        resolveToken('--accent', 'rgba(93,159,223,1)'),
+                      )
                     : toneStroke(block.tone);
                   const fill = isSelected
-                    ? 'color-mix(in oklab, var(--accent) 20%, transparent)'
+                    ? resolveToken('--accent-subtle', 'rgba(93,159,223,0.20)')
                     : toneFill(block.tone);
 
                   return (
@@ -250,8 +262,8 @@ export function LabelerCanvas(props: LabelerCanvasProps) {
                     x={cx}
                     y={cy}
                     radius={5}
-                    fill="var(--surface, #fff)"
-                    stroke="var(--accent)"
+                    fill={resolveToken('--bg-surface', '#fff')}
+                    stroke={resolveToken('--accent', 'rgba(93,159,223,1)')}
                     strokeWidth={1.5}
                     listening={false}
                     perfectDrawEnabled={false}

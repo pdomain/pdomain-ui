@@ -10,6 +10,7 @@
 
 import { Rect } from 'react-konva';
 import type { CoordContext } from '../../canvas/types.js';
+import { resolveToken } from '../../canvas/resolveToken.js';
 
 export interface IllustBbox {
   id: string;
@@ -34,6 +35,9 @@ export function IllustOverlay({ coords, illustBboxes }: IllustOverlayProps) {
         const y = ny * coords.pageHeight;
         const w = nw * coords.pageWidth;
         const h = nh * coords.pageHeight;
+        // Resolve --ocr (remapped from --info per §0.2) for Konva canvas rendering.
+        const ocrColor = resolveToken('--ocr', 'rgba(14,165,233,1)');
+        const ocrFill = resolveToken('--ocr-subtle', 'rgba(14,165,233,0.12)');
         return (
           <Rect
             key={ill.id}
@@ -42,9 +46,9 @@ export function IllustOverlay({ coords, illustBboxes }: IllustOverlayProps) {
             y={y}
             width={w}
             height={h}
-            stroke="var(--info, #0ea5e9)"
+            stroke={ocrColor}
             strokeWidth={2}
-            fill="color-mix(in oklab, var(--info, #0ea5e9) 12%, transparent)"
+            fill={ocrFill}
             cornerRadius={2}
             listening={false}
             perfectDrawEnabled={false}

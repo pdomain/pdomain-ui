@@ -32,6 +32,7 @@ export function WordRow({ word, onClick }: WordRowProps): React.ReactElement {
       className="word-row"
       role={onClick != null ? 'button' : undefined}
       tabIndex={onClick != null ? 0 : undefined}
+      aria-label={onClick != null ? `Edit word: ${word.text}` : undefined}
       onClick={onClick}
       onKeyDown={onClick != null ? handleKeyDown : undefined}
       style={{
@@ -49,7 +50,7 @@ export function WordRow({ word, onClick }: WordRowProps): React.ReactElement {
           flex: 1,
           fontSize: 13,
           color: 'var(--ink-1)',
-          fontFamily: 'Georgia, serif',
+          fontFamily: 'var(--book-font, Georgia, serif)',
           minWidth: 0,
           overflow: 'hidden',
           textOverflow: 'ellipsis',

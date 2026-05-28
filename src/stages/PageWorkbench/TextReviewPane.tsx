@@ -62,6 +62,9 @@ export function TextReviewPane({
 }: TextReviewPaneProps): React.ReactElement {
   const label = title ?? 'Text review';
   const outerTestId = testId ?? TEXT_REVIEW_PANE;
+  // Use React.useId() to generate a unique id per instance, avoiding duplicate
+  // id="text-review-content" when multiple TextReviewPane instances exist on a page.
+  const contentId = React.useId();
 
   return (
     <section className="text-review-pane" data-open={open} data-testid={outerTestId}>
@@ -73,7 +76,7 @@ export function TextReviewPane({
             onOpenChange(!open);
           }}
           aria-expanded={open}
-          aria-controls="text-review-content"
+          aria-controls={contentId}
           data-testid={TEXT_REVIEW_PANE_TOGGLE}
         >
           <Icon name={open ? 'chevD' : 'chevU'} size={16} />
@@ -82,7 +85,7 @@ export function TextReviewPane({
       </header>
 
       <div
-        id="text-review-content"
+        id={contentId}
         className="text-review-pane__content"
         {...(!open ? { hidden: true } : {})}
       >

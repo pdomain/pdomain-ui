@@ -24,13 +24,14 @@ export interface RotateHandleProps {
 /** Radius of the circular handle in page-space pixels. */
 const HANDLE_RADIUS = 10;
 
-/** Offset from page top center to handle center. */
-const HANDLE_OFFSET_Y = -24;
+/** Offset from page top center to handle center — must stay inside stage. */
+const HANDLE_OFFSET_Y = HANDLE_RADIUS + 4; // 14px from top edge, inside canvas
 
 export function RotateHandle({ coords, rotationDeg, onRotationChange }: RotateHandleProps) {
   const [dragging, setDragging] = useState(false);
 
   const cx = coords.pageWidth / 2;
+  // Place handle inside the stage (was -24, which clips off the top of the canvas).
   const cy = HANDLE_OFFSET_Y;
 
   // Compute handle visual position offset by current rotation angle.
@@ -45,7 +46,7 @@ export function RotateHandle({ coords, rotationDeg, onRotationChange }: RotateHa
       const stage = e.target.getStage();
       const pos = stage?.getPointerPosition();
       if (!pos || !onRotationChange) return;
-      const scale = coords.scale || 1;
+      const scale = coords.scale ?? 1;
       const px = pos.x / scale - cx;
       const py = pos.y / scale - coords.pageHeight / 2;
       const dragAngleRad = Math.atan2(px, -py);
@@ -83,7 +84,10 @@ export function RotateHandle({ coords, rotationDeg, onRotationChange }: RotateHa
         onDragEnd={() => {
           setDragging(false);
         }}
-        dragBoundFunc={(pos) => pos}
+        dragBoundFunc={(pos) => ({
+          x: Math.max(HANDLE_RADIUS, Math.min(coords.stageWidth - HANDLE_RADIUS, pos.x)),
+          y: Math.max(HANDLE_RADIUS, Math.min(coords.stageHeight - HANDLE_RADIUS, pos.y)),
+        })}
         perfectDrawEnabled={false}
       />
     </>

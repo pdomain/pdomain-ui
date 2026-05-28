@@ -45,6 +45,7 @@ describe('EditModeSelector', () => {
         split: /split/i,
         illust: /illustration/i,
         rotate: /rotate/i,
+        words: /words/i,
       };
 
       render(<EditModeSelector mode="view" onModeChange={onModeChange} />);

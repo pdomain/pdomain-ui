@@ -29,10 +29,23 @@ interface TypeGridProps {
  */
 export function TypeGrid({ types, selectedType, onSelect }: TypeGridProps): React.ReactElement {
   const cellRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+  const gridRef = React.useRef<HTMLDivElement>(null);
+
+  /**
+   * Compute the current column count from the grid's rendered layout.
+   * Falls back to 3 (default CSS auto-fill minimum) when layout is unavailable.
+   */
+  const getColCount = React.useCallback((): number => {
+    const grid = gridRef.current;
+    if (!grid) return 3;
+    const style = getComputedStyle(grid);
+    const cols = style.gridTemplateColumns.split(' ').filter(Boolean).length;
+    return cols > 0 ? cols : 3;
+  }, []);
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLButtonElement>, idx: number) => {
-      const colCount = 3;
+      const colCount = getColCount();
       let nextIdx: number | null = null;
 
       if (e.key === 'ArrowRight') {
@@ -50,11 +63,11 @@ export function TypeGrid({ types, selectedType, onSelect }: TypeGridProps): Reac
         cellRefs.current[nextIdx]?.focus();
       }
     },
-    [types.length],
+    [types.length, getColCount],
   );
 
   return (
-    <div className="type-grid" role="group">
+    <div ref={gridRef} className="type-grid" role="group">
       {types.map((t, idx) => {
         const isSelected = t.value === selectedType;
         return (

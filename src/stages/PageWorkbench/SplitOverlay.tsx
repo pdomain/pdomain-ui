@@ -42,7 +42,7 @@ export function SplitOverlay({ coords, splitX, onSplitXChange }: SplitOverlayPro
       const stage = e.target.getStage();
       const pos = stage?.getPointerPosition();
       if (!pos || !onSplitXChange) return;
-      const scale = coords.scale || 1;
+      const scale = coords.scale ?? 1;
       const rawX = pos.x / scale;
       const clamped = Math.max(0, Math.min(1, rawX / coords.pageWidth));
       onSplitXChange(clamped);
@@ -56,7 +56,7 @@ export function SplitOverlay({ coords, splitX, onSplitXChange }: SplitOverlayPro
       const stage = e.target.getStage();
       const pos = stage?.getPointerPosition();
       if (!pos || !onSplitXChange) return;
-      const scale = coords.scale || 1;
+      const scale = coords.scale ?? 1;
       const rawX = pos.x / scale;
       const clamped = Math.max(0, Math.min(1, rawX / coords.pageWidth));
       onSplitXChange(clamped);

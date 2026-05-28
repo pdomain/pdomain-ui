@@ -65,14 +65,22 @@ describe('TextReviewPane', () => {
 
   it('content section has hidden attribute when open=false', () => {
     renderPane({ open: false });
-    const content = document.getElementById('text-review-content');
+    // The content div id is generated via React.useId(); find via aria-controls.
+    const toggleBtn = screen.getByTestId(TEXT_REVIEW_PANE_TOGGLE);
+    const contentId = toggleBtn.getAttribute('aria-controls');
+    expect(contentId).not.toBeNull();
+    const content = contentId ? document.getElementById(contentId) : null;
     expect(content).not.toBeNull();
     expect(content?.hasAttribute('hidden')).toBe(true);
   });
 
   it('content section does not have hidden attribute when open=true', () => {
     renderPane({ open: true });
-    const content = document.getElementById('text-review-content');
+    // The content div id is generated via React.useId(); find via aria-controls.
+    const toggleBtn = screen.getByTestId(TEXT_REVIEW_PANE_TOGGLE);
+    const contentId = toggleBtn.getAttribute('aria-controls');
+    expect(contentId).not.toBeNull();
+    const content = contentId ? document.getElementById(contentId) : null;
     expect(content).not.toBeNull();
     expect(content?.hasAttribute('hidden')).toBe(false);
   });
