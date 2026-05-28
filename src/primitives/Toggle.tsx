@@ -2,7 +2,10 @@ import * as React from 'react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { cn } from './cn.js';
 
-export interface ToggleProps {
+export interface ToggleProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>,
+  'checked' | 'onCheckedChange' | 'disabled'
+> {
   /** Current on/off state. */
   checked: boolean;
   /** Called with the new boolean state when the user toggles. */
@@ -24,26 +27,28 @@ export interface ToggleProps {
  *
  * Styled via `.toggle` / `.toggle__thumb` CSS classes — no inline styles.
  * Use alongside a `<label>` or provide `label` prop for accessible labeling.
+ *
+ * Pass-through: all `data-*`, `aria-*`, `id`, and other standard HTML
+ * attributes are forwarded to the underlying `<button role="switch">` DOM
+ * node, enabling stable `data-testid` selectors in consumer e2e tests.
  */
-export function Toggle({
-  checked,
-  onCheckedChange,
-  disabled,
-  label,
-  id,
-  className,
-}: ToggleProps): React.ReactElement {
+export const Toggle = React.forwardRef<
+  React.ComponentRef<typeof SwitchPrimitive.Root>,
+  ToggleProps
+>(function Toggle({ checked, onCheckedChange, disabled, label, id, className, ...rest }, ref) {
   const autoId = React.useId();
   const switchId = id ?? autoId;
 
   return (
     <span className={cn('toggle-wrapper', className)}>
       <SwitchPrimitive.Root
+        ref={ref}
         id={switchId}
         checked={checked}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
         className={cn('toggle', checked ? 'toggle--on' : undefined)}
+        {...rest}
       >
         <SwitchPrimitive.Thumb className="toggle__thumb" />
       </SwitchPrimitive.Root>
@@ -54,6 +59,6 @@ export function Toggle({
       ) : null}
     </span>
   );
-}
+});
 
 Toggle.displayName = 'Toggle';
