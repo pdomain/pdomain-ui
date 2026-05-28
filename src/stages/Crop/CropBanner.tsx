@@ -5,7 +5,7 @@ import { CROP_BANNER, CROP_BANNER_RERUN } from '../../testids/index.js';
 
 // ─── Public types ─────────────────────────────────────────────────────────────
 
-export type CropState = 'running' | 'review' | 'done';
+export type CropState = 'running' | 'review' | 'done' | 'error';
 
 export interface CropFlagCounts {
   overCrop: number;
@@ -21,8 +21,10 @@ export interface CropBannerProps {
   progress?: number;
   /** Flag tallies for the review state. */
   flagCounts?: CropFlagCounts;
-  /** Re-run callback for review/done states. */
+  /** Re-run callback for review/done/error states. */
   onRerun?: () => void;
+  /** Optional error detail message for the error state. */
+  errorMessage?: string;
   /** Override the root element's data-testid. Defaults to `CROP_BANNER`. */
   'data-testid'?: string;
 }
@@ -74,6 +76,7 @@ export function CropBanner({
   progress = 0,
   flagCounts,
   onRerun,
+  errorMessage,
   'data-testid': testId = CROP_BANNER,
 }: CropBannerProps): React.ReactElement {
   const rerunButton =
@@ -103,6 +106,18 @@ export function CropBanner({
         tone="warning"
         headline="Review crops"
         subtext={summary}
+        actions={rerunButton}
+        data-testid={testId}
+      />
+    );
+  }
+
+  if (state === 'error') {
+    return (
+      <Banner
+        tone="danger"
+        headline="Crop pipeline failed"
+        subtext={errorMessage ?? 'An error occurred during cropping. Check logs and re-run.'}
         actions={rerunButton}
         data-testid={testId}
       />

@@ -92,7 +92,7 @@ export function CropStepSettings({
   }
 
   return (
-    <div className="crop-step-settings" data-testid={testid}>
+    <div className="crop-step-settings" data-testid={testid ?? 'crop-step-settings'}>
       <div className="crop-step-settings__header">
         <h2 className="crop-step-settings__title">Stage settings · Crop</h2>
         <p className="crop-step-settings__subtitle">

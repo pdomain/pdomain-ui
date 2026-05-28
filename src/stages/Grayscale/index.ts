@@ -4,9 +4,12 @@
  * Public exports from this subpath (Phase 2 M4).
  */
 
+// ─── Shared types ─────────────────────────────────────────────────────────────
+export type { GrayscaleMode } from './types.js';
+
 // ─── AutoDetectBanner ─────────────────────────────────────────────────────────
 export { AutoDetectBanner } from './AutoDetectBanner.js';
-export type { AutoDetectBannerProps, GrayscaleMode } from './AutoDetectBanner.js';
+export type { AutoDetectBannerProps } from './AutoDetectBanner.js';
 
 // ─── ModeCard ─────────────────────────────────────────────────────────────────
 export { ModeCard } from './ModeCard.js';

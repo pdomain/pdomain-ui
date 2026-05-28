@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { Badge } from '../../primitives/Badge.js';
 import { MODE_CARD_GROUP, modeCardTestId } from '../../testids/index.js';
+import type { GrayscaleMode } from './types.js';
 
-/**
- * The two grayscale conversion modes.
- *
- * Declared locally so this module compiles when AutoDetectBanner (sibling) is
- * not yet on the same branch. The orchestrator will reconcile to a single
- * canonical declaration.
- */
-export type GrayscaleMode = 'standard' | 'perceptual';
+export type { GrayscaleMode };
 
 /** Tone of the estimate badge. `exact` = reliable (green); `fuzzy` = rough (amber). */
 export type EstimateTone = 'exact' | 'fuzzy';
@@ -43,6 +37,7 @@ interface ModeCardItemProps {
   estimate: ModeEstimate;
   isSelected: boolean;
   onSelect: (mode: GrayscaleMode) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
 }
 
 function ModeCardItem({
@@ -52,16 +47,19 @@ function ModeCardItem({
   estimate,
   isSelected,
   onSelect,
+  onKeyDown,
 }: ModeCardItemProps): React.ReactElement {
   return (
     <button
       role="radio"
       aria-checked={isSelected}
+      tabIndex={isSelected ? 0 : -1}
       data-testid={modeCardTestId(mode)}
       className={`mode-card${isSelected ? ' mode-card--selected' : ''}`}
       onClick={() => {
         onSelect(mode);
       }}
+      onKeyDown={onKeyDown}
       type="button"
     >
       <div className="mode-card__header">
@@ -75,6 +73,8 @@ function ModeCardItem({
     </button>
   );
 }
+
+const GRAYSCALE_MODES: ReadonlyArray<GrayscaleMode> = ['standard', 'perceptual'];
 
 const MODE_META: Record<GrayscaleMode, { label: string; description: string }> = {
   standard: {
@@ -98,7 +98,26 @@ export const ModeCard = React.forwardRef<HTMLDivElement, ModeCardProps>(function
   { selectedMode, onModeChange, estimates, 'data-testid': testId },
   ref,
 ) {
-  const modes: GrayscaleMode[] = ['standard', 'perceptual'];
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>, currentMode: GrayscaleMode) => {
+      const currentIdx = GRAYSCALE_MODES.indexOf(currentMode);
+      const last = GRAYSCALE_MODES.length - 1;
+      let nextIdx = currentIdx;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        nextIdx = currentIdx === last ? 0 : currentIdx + 1;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        nextIdx = currentIdx === 0 ? last : currentIdx - 1;
+      } else {
+        return;
+      }
+      e.preventDefault();
+      const nextMode = GRAYSCALE_MODES[nextIdx];
+      if (nextMode !== undefined) {
+        onModeChange(nextMode);
+      }
+    },
+    [onModeChange],
+  );
 
   return (
     <div
@@ -108,7 +127,7 @@ export const ModeCard = React.forwardRef<HTMLDivElement, ModeCardProps>(function
       data-testid={testId ?? MODE_CARD_GROUP}
       className="mode-card-group"
     >
-      {modes.map((mode) => (
+      {GRAYSCALE_MODES.map((mode) => (
         <ModeCardItem
           key={mode}
           mode={mode}
@@ -117,6 +136,9 @@ export const ModeCard = React.forwardRef<HTMLDivElement, ModeCardProps>(function
           estimate={estimates[mode]}
           isSelected={selectedMode === mode}
           onSelect={onModeChange}
+          onKeyDown={(e) => {
+            handleKeyDown(e, mode);
+          }}
         />
       ))}
     </div>

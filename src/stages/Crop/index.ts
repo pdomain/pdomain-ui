@@ -2,6 +2,9 @@
  * Crop stage barrel (Phase 2 M5).
  */
 
+// ─── Shared types ─────────────────────────────────────────────────────────────
+export type { CropFlagKind } from './types.js';
+
 // ─── CropBanner ───────────────────────────────────────────────────────────────
 export { CropBanner } from './CropBanner.js';
 export type { CropBannerProps, CropState, CropFlagCounts } from './CropBanner.js';
@@ -11,7 +14,6 @@ export { CropToolbar } from './CropToolbar.js';
 export type {
   CropToolbarProps,
   CropFilter,
-  CropFlagKind,
   CropDensity,
   CropFilterCounts,
   CropFlagDrillCounts,

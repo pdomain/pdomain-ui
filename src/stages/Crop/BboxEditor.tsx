@@ -15,7 +15,8 @@
  *   - 8 draggable handle dots (visual only — drag wiring is Phase 2 follow-on)
  *
  * Drag handle wiring is intentionally OUT OF SCOPE for M5.
- * Filed as follow-on: Phase 2 BboxEditor drag handles (#TODO).
+ * Follow-on: Phase 2 interactive drag handles for BboxEditor.
+ * See: ConcaveTrillion/ocr-container-meta — search "BboxEditor drag handles".
  */
 
 import * as React from 'react';

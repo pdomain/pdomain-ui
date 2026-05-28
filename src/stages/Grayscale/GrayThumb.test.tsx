@@ -86,3 +86,24 @@ describe('GrayThumb', () => {
     expect(article).toHaveAttribute('data-testid', 'gray-thumb');
   });
 });
+
+// ─── TDD: require onClick when interactive (WS5) ──────────────────────────────
+
+describe('GrayThumb — onClick requirement when interactive', () => {
+  it('renders a div (not button) when interactive=true but onClick is undefined', () => {
+    const { container } = render(
+      <GrayThumb page={PAGE} estimatedSeconds={10} interactive={true} />,
+    );
+    // Must NOT render a dead interactive button
+    expect(container.querySelector('button.gray-thumb__body')).not.toBeInTheDocument();
+    // Body still renders as div
+    expect(container.querySelector('.gray-thumb__body')).toBeInTheDocument();
+  });
+
+  it('renders button when both interactive=true and onClick are provided', () => {
+    const { container } = render(
+      <GrayThumb page={PAGE} estimatedSeconds={10} interactive={true} onClick={vi.fn()} />,
+    );
+    expect(container.querySelector('button.gray-thumb__body')).toBeInTheDocument();
+  });
+});

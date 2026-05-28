@@ -36,6 +36,8 @@ export const StageControlsLeft = React.forwardRef<HTMLElement, StageControlsLeft
     {
       inheritance,
       presetName,
+      // backend is accepted for API stability but CPU-fallback wiring is deferred.
+      // See ConcaveTrillion/ocr-container-meta — "StageControlsLeft backend wiring".
       backend: _backend, // eslint-disable-line @typescript-eslint/no-unused-vars
       cpuFallback,
       mode,
