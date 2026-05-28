@@ -145,6 +145,14 @@ describe('Segmented', () => {
     expect(alpha2?.getAttribute('tabindex')).toBe('-1');
   });
 
+  it('renders nothing when options is empty (WS5 guard)', () => {
+    const { container } = render(<Segmented options={[]} />);
+    const radiogroup = container.querySelector('[role="radiogroup"]');
+    expect(radiogroup).toBeTruthy();
+    // No radio buttons should be rendered
+    expect(screen.queryAllByRole('radio')).toHaveLength(0);
+  });
+
   it('renders option icons when provided', () => {
     const optsWithIcons = [
       { value: 'x', label: 'X', icon: <span data-testid="icon-x" /> },

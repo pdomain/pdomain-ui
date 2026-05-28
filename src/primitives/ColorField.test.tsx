@@ -9,6 +9,7 @@
  *   - Follows Field/Input pattern from primitives/.
  */
 import * as React from 'react';
+import { createRef } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ColorField } from './ColorField.js';
@@ -115,5 +116,12 @@ describe('ColorField (#17)', () => {
     );
     const colorInput = document.querySelector('input[type="color"]') as HTMLInputElement;
     expect(colorInput.getAttribute('aria-label')).toBe('Choose accent color');
+  });
+
+  it('forwards ref to the native color input element (WS5)', () => {
+    const ref = createRef<HTMLInputElement>();
+    render(<ColorField id="accent" label="Accent" value="#ff6600" onChange={vi.fn()} ref={ref} />);
+    const colorInput = document.querySelector('input[type="color"]') as HTMLInputElement;
+    expect(ref.current).toBe(colorInput);
   });
 });

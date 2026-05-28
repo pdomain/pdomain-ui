@@ -56,9 +56,19 @@ export function BaseJobConfigDialog({
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Reset projectName when sourcePath changes
   useEffect(() => {
     setProjectName(basename(sourcePath));
   }, [sourcePath]);
+
+  // WS5 fix: reset outputDir (and error) when the dialog opens/reopens.
+  // Previously outputDir was never reset so stale values from prior sessions persisted.
+  useEffect(() => {
+    if (open) {
+      setOutputDir('');
+      setError(null);
+    }
+  }, [open]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

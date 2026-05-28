@@ -126,6 +126,51 @@ describe('BaseJobConfigDialog', () => {
     expect(screen.getByRole('button', { name: /process/i })).toBeTruthy();
   });
 
+  it('resets outputDir to empty when dialog reopens (WS5)', async () => {
+    const user = userEvent.setup();
+    const mockClose = vi.fn();
+    const { rerender } = render(
+      <BaseJobConfigDialog
+        open={true}
+        title="Run OCR Job"
+        sourcePath="/books/my-novel.pdf"
+        onClose={mockClose}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    // Type in the output dir
+    const outputInput = screen.getByPlaceholderText('/home/user/output');
+    await user.type(outputInput, '/tmp/first-run');
+    expect((outputInput as HTMLInputElement).value).toBe('/tmp/first-run');
+
+    // Close the dialog
+    rerender(
+      <BaseJobConfigDialog
+        open={false}
+        title="Run OCR Job"
+        sourcePath="/books/my-novel.pdf"
+        onClose={mockClose}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    // Reopen it
+    rerender(
+      <BaseJobConfigDialog
+        open={true}
+        title="Run OCR Job"
+        sourcePath="/books/my-novel.pdf"
+        onClose={mockClose}
+        onSubmit={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    // outputDir should be reset to empty
+    const outputInputAfter = screen.getByPlaceholderText('/home/user/output');
+    expect((outputInputAfter as HTMLInputElement).value).toBe('');
+  });
+
   // Ensure noop import is used so TS doesn't tree-shake it
   it('noop resolves', async () => {
     await expect(noop()).resolves.toBeUndefined();
