@@ -107,4 +107,12 @@ describe('RuleDetail', () => {
     render(<RuleDetail rule={baseRule} onToggleAutoApply={vi.fn()} />);
     expect(screen.getByTestId(SCANNO_RULE_DETAIL_AUTO_APPLY)).toBeInTheDocument();
   });
+
+  it('forwards custom data-testid to root element', () => {
+    render(
+      <RuleDetail rule={baseRule} onToggleAutoApply={vi.fn()} data-testid="custom-rule-detail" />,
+    );
+    expect(screen.getByTestId('custom-rule-detail')).toBeInTheDocument();
+    expect(screen.queryByTestId(SCANNO_RULE_DETAIL)).toBeNull();
+  });
 });

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Icon } from '../../icons/Icon.js';
-import { SCANNO_NAV_GROUP } from '../../testids/index.js';
+import { SCANNO_NAV_GROUP, SCANNO_NAV_GROUP_COUNT } from '../../testids/index.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,7 +64,7 @@ export function NavGroup({
 
         {/* Count badge — rendered only when count is provided */}
         {count !== undefined && (
-          <span className="scanno-nav-group__count" data-testid="scanno-nav-group-count">
+          <span className="scanno-nav-group__count" data-testid={SCANNO_NAV_GROUP_COUNT}>
             {count}
           </span>
         )}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Popover, PopoverAnchor, PopoverContent } from '../../primitives/Popover.js';
+import { Popover, PopoverTrigger, PopoverContent } from '../../primitives/Popover.js';
 import { Button } from '../../primitives/Button.js';
 import { Badge } from '../../primitives/Badge.js';
 import type { BadgeTone } from '../../primitives/Badge.js';
@@ -47,6 +47,12 @@ export interface InlineMarkPopoverProps {
   onDismiss?: () => void;
   /** Called when the user promotes the token to a new candidate. */
   onPromote?: () => void;
+  /**
+   * Optional trigger element. When provided it is rendered via `PopoverTrigger asChild`
+   * so the popover anchors to this element (e.g. the `<ScannoToken>` button).
+   * When omitted the popover floats without an anchor.
+   */
+  children?: React.ReactNode;
 }
 
 // ─── Source → badge tone map ──────────────────────────────────────────────────
@@ -72,10 +78,11 @@ export function InlineMarkPopover({
   token,
   open,
   onClose,
-  ...optionalCallbacks
+  onAccept,
+  onDismiss,
+  onPromote,
+  children,
 }: InlineMarkPopoverProps) {
-  const { onAccept, onDismiss, onPromote } = optionalCallbacks;
-
   return (
     <Popover
       open={open}
@@ -83,8 +90,8 @@ export function InlineMarkPopover({
         if (!isOpen) onClose();
       }}
     >
-      {/* Anchor keeps the popover attached to the inline token site. */}
-      <PopoverAnchor />
+      {/* Trigger/anchor: when a trigger element is provided, anchor the popover to it. */}
+      {children !== undefined ? <PopoverTrigger asChild>{children}</PopoverTrigger> : null}
       <PopoverContent
         side="bottom"
         align="center"
@@ -120,7 +127,7 @@ export function InlineMarkPopover({
             size="sm"
             full
             data-testid={SCANNO_INLINE_MARK_POPOVER_ACCEPT}
-            {...(onAccept !== undefined ? { onClick: onAccept } : {})}
+            {...(onAccept !== undefined ? { onClick: onAccept } : { disabled: true })}
           >
             Accept
           </Button>
@@ -129,7 +136,7 @@ export function InlineMarkPopover({
             size="sm"
             full
             data-testid={SCANNO_INLINE_MARK_POPOVER_DISMISS}
-            {...(onDismiss !== undefined ? { onClick: onDismiss } : {})}
+            {...(onDismiss !== undefined ? { onClick: onDismiss } : { disabled: true })}
           >
             Dismiss
           </Button>
@@ -138,7 +145,7 @@ export function InlineMarkPopover({
             size="sm"
             full
             data-testid={SCANNO_INLINE_MARK_POPOVER_PROMOTE}
-            {...(onPromote !== undefined ? { onClick: onPromote } : {})}
+            {...(onPromote !== undefined ? { onClick: onPromote } : { disabled: true })}
           >
             Promote
           </Button>

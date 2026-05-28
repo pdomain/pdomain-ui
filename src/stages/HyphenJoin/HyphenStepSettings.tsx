@@ -139,25 +139,36 @@ export function HyphenStepSettings({
   // ── Cache handlers ─────────────────────────────────────────────────────────
 
   function handleCacheSize(e: React.ChangeEvent<HTMLInputElement>): void {
+    const raw = Number(e.target.value);
+    const sizeMB =
+      e.target.value === '' || isNaN(raw) || raw < 1 ? settings.ngramCache.sizeMB : raw;
     onChange({
       ...settings,
-      ngramCache: { ...settings.ngramCache, sizeMB: Number(e.target.value) },
+      ngramCache: { ...settings.ngramCache, sizeMB },
     });
   }
 
   function handleCacheTtl(e: React.ChangeEvent<HTMLInputElement>): void {
+    const raw = Number(e.target.value);
+    const ttlMinutes =
+      e.target.value === '' || isNaN(raw) || raw < 1 ? settings.ngramCache.ttlMinutes : raw;
     onChange({
       ...settings,
-      ngramCache: { ...settings.ngramCache, ttlMinutes: Number(e.target.value) },
+      ngramCache: { ...settings.ngramCache, ttlMinutes },
     });
   }
 
   // ── Threshold handlers ─────────────────────────────────────────────────────
 
   function handleAutoFlagThreshold(e: React.ChangeEvent<HTMLInputElement>): void {
+    const raw = Number(e.target.value);
+    const autoFlagBelow =
+      e.target.value === '' || isNaN(raw) || raw < 0
+        ? settings.thresholds.autoFlagBelow
+        : Math.min(raw, 1);
     onChange({
       ...settings,
-      thresholds: { ...settings.thresholds, autoFlagBelow: Number(e.target.value) },
+      thresholds: { ...settings.thresholds, autoFlagBelow },
     });
   }
 

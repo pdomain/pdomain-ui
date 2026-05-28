@@ -7,7 +7,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NavGroup } from './NavGroup.js';
-import { SCANNO_NAV_GROUP, scannoNavGroupTestId } from '../../testids/index.js';
+import {
+  SCANNO_NAV_GROUP,
+  SCANNO_NAV_GROUP_COUNT,
+  scannoNavGroupTestId,
+} from '../../testids/index.js';
 
 describe('NavGroup', () => {
   it('renders label', () => {
@@ -82,7 +86,7 @@ describe('NavGroup', () => {
       </NavGroup>,
     );
     // No element with an explicit count digit should exist
-    expect(screen.queryByTestId('scanno-nav-group-count')).toBeNull();
+    expect(screen.queryByTestId(SCANNO_NAV_GROUP_COUNT)).toBeNull();
   });
 
   it('applies default testid from SCANNO_NAV_GROUP constant', () => {

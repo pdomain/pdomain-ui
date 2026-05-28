@@ -279,4 +279,83 @@ describe('HyphenStepSettings — auto-flag thresholds section', () => {
     expect(next.ngramCache.ttlMinutes).toBe(120);
     expect(next.rules).toHaveLength(1);
   });
+
+  it('clamps autoFlagBelow to 1 when value > 1', () => {
+    const onChange = vi.fn<(arg: HyphenSettings) => void>();
+    render(
+      <HyphenStepSettings
+        settings={makeSettings({ thresholds: { autoFlagBelow: 0.8 } })}
+        onChange={onChange}
+      />,
+    );
+    fireEvent.change(screen.getByTestId(HYPHEN_STEP_SETTINGS_AUTO_FLAG_THRESHOLD), {
+      target: { value: '1.5' },
+    });
+    const [next] = onChange.mock.calls[0] as [HyphenSettings];
+    expect(next.thresholds.autoFlagBelow).toBe(1);
+  });
+});
+
+// ─── NaN / min guards ─────────────────────────────────────────────────────────
+
+describe('HyphenStepSettings — NaN / min guards', () => {
+  it('NaN cache-size input does not call onChange with NaN — keeps previous value', () => {
+    const onChange = vi.fn<(arg: HyphenSettings) => void>();
+    render(
+      <HyphenStepSettings
+        settings={makeSettings({ ngramCache: { sizeMB: 32, ttlMinutes: 120 } })}
+        onChange={onChange}
+      />,
+    );
+    fireEvent.change(screen.getByTestId(HYPHEN_STEP_SETTINGS_CACHE_SIZE), {
+      target: { value: '' },
+    });
+    const [next] = onChange.mock.calls[0] as [HyphenSettings];
+    expect(next.ngramCache.sizeMB).toBe(32);
+  });
+
+  it('sub-min (0) cache-size input keeps previous value', () => {
+    const onChange = vi.fn<(arg: HyphenSettings) => void>();
+    render(
+      <HyphenStepSettings
+        settings={makeSettings({ ngramCache: { sizeMB: 32, ttlMinutes: 120 } })}
+        onChange={onChange}
+      />,
+    );
+    fireEvent.change(screen.getByTestId(HYPHEN_STEP_SETTINGS_CACHE_SIZE), {
+      target: { value: '0' },
+    });
+    const [next] = onChange.mock.calls[0] as [HyphenSettings];
+    expect(next.ngramCache.sizeMB).toBe(32);
+  });
+
+  it('NaN cache-ttl input keeps previous value', () => {
+    const onChange = vi.fn<(arg: HyphenSettings) => void>();
+    render(
+      <HyphenStepSettings
+        settings={makeSettings({ ngramCache: { sizeMB: 32, ttlMinutes: 120 } })}
+        onChange={onChange}
+      />,
+    );
+    fireEvent.change(screen.getByTestId(HYPHEN_STEP_SETTINGS_CACHE_TTL), {
+      target: { value: 'abc' },
+    });
+    const [next] = onChange.mock.calls[0] as [HyphenSettings];
+    expect(next.ngramCache.ttlMinutes).toBe(120);
+  });
+
+  it('NaN autoFlagBelow input keeps previous value', () => {
+    const onChange = vi.fn<(arg: HyphenSettings) => void>();
+    render(
+      <HyphenStepSettings
+        settings={makeSettings({ thresholds: { autoFlagBelow: 0.9 } })}
+        onChange={onChange}
+      />,
+    );
+    fireEvent.change(screen.getByTestId(HYPHEN_STEP_SETTINGS_AUTO_FLAG_THRESHOLD), {
+      target: { value: '' },
+    });
+    const [next] = onChange.mock.calls[0] as [HyphenSettings];
+    expect(next.thresholds.autoFlagBelow).toBe(0.9);
+  });
 });

@@ -149,9 +149,11 @@ export const HJDecisionCard = React.forwardRef<HTMLDivElement, HJDecisionCardPro
 
     return (
       /* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
+      /* role="group" provides AT-readable structure; tabIndex+onKeyDown enable Y/N/F/J/K shortcuts.
+         role="application" was removed because it mutes the AT virtual cursor. */
       <div
         ref={ref}
-        role="application"
+        role="group"
         tabIndex={0}
         aria-label={`Hyphen-join decision: ${decisionCase.originalText}`}
         data-testid={testId}
@@ -293,6 +295,7 @@ export const HJDecisionCard = React.forwardRef<HTMLDivElement, HJDecisionCardPro
           </Button>
         </div>
       </div>
+      /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
     );
   },
 );

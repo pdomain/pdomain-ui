@@ -61,6 +61,16 @@ export interface HyphenPageWorkbenchProps {
    * (`status === 'joined'`). Otherwise `'accept'` is emitted.
    */
   onDecide: (caseId: string, decision: HJWorkbenchDecision) => void;
+  /**
+   * Fired when the user navigates to the next case (keyboard: J).
+   * When provided, `onNext` is threaded to each HJDecisionCard.
+   */
+  onNext?: (() => void) | undefined;
+  /**
+   * Fired when the user navigates to the previous case (keyboard: K).
+   * When provided, `onPrev` is threaded to each HJDecisionCard.
+   */
+  onPrev?: (() => void) | undefined;
   /** Optional override for the root testid. */
   'data-testid'?: string;
 }
@@ -75,7 +85,7 @@ export interface HyphenPageWorkbenchProps {
  */
 export const HyphenPageWorkbench = React.forwardRef<HTMLDivElement, HyphenPageWorkbenchProps>(
   function HyphenPageWorkbench(
-    { page, cases, onDecide, 'data-testid': testId = HYPHEN_PAGE_WORKBENCH },
+    { page, cases, onDecide, onNext, onPrev, 'data-testid': testId = HYPHEN_PAGE_WORKBENCH },
     ref,
   ) {
     // Build split proposal when afterImageUrl is present.
@@ -141,6 +151,8 @@ export const HyphenPageWorkbench = React.forwardRef<HTMLDivElement, HyphenPageWo
               onFlag={() => {
                 onDecide(c.id, 'flag');
               }}
+              {...(onNext !== undefined ? { onNext } : {})}
+              {...(onPrev !== undefined ? { onPrev } : {})}
             />
           ))}
         </div>

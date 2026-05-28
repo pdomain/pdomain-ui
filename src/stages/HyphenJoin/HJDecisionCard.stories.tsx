@@ -84,3 +84,14 @@ export const NoNgrams: Story = {
     onPrev: () => console.log('prev'),
   },
 };
+
+/**
+ * ReadOnly — no action callbacks wired; buttons are present but no-ops.
+ * Demonstrates the read-only / display-only usage of HJDecisionCard.
+ */
+export const ReadOnly: Story = {
+  name: 'ReadOnly',
+  args: {
+    decisionCase: CASE_WITH_STATUS,
+  },
+};

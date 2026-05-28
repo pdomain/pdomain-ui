@@ -646,6 +646,9 @@ export const SCANNO_NAV_GROUP = 'scanno-nav-group' as const;
 /** Per-instance testid helper for NavGroup (e.g. `scannoNavGroupTestId('punctuation')`). */
 export const scannoNavGroupTestId = (id: string) => `scanno-nav-group-${id}` as const;
 
+/** Count badge inside a NavGroup header. */
+export const SCANNO_NAV_GROUP_COUNT = 'scanno-nav-group-count' as const;
+
 // ─── Stages / Scannos / CandidateDetail (Phase 2 M7) ────────────────────────
 
 /** Root element of the Scannos CandidateDetail right-pane panel. */

@@ -176,15 +176,9 @@ function CaseRow({ decisionCase }: CaseRowProps): React.ReactElement {
  */
 export function HyphenAutoJoined({
   groups,
+  onValidate,
   'data-testid': testId = HYPHEN_AUTO_JOINED,
-  ...rest
 }: HyphenAutoJoinedProps): React.ReactElement {
-  // exactOptionalPropertyTypes — pull onValidate from rest safely
-  const onValidate: ((groupWord: string) => void) | undefined =
-    'onValidate' in rest
-      ? (rest as { onValidate?: (groupWord: string) => void }).onValidate
-      : undefined;
-
   const totalCases = groups.reduce((sum, g) => sum + g.cases.length, 0);
   const groupCount = groups.length;
 
