@@ -44,6 +44,8 @@ export interface AppHeaderProps {
   onUserClick?: () => void;
   /** Extra CSS class applied to the <header> element. */
   className?: string;
+  /** App-specific controls rendered in the right cluster, before JobsPill. */
+  actions?: React.ReactNode;
 }
 
 // ─── AppHeader ────────────────────────────────────────────────────────────────
@@ -61,6 +63,7 @@ export function AppHeader({
   onBellClick,
   onUserClick,
   className,
+  actions,
 }: AppHeaderProps) {
   const letter = appInitial ?? appName.charAt(0).toLowerCase();
 
@@ -187,6 +190,8 @@ export function AppHeader({
           minWidth: 0,
         }}
       >
+        {actions}
+
         <JobsPill activeJobs={activeJobs} open={jobsOpen} />
 
         {/* Bell button */}
