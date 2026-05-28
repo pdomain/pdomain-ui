@@ -14,6 +14,9 @@
 // Component
 export { PageImageCanvas } from './PageImageCanvas';
 
+// Token resolver (P1 — also imported by L-PW lane for Konva color resolution)
+export { resolveToken } from './resolveToken';
+
 // Throttle utility (issue #35)
 export { makeRafThrottle } from './rafThrottle';
 

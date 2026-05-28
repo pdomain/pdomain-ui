@@ -108,6 +108,8 @@ export function useShortcuts(bindings: ShortcutBinding[], opts?: UseShortcutsOpt
 
   // Re-register whenever bindings changes so allBindings stays current.
   // Skipped on the very first render to avoid double-registering with mount.
+  // Unregister before re-registering to avoid stale bindings in allBindings
+  // during the interval between the old and new registration (audit WS5).
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
@@ -115,6 +117,7 @@ export function useShortcuts(bindings: ShortcutBinding[], opts?: UseShortcutsOpt
       return;
     }
     if (!shouldRegister) return;
+    unregister(id);
     register(id, bindings);
     // Intentionally omit register/unregister/id/shouldRegister — stable refs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
