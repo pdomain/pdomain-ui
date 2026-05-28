@@ -17,6 +17,7 @@ import * as React from 'react';
 import { cn } from '../primitives/cn.js';
 import { Icon } from '../icons/Icon.js';
 import type { IconName } from '../icons/Icon.js';
+import { projectSettingsNavItem } from '../testids/index.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -38,6 +39,11 @@ export interface SettingsNavGroup {
    * Intended for destructive sections like "Danger zone".
    */
   danger?: boolean;
+  /**
+   * Optional `data-testid` attribute for the button element.
+   * Use for Playwright selectors — renaming is a breaking change.
+   */
+  testId?: string;
 }
 
 export interface SettingsNavProps {
@@ -70,14 +76,35 @@ export interface SettingsNavProps {
  * Source: pipeline-template.jsx ProjectSettingsTemplate (lines 362–370).
  */
 export const PROJECT_SETTINGS_GROUPS: SettingsNavGroup[] = [
-  { id: 'general', name: 'General', icon: 'wrench' },
-  { id: 'bib', name: 'Bibliographic', icon: 'fileText' },
-  { id: 'pgdp', name: 'PGDP submission', icon: 'package' },
-  { id: 'format', name: 'Format & content', icon: 'file' },
-  { id: 'defaults', name: 'Stage defaults', icon: 'sparkles' },
-  { id: 'members', name: 'Members', icon: 'image' },
-  { id: 'storage', name: 'Storage & cleanup', icon: 'hardDrive' },
-  { id: 'danger', name: 'Danger zone', icon: 'trash', danger: true },
+  { id: 'general', name: 'General', icon: 'wrench', testId: projectSettingsNavItem('general') },
+  { id: 'bib', name: 'Bibliographic', icon: 'fileText', testId: projectSettingsNavItem('bib') },
+  { id: 'pgdp', name: 'PGDP submission', icon: 'package', testId: projectSettingsNavItem('pgdp') },
+  {
+    id: 'format',
+    name: 'Format & content',
+    icon: 'file',
+    testId: projectSettingsNavItem('format'),
+  },
+  {
+    id: 'defaults',
+    name: 'Stage defaults',
+    icon: 'sparkles',
+    testId: projectSettingsNavItem('defaults'),
+  },
+  { id: 'members', name: 'Members', icon: 'image', testId: projectSettingsNavItem('members') },
+  {
+    id: 'storage',
+    name: 'Storage & cleanup',
+    icon: 'hardDrive',
+    testId: projectSettingsNavItem('storage'),
+  },
+  {
+    id: 'danger',
+    name: 'Danger zone',
+    icon: 'trash',
+    danger: true,
+    testId: projectSettingsNavItem('danger'),
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -130,6 +157,7 @@ export const SettingsNav: React.FC<SettingsNavProps> = ({
             key={group.id}
             type="button"
             aria-current={active ? 'page' : undefined}
+            data-testid={group.testId}
             className={cn(
               'settings-nav__item',
               active && 'settings-nav__item--active',

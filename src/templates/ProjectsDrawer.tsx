@@ -193,6 +193,8 @@ export const ProjectsDrawer = React.forwardRef<HTMLDivElement, ProjectsDrawerPro
 
         {/* Active / Archived tab strip */}
         <div
+          role="tablist"
+          aria-label="Project filter"
           style={{
             padding: '0 12px 10px',
             display: 'flex',
@@ -210,8 +212,11 @@ export const ProjectsDrawer = React.forwardRef<HTMLDivElement, ProjectsDrawerPro
             return (
               <button
                 key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                tabIndex={on ? 0 : -1}
                 onClick={() => setTab(t.id)}
-                aria-pressed={on}
                 style={{
                   flex: 1,
                   height: 28,

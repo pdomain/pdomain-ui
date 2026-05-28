@@ -29,19 +29,18 @@ export function useWorklistSort<TItem extends WordListItem>(
   return useMemo(() => {
     if (sortKey === 'index') return items;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sorted = [...items].sort((a: any, b: any) => {
+    const sorted = [...items].sort((a: TItem, b: TItem) => {
       if (sortKey === 'confidence') {
-        const ca: number | null | undefined = (a as WordListItem).ocr_confidence;
-        const cb: number | null | undefined = (b as WordListItem).ocr_confidence;
+        const ca: number | null | undefined = a.ocr_confidence;
+        const cb: number | null | undefined = b.ocr_confidence;
         if (ca == null && cb == null) return 0;
         if (ca == null) return 1;
         if (cb == null) return -1;
         return cb - ca;
       }
       // 'text'
-      const ta: string = (a as WordListItem).text;
-      const tb: string = (b as WordListItem).text;
+      const ta: string = a.text;
+      const tb: string = b.text;
       return ta.localeCompare(tb);
     });
     return sorted;

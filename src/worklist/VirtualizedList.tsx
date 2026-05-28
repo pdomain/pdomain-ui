@@ -16,7 +16,15 @@ export interface VirtualizedListProps<TItem> {
   className?: string | undefined;
   renderItem: (item: TItem, index: number, isSelected: boolean) => React.ReactNode;
   defaultAriaLabel: string;
+  /**
+   * Optional slot rendered when `items` is empty.
+   * Replaces the virtualized list content; the listbox wrapper is still present.
+   */
+  emptySlot?: React.ReactNode;
 }
+
+// Stable id prefix derived from React.useId for aria-activedescendant wiring.
+const OPTION_ID_PREFIX = 'vl-opt';
 
 function VirtualizedListInner<TItem>(
   {
@@ -27,9 +35,11 @@ function VirtualizedListInner<TItem>(
     className,
     renderItem,
     defaultAriaLabel,
+    emptySlot,
   }: VirtualizedListProps<TItem>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const uid = React.useId();
   const [internalIndex, setInternalIndex] = React.useState<number | null>(null);
 
   const isControlled = controlledSelectedIndex !== undefined;
@@ -83,6 +93,9 @@ function VirtualizedListInner<TItem>(
     [items.length, selectedIndex, handleSelect],
   );
 
+  /** Stable element id for a given row, used for aria-activedescendant. */
+  const optionId = (index: number) => `${OPTION_ID_PREFIX}-${uid}-${index}`;
+
   const renderRow = React.useCallback(
     (index: number, item: TItem) => {
       const isSelected = selectedIndex === index;
@@ -91,9 +104,11 @@ function VirtualizedListInner<TItem>(
       return (
         <div
           key={index}
+          id={optionId(index)}
           role="option"
           aria-selected={isSelected}
-          tabIndex={0}
+          // Roving tabIndex: only the active option is in the tab order.
+          tabIndex={isSelected ? 0 : -1}
           onClick={() => {
             handleSelect(index);
           }}
@@ -109,14 +124,22 @@ function VirtualizedListInner<TItem>(
         </div>
       );
     },
-    [selectedIndex, renderItem, handleSelect],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedIndex, renderItem, handleSelect, uid],
   );
+
+  // Compute the active-descendant id: point at the selected option element.
+  const activeDescendant =
+    selectedIndex !== null && selectedIndex !== undefined && selectedIndex < items.length
+      ? optionId(selectedIndex)
+      : undefined;
 
   return (
     <div
       ref={ref}
       role="listbox"
       aria-label={ariaLabel ?? defaultAriaLabel}
+      aria-activedescendant={activeDescendant}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       className={`virtualized-list${className ? ` ${className}` : ''}`}
@@ -128,7 +151,11 @@ function VirtualizedListInner<TItem>(
         flexDirection: 'column',
       }}
     >
-      <Virtuoso<TItem> data={items} itemContent={renderRow} style={{ flex: 1 }} />
+      {items.length === 0 && emptySlot !== undefined ? (
+        emptySlot
+      ) : (
+        <Virtuoso<TItem> data={items} itemContent={renderRow} style={{ flex: 1 }} />
+      )}
     </div>
   );
 }

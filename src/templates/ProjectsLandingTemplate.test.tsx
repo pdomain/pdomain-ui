@@ -229,6 +229,101 @@ describe('ProjectsLandingTemplate — empty state', () => {
   });
 });
 
+// ─── selectedId change resets tab (WS5) ─────────────────────────────────────
+
+describe('ProjectsLandingTemplate — selectedId tab reset (WS5)', () => {
+  it('resets detail tab to defaultTab when selectedId changes', () => {
+    const onSelect = vi.fn();
+    const { rerender } = render(
+      <ProjectsLandingTemplate
+        state="populated"
+        projects={PROJECTS}
+        selectedId="austen-emma-vol2"
+        onSelect={onSelect}
+        defaultTab="activity"
+      />,
+    );
+    // Switch to manage tab
+    const manageTab = screen
+      .getByTestId('projects-tab-strip')
+      .querySelector('[data-tab="manage"]') as HTMLElement;
+    fireEvent.click(manageTab);
+    expect(manageTab.getAttribute('aria-selected')).toBe('true');
+
+    // Now change selectedId — tab must reset to defaultTab ('activity')
+    rerender(
+      <ProjectsLandingTemplate
+        state="populated"
+        projects={PROJECTS}
+        selectedId="twain-puddnhead"
+        onSelect={onSelect}
+        defaultTab="activity"
+      />,
+    );
+    const activityTab = screen
+      .getByTestId('projects-tab-strip')
+      .querySelector('[data-tab="activity"]') as HTMLElement;
+    expect(activityTab.getAttribute('aria-selected')).toBe('true');
+  });
+});
+
+// ─── button callbacks (WS5) ──────────────────────────────────────────────────
+
+describe('ProjectsLandingTemplate — button callbacks (WS5)', () => {
+  it('calls onOpenProject when Open project button is clicked', () => {
+    const onOpenProject = vi.fn();
+    const onSelect = vi.fn();
+    render(
+      <ProjectsLandingTemplate
+        state="populated"
+        projects={PROJECTS}
+        selectedId="austen-emma-vol2"
+        onSelect={onSelect}
+        onOpenProject={onOpenProject}
+      />,
+    );
+    fireEvent.click(screen.getByTestId('projects-open-btn'));
+    expect(onOpenProject).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onPasteUrl when Paste source URL button is clicked (empty state)', () => {
+    const onPasteUrl = vi.fn();
+    render(<ProjectsLandingTemplate state="empty" onPasteUrl={onPasteUrl} />);
+    fireEvent.click(screen.getByRole('button', { name: /paste source url/i }));
+    expect(onPasteUrl).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onImportArchive when Import archive button is clicked (empty state)', () => {
+    const onImportArchive = vi.fn();
+    render(<ProjectsLandingTemplate state="empty" onImportArchive={onImportArchive} />);
+    fireEvent.click(screen.getByRole('button', { name: /import.*archive/i }));
+    expect(onImportArchive).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onOpenStyleGuide when style guide button is clicked (empty state)', () => {
+    const onOpenStyleGuide = vi.fn();
+    render(<ProjectsLandingTemplate state="empty" onOpenStyleGuide={onOpenStyleGuide} />);
+    fireEvent.click(screen.getByRole('button', { name: /style guide/i }));
+    expect(onOpenStyleGuide).toHaveBeenCalledTimes(1);
+  });
+});
+
+// ─── populated with no matching selectedId (WS5 empty state) ─────────────────
+
+describe('ProjectsLandingTemplate — no-selection empty state (WS5)', () => {
+  it('shows empty-state prompt when selectedId does not match any project', () => {
+    render(
+      <ProjectsLandingTemplate
+        state="populated"
+        projects={PROJECTS}
+        selectedId={null}
+        onSelect={vi.fn()}
+      />,
+    );
+    expect(screen.getByTestId('projects-no-selection')).toBeTruthy();
+  });
+});
+
 // ─── tab switching ────────────────────────────────────────────────────────────
 
 describe('ProjectsLandingTemplate — tab switching', () => {

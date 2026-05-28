@@ -180,40 +180,42 @@ export const StageStrip = React.forwardRef<HTMLDivElement, StageStripProps>(func
 
           return (
             <React.Fragment key={s.id}>
-              {isCur ? (
-                /* Expanded current-stage dot */
-                <button
-                  type="button"
-                  title={s.id}
-                  className={cn(
-                    'stage-strip__dot-cur',
-                    running ? 'stage-strip__dot-cur--running' : 'stage-strip__dot-cur--done',
-                  )}
-                  onClick={() => onStageClick?.(s.id)}
-                  aria-current="step"
-                  aria-label={`Current: ${s.id}`}
-                >
-                  <span className="stage-strip__dot-pip" aria-hidden="true" />
-                  <span className="stage-strip__dot-label mono">{s.short}</span>
-                </button>
-              ) : (
-                /* Collapsed non-current dot */
-                <button
-                  type="button"
-                  title={`${i + 1}. ${s.id}`}
-                  className="stage-strip__dot-item"
-                  onClick={() => onStageClick?.(s.id)}
-                  aria-label={`${isDone ? 'Done' : 'Pending'}: ${s.id}`}
-                >
-                  <span
+              <div role="listitem" className="stage-strip__track-item">
+                {isCur ? (
+                  /* Expanded current-stage dot */
+                  <button
+                    type="button"
+                    title={s.id}
                     className={cn(
-                      'stage-strip__dot-pip',
-                      isDone ? 'stage-strip__dot-pip--done' : 'stage-strip__dot-pip--pending',
+                      'stage-strip__dot-cur',
+                      running ? 'stage-strip__dot-cur--running' : 'stage-strip__dot-cur--done',
                     )}
-                    aria-hidden="true"
-                  />
-                </button>
-              )}
+                    onClick={() => onStageClick?.(s.id)}
+                    aria-current="step"
+                    aria-label={`Current: ${s.id}`}
+                  >
+                    <span className="stage-strip__dot-pip" aria-hidden="true" />
+                    <span className="stage-strip__dot-label mono">{s.short}</span>
+                  </button>
+                ) : (
+                  /* Collapsed non-current dot */
+                  <button
+                    type="button"
+                    title={`${i + 1}. ${s.id}`}
+                    className="stage-strip__dot-item"
+                    onClick={() => onStageClick?.(s.id)}
+                    aria-label={`${isDone ? 'Done' : 'Pending'}: ${s.id}`}
+                  >
+                    <span
+                      className={cn(
+                        'stage-strip__dot-pip',
+                        isDone ? 'stage-strip__dot-pip--done' : 'stage-strip__dot-pip--pending',
+                      )}
+                      aria-hidden="true"
+                    />
+                  </button>
+                )}
+              </div>
               {i < stages.length - 1 ? (
                 <span className="stage-strip__connector" aria-hidden="true" />
               ) : null}
