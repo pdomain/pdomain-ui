@@ -68,6 +68,12 @@ const VIEW_OPTIONS = [
  *     onWordEdit={(id) => openWordEditor(id)}
  *   />
  */
+// VIEW_OPTION values are a closed set matching OcrViewMode; narrow explicitly.
+const VIEW_MODE_VALUES = new Set<OcrViewMode>(['cards', 'rows']);
+function isOcrViewMode(v: string): v is OcrViewMode {
+  return VIEW_MODE_VALUES.has(v as OcrViewMode);
+}
+
 export const OcrTextPanel = React.forwardRef<HTMLElement, OcrTextPanelProps>(function OcrTextPanel(
   {
     lines,
@@ -116,7 +122,7 @@ export const OcrTextPanel = React.forwardRef<HTMLElement, OcrTextPanelProps>(fun
               options={VIEW_OPTIONS}
               value={viewMode}
               onChange={(v) => {
-                onViewModeChange(v as OcrViewMode);
+                if (isOcrViewMode(v)) onViewModeChange(v);
               }}
               size="sm"
             />

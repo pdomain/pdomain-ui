@@ -26,7 +26,7 @@ export function PaperRender({ children }: PaperRenderProps) {
       style={{
         flex: 1,
         position: 'relative',
-        padding: 18,
+        padding: 'var(--space-4-5, 18px)',
         display: 'flex',
         flexDirection: 'column',
       }}

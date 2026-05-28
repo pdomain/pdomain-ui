@@ -88,7 +88,8 @@ export function TreeRow({
         }
       }}
     >
-      {/* Expand/collapse toggle */}
+      {/* Expand/collapse toggle — always tabIndex=-1; row itself is the focus stop.
+          Arrow keys on the row dispatch toggle via keydown handler. */}
       <button
         type="button"
         className="tree-row__toggle"
@@ -97,7 +98,7 @@ export function TreeRow({
           if (hasChildren) onToggle();
         }}
         aria-hidden={!hasChildren}
-        tabIndex={hasChildren ? 0 : -1}
+        tabIndex={-1}
         disabled={!hasChildren}
       >
         {hasChildren ? (

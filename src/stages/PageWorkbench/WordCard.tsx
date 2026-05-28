@@ -32,6 +32,7 @@ export function WordCard({ word, onClick }: WordCardProps): React.ReactElement {
       className="word-card"
       role={onClick != null ? 'button' : undefined}
       tabIndex={onClick != null ? 0 : undefined}
+      aria-label={onClick != null ? `Edit word: ${word.text}` : undefined}
       onClick={onClick}
       onKeyDown={onClick != null ? handleKeyDown : undefined}
       style={{
@@ -67,7 +68,7 @@ export function WordCard({ word, onClick }: WordCardProps): React.ReactElement {
           fontSize: 13,
           color: 'var(--ink-1)',
           textAlign: 'center',
-          fontFamily: 'Georgia, serif',
+          fontFamily: 'var(--book-font, Georgia, serif)',
           minHeight: 24,
           display: 'grid',
           placeItems: 'center',

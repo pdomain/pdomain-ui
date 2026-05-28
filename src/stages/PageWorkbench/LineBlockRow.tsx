@@ -86,7 +86,7 @@ export function LineBlockRow({ line, onWordEdit }: LineBlockRowProps): React.Rea
             padding: '8px 12px',
             fontSize: 13,
             color: 'var(--ink-2)',
-            fontFamily: 'Georgia, serif',
+            fontFamily: 'var(--book-font, Georgia, serif)',
           }}
         >
           {line.text}

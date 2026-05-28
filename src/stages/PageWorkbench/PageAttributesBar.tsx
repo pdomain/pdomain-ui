@@ -49,6 +49,8 @@ export function PageAttributesBar({
 }: PageAttributesBarProps): React.ReactElement {
   const [collapsed, setCollapsed] = React.useState(defaultCollapsed);
   const [openChipId, setOpenChipId] = React.useState<string | null>(null);
+  // Unique id for aria-controls wiring between the toggle button and chip list.
+  const chipListId = React.useId();
 
   const handleCommit = React.useCallback(
     (id: string, nextValue: string) => {
@@ -71,6 +73,7 @@ export function PageAttributesBar({
       <button
         className="page-attributes-bar__toggle"
         aria-expanded={!collapsed}
+        aria-controls={chipListId}
         aria-label={collapsed ? 'Expand attributes' : 'Collapse attributes'}
         data-testid="page-attributes-bar-toggle"
         onClick={() => setCollapsed((c) => !c)}
@@ -83,7 +86,7 @@ export function PageAttributesBar({
 
       {/* Expanded chip strip */}
       {!collapsed && attrs.length > 0 && (
-        <ul className="page-attributes-bar__chips">
+        <ul id={chipListId} className="page-attributes-bar__chips">
           {attrs.map((attr) => {
             const chipTestId = `page-attr-chip-${attr.id}`;
             const isOpen = openChipId === attr.id;

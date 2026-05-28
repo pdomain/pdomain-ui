@@ -18,7 +18,7 @@
  * independently exported for consumers that need custom shells.
  */
 
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { PageImageCanvas } from '../../canvas/PageImageCanvas.js';
 import type { CanvasWord } from '../../canvas/types.js';
@@ -101,6 +101,22 @@ export function ArtifactViewer({
 }: ArtifactViewerProps) {
   const page = { width: pageWidth, height: pageHeight };
 
+  // Measure the rendered CSS width for the SplitHandle sidecar.
+  // The stage is scaled by CSS so natural pageWidth differs from rendered width.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [measuredWidth, setMeasuredWidth] = useState<number>(pageWidth);
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) setMeasuredWidth(entry.contentRect.width);
+    });
+    observer.observe(containerRef.current);
+    // Seed on mount
+    setMeasuredWidth(containerRef.current.getBoundingClientRect().width);
+    return () => observer.disconnect();
+  }, []);
+
   // WordBboxOverlay uses the `selection` slot so clicks are routable.
   // We need selectionLayerListening=true when in 'words' mode.
   const selectionLayerListening = overlayMode === 'words';
@@ -152,9 +168,11 @@ export function ArtifactViewer({
   return (
     <ArtifactPlate {...(className !== undefined ? { className } : {})}>
       <PaperRender>
+        {/* Measurement wrapper — used to pass rendered CSS width to SplitHandle */}
+        <div ref={containerRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
         {/* DOM sidecar for split handle role="separator" */}
         {overlayMode === 'split' && splitProposal !== undefined && (
-          <SplitHandle splitX={splitProposal.splitX} containerWidth={pageWidth} />
+          <SplitHandle splitX={splitProposal.splitX} containerWidth={measuredWidth} />
         )}
         <PageImageCanvas
           src={imageSrc}

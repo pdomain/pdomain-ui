@@ -5,8 +5,11 @@ import { Icon } from '../../icons/Icon.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-/** The four PageWorkbench overlay edit modes surfaced by EditModeSelector. */
-export type EditMode = 'view' | 'split' | 'illust' | 'rotate';
+/**
+ * The PageWorkbench overlay edit modes surfaced by EditModeSelector.
+ * Matches `OverlayMode` in ArtifactViewer (including 'words' for word-bbox overlay).
+ */
+export type EditMode = 'view' | 'split' | 'illust' | 'rotate' | 'words';
 
 export interface EditModeSelectorProps {
   /** Currently active mode (controlled). */
