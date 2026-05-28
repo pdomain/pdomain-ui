@@ -51,12 +51,8 @@ function PageStack(): React.ReactElement {
   return (
     <div
       aria-hidden="true"
-      style={{
-        position: 'relative',
-        width: 140,
-        height: 100,
-        flexShrink: 0,
-      }}
+      className="projects-empty__stack"
+      style={{ width: 140, height: 100, flexShrink: 0 }}
     >
       {([0, 1, 2] as const).map((i) => (
         <div
@@ -70,7 +66,7 @@ function PageStack(): React.ReactElement {
             borderRadius: 4,
             background: 'var(--bg-surface)',
             border: '1px solid var(--border-2)',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+            boxShadow: 'var(--shadow-sm)',
             opacity: 1 - i * 0.18,
             transform: `rotate(${(i - 1) * 4}deg)`,
           }}
@@ -139,7 +135,7 @@ export function ProjectsEmpty({
             style={{
               marginTop: 8,
               marginBottom: 0,
-              fontSize: '0.84375rem',
+              fontSize: 'var(--text-sm)',
               color: 'var(--ink-3)',
               lineHeight: 1.55,
               maxWidth: 440,
@@ -175,3 +171,5 @@ export function ProjectsEmpty({
     </div>
   );
 }
+
+ProjectsEmpty.displayName = 'ProjectsEmpty';

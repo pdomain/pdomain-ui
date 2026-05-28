@@ -35,7 +35,12 @@ import {
 export interface SourcePageWorkbenchProps {
   /** Page id + pageNumber + thumbnailUrl + status + role. */
   page: SourcePage;
-  /** Original (before-processing) page image URL. */
+  /**
+   * Original (before-processing) page image URL.
+   * Kept in the API for future split-view; currently unused in the single-image
+   * ArtifactViewer. Pass `''` or omit when unavailable — will be wired when
+   * 2-image plumbing is added in a follow-on.
+   */
   beforeImageUrl: string;
   /** Processed (after) page image URL. */
   afterImageUrl: string;
@@ -47,6 +52,8 @@ export interface SourcePageWorkbenchProps {
   /** Tone hint summary (e.g. "Mostly text", "Heavy art"); display-only. */
   toneHint?: string;
   onRoleChange?: (role: SourcePageRole) => void;
+  /** Called when the user changes the rotation segment. Value is 0/90/180/270. */
+  onRotationChange?: (deg: number) => void;
   onApply?: () => void;
   onNavigate?: (dir: 'prev' | 'next') => void;
   /** Disable Prev when at first page. */
@@ -102,6 +109,7 @@ export const SourcePageWorkbench = React.forwardRef<HTMLDivElement, SourcePageWo
       rotationDeg,
       toneHint,
       onRoleChange,
+      onRotationChange,
       onApply,
       onNavigate,
       hasPrev = true,
@@ -120,14 +128,9 @@ export const SourcePageWorkbench = React.forwardRef<HTMLDivElement, SourcePageWo
             <span className="spw__page-number" data-testid={`${testId}-page-number`}>
               p.{page.pageNumber}
             </span>
-            {rotationDeg !== undefined && rotationDeg !== 0 && (
+            {rotationDeg !== undefined && (
               <span className="spw__rotation" data-testid={`${testId}-rotation`}>
                 {rotationDeg}°
-              </span>
-            )}
-            {rotationDeg !== undefined && rotationDeg === 0 && (
-              <span className="spw__rotation" data-testid={`${testId}-rotation`}>
-                0°
               </span>
             )}
             {toneHint !== undefined && (
@@ -181,7 +184,24 @@ export const SourcePageWorkbench = React.forwardRef<HTMLDivElement, SourcePageWo
             <div className="spw__field">
               <span className="spw__field-label">Rotation</span>
               <div data-testid={`${testId}-rotation-segment`}>
-                <Segmented options={ROTATION_OPTIONS} value={rotationValue} size="sm" full />
+                <Segmented
+                  options={ROTATION_OPTIONS}
+                  value={rotationValue}
+                  onChange={(v) => onRotationChange?.(Number(v))}
+                  size="sm"
+                  full
+                />
+              </div>
+              {/* Hidden per-rotation testid anchors for Playwright drivers */}
+              <div aria-hidden="true" style={{ display: 'none' }}>
+                {ROTATION_OPTIONS.map((opt) => (
+                  <span
+                    key={opt.value}
+                    data-testid={`${testId}-rotation-${opt.value}`}
+                    data-rotation={opt.value}
+                    data-active={rotationValue === opt.value ? 'true' : 'false'}
+                  />
+                ))}
               </div>
             </div>
 

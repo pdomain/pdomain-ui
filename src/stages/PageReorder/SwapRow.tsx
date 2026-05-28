@@ -86,14 +86,24 @@ export function SwapRow(props: SwapRowProps): React.ReactElement {
   if (state === 'pending') {
     const { onSkip, onInspect, onAccept } = props;
     actionZone = (
-      <div className="swap-row__actions">
-        <Button variant="ghost" size="sm" onClick={onSkip}>
+      <div className="swap-row__actions" aria-label={`Actions for swap ${swap.number}`}>
+        <Button variant="ghost" size="sm" aria-label={`Skip swap ${swap.number}`} onClick={onSkip}>
           Skip
         </Button>
-        <Button variant="ghost" size="sm" onClick={onInspect}>
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label={`Inspect swap ${swap.number}`}
+          onClick={onInspect}
+        >
           Inspect
         </Button>
-        <Button variant="primary" size="sm" onClick={onAccept}>
+        <Button
+          variant="primary"
+          size="sm"
+          aria-label={`Accept swap ${swap.number}`}
+          onClick={onAccept}
+        >
           Accept
         </Button>
       </div>

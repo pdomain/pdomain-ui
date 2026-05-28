@@ -13,7 +13,7 @@
   /* pending default */
   width: 6px;
   height: 6px;
-  background: var(--color-muted, var(--border-2));
+  background: var(--border-2);
   opacity: 1;
   transition:
     width 0.15s ease,
@@ -23,7 +23,7 @@
 
 /* done */
 .pipeline-mini__dot[data-status='done'] {
-  background: var(--color-success, var(--exact));
+  background: var(--exact);
   opacity: 0.7;
 }
 
@@ -31,12 +31,12 @@
 .pipeline-mini__dot[data-active='true'] {
   width: 8px;
   height: 8px;
-  background: var(--color-brand, var(--ocr));
+  background: var(--ocr);
   opacity: 1;
 }
 
 /* skipped */
 .pipeline-mini__dot[data-status='skipped'] {
-  background: var(--color-muted, var(--border-2));
+  background: var(--border-2);
   opacity: 0.4;
 }

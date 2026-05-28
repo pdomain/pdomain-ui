@@ -143,4 +143,33 @@ describe('ThumbCard', () => {
     expect(c1.querySelector('.thumb-card')?.getAttribute('data-density')).toBe('s');
     expect(c2.querySelector('.thumb-card')?.getAttribute('data-density')).toBe('l');
   });
+
+  // ── WS5: single select path — no double-fire ──────────────────────────────
+
+  it('body click fires onSelect exactly once (no double-fire with checkbox)', () => {
+    const onSelect = vi.fn();
+    const { container } = render(
+      <ThumbCard
+        page={makePage({ id: 'p-double' })}
+        density="m"
+        selected={false}
+        onSelect={onSelect}
+      />,
+    );
+    const bodyBtn = container.querySelector('.thumb-card__body') as HTMLButtonElement;
+    fireEvent.click(bodyBtn);
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onSelect).toHaveBeenCalledWith('p-double');
+  });
+
+  it('density="s" body click fires onSelect once (no checkbox path)', () => {
+    const onSelect = vi.fn();
+    const { container } = render(
+      <ThumbCard page={makePage({ id: 'p-small' })} density="s" onSelect={onSelect} />,
+    );
+    const bodyBtn = container.querySelector('.thumb-card__body') as HTMLButtonElement;
+    fireEvent.click(bodyBtn);
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onSelect).toHaveBeenCalledWith('p-small');
+  });
 });

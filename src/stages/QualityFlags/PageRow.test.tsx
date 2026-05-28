@@ -118,8 +118,16 @@ describe('PageRow', () => {
     });
   });
 
-  it('passes role=row on root', () => {
+  // ── WS6: valid ARIA — listitem not bare role=row ──────────────────────────
+
+  it('root has role=listitem (valid ARIA — not bare role=row)', () => {
     render(<PageRow page={makePage()} />);
-    expect(screen.getByRole('row')).toBeTruthy();
+    expect(screen.getByRole('listitem')).toBeTruthy();
+  });
+
+  it('root does NOT have role=row (invalid without grid/rowgroup)', () => {
+    const { container } = render(<PageRow page={makePage()} />);
+    const rowEl = container.querySelector('[role="row"]');
+    expect(rowEl).toBeNull();
   });
 });

@@ -91,24 +91,26 @@ describe('ModalC', () => {
 
   // ── Rail click → onStepChange ─────────────────────────────────────────────
 
-  it('clicking a rail item invokes onStepChange with the correct step', () => {
-    const { onStepChange } = renderOpen({ step: 'name' });
-    const sourceItem = screen.getByTestId(uploadModalCStepTestId('source'));
-    fireEvent.click(sourceItem);
+  it('clicking a past rail item invokes onStepChange with the correct step', () => {
+    // step="review" → 'name' and 'source' are past steps (navigable)
+    const { onStepChange } = renderOpen({ step: 'review' });
+    const nameItem = screen.getByTestId(uploadModalCStepTestId('name'));
+    fireEvent.click(nameItem);
     expect(onStepChange).toHaveBeenCalledOnce();
-    expect(onStepChange).toHaveBeenCalledWith('source');
+    expect(onStepChange).toHaveBeenCalledWith('name');
   });
 
-  it('clicking each rail item calls onStepChange with its step', () => {
-    const steps: Step[] = ['name', 'source', 'review', 'upload'];
-    for (const targetStep of steps) {
+  it('clicking past steps calls onStepChange; future steps do not', () => {
+    // When step="upload" all prior steps are past and navigable
+    const pastSteps: Step[] = ['name', 'source', 'review'];
+    for (const targetStep of pastSteps) {
       cleanup();
       const onStepChange = vi.fn<(arg: Step) => void>();
       render(
         <ModalC
           open={true}
           onOpenChange={vi.fn()}
-          step="name"
+          step="upload"
           onStepChange={onStepChange}
           stepContent={STEP_CONTENT}
         />,
@@ -187,5 +189,31 @@ describe('ModalC', () => {
   it('renders a visible dialog title', () => {
     renderOpen();
     expect(screen.getByRole('heading')).toBeInTheDocument();
+  });
+
+  // ── WS5: future-step guard (aria-disabled + suppress click) ───────────────
+
+  it('clicking a future rail step does NOT call onStepChange', () => {
+    // step="name" → 'review' and 'upload' are future steps
+    const { onStepChange } = renderOpen({ step: 'name' });
+    const reviewItem = screen.getByTestId(uploadModalCStepTestId('review'));
+    fireEvent.click(reviewItem);
+    expect(onStepChange).not.toHaveBeenCalled();
+  });
+
+  it('future rail steps have aria-disabled=true', () => {
+    renderOpen({ step: 'name' });
+    const reviewItem = screen.getByTestId(uploadModalCStepTestId('review'));
+    const uploadItem = screen.getByTestId(uploadModalCStepTestId('upload'));
+    expect(reviewItem).toHaveAttribute('aria-disabled', 'true');
+    expect(uploadItem).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('past and current rail steps do NOT have aria-disabled', () => {
+    renderOpen({ step: 'review' });
+    const nameItem = screen.getByTestId(uploadModalCStepTestId('name'));
+    const reviewItem = screen.getByTestId(uploadModalCStepTestId('review'));
+    expect(nameItem).not.toHaveAttribute('aria-disabled', 'true');
+    expect(reviewItem).not.toHaveAttribute('aria-disabled', 'true');
   });
 });

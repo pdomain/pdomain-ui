@@ -65,17 +65,33 @@ export const ThumbCard = React.forwardRef<HTMLElement, ThumbCardProps>(function 
   { page, density, selected, onSelect, onRoleChange, 'data-testid': testId = THUMB_CARD },
   ref,
 ) {
-  const handleBodyClick = () => {
+  const checkboxRef = React.useRef<HTMLInputElement>(null);
+
+  /**
+   * Single selection path — all selection events funnel here.
+   * When a checkbox is present (density !== 's'), the body button
+   * forwards its click to the checkbox so there is exactly one
+   * onSelect call per user interaction.
+   */
+  const handleSelect = () => {
     if (onSelect !== undefined) {
       onSelect(page.id);
     }
   };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    if (onSelect !== undefined) {
-      onSelect(page.id);
+  const handleBodyClick = () => {
+    if (density !== 's' && checkboxRef.current !== null) {
+      // Delegate to the checkbox — the checkbox onChange will call handleSelect.
+      checkboxRef.current.click();
+    } else {
+      handleSelect();
     }
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Prevent the change event from bubbling further; selection is handled here.
+    e.stopPropagation();
+    handleSelect();
   };
 
   const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -94,6 +110,7 @@ export const ThumbCard = React.forwardRef<HTMLElement, ThumbCardProps>(function 
     >
       {density !== 's' && (
         <input
+          ref={checkboxRef}
           type="checkbox"
           className="thumb-card__checkbox"
           checked={selected === true}
