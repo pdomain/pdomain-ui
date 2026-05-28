@@ -1881,3 +1881,48 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink-3);
   letter-spacing: 0.02em;
 }
+
+/* ── StageToolbar (3-slot horizontal toolbar for stage page headers) ────
+ *
+ * Renders as a flex row with three slot containers. Mirrors the
+ * structural pattern of .page-split-view__toolbar but with explicit
+ * left / center / right slots and sticky support via [data-sticky="true"].
+ */
+.stage-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-2);
+  border-radius: 6px 6px 0 0;
+}
+
+.stage-toolbar[data-sticky='true'] {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  box-shadow: 0 1px 0 var(--border-2);
+}
+
+.stage-toolbar__left,
+.stage-toolbar__center,
+.stage-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Auto margins on center consume all free space evenly, centering the
+ * center slot between left and right. The right slot's margin-left:auto
+ * only applies when center is absent — :has() lets us scope it so we
+ * don't double-claim free space alongside center's auto margins. */
+.stage-toolbar__center {
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.stage-toolbar:not(:has(.stage-toolbar__center)) .stage-toolbar__right {
+  margin-left: auto;
+}
