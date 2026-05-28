@@ -32,6 +32,9 @@ export { LauncherSlot } from './LauncherSlot.js';
 export { LauncherTile } from './LauncherTile.js';
 export type { LauncherTileProps } from './LauncherTile.js';
 
+// ─── ShortcutsHelpButton ──────────────────────────────────────────────────────
+export { ShortcutsHelpButton } from './ShortcutsHelpButton.js';
+
 // ─── SettingsSlot + SettingsModal + AppearancePanel ───────────────────────────
 export { SettingsSlot } from './SettingsSlot.js';
 export { SettingsModal } from './SettingsModal.js';

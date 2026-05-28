@@ -15,6 +15,11 @@ export const APP_SHELL_MAIN = 'app-shell-main' as const;
 export const APP_SHELL_RIGHT = 'app-shell-right' as const;
 export const APP_SHELL_FOOTER = 'app-shell-footer' as const;
 
+// ─── ShortcutsHelpButton ──────────────────────────────────────────────────────
+
+/** Ghost icon button in the header that opens the global shortcuts cheatsheet. */
+export const SHORTCUTS_HELP_BUTTON = 'shortcuts-help-button' as const;
+
 // ─── SettingsSlot / SettingsModal ─────────────────────────────────────────────
 
 export const SETTINGS_SLOT_TRIGGER = 'settings-slot-trigger' as const;

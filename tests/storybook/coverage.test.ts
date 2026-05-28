@@ -57,6 +57,11 @@ const WHITELIST: ReadonlySet<string> = new Set([
   // UIPrefsApplicator is a zero-render side-effect component exercised by AppShell
   'shell/UIPrefsApplicator.tsx',
 
+  // ShortcutsContext is a pure context provider — visual output (ShortcutsCheatsheet)
+  // is exercised by ShortcutsCheatsheet.stories.tsx; the provider itself has no
+  // renderable UI surface of its own beyond the dialog it delegates.
+  'hooks/ShortcutsContext.tsx',
+
   // AppearancePanel + SettingsModal are internal to AppShell settings surface
   // They are exercised by AppShell.stories.tsx and SettingsSlot.stories.tsx
   'shell/AppearancePanel.tsx',

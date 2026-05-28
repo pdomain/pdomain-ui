@@ -31,6 +31,14 @@ export interface ShortcutBinding {
 
 export interface UseShortcutsOptions {
   enabled?: boolean | undefined;
+  /**
+   * When false, this hook's bindings are NOT registered into a mounted
+   * `ShortcutsProvider` for display in the cheatsheet. They still fire
+   * normally via the window keydown listener.
+   *
+   * Default: true (register when a provider is present).
+   */
+  register?: boolean | undefined;
 }
 
 // ─── Modifier detection ──────────────────────────────────────────────────────
