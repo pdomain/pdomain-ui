@@ -19,6 +19,7 @@ import { memo } from 'react';
 import { Rect } from 'react-konva';
 import type { WordSlotProps } from '../types';
 import { bboxToRect } from '../types';
+import { resolveToken } from '../resolveToken.js';
 // WordSlotProps.word is CanvasWord (locally typed), not imported from generated types
 
 interface BBoxLayerProps extends WordSlotProps {
@@ -36,11 +37,16 @@ interface BBoxLayerProps extends WordSlotProps {
   dimmed?: boolean;
 }
 
+// Resolve design tokens once at module load (resolve-once-at-mount per OQ-1).
+// These provide Konva-compatible resolved color strings; Konva cannot evaluate var().
+const DEFAULT_WORD_FILL = resolveToken('--word', 'rgba(59,130,246,0.18)');
+const DEFAULT_WORD_STROKE = resolveToken('--word', 'rgba(29,78,216,0.65)');
+
 function BBoxLayerInner({
   word,
   isSelected,
-  fill = 'var(--layer-word-fill, rgba(59,130,246,0.18))',
-  stroke = 'var(--layer-word-stroke, rgba(29,78,216,0.65))',
+  fill = DEFAULT_WORD_FILL,
+  stroke = DEFAULT_WORD_STROKE,
   strokeWidth = 1,
   selectedStrokeWidth = 3,
   dimmedOpacity = 0.2,

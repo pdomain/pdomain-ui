@@ -69,12 +69,11 @@ const mockCoords = {
   pageHeight: 600,
 };
 
+// pan and hover removed from SlotRenderProps (audit WS5 — not yet implemented).
 const mockSlotProps: SlotRenderProps = {
   coords: mockCoords,
   selection: { ids: new Set() },
-  hover: null,
   zoom: 1,
-  pan: { x: 0, y: 0 },
 };
 
 function makeWordSlotProps(

@@ -43,10 +43,22 @@ export interface UseShortcutsOptions {
 
 // ─── Modifier detection ──────────────────────────────────────────────────────
 
-/** True when running on macOS. Evaluated once at module load. */
-const IS_MAC =
-  typeof navigator !== 'undefined' &&
-  (/mac/i.test(navigator.platform) || /mac/i.test(navigator.userAgent));
+/** True when running on macOS. Evaluated once at module load.
+ *  Prefers `navigator.userAgentData?.platform` (non-deprecated) with
+ *  `navigator.platform` as a fallback for browsers that don't yet support
+ *  the User-Agent Client Hints API (audit WS7).
+ */
+const IS_MAC = (() => {
+  if (typeof navigator === 'undefined') return false;
+  // navigator.userAgentData is available in modern Chromium-based browsers.
+  const uaDataPlatform = (navigator as Navigator & { userAgentData?: { platform?: string } })
+    .userAgentData?.platform;
+  if (uaDataPlatform !== undefined && uaDataPlatform !== '') {
+    return /mac/i.test(uaDataPlatform);
+  }
+  // Fallback: legacy navigator.platform (deprecated but widely supported).
+  return /mac/i.test(navigator.platform) || /mac/i.test(navigator.userAgent);
+})();
 
 // ─── Combo parser ────────────────────────────────────────────────────────────
 

@@ -22,6 +22,10 @@ import type { CanvasProps, CanvasWord, CoordContext, SelectionState, ViewportSta
 import { isValidBBox } from './types';
 import { isPageDimensionsValid } from './pageSizeGuard';
 import { makeRafThrottle } from './rafThrottle';
+import { resolveToken } from './resolveToken.js';
+
+// Resolve design tokens once at module load (resolve-once-at-mount per OQ-1).
+const DRAG_STROKE_COLOR = resolveToken('--accent', '#5d9fdf');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -126,6 +130,8 @@ export function PageImageCanvas<
   const effectiveScale = zoom === 0 ? fitScale : zoom;
 
   // ── Pan state ──────────────────────────────────────────────────────────────
+  // TODO(audit): pan is not yet implemented (always {0,0}). Removed from
+  // SlotRenderProps to avoid misleading slot authors (audit WS5).
   const [pan] = useState(EMPTY_PAN);
 
   // ── Selection state (uncontrolled + controlled) ────────────────────────────
@@ -165,17 +171,15 @@ export function PageImageCanvas<
   );
 
   // ── Slot render props (shared across all non-word slots) ───────────────────
-  const [hover] = useState<CanvasWord | null>(null);
-
+  // hover is not implemented (always null) — removed from SlotRenderProps
+  // to avoid misleading slot authors (audit WS5 / TODO: pan/hover).
   const slotProps = useMemo(
     () => ({
       coords,
       selection,
-      hover,
       zoom: effectiveScale,
-      pan,
     }),
-    [coords, selection, hover, effectiveScale, pan],
+    [coords, selection, effectiveScale],
   );
 
   // ── Context value ──────────────────────────────────────────────────────────
@@ -261,7 +265,7 @@ export function PageImageCanvas<
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'var(--color-text-muted, #888)',
+          color: 'var(--ink-3)',
           fontSize: '0.875rem',
           outline: 'none',
           userSelect: 'none',
@@ -278,7 +282,7 @@ export function PageImageCanvas<
       <div
         ref={wrapperRef}
         tabIndex={0}
-        role="img"
+        role="region"
         aria-label="Page image viewport"
         data-testid="image-viewport"
         data-width={page.width}
@@ -436,7 +440,7 @@ export function PageImageCanvas<
                   y={dragRect.y}
                   width={dragRect.width}
                   height={dragRect.height}
-                  stroke="var(--accent, #5d9fdf)"
+                  stroke={DRAG_STROKE_COLOR}
                   strokeWidth={2}
                   dash={[4, 2]}
                   fill="transparent"

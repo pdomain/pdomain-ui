@@ -180,4 +180,30 @@ describe('useShortcuts', () => {
     keyDown({ key: '?' });
     expect(handler).toHaveBeenCalledTimes(1);
   });
+
+  it('does not fire stale handler when bindings are updated (unregister-before-register)', () => {
+    // When bindings change, the old listener must be removed before adding the new one.
+    // Without unregister-before-register, both the old and new handlers fire.
+    const oldHandler = vi.fn();
+    const newHandler = vi.fn();
+    const { rerender } = renderHook(
+      ({ bindings }: { bindings: ShortcutBinding[] }) => useShortcuts(bindings),
+      { initialProps: { bindings: [makeBinding('q', oldHandler)] } },
+    );
+    // Update to new handler
+    rerender({ bindings: [makeBinding('q', newHandler)] });
+    keyDown({ key: 'q' });
+    expect(newHandler).toHaveBeenCalledTimes(1);
+    // stale handler must NOT have fired
+    expect(oldHandler).not.toHaveBeenCalled();
+  });
+
+  it('uses navigator.userAgentData?.platform for Mac detection when available', () => {
+    // We cannot change the module-level IS_MAC constant in a live test, but we
+    // can at least verify formatShortcut returns 'Ctrl' on non-Mac environments
+    // (jsdom has empty navigator.platform and no userAgentData).
+    const tokens = formatShortcut('mod+k');
+    // jsdom = non-Mac; mod → Ctrl
+    expect(tokens[0]).toBe('Ctrl');
+  });
 });

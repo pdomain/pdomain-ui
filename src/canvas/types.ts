@@ -164,13 +164,20 @@ export interface ViewportState {
 
 // ── Slot types ────────────────────────────────────────────────────────────────
 
-/** Props provided to every layer slot fill. */
+/**
+ * Props provided to every layer slot fill.
+ *
+ * Note: `pan` and `hover` are intentionally absent — neither is implemented
+ * in the current PageImageCanvas (pan is always {0,0} and hover is always null).
+ * Exposing unimplemented fields on the public API would silently mislead
+ * slot authors into depending on values that never change.
+ * TODO(audit): pan/hover not implemented — re-add when pan/zoom and word-hover
+ * state are wired in PageImageCanvas (audit WS5).
+ */
 export type SlotRenderProps = {
   coords: CoordContext;
   selection: SelectionState;
-  hover: CanvasWord | null;
   zoom: number;
-  pan: { x: number; y: number };
 };
 
 /** Props provided to the per-word overlay slot fill. */

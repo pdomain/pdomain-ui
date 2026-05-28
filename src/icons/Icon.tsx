@@ -140,6 +140,16 @@ export interface IconProps {
   color?: string;
   /** Additional props forwarded to the underlying lucide component. */
   strokeWidth?: number;
+  /**
+   * Accessible label for the icon.
+   *
+   * When provided, the icon is announced to screen readers with this label
+   * and `aria-hidden` is NOT set.
+   *
+   * When absent (default), the icon is decorative: `aria-hidden="true"` is
+   * applied so screen readers skip it entirely (audit WS6 / P2).
+   */
+  'aria-label'?: string;
 }
 
 /**
@@ -148,9 +158,12 @@ export interface IconProps {
  * Renders the lucide icon corresponding to the given design-system `name`.
  * All 40 names from the design-handoff Table 3 are supported.
  *
+ * Icons are decorative by default (`aria-hidden="true"`). Pass `aria-label`
+ * to make an icon meaningful to screen readers.
+ *
  * @example
  *   <Icon name="check" size={16} />
- *   <Icon name="alert" size={20} color="var(--mismatch)" />
+ *   <Icon name="alert" size={20} color="var(--mismatch)" aria-label="Warning" />
  */
 export function Icon({
   name,
@@ -158,7 +171,19 @@ export function Icon({
   className,
   color,
   strokeWidth,
+  'aria-label': ariaLabel,
 }: IconProps): React.ReactElement {
   const LucideIcon = ICON_MAP[name];
-  return <LucideIcon size={size} className={className} color={color} strokeWidth={strokeWidth} />;
+  const a11y = ariaLabel
+    ? ({ 'aria-label': ariaLabel } as const)
+    : ({ 'aria-hidden': true } as const);
+  return (
+    <LucideIcon
+      size={size}
+      className={className}
+      color={color}
+      strokeWidth={strokeWidth}
+      {...a11y}
+    />
+  );
 }
