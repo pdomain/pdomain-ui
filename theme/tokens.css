@@ -5,81 +5,117 @@
 
 :root {
   /* Surfaces — warm charcoal scale */
-  --bg-page:    #0c0c10;
+  --bg-page: #0c0c10;
   --bg-surface: #15151b;
-  --bg-raised:  #1d1d24;
-  --bg-sunk:    #08080c;
+  --bg-raised: #1d1d24;
+  --bg-sunk: #08080c;
 
   /* Borders — 3 step */
-  --border-1:   #222229;
-  --border-2:   #2f2f38;
-  --border-3:   #3f3f49;
+  --border-1: #222229;
+  --border-2: #2f2f38;
+  --border-3: #3f3f49;
 
   /* Text — 4 step */
-  --ink-1:      #f0f0f2;
-  --ink-2:      #b0b0b8;
-  --ink-3:      #7a7a85;
-  --ink-4:      #4e4e58;
+  --ink-1: #f0f0f2;
+  --ink-2: #b0b0b8;
+  --ink-3: #7a7a85;
+  --ink-4: #4e4e58;
 
   /* Accent — amber-on-charcoal */
-  --accent:     #d6925a;
+  --accent: #d6925a;
   --accent-ink: #1a0f08;
 
   /* Status — 5 semantic */
-  --exact:      #5fbf6a;   /* OCR == GT · done */
-  --fuzzy:      #e8a83a;   /* OCR ≈ GT · review */
-  --mismatch:   #dc6555;   /* OCR ≠ GT · errored */
-  --ocr:        #5d9fdf;   /* OCR-only · running · style */
-  --gt:         #a888d4;   /* GT-only · component */
+  --exact: #5fbf6a; /* OCR == GT · done */
+  --fuzzy: #e8a83a; /* OCR ≈ GT · review */
+  --mismatch: #dc6555; /* OCR ≠ GT · errored */
+  --ocr: #5d9fdf; /* OCR-only · running · style */
+  --gt: #a888d4; /* GT-only · component */
 
   /* Layers — 4 (canvas + UI chips only) */
-  --block:      #a89074;
-  --para:       #7fb56a;
-  --line:       #d088a8;
-  --word:       #6e9cdf;
+  --block: #a89074;
+  --para: #7fb56a;
+  --line: #d088a8;
+  --word: #6e9cdf;
 
   /* Type families */
-  --ui-font:    'Inter', system-ui, sans-serif;
-  --mono-font:  'JetBrains Mono', ui-monospace, monospace;
+  --ui-font: 'Inter', system-ui, sans-serif;
+  --mono-font: 'JetBrains Mono', ui-monospace, monospace;
+  --book-font: 'Georgia', serif;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-4-5: 18px;
+  --space-5: 16px;
+  --space-6: 20px;
+  --space-7: 24px;
+  --space-8: 32px;
+
+  /* Radius scale */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-pill: 999px;
+
+  /* Type size scale */
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-md: 13px;
+  --text-lg: 15px;
+
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
 
   /* Elevation — floating chrome only */
-  --shadow-floating: 0 3px 10px rgba(0,0,0,0.35);
+  --shadow-floating: 0 3px 10px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-dock: 0 2px 8px rgba(0, 0, 10, 0.4);
+  --shadow-overlay: 0 8px 24px rgba(0, 0, 10, 0.55);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.25);
 
   /* Overlay scrim — modal/dialog backdrop */
   --overlay-scrim: rgba(0, 0, 0, 0.55);
 }
 
-[data-theme="light"] {
-  --bg-page:    #f6f4ef;
+[data-theme='light'] {
+  --bg-page: #f6f4ef;
   --bg-surface: #ffffff;
-  --bg-raised:  #ecebe5;
-  --bg-sunk:    #f0eee7;
+  --bg-raised: #ecebe5;
+  --bg-sunk: #f0eee7;
 
-  --border-1:   #d8d4c8;
-  --border-2:   #c2bdaf;
-  --border-3:   #a39e8d;
+  --border-1: #d8d4c8;
+  --border-2: #c2bdaf;
+  --border-3: #a39e8d;
 
-  --ink-1:      #1a1810;
-  --ink-2:      #4a4538;
-  --ink-3:      #7c7665;
-  --ink-4:      #b0aa95;
+  --ink-1: #1a1810;
+  --ink-2: #4a4538;
+  --ink-3: #7c7665;
+  --ink-4: #b0aa95;
 
-  --accent:     #b85a2e;
+  --accent: #b85a2e;
   --accent-ink: #ffffff;
 
-  --exact:      #2d8c3a;
-  --fuzzy:      #b87b1f;
-  --mismatch:   #b13d32;
-  --ocr:        #2d6fb5;
-  --gt:         #6e4ea5;
+  --exact: #2d8c3a;
+  --fuzzy: #b87b1f;
+  --mismatch: #b13d32;
+  --ocr: #2d6fb5;
+  --gt: #6e4ea5;
 
-  --block:      #7a5e3a;
-  --para:       #4d8a3a;
-  --line:       #a8527a;
-  --word:       #3d6bb8;
+  --block: #7a5e3a;
+  --para: #4d8a3a;
+  --line: #a8527a;
+  --word: #3d6bb8;
 
-  --shadow-floating: 0 3px 10px rgba(60,40,20,0.1);
+  --shadow-floating: 0 3px 10px rgba(60, 40, 20, 0.1);
+  --shadow-sm: 0 1px 3px rgba(60, 40, 20, 0.08);
+  --shadow-dock: 0 2px 8px rgba(60, 40, 20, 0.14);
+  --shadow-overlay: 0 8px 24px rgba(60, 40, 20, 0.2);
+  --shadow-card: 0 2px 6px rgba(60, 40, 20, 0.1);
 
   /* Overlay scrim — modal/dialog backdrop */
-  --overlay-scrim: rgba(0, 0, 0, 0.40);
+  --overlay-scrim: rgba(0, 0, 0, 0.4);
 }

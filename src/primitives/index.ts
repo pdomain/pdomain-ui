@@ -79,7 +79,7 @@ export {
   AlertDialogCancel,
 } from './AlertDialog.js';
 
-export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent } from './Popover.js';
+export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent, PopoverClose } from './Popover.js';
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './Tooltip.js';
 
