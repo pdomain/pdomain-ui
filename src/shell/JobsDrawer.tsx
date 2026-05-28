@@ -96,7 +96,7 @@ function ToastCard({ toast, onOpen, onDismiss }: ToastCardProps) {
         background: 'var(--bg-surface)',
         border: '1px solid color-mix(in oklab, var(--exact) 40%, var(--border-1))',
         borderRadius: 8,
-        boxShadow: '0 6px 18px rgba(15,23,42,.14)',
+        boxShadow: 'var(--shadow-card)',
         display: 'flex',
         alignItems: 'center',
         gap: 10,
@@ -177,6 +177,8 @@ export function JobsDrawer({
   onToastDismiss,
   className,
 }: JobsDrawerProps) {
+  const [hoveredId, setHoveredId] = React.useState<string | undefined>(undefined);
+
   // Dismissed + nothing to show → render null
   if (mode === 'dismissed' && activeJobs.length === 0 && toasts.length === 0) {
     return null;
@@ -184,7 +186,15 @@ export function JobsDrawer({
 
   const running = activeJobs.filter((j) => j.status !== 'done' && j.status !== 'succeeded');
   const done = activeJobs.filter((j) => j.status === 'done' || j.status === 'succeeded');
-  const summary = buildSummary(running, done);
+
+  // Multi-running: show aggregate "N running" label; single running shows normal summary.
+  const summary =
+    running.length > 1
+      ? `${running.length} running · ${done.length > 0 ? `${done.length} done` : ''}`.replace(
+          /\s·\s$/,
+          '',
+        )
+      : buildSummary(running, done);
 
   const showDrawerBody = mode !== 'dismissed' && activeJobs.length > 0;
   const singleRunning: Job | undefined = running.length === 1 ? running[0] : undefined;
@@ -220,7 +230,7 @@ export function JobsDrawer({
             background: 'var(--bg-surface)',
             border: '1px solid var(--border-1)',
             borderRadius: 10,
-            boxShadow: '0 14px 36px rgba(15,23,42,.20), 0 2px 6px rgba(15,23,42,.08)',
+            boxShadow: 'var(--shadow-overlay)',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
@@ -229,13 +239,20 @@ export function JobsDrawer({
           {/* Resize-handle hint — expanded mode only */}
           {mode === 'expanded' ? (
             <div
+              role="slider"
               aria-label="Resize drawer"
+              aria-orientation="horizontal"
+              aria-valuemin={100}
+              aria-valuemax={600}
+              aria-valuenow={320}
+              tabIndex={0}
               style={{
                 position: 'relative',
                 height: 6,
                 cursor: 'ns-resize',
                 background: 'var(--bg-page)',
                 borderBottom: '1px solid var(--border-1)',
+                outline: 'none',
               }}
             >
               <div
@@ -426,20 +443,30 @@ export function JobsDrawer({
               }}
             >
               {activeJobs.map((job) => (
-                <JobRow
+                <div
                   key={job.id}
-                  job={job}
-                  {...(onJobOpen !== undefined ? { onOpen: onJobOpen } : {})}
-                  {...(onJobPauseResume !== undefined ? { onPauseResume: onJobPauseResume } : {})}
-                  {...(onJobCancel !== undefined ? { onCancel: onJobCancel } : {})}
-                />
+                  onMouseEnter={() => {
+                    setHoveredId(job.id);
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredId(undefined);
+                  }}
+                >
+                  <JobRow
+                    job={job}
+                    hovered={hoveredId === job.id}
+                    {...(onJobOpen !== undefined ? { onOpen: onJobOpen } : {})}
+                    {...(onJobPauseResume !== undefined ? { onPauseResume: onJobPauseResume } : {})}
+                    {...(onJobCancel !== undefined ? { onCancel: onJobCancel } : {})}
+                  />
+                </div>
               ))}
               <button
                 type="button"
+                data-testid="jobs-drawer-view-all"
                 onClick={onViewAll}
                 style={{
                   padding: '8px 12px',
-                  borderTop: '1px solid var(--border-1)',
                   background: 'var(--bg-page)',
                   border: 0,
                   borderTopWidth: 1,

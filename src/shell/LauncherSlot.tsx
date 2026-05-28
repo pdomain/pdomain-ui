@@ -18,7 +18,7 @@ import { LauncherTile } from './LauncherTile.js';
 export function LauncherSlot() {
   const ctx = useSuiteSiblingsContext();
 
-  if (!ctx || ctx.siblings.length === 0) {
+  if (!ctx || ctx.error !== null || ctx.siblings.length === 0) {
     return null;
   }
 

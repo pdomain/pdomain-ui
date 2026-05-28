@@ -21,10 +21,11 @@ function wrapper(
   siblings: InstalledApp[],
   launch: (id: string) => Promise<LaunchResult> = vi.fn(),
   loading = false,
+  error: unknown = null,
 ) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
     return (
-      <SuiteSiblingsContext.Provider value={{ siblings, launch, loading }}>
+      <SuiteSiblingsContext.Provider value={{ siblings, launch, loading, error }}>
         {children}
       </SuiteSiblingsContext.Provider>
     );

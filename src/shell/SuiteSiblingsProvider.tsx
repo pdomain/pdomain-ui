@@ -28,10 +28,12 @@ export function SuiteSiblingsProvider({ value, children }: SuiteSiblingsProvider
 
   const [siblings, setSiblings] = React.useState<InstalledApp[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<unknown>(null);
 
   React.useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setError(null);
     fetchInstalled()
       .then((apps) => {
         if (!cancelled) {
@@ -39,8 +41,11 @@ export function SuiteSiblingsProvider({ value, children }: SuiteSiblingsProvider
           setLoading(false);
         }
       })
-      .catch(() => {
-        if (!cancelled) setLoading(false);
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err);
+          setLoading(false);
+        }
       });
     return () => {
       cancelled = true;
@@ -54,7 +59,7 @@ export function SuiteSiblingsProvider({ value, children }: SuiteSiblingsProvider
   );
 
   return (
-    <SuiteSiblingsContext.Provider value={{ siblings, launch, loading }}>
+    <SuiteSiblingsContext.Provider value={{ siblings, launch, loading, error }}>
       {children}
     </SuiteSiblingsContext.Provider>
   );

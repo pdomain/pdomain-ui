@@ -36,7 +36,7 @@ export function SettingsSlot() {
         transition: 'background .12s, color .12s',
       }}
     >
-      <Settings size={15} />
+      <Settings size={15} aria-hidden />
     </button>
   );
 }

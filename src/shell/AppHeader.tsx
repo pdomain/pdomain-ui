@@ -20,7 +20,7 @@ import type { ActiveJob } from './JobsPill.js';
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
 export interface AppHeaderProps {
-  /** Application name displayed in the left glyph area. Default: 'pgdp-prep'. */
+  /** Application name displayed in the left glyph area. Required — pass your app name. */
   appName?: string;
   /** Single uppercase letter used in the app icon square. Defaults to first char of appName. */
   appInitial?: string;
@@ -51,13 +51,13 @@ export interface AppHeaderProps {
 // ─── AppHeader ────────────────────────────────────────────────────────────────
 
 export function AppHeader({
-  appName = 'pgdp-prep',
+  appName = '',
   appInitial,
-  searchPlaceholder = 'Search projects, pages, settings…',
+  searchPlaceholder = 'Search…',
   activeJobs = [],
   jobsOpen = false,
-  username = 'jsmith',
-  initials = 'JS',
+  username = '',
+  initials = '',
   unread = 0,
   onSearchClick,
   onBellClick,
@@ -65,7 +65,7 @@ export function AppHeader({
   className,
   actions,
 }: AppHeaderProps) {
-  const letter = appInitial ?? appName.charAt(0).toLowerCase();
+  const letter = appInitial ?? (appName.length > 0 ? appName.charAt(0).toLowerCase() : '');
 
   return (
     <header

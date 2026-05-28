@@ -45,7 +45,11 @@ const DEFAULT_PREFS: UIPrefs = {
  * @param url - Absolute or relative URL for the prefs endpoint.
  *              Defaults to `'/api/ui-prefs'`.
  */
-export function createApiUIPrefsConfig(url = '/api/ui-prefs'): UIPrefsConfig {
+export function createApiUIPrefsConfig(
+  url = '/api/ui-prefs',
+  opts: { onPersistError?: (error: unknown) => void } = {},
+): UIPrefsConfig {
+  const { onPersistError } = opts;
   return {
     async load(): Promise<UIPrefs> {
       try {
@@ -58,27 +62,31 @@ export function createApiUIPrefsConfig(url = '/api/ui-prefs'): UIPrefsConfig {
       }
     },
 
+    ...(onPersistError !== undefined ? { onPersistError } : {}),
+
     async persistCommon(prefs: Omit<UIPrefs, 'app'>): Promise<void> {
       try {
-        await fetch(url, {
+        const res = await fetch(url, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(prefs),
         });
-      } catch {
-        // Best-effort — silently swallow network errors.
+        if (!res.ok) throw new Error(`persist failed: ${res.status}`);
+      } catch (err: unknown) {
+        if (onPersistError) onPersistError(err);
       }
     },
 
     async persistApp(appPrefs: Record<string, unknown>): Promise<void> {
       try {
-        await fetch(url, {
+        const res = await fetch(url, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ app: appPrefs }),
         });
-      } catch {
-        // Best-effort — silently swallow network errors.
+        if (!res.ok) throw new Error(`persist failed: ${res.status}`);
+      } catch (err: unknown) {
+        if (onPersistError) onPersistError(err);
       }
     },
   };

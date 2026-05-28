@@ -38,6 +38,7 @@ export interface SettingsModalProps {
 
 export function SettingsModal({ settingsPanels }: SettingsModalProps) {
   const { open, activePanel, closeModal, openPanel } = useSettingsModal();
+  const tablistId = React.useId();
 
   // Build the full panel list: Appearance is always first.
   const panels: PanelEntry[] = [
@@ -94,41 +95,70 @@ export function SettingsModal({ settingsPanels }: SettingsModalProps) {
             overflowY: 'auto',
           }}
         >
-          {panels.map((panel) => {
-            const isActive = panel.id === resolvedActive;
-            return (
-              <button
-                key={panel.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                data-testid={`settings-modal-tab-${panel.id}`}
-                onClick={() => {
-                  openPanel(panel.id);
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  border: 'none',
-                  background: isActive ? 'var(--bg-raised)' : 'transparent',
-                  color: isActive ? 'var(--ink-1)' : 'var(--ink-3)',
-                  fontFamily: 'var(--ui-font)',
-                  fontSize: '12px',
-                  fontWeight: isActive ? 600 : 400,
-                  cursor: 'pointer',
-                  borderRadius: '6px',
-                  margin: '1px 6px',
-                  textAlign: 'left',
-                  transition: 'background .1s, color .1s',
-                }}
-              >
-                {panel.icon}
-                <span>{panel.label}</span>
-              </button>
-            );
-          })}
+          <div
+            role="tablist"
+            aria-label="Settings panels"
+            aria-orientation="vertical"
+            id={tablistId}
+            style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            {panels.map((panel, idx) => {
+              const isActive = panel.id === resolvedActive;
+              return (
+                <button
+                  key={panel.id}
+                  type="button"
+                  role="tab"
+                  id={`${tablistId}-tab-${panel.id}`}
+                  aria-selected={isActive}
+                  aria-controls={`${tablistId}-panel-${panel.id}`}
+                  tabIndex={isActive ? 0 : -1}
+                  data-testid={`settings-modal-tab-${panel.id}`}
+                  onClick={() => {
+                    openPanel(panel.id);
+                  }}
+                  onKeyDown={(e) => {
+                    const last = panels.length - 1;
+                    let next = idx;
+                    if (e.key === 'ArrowDown') next = idx === last ? 0 : idx + 1;
+                    else if (e.key === 'ArrowUp') next = idx === 0 ? last : idx - 1;
+                    else if (e.key === 'Home') next = 0;
+                    else if (e.key === 'End') next = last;
+                    else return;
+                    e.preventDefault();
+                    const tabs = document.querySelectorAll<HTMLElement>(
+                      `[id^="${tablistId}-tab-"]`,
+                    );
+                    const target = tabs[next];
+                    if (target) {
+                      target.focus();
+                      openPanel(panels[next]?.id ?? panel.id);
+                    }
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 14px',
+                    border: 'none',
+                    background: isActive ? 'var(--bg-raised)' : 'transparent',
+                    color: isActive ? 'var(--ink-1)' : 'var(--ink-3)',
+                    fontFamily: 'var(--ui-font)',
+                    fontSize: '12px',
+                    fontWeight: isActive ? 600 : 400,
+                    cursor: 'pointer',
+                    borderRadius: '6px',
+                    margin: '1px 6px',
+                    textAlign: 'left',
+                    transition: 'background .1s, color .1s',
+                  }}
+                >
+                  {panel.icon}
+                  <span>{panel.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </nav>
 
         {/* ── Right content pane ────────────────────────────────────── */}
@@ -188,6 +218,9 @@ export function SettingsModal({ settingsPanels }: SettingsModalProps) {
 
           {/* Active panel content */}
           <div
+            role="tabpanel"
+            id={`${tablistId}-panel-${resolvedActive}`}
+            aria-labelledby={`${tablistId}-tab-${resolvedActive}`}
             data-testid={`settings-modal-panel-${resolvedActive}`}
             style={{
               flex: 1,

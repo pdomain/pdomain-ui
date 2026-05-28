@@ -31,6 +31,7 @@ export function Drawer({ open, children, className, width = '320px' }: DrawerPro
         flexDirection: 'column',
         height: '100%',
         width: open ? width : '0px',
+        minWidth: 0,
         overflow: 'hidden',
         background: 'var(--bg-surface)',
         borderRight: '1px solid var(--border-1)',

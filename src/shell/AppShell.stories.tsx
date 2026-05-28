@@ -39,7 +39,7 @@ const HeaderSlot = (
       padding: '0 16px',
       gap: '12px',
       background: 'var(--bg-raised)',
-      borderBottom: '1px solid var(--border)',
+      borderBottom: '1px solid var(--border-1)',
     }}
   >
     <span style={{ fontWeight: 600, color: 'var(--ink-1)' }}>pdomain-ui Demo App</span>
@@ -61,7 +61,7 @@ const RailSlot = (
       width: '64px',
       height: '100%',
       background: 'var(--bg-raised)',
-      borderRight: '1px solid var(--border)',
+      borderRight: '1px solid var(--border-1)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -86,8 +86,8 @@ const DrawerSlot = (
     style={{
       width: '240px',
       height: '100%',
-      background: 'var(--bg)',
-      borderRight: '1px solid var(--border)',
+      background: 'var(--bg-page)',
+      borderRight: '1px solid var(--border-1)',
       padding: '16px',
     }}
   >
@@ -131,8 +131,8 @@ const RightPanelSlot = (
     style={{
       width: '280px',
       height: '100%',
-      background: 'var(--bg)',
-      borderLeft: '1px solid var(--border)',
+      background: 'var(--bg-page)',
+      borderLeft: '1px solid var(--border-1)',
       padding: '16px',
     }}
   >
@@ -199,7 +199,7 @@ export const HostedMode: Story = {
               padding: '0 16px',
               gap: '12px',
               background: 'var(--bg-raised)',
-              borderBottom: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border-1)',
             }}
           >
             <span style={{ fontWeight: 600, color: 'var(--ink-1)' }}>

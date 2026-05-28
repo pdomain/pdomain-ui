@@ -20,7 +20,9 @@ function sibling(overrides?: Partial<InstalledApp>): InstalledApp {
 
 function wrapWithContext(launch: (id: string) => Promise<LaunchResult>, children: React.ReactNode) {
   return (
-    <SuiteSiblingsContext.Provider value={{ siblings: [sibling()], launch, loading: false }}>
+    <SuiteSiblingsContext.Provider
+      value={{ siblings: [sibling()], launch, loading: false, error: null }}
+    >
       {children}
     </SuiteSiblingsContext.Provider>
   );
