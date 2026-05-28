@@ -147,9 +147,7 @@ describe('useShortcuts', () => {
 
   it('respects allowInEditable:false to block mod-combo in editable', () => {
     const handler = vi.fn();
-    renderHook(() =>
-      useShortcuts([makeBinding('mod+s', handler, { allowInEditable: false })]),
-    );
+    renderHook(() => useShortcuts([makeBinding('mod+s', handler, { allowInEditable: false })]));
 
     const input = document.createElement('input');
     document.body.appendChild(input);

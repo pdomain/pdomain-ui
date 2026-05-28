@@ -30,11 +30,7 @@ function InteractiveWrapper(): React.ReactElement {
       <button className="btn" onClick={() => setOpen(true)}>
         Open Cheatsheet
       </button>
-      <ShortcutsCheatsheet
-        open={open}
-        onClose={() => setOpen(false)}
-        bindings={BINDINGS}
-      />
+      <ShortcutsCheatsheet open={open} onClose={() => setOpen(false)} bindings={BINDINGS} />
     </>
   );
 }

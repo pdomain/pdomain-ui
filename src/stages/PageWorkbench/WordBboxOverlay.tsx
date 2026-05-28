@@ -44,12 +44,8 @@ export function WordBboxOverlay({ coords, wordBboxes, onWordClick }: WordBboxOve
 
         const isSelected = wb.selected === true;
         // Konva renders to Canvas; CSS vars / color-mix() are unparseable here.
-        const strokeColor = isSelected
-          ? 'rgba(239,68,68,1)'
-          : 'rgba(34,197,94,0.7)';
-        const fillColor = isSelected
-          ? 'rgba(239,68,68,0.18)'
-          : 'rgba(34,197,94,0.12)';
+        const strokeColor = isSelected ? 'rgba(239,68,68,1)' : 'rgba(34,197,94,0.7)';
+        const fillColor = isSelected ? 'rgba(239,68,68,0.18)' : 'rgba(34,197,94,0.12)';
 
         return (
           <Rect

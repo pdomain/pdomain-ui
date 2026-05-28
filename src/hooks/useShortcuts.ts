@@ -108,11 +108,7 @@ function parseCombo(keys: string): ParsedCombo {
 function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   const tag = target.tagName.toLowerCase();
-  return (
-    tag === 'input' ||
-    tag === 'textarea' ||
-    target.isContentEditable
-  );
+  return tag === 'input' || tag === 'textarea' || target.isContentEditable;
 }
 
 // ─── Event matching ──────────────────────────────────────────────────────────
@@ -195,10 +191,7 @@ export function formatShortcut(keys: string): string[] {
  * - Combos with non-shift modifiers (Ctrl/⌘/Alt) still fire in editables
  *   unless `allowInEditable: false` is set explicitly.
  */
-export function useShortcuts(
-  bindings: ShortcutBinding[],
-  opts?: UseShortcutsOptions,
-): void {
+export function useShortcuts(bindings: ShortcutBinding[], opts?: UseShortcutsOptions): void {
   // Keep a stable ref so the effect doesn't re-run when bindings change identity.
   const bindingsRef = useRef(bindings);
   bindingsRef.current = bindings;

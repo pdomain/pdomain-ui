@@ -29,10 +29,7 @@ import { BuildPackagePanel } from '../../src/primitives/BuildPackagePanel.js';
 // ─── Shared: load primitives.css once ────────────────────────────────────────
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const primitivesCss = readFileSync(
-  resolve(__dirname, '../../theme/primitives.css'),
-  'utf-8',
-);
+const primitivesCss = readFileSync(resolve(__dirname, '../../theme/primitives.css'), 'utf-8');
 
 /** Assert that a CSS class selector appears in primitives.css. */
 function expectClassDefined(cls: string): void {
@@ -200,9 +197,7 @@ describe('FilterToolbar — CSS class presence', () => {
   }
 
   it('root element carries .filter-toolbar class', () => {
-    const { container } = render(
-      <FilterToolbar value="" onValueChange={() => undefined} />,
-    );
+    const { container } = render(<FilterToolbar value="" onValueChange={() => undefined} />);
     const root = container.firstElementChild;
     expect(root?.classList.contains('filter-toolbar')).toBe(true);
   });
@@ -271,24 +266,18 @@ describe('RunAllDirtyPanel — CSS class presence', () => {
   }
 
   it('root element carries .run-all-dirty-panel class', () => {
-    const { container } = render(
-      <RunAllDirtyPanel dirtyCount={3} onRunAll={() => undefined} />,
-    );
+    const { container } = render(<RunAllDirtyPanel dirtyCount={3} onRunAll={() => undefined} />);
     const root = container.firstElementChild;
     expect(root?.classList.contains('run-all-dirty-panel')).toBe(true);
   });
 
   it('count element carries .run-all-dirty-panel__count--dirty when dirtyCount > 0', () => {
-    const { container } = render(
-      <RunAllDirtyPanel dirtyCount={5} onRunAll={() => undefined} />,
-    );
+    const { container } = render(<RunAllDirtyPanel dirtyCount={5} onRunAll={() => undefined} />);
     expect(container.querySelector('.run-all-dirty-panel__count--dirty')).not.toBeNull();
   });
 
   it('count element does not carry --dirty modifier when dirtyCount === 0', () => {
-    const { container } = render(
-      <RunAllDirtyPanel dirtyCount={0} onRunAll={() => undefined} />,
-    );
+    const { container } = render(<RunAllDirtyPanel dirtyCount={0} onRunAll={() => undefined} />);
     expect(container.querySelector('.run-all-dirty-panel__count--dirty')).toBeNull();
   });
 });
@@ -303,9 +292,7 @@ describe('BuildPackagePanel — CSS class presence', () => {
   });
 
   it('root element carries .build-package-panel class', () => {
-    const { container } = render(
-      <BuildPackagePanel onBuild={() => undefined} />,
-    );
+    const { container } = render(<BuildPackagePanel onBuild={() => undefined} />);
     const root = container.firstElementChild;
     expect(root?.classList.contains('build-package-panel')).toBe(true);
   });

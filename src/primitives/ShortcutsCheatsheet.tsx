@@ -5,12 +5,7 @@
  * field inside the shared Dialog primitive.
  */
 import * as React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from './Dialog.js';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './Dialog.js';
 import { KeyCap } from './KeyCap.js';
 import { formatShortcut } from '../hooks/useShortcuts.js';
 import type { ShortcutBinding } from '../hooks/useShortcuts.js';

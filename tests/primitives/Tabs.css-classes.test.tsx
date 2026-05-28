@@ -92,18 +92,14 @@ describe('Tabs — CSS class names', () => {
     const { container } = renderTabs();
     // Radix hides inactive panels — the panel for "b" starts inactive
     const panels = container.querySelectorAll('[role="tabpanel"]');
-    const inactive = Array.from(panels).find(
-      (p) => p.getAttribute('data-state') === 'inactive',
-    );
+    const inactive = Array.from(panels).find((p) => p.getAttribute('data-state') === 'inactive');
     // Radix may also remove the element from the DOM by default; accept either.
     // The guard here is: when an inactive panel IS in the DOM it must carry the class.
     if (inactive != null) {
       expect(inactive.classList.contains('tabs-content')).toBe(true);
     }
     // At minimum one active panel should exist in the DOM
-    const active = Array.from(panels).find(
-      (p) => p.getAttribute('data-state') === 'active',
-    );
+    const active = Array.from(panels).find((p) => p.getAttribute('data-state') === 'active');
     expect(active).toBeDefined();
   });
 });
@@ -117,9 +113,7 @@ describe('ConfigureTabs — CSS class names', () => {
   ];
 
   function renderConfigureTabs(value = 'general') {
-    return render(
-      <ConfigureTabs tabs={tabs} value={value} onValueChange={() => undefined} />,
-    );
+    return render(<ConfigureTabs tabs={tabs} value={value} onValueChange={() => undefined} />);
   }
 
   it('root element has class "configure-tabs"', () => {
@@ -219,7 +213,6 @@ describe('ConfigureHeader — CSS class names', () => {
     expect(screen.queryByRole('button', { name: /close/i })).toBeNull();
   });
 
-
   it('breadcrumb has class "configure-header__breadcrumb" when trail provided', () => {
     const { container } = render(
       <ConfigureHeader
@@ -233,10 +226,7 @@ describe('ConfigureHeader — CSS class names', () => {
 
   it('each crumb has class "configure-header__crumb"', () => {
     const { container } = render(
-      <ConfigureHeader
-        title="Settings"
-        trail={[{ label: 'Jobs' }, { label: 'my-book.pdf' }]}
-      />,
+      <ConfigureHeader title="Settings" trail={[{ label: 'Jobs' }, { label: 'my-book.pdf' }]} />,
     );
     const crumbs = container.querySelectorAll('.configure-header__crumb');
     expect(crumbs.length).toBe(2);

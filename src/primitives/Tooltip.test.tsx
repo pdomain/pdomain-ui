@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './Tooltip.js';
 
-
 describe('Tooltip', () => {
   it('tooltip content is not visible initially', () => {
     render(
