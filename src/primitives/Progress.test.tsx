@@ -52,4 +52,15 @@ describe('Progress', () => {
     render(<Progress ref={ref} />);
     expect(ref.current?.classList.contains('progress')).toBe(true);
   });
+
+  it('accepts aria-label for screen reader description (WS6)', () => {
+    render(<Progress value={50} aria-label="OCR progress" data-testid="prog" />);
+    expect(screen.getByTestId('prog').getAttribute('aria-label')).toBe('OCR progress');
+  });
+
+  it('has aria-live polite for ongoing updates (WS6)', () => {
+    render(<Progress status="running" data-testid="prog" />);
+    const el = screen.getByTestId('prog');
+    expect(el.getAttribute('aria-live')).toBe('polite');
+  });
 });

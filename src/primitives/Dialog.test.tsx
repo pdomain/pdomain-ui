@@ -94,4 +94,19 @@ describe('Dialog', () => {
     const title = screen.getByText('My Title');
     expect(title.classList.contains('dialog-title')).toBe(true);
   });
+
+  it('DialogContent accepts and forwards data-testid (WS7)', async () => {
+    const user = userEvent.setup();
+    render(
+      <Dialog>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent aria-describedby="desc" data-testid="my-dialog">
+          <DialogTitle>Testid dialog</DialogTitle>
+          <DialogDescription id="desc">desc</DialogDescription>
+        </DialogContent>
+      </Dialog>,
+    );
+    await user.click(screen.getByText('Open'));
+    expect(screen.getByTestId('my-dialog')).toBeTruthy();
+  });
 });

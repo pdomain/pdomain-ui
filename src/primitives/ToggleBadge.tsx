@@ -34,6 +34,9 @@ export function ToggleBadge({
 }: ToggleBadgeProps): React.ReactElement {
   return (
     <span className="toggle-badge" {...(testId !== undefined ? { 'data-testid': testId } : {})}>
+      {/* WS7: spread disabled only when it is a boolean (not undefined).
+          This satisfies exactOptionalPropertyTypes while still allowing
+          disabled={false} to explicitly enable the toggle. */}
       <Toggle
         checked={checked}
         onCheckedChange={onCheckedChange}

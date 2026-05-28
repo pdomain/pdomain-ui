@@ -47,4 +47,21 @@ describe('AlertDialog', () => {
     expect(actionBtn.classList.contains('btn')).toBe(true);
     expect(actionBtn.classList.contains('primary')).toBe(true);
   });
+
+  it('AlertDialogContent accepts and forwards data-testid (WS7)', async () => {
+    const user = userEvent.setup();
+    render(
+      <AlertDialog>
+        <AlertDialogTrigger>Open</AlertDialogTrigger>
+        <AlertDialogContent data-testid="my-alert-dialog">
+          <AlertDialogTitle>Delete?</AlertDialogTitle>
+          <AlertDialogDescription>Irreversible.</AlertDialogDescription>
+          <AlertDialogCancel>No</AlertDialogCancel>
+          <AlertDialogAction>Yes</AlertDialogAction>
+        </AlertDialogContent>
+      </AlertDialog>,
+    );
+    await user.click(screen.getByText('Open'));
+    expect(screen.getByTestId('my-alert-dialog')).toBeTruthy();
+  });
 });

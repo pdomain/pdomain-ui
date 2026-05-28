@@ -36,6 +36,9 @@ export interface TableHeaderProps {
  * that calls `onSort` with the next direction.  Used in wf03/wf11/wf-pw
  * page-list table views.
  * Token-only styling; no hex literals.
+ *
+ * WS6: sortable cells now carry aria-sort and respond to Enter/Space keyboard
+ * activation in addition to click.
  */
 export function TableHeader({
   columns,
@@ -44,20 +47,42 @@ export function TableHeader({
   onSort,
   className,
 }: TableHeaderProps): React.ReactElement {
-  function handleCellClick(col: TableColumnDef): void {
+  function handleCellActivate(col: TableColumnDef): void {
     if (!col.sortable || onSort == null) return;
     const next: SortDir = sortKey === col.id && sortDir === 'asc' ? 'desc' : 'asc';
     onSort(col.id, next);
+  }
+
+  // WS6: keyboard activation for sortable column headers (Enter / Space)
+  function handleCellKeyDown(e: React.KeyboardEvent<HTMLDivElement>, col: TableColumnDef): void {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCellActivate(col);
+    }
   }
 
   return (
     <div className={cn('table-header', className)} role="row">
       {columns.map((col) => {
         const isActive = sortKey === col.id;
+
+        // WS6: compute aria-sort for sortable columns.
+        // Active column: ascending/descending; sortable-but-not-active: 'none'.
+        let ariaSort: React.AriaAttributes['aria-sort'] | undefined;
+        if (col.sortable) {
+          if (isActive && sortDir != null) {
+            ariaSort = sortDir === 'asc' ? 'ascending' : 'descending';
+          } else {
+            ariaSort = 'none';
+          }
+        }
+
         const cellProps: React.HTMLAttributes<HTMLDivElement> & {
           onClick?: React.MouseEventHandler;
+          onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
           role?: string;
           tabIndex?: number;
+          'aria-sort'?: React.AriaAttributes['aria-sort'];
           'data-sort'?: string;
           style?: React.CSSProperties;
         } = {
@@ -67,6 +92,7 @@ export function TableHeader({
             isActive ? 'table-header__cell--active' : undefined,
           ),
           role: 'columnheader',
+          ...(ariaSort !== undefined ? { 'aria-sort': ariaSort } : {}),
           ...(col.width != null ? { style: { width: col.width } } : {}),
         };
 
@@ -75,7 +101,8 @@ export function TableHeader({
         }
 
         if (col.sortable && onSort != null) {
-          cellProps.onClick = () => handleCellClick(col);
+          cellProps.onClick = () => handleCellActivate(col);
+          cellProps.onKeyDown = (e) => handleCellKeyDown(e, col);
           cellProps.tabIndex = 0;
         }
 

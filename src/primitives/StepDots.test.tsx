@@ -26,24 +26,24 @@ describe('StepDots', () => {
     expect(connectors).toHaveLength(2);
   });
 
-  it('applies t-active class to the current step', () => {
+  it('applies step-dot--active class to the current step', () => {
     const { container } = render(<StepDots steps={steps} current={1} />);
     const dots = container.querySelectorAll('.step-dot');
-    expect(dots[1]?.classList.contains('t-active')).toBe(true);
+    expect(dots[1]?.classList.contains('step-dot--active')).toBe(true);
   });
 
-  it('applies t-done class to steps before current', () => {
+  it('applies step-dot--done class to steps before current', () => {
     const { container } = render(<StepDots steps={steps} current={2} />);
     const dots = container.querySelectorAll('.step-dot');
-    expect(dots[0]?.classList.contains('t-done')).toBe(true);
-    expect(dots[1]?.classList.contains('t-done')).toBe(true);
+    expect(dots[0]?.classList.contains('step-dot--done')).toBe(true);
+    expect(dots[1]?.classList.contains('step-dot--done')).toBe(true);
   });
 
-  it('applies t-pending class to steps after current', () => {
+  it('applies step-dot--pending class to steps after current', () => {
     const { container } = render(<StepDots steps={steps} current={0} />);
     const dots = container.querySelectorAll('.step-dot');
-    expect(dots[1]?.classList.contains('t-pending')).toBe(true);
-    expect(dots[2]?.classList.contains('t-pending')).toBe(true);
+    expect(dots[1]?.classList.contains('step-dot--pending')).toBe(true);
+    expect(dots[2]?.classList.contains('step-dot--pending')).toBe(true);
   });
 
   it('calls onStepClick with step index when a step is clicked', () => {

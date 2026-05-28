@@ -32,14 +32,14 @@ describe('StatusPip', () => {
     expect(screen.getByTestId('status-pip-mismatch').style.color).toBe('var(--mismatch)');
   });
 
-  it('applies color: var(--fuzzy) for status="ocr" (amber/warning)', () => {
+  it('applies color: var(--ocr) for status="ocr" (WS4 fix: was --fuzzy)', () => {
     render(<StatusPip status="ocr" />);
-    expect(screen.getByTestId('status-pip-ocr').style.color).toBe('var(--fuzzy)');
+    expect(screen.getByTestId('status-pip-ocr').style.color).toBe('var(--ocr)');
   });
 
-  it('applies color: var(--accent) for status="gt"', () => {
+  it('applies color: var(--gt) for status="gt" (WS4 fix: was --accent)', () => {
     render(<StatusPip status="gt" />);
-    expect(screen.getByTestId('status-pip-gt').style.color).toBe('var(--accent)');
+    expect(screen.getByTestId('status-pip-gt').style.color).toBe('var(--gt)');
   });
 
   it('renders a label when provided', () => {
@@ -65,5 +65,12 @@ describe('StatusPip', () => {
     const el = screen.getByTestId('status-pip-exact');
     expect(el.classList.contains('pip')).toBe(true);
     expect(el.classList.contains('extra')).toBe(true);
+  });
+
+  it('decorative dot is aria-hidden (WS6)', () => {
+    render(<StatusPip status="exact" />);
+    const el = screen.getByTestId('status-pip-exact');
+    const dot = el.querySelector('.dot');
+    expect(dot?.getAttribute('aria-hidden')).toBe('true');
   });
 });

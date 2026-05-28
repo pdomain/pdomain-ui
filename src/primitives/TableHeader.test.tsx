@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { TableHeader } from './TableHeader.js';
 
 const columns = [
@@ -48,5 +49,43 @@ describe('TableHeader', () => {
   it('forwards className', () => {
     const { container } = render(<TableHeader columns={columns} className="extra" />);
     expect(container.querySelector('.extra')).toBeTruthy();
+  });
+
+  it('sets aria-sort="ascending" on sorted column (WS6)', () => {
+    render(<TableHeader columns={columns} sortKey="page" sortDir="asc" onSort={() => {}} />);
+    const pageCell = screen.getByText('Page').closest('[role="columnheader"]');
+    expect(pageCell?.getAttribute('aria-sort')).toBe('ascending');
+  });
+
+  it('sets aria-sort="descending" on sorted column (WS6)', () => {
+    render(<TableHeader columns={columns} sortKey="page" sortDir="desc" onSort={() => {}} />);
+    const pageCell = screen.getByText('Page').closest('[role="columnheader"]');
+    expect(pageCell?.getAttribute('aria-sort')).toBe('descending');
+  });
+
+  it('sets aria-sort="none" on sortable but unsorted column (WS6)', () => {
+    render(<TableHeader columns={columns} sortKey="page" sortDir="asc" onSort={() => {}} />);
+    const flagsCell = screen.getByText('Flags').closest('[role="columnheader"]');
+    expect(flagsCell?.getAttribute('aria-sort')).toBe('none');
+  });
+
+  it('triggers onSort via Enter key on sortable column (WS6 keyboard)', async () => {
+    const user = userEvent.setup();
+    const onSort = vi.fn();
+    render(<TableHeader columns={columns} onSort={onSort} />);
+    const pageCell = screen.getByText('Page').closest('[role="columnheader"]') as HTMLElement;
+    pageCell.focus();
+    await user.keyboard('{Enter}');
+    expect(onSort).toHaveBeenCalledWith('page', expect.any(String));
+  });
+
+  it('triggers onSort via Space key on sortable column (WS6 keyboard)', async () => {
+    const user = userEvent.setup();
+    const onSort = vi.fn();
+    render(<TableHeader columns={columns} onSort={onSort} />);
+    const pageCell = screen.getByText('Page').closest('[role="columnheader"]') as HTMLElement;
+    pageCell.focus();
+    await user.keyboard(' ');
+    expect(onSort).toHaveBeenCalledWith('page', expect.any(String));
   });
 });

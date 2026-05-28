@@ -147,8 +147,9 @@ export const AttributesPanel = React.forwardRef<HTMLDivElement, AttributesPanelP
     ];
 
     // Default "Edit" button rendered in each section header.
+    // WS1: correct class names — design-system uses .btn.ghost.sm not BEM modifiers
     const defaultEditButton = (
-      <button className="btn btn--ghost btn--sm ap-section-header__edit" type="button">
+      <button className="btn ghost sm ap-section-header__edit" type="button">
         Edit
       </button>
     );

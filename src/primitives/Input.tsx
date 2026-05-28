@@ -47,14 +47,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     // Composite mode: wrapper div + input + suffix span.
     // The wrapper carries the visual border/background so it looks like one
     // unified input field; the inner <input> has no border of its own.
+    // WS7: className is applied to the outer wrapper (not the inner input)
+    // so consumers can style the visual boundary, not a hidden inner element.
     return (
-      <div className={cn('input-wrapper', focusRingClass)}>
-        <input
-          ref={ref}
-          className={cn('input input-inner', sizeClass, className)}
-          {...fieldA11y}
-          {...props}
-        />
+      <div className={cn('input-wrapper', focusRingClass, className)}>
+        <input ref={ref} className={cn('input input-inner', sizeClass)} {...fieldA11y} {...props} />
         <span className="input-suffix">{suffix}</span>
       </div>
     );

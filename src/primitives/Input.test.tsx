@@ -99,6 +99,23 @@ describe('Input – suffix slot', () => {
   });
 });
 
+/* ─── WS7: className on suffix composite mode ─────────────────────────────── */
+
+describe('Input – className in composite (suffix) mode (WS7)', () => {
+  it('applies className to the outer wrapper div when suffix is present', () => {
+    const { container } = render(<Input data-testid="inp" suffix="px" className="my-class" />);
+    const wrapper = container.querySelector('.input-wrapper');
+    expect(wrapper?.classList.contains('my-class')).toBe(true);
+  });
+
+  it('does NOT apply className to the inner input when suffix present', () => {
+    render(<Input data-testid="inp" suffix="px" className="my-class" />);
+    const inp = screen.getByTestId('inp');
+    // Inner input should NOT have the consumer className
+    expect(inp.classList.contains('my-class')).toBe(false);
+  });
+});
+
 /* ─── autoFocusRing ───────────────────────────────────────────────────────── */
 
 describe('Input – autoFocusRing', () => {

@@ -3,6 +3,9 @@
  *
  * Renders all registered ShortcutBinding objects grouped by their `group`
  * field inside the shared Dialog primitive.
+ *
+ * WS3: inline px literals extracted to CSS classes (.shortcuts__grid/group/title/row).
+ * L-CSS provides the rules for those classes; this file only emits the names.
  */
 import * as React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './Dialog.js';
@@ -55,54 +58,16 @@ export function ShortcutsCheatsheet({
           <DialogTitle>Keyboard shortcuts</DialogTitle>
         </DialogHeader>
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-          }}
-        >
+        {/* WS3: replace inline styles with design-system class names */}
+        <div className="shortcuts__grid">
           {Array.from(grouped.entries()).map(([group, items]) => (
-            <section key={group}>
-              <div
-                style={{
-                  marginBottom: '6px',
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: 'var(--ink-3)',
-                }}
-              >
-                {group}
-              </div>
+            <section key={group} className="shortcuts__group">
+              <div className="shortcuts__title">{group}</div>
 
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '2px',
-                }}
-              >
+              <div className="shortcuts__rows">
                 {items.map((binding) => (
-                  <div
-                    key={binding.keys}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '5px 0',
-                      borderBottom: '1px solid var(--border-1)',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: '13px',
-                        color: 'var(--ink-1)',
-                      }}
-                    >
-                      {binding.label}
-                    </span>
+                  <div key={binding.keys} className="shortcuts__row">
+                    <span className="shortcuts__label">{binding.label}</span>
                     <KeyCap keys={formatShortcut(binding.keys)} />
                   </div>
                 ))}

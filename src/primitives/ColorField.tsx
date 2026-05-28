@@ -44,7 +44,7 @@ export interface ColorFieldProps {
  * Used by the AppearancePanel inside the SettingsModal for layer, status, and
  * accent color overrides.
  */
-export const ColorField = React.forwardRef<HTMLDivElement, ColorFieldProps>(function ColorField(
+export const ColorField = React.forwardRef<HTMLInputElement, ColorFieldProps>(function ColorField(
   { id, label, value, onChange, defaultValue, className, inputAriaLabel, inputTestId, resetTestId },
   ref,
 ) {
@@ -61,7 +61,7 @@ export const ColorField = React.forwardRef<HTMLDivElement, ColorFieldProps>(func
   };
 
   return (
-    <div ref={ref} className={cn('color-field', className)}>
+    <div className={cn('color-field', className)}>
       <label htmlFor={id} className="color-field-label">
         {label}
       </label>
@@ -74,7 +74,7 @@ export const ColorField = React.forwardRef<HTMLDivElement, ColorFieldProps>(func
           aria-hidden="true"
         />
         <input
-          ref={null}
+          ref={ref}
           id={id}
           type="color"
           className="color-field-input"

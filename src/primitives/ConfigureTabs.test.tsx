@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { ConfigureTabs } from './ConfigureTabs.js';
 
@@ -59,5 +60,31 @@ describe('ConfigureTabs', () => {
   it('uses tablist role on container', () => {
     render(<ConfigureTabs tabs={tabs} value="general" onValueChange={() => {}} />);
     expect(screen.getByRole('tablist')).toBeTruthy();
+  });
+
+  it('ArrowRight moves focus to next tab (WS6 roving-tabindex)', async () => {
+    const user = userEvent.setup();
+    render(<ConfigureTabs tabs={tabs} value="general" onValueChange={() => {}} />);
+    const generalTab = screen.getByRole('tab', { name: 'General' });
+    generalTab.focus();
+    await user.keyboard('{ArrowRight}');
+    expect(document.activeElement?.textContent).toContain('Advanced');
+  });
+
+  it('ArrowLeft moves focus to previous tab (WS6 roving-tabindex)', async () => {
+    const user = userEvent.setup();
+    render(<ConfigureTabs tabs={tabs} value="advanced" onValueChange={() => {}} />);
+    const advancedTab = screen.getByRole('tab', { name: 'Advanced' });
+    advancedTab.focus();
+    await user.keyboard('{ArrowLeft}');
+    expect(document.activeElement?.textContent).toContain('General');
+  });
+
+  it('active tab has tabIndex=0, others have tabIndex=-1 (WS6)', () => {
+    render(<ConfigureTabs tabs={tabs} value="advanced" onValueChange={() => {}} />);
+    const advancedTab = screen.getByRole('tab', { name: 'Advanced' });
+    const generalTab = screen.getByRole('tab', { name: 'General' });
+    expect(advancedTab.getAttribute('tabindex')).toBe('0');
+    expect(generalTab.getAttribute('tabindex')).toBe('-1');
   });
 });

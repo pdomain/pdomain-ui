@@ -57,6 +57,9 @@ export function QualityBanner({
 
   return (
     <div
+      // WS6: polite live region so screen readers announce flag count updates
+      // without interrupting current speech.
+      aria-live="polite"
       className={cn('quality-banner', extreme ? 'quality-banner--extreme' : undefined, className)}
     >
       <div className="quality-banner__stripe" aria-hidden="true" />

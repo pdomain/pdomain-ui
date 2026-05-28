@@ -17,7 +17,8 @@ export interface RowFlagBadgeProps {
 export function RowFlagBadge({ kind, className }: RowFlagBadgeProps): React.ReactElement {
   return (
     <span className={cn('row-flag-badge', className)} data-kind={kind}>
-      <span className="row-flag-badge__dot" />
+      {/* WS6: decorative dot is aria-hidden; the kind text conveys the flag */}
+      <span className="row-flag-badge__dot" aria-hidden="true" />
       {kind}
     </span>
   );

@@ -44,7 +44,7 @@ export const WithStatus: Story = {
           width: '8px',
           height: '8px',
           borderRadius: '50%',
-          background: 'var(--accent-warning)',
+          background: 'var(--fuzzy)',
         }}
       />
     ),
@@ -104,10 +104,10 @@ export const FullSlots: Story = {
       <span
         style={{
           fontSize: '10px',
-          background: 'var(--accent-warning)',
+          background: 'var(--fuzzy)',
           borderRadius: '3px',
           padding: '1px 4px',
-          color: 'var(--bg-base)',
+          color: 'var(--bg-page)',
         }}
       >
         flagged
@@ -140,7 +140,7 @@ export const FullSlots: Story = {
           width="80%"
           height="80%"
           fill="none"
-          stroke="var(--accent-info)"
+          stroke="var(--ocr)"
           strokeWidth="2"
         />
       </svg>
@@ -174,11 +174,11 @@ export const FullSlots: Story = {
           style={{
             flex: 1,
             fontSize: '11px',
-            background: 'var(--accent-primary)',
+            background: 'var(--accent)',
             border: '1px solid transparent',
             borderRadius: '3px',
             padding: '2px 6px',
-            color: 'var(--bg-base)',
+            color: 'var(--bg-page)',
             cursor: 'pointer',
           }}
         >
@@ -198,10 +198,10 @@ export const WithRoleBadge: Story = {
       <span
         style={{
           fontSize: '10px',
-          background: 'var(--accent-primary)',
+          background: 'var(--accent)',
           borderRadius: '3px',
           padding: '1px 5px',
-          color: 'var(--bg-base)',
+          color: 'var(--bg-page)',
           fontWeight: 600,
         }}
       >
