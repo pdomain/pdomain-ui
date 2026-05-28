@@ -39,7 +39,10 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(function Field
         {label !== undefined && <label htmlFor={htmlFor}>{label}</label>}
         {children}
         {hasError && (
-          <span id={resolvedErrorId} className="field-error" role="alert">
+          // WS6: role=status (not alert) — alert announces on every render including
+          // mount, which disrupts page-load AT flow. role=status is still live but
+          // non-interruptive; aria-invalid on the input is the primary signal.
+          <span id={resolvedErrorId} className="field-error" role="status">
             {error}
           </span>
         )}

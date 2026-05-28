@@ -124,4 +124,12 @@ describe('Banner', () => {
     const { container } = render(<Banner headline="No footer" />);
     expect(container.querySelector('.banner__footer')).toBeNull();
   });
+
+  it('renders a div root (not section) to avoid spurious landmarks (WS6)', () => {
+    const { container } = render(<Banner headline="Test" />);
+    // <section> makes every banner a landmark, polluting the page outline.
+    // The root element should be a <div> with an explicit role attribute instead.
+    const root = container.firstChild as HTMLElement;
+    expect(root.tagName.toLowerCase()).toBe('div');
+  });
 });

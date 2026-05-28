@@ -113,4 +113,21 @@ describe('QualityBanner', () => {
     );
     expect(container.querySelector('.custom')).toBeTruthy();
   });
+
+  it('has aria-live polite for dynamic updates (WS6)', () => {
+    const { container } = render(
+      <QualityBanner title="Issues" flagged={5} total={100} flags={DEFAULT_FLAGS} />,
+    );
+    const banner = container.querySelector('.quality-banner');
+    expect(banner?.getAttribute('aria-live')).toBe('polite');
+  });
+
+  it('decorative dots are aria-hidden (WS6)', () => {
+    const { container } = render(
+      <QualityBanner title="Issues" flagged={5} total={100} flags={DEFAULT_FLAGS} />,
+    );
+    // The stripe and icon elements should be aria-hidden decorative
+    const hidden = container.querySelectorAll('[aria-hidden="true"]');
+    expect(hidden.length).toBeGreaterThan(0);
+  });
 });

@@ -60,8 +60,11 @@ export function Banner({
   const resolvedAriaLive: 'off' | 'polite' | 'assertive' =
     ariaLive ?? (isDanger ? 'assertive' : 'polite');
 
+  // WS6: use <div> not <section> — <section> creates a landmark per ARIA spec,
+  // which pollutes the page outline when banners appear inline inside content.
+  // An explicit role= attribute on <div> gives the same semantics without the landmark.
   return (
-    <section
+    <div
       className={cn('banner', className)}
       data-tone={tone}
       role={resolvedRole}
@@ -76,7 +79,7 @@ export function Banner({
         {footer != null ? <div className="banner__footer">{footer}</div> : null}
       </div>
       {actions != null ? <div className="banner__actions">{actions}</div> : null}
-    </section>
+    </div>
   );
 }
 

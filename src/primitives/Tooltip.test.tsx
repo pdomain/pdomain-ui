@@ -36,6 +36,24 @@ describe('Tooltip', () => {
     expect(visualContent !== null || tooltipEl !== null).toBe(true);
   });
 
+  it('TooltipContent renders inside a Portal (WS6: prevents overflow clipping)', async () => {
+    const user = userEvent.setup();
+    render(
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>Hover me</TooltipTrigger>
+          <TooltipContent>Portal tip</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+    await user.hover(screen.getByText('Hover me'));
+    await screen.findByRole('tooltip');
+    // A Portal renders outside the nearest stacking context; Radix uses a
+    // data-radix-popper-content-wrapper div appended to body, not inline.
+    const portal = document.body.querySelector('[data-radix-popper-content-wrapper]');
+    expect(portal).not.toBeNull();
+  });
+
   /**
    * CSS regression guard: TooltipContent must render with the .tooltip class.
    * This test fails if the class binding is removed from Tooltip.tsx — ensuring

@@ -37,9 +37,9 @@ describe('Field', () => {
     expect(input.id).toBe('email');
   });
 
-  it('renders error slot with role=alert when error prop is set', () => {
+  it('renders error slot with role=status when error prop is set', () => {
     render(<Field label="Age" htmlFor="age" error="Age is required" data-testid="f" />);
-    const error = screen.getByRole('alert');
+    const error = screen.getByRole('status');
     expect(error.textContent).toBe('Age is required');
     expect(error.classList.contains('field-error')).toBe(true);
   });
@@ -50,7 +50,7 @@ describe('Field', () => {
         <Input id="age" data-testid="inp" />
       </Field>,
     );
-    const errorSpan = screen.getByRole('alert');
+    const errorSpan = screen.getByRole('status');
     expect(errorSpan.id).toBe('age-error');
   });
 
@@ -60,18 +60,18 @@ describe('Field', () => {
         <Input id="age" data-testid="inp" />
       </Field>,
     );
-    const errorSpan = screen.getByRole('alert');
+    const errorSpan = screen.getByRole('status');
     expect(errorSpan.id).toBe('custom-err');
   });
 
   it('does NOT render error slot when error prop is not set', () => {
     render(<Field label="Name" htmlFor="name" data-testid="f" />);
-    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
   });
 
   it('does NOT render error slot when error is empty string', () => {
     render(<Field label="Name" htmlFor="name" error="" data-testid="f" />);
-    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
   });
 
   it('does NOT render label when label prop not provided', () => {
@@ -107,7 +107,7 @@ describe('Field + Input a11y association (#48)', () => {
       </Field>,
     );
     const input = screen.getByTestId('inp');
-    const errorSpan = screen.getByRole('alert');
+    const errorSpan = screen.getByRole('status');
     expect(errorSpan.id).toBe('email-error');
     expect(input.getAttribute('aria-describedby')).toBe('email-error');
   });
@@ -183,7 +183,7 @@ describe('Field + Textarea a11y association (#48)', () => {
       </Field>,
     );
     const ta = screen.getByTestId('ta');
-    const errorSpan = screen.getByRole('alert');
+    const errorSpan = screen.getByRole('status');
     expect(errorSpan.id).toBe('notes-error');
     expect(ta.getAttribute('aria-describedby')).toBe('notes-error');
   });

@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { ViewToggle } from './ViewToggle.js';
 
@@ -44,5 +45,31 @@ describe('ViewToggle', () => {
   it('forwards className', () => {
     const { container } = render(<ViewToggle onChange={() => {}} className="custom" />);
     expect(container.querySelector('.custom')).toBeTruthy();
+  });
+
+  it('ArrowRight moves focus to next option (WS6 arrow nav)', async () => {
+    const user = userEvent.setup();
+    render(<ViewToggle mode="list" onChange={() => {}} />);
+    const listBtn = screen.getByText('List').closest('button') as HTMLButtonElement;
+    listBtn.focus();
+    await user.keyboard('{ArrowRight}');
+    expect(document.activeElement?.textContent).toContain('Thumbnails');
+  });
+
+  it('ArrowLeft moves focus to previous option (WS6 arrow nav)', async () => {
+    const user = userEvent.setup();
+    render(<ViewToggle mode="thumb" onChange={() => {}} />);
+    const thumbBtn = screen.getByText('Thumbnails').closest('button') as HTMLButtonElement;
+    thumbBtn.focus();
+    await user.keyboard('{ArrowLeft}');
+    expect(document.activeElement?.textContent).toContain('List');
+  });
+
+  it('active option has tabIndex=0, inactive has tabIndex=-1 (WS6)', () => {
+    render(<ViewToggle mode="list" onChange={() => {}} />);
+    const listBtn = screen.getByText('List').closest('button') as HTMLButtonElement;
+    const thumbBtn = screen.getByText('Thumbnails').closest('button') as HTMLButtonElement;
+    expect(listBtn.getAttribute('tabindex')).toBe('0');
+    expect(thumbBtn.getAttribute('tabindex')).toBe('-1');
   });
 });

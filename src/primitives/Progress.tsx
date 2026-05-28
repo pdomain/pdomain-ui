@@ -23,6 +23,9 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(function
       aria-valuenow={clampedValue}
       aria-valuemin={0}
       aria-valuemax={100}
+      // WS6: polite live region lets screen readers announce updates without
+      // interrupting current speech; callers can override via {...props}.
+      aria-live="polite"
       className={cn('progress', status !== undefined ? `t-${status}` : undefined, className)}
       {...props}
     >
