@@ -241,3 +241,7 @@ export { StageToolbar } from './StageToolbar.js';
 export type { StageToolbarProps } from './StageToolbar.js';
 export { Thumbnail } from './Thumbnail.js';
 export type { ThumbnailProps, ThumbnailDensity } from './Thumbnail.js';
+
+// Keyboard shortcut cheatsheet dialog
+export { ShortcutsCheatsheet } from './ShortcutsCheatsheet.js';
+export type { ShortcutsCheatsheetProps } from './ShortcutsCheatsheet.js';

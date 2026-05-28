@@ -21,6 +21,7 @@ export default defineConfig({
         stores: resolve(__dirname, 'src/stores/index.ts'),
         testids: resolve(__dirname, 'src/testids/index.ts'),
         templates: resolve(__dirname, 'src/templates/index.ts'),
+        hooks: resolve(__dirname, 'src/hooks/index.ts'),
         'stages/PageWorkbench/index': resolve(__dirname, 'src/stages/PageWorkbench/index.ts'),
         'stages/Source/index': resolve(__dirname, 'src/stages/Source/index.ts'),
         'stages/Grayscale/index': resolve(__dirname, 'src/stages/Grayscale/index.ts'),

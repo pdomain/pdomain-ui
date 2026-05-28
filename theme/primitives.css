@@ -1926,3 +1926,40 @@ a { color: inherit; text-decoration: none; }
 .stage-toolbar:not(:has(.stage-toolbar__center)) .stage-toolbar__right {
   margin-left: auto;
 }
+
+/* ── Tooltip (Radix-backed floating label surface) ─────────────────────────
+ * Applied via .tooltip class on TooltipContent in src/primitives/Tooltip.tsx.
+ * Radix ships headless — these classes supply the surface, typography, and
+ * fade animations. All colors via tokens.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+@keyframes tooltip-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes tooltip-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.tooltip {
+  background: var(--bg-raised);
+  color: var(--ink-1);
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  box-shadow: var(--shadow-floating);
+  z-index: 70;
+  max-width: 260px;
+  line-height: 1.45;
+}
+
+.tooltip[data-state="delayed-open"] {
+  animation: tooltip-in 120ms ease-out;
+}
+
+.tooltip[data-state="closed"] {
+  animation: tooltip-out 100ms ease-in;
+}
