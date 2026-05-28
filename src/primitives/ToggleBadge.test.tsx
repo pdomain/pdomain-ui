@@ -63,4 +63,19 @@ describe('ToggleBadge', () => {
     );
     expect(container.querySelector('.toggle--badge')).toBeTruthy();
   });
+
+  it('always passes disabled prop to Toggle (WS7: no over-cautious spread)', () => {
+    // When disabled is explicitly false, the switch must still be interactive.
+    const onChange = vi.fn();
+    render(
+      <ToggleBadge
+        checked={false}
+        onCheckedChange={onChange}
+        label="Auto-apply"
+        disabled={false}
+      />,
+    );
+    fireEvent.click(screen.getByRole('switch'));
+    expect(onChange).toHaveBeenCalledOnce();
+  });
 });

@@ -24,6 +24,9 @@ export interface StageToolbarProps {
  * the `data-sticky` attribute so consumers can style it with tokens.
  *
  * Distinct from FilterToolbar, which is a single-line search input.
+ *
+ * WS7: returns null when no slot content is provided — an empty role=toolbar
+ * with no interactive children is invalid ARIA and produces a confusing a11y tree.
  */
 export function StageToolbar({
   leftSlot,
@@ -33,7 +36,15 @@ export function StageToolbar({
   className,
   'data-testid': testId,
   'aria-label': ariaLabel,
-}: StageToolbarProps): React.ReactElement {
+}: StageToolbarProps): React.ReactElement | null {
+  // Guard: empty toolbar is invalid ARIA (role=toolbar requires at least one control).
+  const hasContent =
+    (leftSlot !== undefined && leftSlot !== null) ||
+    (centerSlot !== undefined && centerSlot !== null) ||
+    (rightSlot !== undefined && rightSlot !== null);
+
+  if (!hasContent) return null;
+
   return (
     <div
       className={cn('stage-toolbar', className)}

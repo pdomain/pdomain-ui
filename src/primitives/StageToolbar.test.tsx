@@ -3,12 +3,18 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { StageToolbar } from './StageToolbar.js';
 
+// Helper: render with at least one slot so the toolbar is not empty
+function renderWithSlot(props: React.ComponentProps<typeof StageToolbar> = {}) {
+  const merged = { leftSlot: <span>Left</span>, ...props };
+  return render(<StageToolbar {...merged} />);
+}
+
 describe('StageToolbar', () => {
-  it('renders without crashing when all slots are omitted (empty toolbar is valid)', () => {
+  it('returns null (renders nothing) when all slots are omitted (WS7 empty guard)', () => {
     const { container } = render(<StageToolbar />);
-    const toolbar = container.querySelector('[role="toolbar"]');
-    expect(toolbar).not.toBeNull();
-    expect(toolbar?.querySelectorAll('div')).toHaveLength(0);
+    // An empty role=toolbar with no interactive children is invalid ARIA.
+    // The component should return null rather than render an empty landmark.
+    expect(container.firstChild).toBeNull();
   });
 
   it('renders the left slot when provided', () => {
@@ -73,47 +79,47 @@ describe('StageToolbar', () => {
   });
 
   it('has role="toolbar"', () => {
-    render(<StageToolbar />);
+    renderWithSlot();
     expect(screen.getByRole('toolbar')).toBeTruthy();
   });
 
   it('uses default aria-label when none is provided', () => {
-    render(<StageToolbar />);
+    renderWithSlot();
     const toolbar = screen.getByRole('toolbar');
     expect(toolbar.getAttribute('aria-label')).toBe('Stage toolbar');
   });
 
   it('uses provided aria-label', () => {
-    render(<StageToolbar aria-label="Source toolbar" />);
+    renderWithSlot({ 'aria-label': 'Source toolbar' });
     const toolbar = screen.getByRole('toolbar');
     expect(toolbar.getAttribute('aria-label')).toBe('Source toolbar');
   });
 
   it('applies data-sticky="true" when sticky prop is true', () => {
-    render(<StageToolbar sticky={true} />);
+    renderWithSlot({ sticky: true });
     const toolbar = screen.getByRole('toolbar');
     expect(toolbar.getAttribute('data-sticky')).toBe('true');
   });
 
   it('does not apply data-sticky when sticky is false', () => {
-    render(<StageToolbar sticky={false} />);
+    renderWithSlot({ sticky: false });
     const toolbar = screen.getByRole('toolbar');
     expect(toolbar.getAttribute('data-sticky')).toBeNull();
   });
 
   it('does not apply data-sticky when sticky is omitted', () => {
-    render(<StageToolbar />);
+    renderWithSlot();
     const toolbar = screen.getByRole('toolbar');
     expect(toolbar.getAttribute('data-sticky')).toBeNull();
   });
 
   it('forwards data-testid', () => {
-    render(<StageToolbar data-testid="my-toolbar" />);
+    renderWithSlot({ 'data-testid': 'my-toolbar' });
     expect(screen.getByTestId('my-toolbar')).toBeTruthy();
   });
 
   it('composes className with the root class', () => {
-    render(<StageToolbar className="extra-class" />);
+    renderWithSlot({ className: 'extra-class' });
     const toolbar = screen.getByRole('toolbar');
     expect(toolbar.classList.contains('stage-toolbar')).toBe(true);
     expect(toolbar.classList.contains('extra-class')).toBe(true);
