@@ -69,7 +69,7 @@ function CustomBlockRow({ item, index, isSelected }: BlockRowProps) {
         cursor: 'pointer',
       }}
     >
-      <span style={{ color: 'var(--ink-3)', fontFamily: 'var(--font-mono)', fontSize: '10px' }}>
+      <span style={{ color: 'var(--ink-3)', fontFamily: 'var(--mono-font)', fontSize: '10px' }}>
         {item.block_category ?? 'BLOCK'}
       </span>
       <span>Block {index + 1}</span>

@@ -201,7 +201,7 @@ function SelectionStory(): React.ReactElement {
           marginBottom: 8,
           fontSize: 12,
           color: 'var(--ink-3)',
-          fontFamily: 'var(--font-mono)',
+          fontFamily: 'var(--mono-font)',
         }}
       >
         Selected: {selectedId ?? '(none)'}
@@ -257,7 +257,7 @@ function TypeChangeStory(): React.ReactElement {
             marginTop: 12,
             fontSize: 12,
             color: 'var(--ink-3)',
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--mono-font)',
           }}
         >
           <div style={{ fontWeight: 600, marginBottom: 4 }}>Type changes:</div>

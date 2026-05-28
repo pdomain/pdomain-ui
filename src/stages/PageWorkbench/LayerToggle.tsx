@@ -32,7 +32,7 @@ export function LayerToggle({ visibility, onChange }: LayerToggleProps) {
         flexDirection: 'row',
         gap: 'var(--space-1, 4px)',
         padding: 'var(--space-1, 4px) var(--space-2, 8px)',
-        background: 'var(--surface-overlay, rgba(0,0,0,0.7))',
+        background: 'var(--bg-raised, rgba(0,0,0,0.7))',
         borderRadius: 'var(--radius-pill, 9999px)',
         alignItems: 'center',
       }}

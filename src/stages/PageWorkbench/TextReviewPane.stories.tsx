@@ -91,7 +91,7 @@ export const WithLongText: Story = {
 
 function RichContent(): React.ReactElement {
   return (
-    <div style={{ padding: '0.5rem', fontFamily: 'var(--font-mono, monospace)' }}>
+    <div style={{ padding: '0.5rem', fontFamily: 'var(--mono-font, monospace)' }}>
       <p style={{ margin: '0 0 0.25rem', color: 'var(--ink-1)' }}>
         <strong>Word count:</strong> 42
       </p>

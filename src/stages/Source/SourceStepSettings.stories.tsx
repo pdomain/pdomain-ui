@@ -86,7 +86,7 @@ function SavingPresetStory() {
 
   return (
     <div style={{ padding: '1.5rem', minWidth: '360px' }}>
-      <p style={{ color: 'var(--color-text-secondary)', marginTop: 0 }}>
+      <p style={{ color: 'var(--ink-3)', marginTop: 0 }}>
         Click "Save as preset…" to open the inline form.
       </p>
       <SourceStepSettings
@@ -139,7 +139,7 @@ function InteractiveStory() {
   return (
     <div style={{ padding: '1.5rem', minWidth: '360px' }}>
       {lastEvent !== null && (
-        <p style={{ color: 'var(--color-text-secondary)', marginTop: 0 }}>
+        <p style={{ color: 'var(--ink-3)', marginTop: 0 }}>
           Last event: <strong>{lastEvent}</strong>
         </p>
       )}

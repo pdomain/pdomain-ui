@@ -107,7 +107,7 @@ export const WithFooter: Story = {
         aria-valuemax={232}
         style={{
           height: 4,
-          background: 'var(--surface-3)',
+          background: 'var(--bg-sunk)',
           borderRadius: 2,
           marginTop: 8,
           position: 'relative',
@@ -138,7 +138,7 @@ export const WithChildrenBody: Story = {
             key={tag}
             style={{
               padding: '2px 8px',
-              background: 'var(--surface-3)',
+              background: 'var(--bg-sunk)',
               borderRadius: 4,
               fontSize: '0.75rem',
             }}

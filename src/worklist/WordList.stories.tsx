@@ -51,7 +51,7 @@ function CustomRow({ item, isSelected, matchStatus }: WordRowProps) {
         background: isSelected
           ? 'color-mix(in srgb, var(--accent) 15%, var(--bg-raised))'
           : 'transparent',
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--mono-font)',
         fontSize: 'var(--text-sm)',
         color: 'var(--ink-1)',
         cursor: 'pointer',

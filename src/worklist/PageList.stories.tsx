@@ -54,7 +54,7 @@ function CustomPageRow({ item, index, isSelected }: PageRowProps) {
     >
       <span
         style={{
-          fontFamily: 'var(--font-mono)',
+          fontFamily: 'var(--mono-font)',
           fontSize: '10px',
           color: 'var(--ink-3)',
           minWidth: '28px',

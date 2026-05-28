@@ -295,7 +295,7 @@ export function LabelerCanvas(props: LabelerCanvasProps) {
           bottom: 'var(--space-2, 8px)',
           left: 'var(--space-2, 8px)',
           padding: 'var(--space-1, 4px) var(--space-2, 8px)',
-          background: 'var(--surface-overlay, rgba(0,0,0,0.6))',
+          background: 'var(--bg-raised, rgba(0,0,0,0.6))',
           color: 'var(--text-on-dark, #fff)',
           borderRadius: 'var(--radius-sm, 4px)',
           fontSize: 'var(--text-xs, 11px)',
