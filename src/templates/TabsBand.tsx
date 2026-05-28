@@ -79,33 +79,63 @@ export const TabsBand: React.FC<TabsBandProps> = ({
   sticky = false,
   rightSlot,
   className,
-}) => (
-  <div role="tablist" className={cn('tabs-band', sticky && 'tabs-band--sticky', className)}>
-    <div className="tabs-band__tabs">
-      {items.map((item) => {
-        const active = current === item.id;
-        return (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            className={cn('tabs-band__tab', active && 'tabs-band__tab--active')}
-            onClick={() => onTabChange?.(item.id)}
-          >
-            {item.icon != null ? (
-              <span className="tabs-band__icon" aria-hidden="true">
-                {item.icon}
-              </span>
-            ) : null}
-            <span className="tabs-band__label">{item.name}</span>
-            {item.count != null ? <span className="tabs-band__count">{item.count}</span> : null}
-          </button>
-        );
-      })}
+}) => {
+  const id = React.useId();
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>, idx: number) {
+    const last = items.length - 1;
+    let next = idx;
+    if (e.key === 'ArrowRight') next = idx === last ? 0 : idx + 1;
+    else if (e.key === 'ArrowLeft') next = idx === 0 ? last : idx - 1;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = last;
+    else return;
+    e.preventDefault();
+    const targetId = items[next]?.id;
+    if (targetId !== undefined) {
+      onTabChange?.(targetId);
+      // Move DOM focus to the newly-active tab button.
+      const tabEl = document.querySelector<HTMLElement>(
+        `[data-tabsband-id="${id}"][data-tab-id="${targetId}"]`,
+      );
+      tabEl?.focus();
+    }
+  }
+
+  return (
+    <div role="tablist" className={cn('tabs-band', sticky && 'tabs-band--sticky', className)}>
+      <div className="tabs-band__tabs">
+        {items.map((item, idx) => {
+          const active = current === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              aria-controls={`${id}-panel-${item.id}`}
+              id={`${id}-tab-${item.id}`}
+              tabIndex={active ? 0 : -1}
+              data-tabsband-id={id}
+              data-tab-id={item.id}
+              className={cn('tabs-band__tab', active && 'tabs-band__tab--active')}
+              onClick={() => onTabChange?.(item.id)}
+              onKeyDown={(e) => handleKeyDown(e, idx)}
+            >
+              {item.icon != null ? (
+                <span className="tabs-band__icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+              ) : null}
+              <span className="tabs-band__label">{item.name}</span>
+              {item.count != null ? <span className="tabs-band__count">{item.count}</span> : null}
+            </button>
+          );
+        })}
+      </div>
+      {rightSlot != null ? <div className="tabs-band__right">{rightSlot}</div> : null}
     </div>
-    {rightSlot != null ? <div className="tabs-band__right">{rightSlot}</div> : null}
-  </div>
-);
+  );
+};
 
 TabsBand.displayName = 'TabsBand';

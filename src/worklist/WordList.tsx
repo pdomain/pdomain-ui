@@ -35,7 +35,7 @@ function DefaultWordRow<TWord extends WordListItem>({
         background: isSelected
           ? 'color-mix(in srgb, var(--accent) 15%, var(--bg-raised))'
           : 'transparent',
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--mono-font)',
         fontSize: 'var(--text-sm)',
         color: 'var(--ink-1)',
         cursor: 'pointer',
@@ -61,6 +61,7 @@ function WordListInner<TWord extends WordListItem = WordListItem>(
     onSelect,
     'aria-label': ariaLabel,
     className,
+    emptySlot,
   }: WordListProps<TWord>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -99,6 +100,7 @@ function WordListInner<TWord extends WordListItem = WordListItem>(
       className={className}
       renderItem={renderItem}
       defaultAriaLabel="Word list"
+      emptySlot={emptySlot}
     />
   );
 }

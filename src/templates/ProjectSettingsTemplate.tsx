@@ -33,15 +33,13 @@
  *   - No direct lucide-react imports.
  */
 import * as React from 'react';
-import { Icon } from '../icons/Icon.js';
-import type { IconName } from '../icons/Icon.js';
 import { ProjectInfoBand } from './PipelineTemplate.js';
 import type { PipelineProject as ProjectData } from './PipelineTemplate.js';
+import { SettingsNav, PROJECT_SETTINGS_GROUPS } from './SettingsNav.js';
 import {
   PROJECT_SETTINGS_TEMPLATE,
   PROJECT_SETTINGS_NAV,
   PROJECT_SETTINGS_CONTENT,
-  projectSettingsNavItem,
 } from '../testids/index.js';
 
 // ---------------------------------------------------------------------------
@@ -58,25 +56,6 @@ export type ProjectSettingsGroup =
   | 'members'
   | 'storage'
   | 'danger';
-
-interface NavItem {
-  id: ProjectSettingsGroup;
-  name: string;
-  icon: IconName;
-  danger?: boolean;
-}
-
-/** Default 8-item project-settings nav definition (matches design source). */
-const NAV_ITEMS: readonly NavItem[] = [
-  { id: 'general', name: 'General', icon: 'wrench' },
-  { id: 'bib', name: 'Bibliographic', icon: 'fileText' },
-  { id: 'pgdp', name: 'PGDP submission', icon: 'package' },
-  { id: 'format', name: 'Format & content', icon: 'file' },
-  { id: 'defaults', name: 'Stage defaults', icon: 'sparkles' },
-  { id: 'members', name: 'Members', icon: 'image' },
-  { id: 'storage', name: 'Storage & cleanup', icon: 'hardDrive' },
-  { id: 'danger', name: 'Danger zone', icon: 'trash', danger: true },
-] as const;
 
 // ---------------------------------------------------------------------------
 // Default right-pane placeholder (no children supplied)
@@ -104,7 +83,7 @@ function SettingsContentPlaceholder() {
             color: 'var(--ink-4)',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--mono-font, monospace)',
           }}
         >
           content slot · settings group
@@ -209,68 +188,24 @@ export function ProjectSettingsTemplate({
         }}
       >
         {/* ── Left rail ─────────────────────────────────────────────────── */}
-        <nav
+        <div
           data-testid={PROJECT_SETTINGS_NAV}
-          aria-label="Settings navigation"
           style={{
             borderRight: '1px solid var(--border-1)',
             background: 'var(--bg-surface)',
             padding: '14px 12px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
           }}
         >
-          <div
-            className="label"
-            style={{
-              color: 'var(--ink-3)',
-              padding: '4px 8px 8px',
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
+          <SettingsNav
+            groups={PROJECT_SETTINGS_GROUPS}
+            currentGroup={currentGroup}
+            onGroupChange={() => {
+              // Navigation is controlled by the consuming app via route changes.
+              // Provide a no-op here; apps wrap ProjectSettingsTemplate in a router.
             }}
-          >
-            Project settings
-          </div>
-
-          {NAV_ITEMS.map((item) => {
-            const active = item.id === currentGroup;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                data-testid={projectSettingsNavItem(item.id)}
-                aria-current={active ? 'page' : undefined}
-                style={{
-                  all: 'unset',
-                  padding: '7px 10px',
-                  borderRadius: 6,
-                  background: active ? 'var(--bg-raised)' : 'transparent',
-                  borderLeft: active ? '2px solid var(--accent)' : '2px solid transparent',
-                  color: item.danger ? 'var(--mismatch)' : active ? 'var(--ink-1)' : 'var(--ink-2)',
-                  fontSize: 12.5,
-                  fontWeight: active ? 600 : 500,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  cursor: 'pointer',
-                  width: '100%',
-                  boxSizing: 'border-box',
-                }}
-              >
-                <span
-                  style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}
-                  aria-hidden="true"
-                >
-                  <Icon name={item.icon} size={13} />
-                </span>
-                {item.name}
-              </button>
-            );
-          })}
-        </nav>
+            label="Project settings"
+          />
+        </div>
 
         {/* ── Right pane ─────────────────────────────────────────────────── */}
         <div

@@ -29,6 +29,7 @@
 import * as React from 'react';
 import { ProjectsDrawer } from './ProjectsDrawer.js';
 import type { ProjectsDrawerProject, ProjectsDrawerTab } from './ProjectsDrawer.js';
+import { CoverPlaceholder } from './PipelineTemplate.js';
 import { AttributesPanel } from '../primitives/AttributesPanel.js';
 import { Badge } from '../primitives/Badge.js';
 import { Button } from '../primitives/Button.js';
@@ -88,6 +89,8 @@ export interface ProjectsLandingTemplatePopulatedProps extends ProjectsLandingSh
   onSelect: (id: string) => void;
   /** Called when the "New project" drawer button is clicked. */
   onCreateProject?: () => void;
+  /** Called when the "Open project" (or "Open read-only") button is clicked. */
+  onOpenProject?: (id: string) => void;
   /**
    * Replaces the default "New project" button in the drawer.
    * When provided, `onCreateProject` is ignored for the drawer button.
@@ -110,6 +113,12 @@ export interface ProjectsLandingTemplateEmptyProps extends ProjectsLandingShared
    * When provided, `onCreateProject` is ignored.
    */
   createSlot?: React.ReactNode;
+  /** Called when the "Paste source URL" secondary button is clicked. */
+  onPasteUrl?: () => void;
+  /** Called when the "Import a .pgdp-prep archive" link button is clicked. */
+  onImportArchive?: () => void;
+  /** Called when the "Open the format style guide" link button is clicked. */
+  onOpenStyleGuide?: () => void;
 }
 
 export type ProjectsLandingTemplateProps =
@@ -157,42 +166,7 @@ function PipelineMini({ total, current, status, height = 8 }: PipelineMiniProps)
   );
 }
 
-/** Avatar/cover placeholder — author initials + chroma-stable hue (from projects.jsx). */
-interface CoverPlaceholderProps {
-  author: string;
-  size?: number;
-}
-
-function CoverPlaceholder({ author, size = 56 }: CoverPlaceholderProps) {
-  const initials = author
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('');
-  const hue = [...author].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
-  return (
-    <div
-      aria-hidden="true"
-      style={{
-        width: size,
-        height: Math.round(size * 1.35),
-        borderRadius: 4,
-        background: `linear-gradient(160deg, oklch(0.62 0.07 ${hue}), oklch(0.42 0.06 ${(hue + 30) % 360}))`,
-        color: 'rgba(255,255,255,0.92)',
-        flex: '0 0 auto',
-        display: 'grid',
-        placeItems: 'center',
-        fontFamily: 'var(--mono-font)',
-        fontWeight: 600,
-        fontSize: Math.round(size * 0.28),
-        letterSpacing: '0.04em',
-        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08), inset -2px 0 0 rgba(0,0,0,0.18)',
-      }}
-    >
-      {initials}
-    </div>
-  );
-}
+// CoverPlaceholder is imported from PipelineTemplate (deduplicated — WS3/WS7)
 
 /** Tiny sort/filter controls strip (ported from projects.jsx). */
 function ProjectsControls() {
@@ -238,12 +212,14 @@ function PopulatedLayout({ props }: PopulatedLayoutProps) {
     selectedId,
     onSelect,
     onCreateProject,
+    onOpenProject,
     createSlot,
     drawerDefaultTab,
     defaultTab = 'activity',
     controlsSlot,
   } = props;
 
+  const tabId = React.useId();
   const [tab, setTab] = React.useState<ProjectsDetailTab>(defaultTab);
 
   // When selectedId changes externally, reset to defaultTab
@@ -251,14 +227,72 @@ function PopulatedLayout({ props }: PopulatedLayoutProps) {
   React.useEffect(() => {
     if (prevSelectedId.current !== selectedId) {
       prevSelectedId.current = selectedId;
+      setTab(defaultTab);
     }
-  }, [selectedId]);
+  }, [selectedId, defaultTab]);
 
-  const selected = projects.find((p) => p.id === selectedId) ?? projects[0];
+  // No fallback to projects[0] — if no matching project, show empty-state prompt.
+  const selected = projects.find((p) => p.id === selectedId);
 
   if (selected === undefined) {
-    // No projects at all — fall through to empty
-    return null;
+    // No matching project selected — show "select a project" prompt instead of
+    // silently falling back to projects[0] (WS5 fix).
+    return (
+      <>
+        {controlsSlot !== undefined ? (
+          <div
+            data-testid="projects-controls"
+            style={{
+              padding: '8px 16px',
+              borderBottom: '1px solid var(--border-1)',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {controlsSlot}
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: '8px 16px',
+              borderBottom: '1px solid var(--border-1)',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <ProjectsControls />
+          </div>
+        )}
+        <div
+          style={{
+            flex: 1,
+            display: 'grid',
+            gridTemplateColumns: '320px 1fr',
+            overflow: 'hidden',
+          }}
+        >
+          <ProjectsDrawer
+            projects={projects}
+            selectedId={null}
+            onSelect={onSelect}
+            {...(onCreateProject !== undefined ? { onCreateProject } : {})}
+            {...(createSlot !== undefined ? { createSlot } : {})}
+            {...(drawerDefaultTab !== undefined ? { defaultTab: drawerDefaultTab } : {})}
+          />
+          <div
+            data-testid="projects-no-selection"
+            style={{
+              display: 'grid',
+              placeItems: 'center',
+              color: 'var(--ink-3)',
+              fontSize: 13,
+            }}
+          >
+            Select a project to view details.
+          </div>
+        </div>
+      </>
+    );
   }
 
   const statusKey: StatusKey = selected.archived ? 'archived' : selected.status;
@@ -442,6 +476,7 @@ function PopulatedLayout({ props }: PopulatedLayoutProps) {
               data-testid="projects-open-btn"
               variant="primary"
               iconRight={<Icon name="arrowR" size={14} />}
+              onClick={() => onOpenProject?.(selected.id)}
             >
               {selected.archived ? 'Open (read-only)' : 'Open project'}
             </Button>
@@ -563,9 +598,13 @@ function PopulatedLayout({ props }: PopulatedLayoutProps) {
                 return (
                   <button
                     key={t.id}
+                    type="button"
                     role="tab"
+                    id={`${tabId}-tab-${t.id}`}
                     data-tab={t.id}
                     aria-selected={active}
+                    aria-controls={`${tabId}-panel-${t.id}`}
+                    tabIndex={active ? 0 : -1}
                     onClick={() => setTab(t.id)}
                     style={{
                       position: 'relative',
@@ -639,7 +678,12 @@ function PopulatedLayout({ props }: PopulatedLayoutProps) {
             </div>
 
             {/* Tab body */}
-            <div data-testid="projects-tab-body">
+            <div
+              data-testid="projects-tab-body"
+              role="tabpanel"
+              id={`${tabId}-panel-${tab}`}
+              aria-labelledby={`${tabId}-tab-${tab}`}
+            >
               {tab === 'activity' ? (
                 <div
                   style={{
@@ -813,7 +857,14 @@ interface EmptyLayoutProps {
 }
 
 function EmptyLayout({ props }: EmptyLayoutProps) {
-  const { onCreateProject, createSlot, controlsSlot } = props;
+  const {
+    onCreateProject,
+    createSlot,
+    controlsSlot,
+    onPasteUrl,
+    onImportArchive,
+    onOpenStyleGuide,
+  } = props;
   return (
     <>
       {/* Controls bar (same chrome as populated) */}
@@ -875,7 +926,7 @@ function EmptyLayout({ props }: EmptyLayoutProps) {
                   borderRadius: 4,
                   background: 'var(--bg-surface)',
                   border: '1px solid var(--border-2)',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                  boxShadow: 'var(--shadow-sm)',
                   opacity: 1 - i * 0.18,
                   transform: `rotate(${(i - 1) * 4}deg)`,
                 }}
@@ -935,7 +986,12 @@ function EmptyLayout({ props }: EmptyLayoutProps) {
                 >
                   Create new project
                 </Button>
-                <Button variant="ghost" size="lg" icon={<Icon name="link" size={16} />}>
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  icon={<Icon name="link" size={16} />}
+                  onClick={onPasteUrl}
+                >
                   Paste source URL
                 </Button>
               </>
@@ -958,6 +1014,7 @@ function EmptyLayout({ props }: EmptyLayoutProps) {
           >
             <button
               type="button"
+              onClick={onImportArchive}
               style={{
                 color: 'var(--ink-3)',
                 background: 'transparent',
@@ -973,6 +1030,7 @@ function EmptyLayout({ props }: EmptyLayoutProps) {
             <span style={{ color: 'var(--border-2)' }}>·</span>
             <button
               type="button"
+              onClick={onOpenStyleGuide}
               style={{
                 color: 'var(--ink-3)',
                 background: 'transparent',

@@ -60,6 +60,24 @@ describe('useLongJob (#166)', () => {
     expect(cancelFn).toHaveBeenCalledWith('job-1');
     expect(result.current.status).toBe('cancelled');
   });
+
+  it('cancel() sets status=error when cancelFn rejects (WS5)', async () => {
+    // When cancelFn rejects, status should become 'error', not remain 'running'.
+    const cancelFn = vi.fn(() => Promise.reject(new Error('cancel failed')));
+    const pollFn = vi.fn(() => Promise.resolve({ status: 'running' as const, progress: 0.5 }));
+    const { result } = renderHook(() =>
+      useLongJob('job-1', { pollFn, cancelFn, pollIntervalMs: 5000 }),
+    );
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 50));
+    });
+    await act(async () => {
+      result.current.cancel();
+      await new Promise((r) => setTimeout(r, 20));
+    });
+    expect(cancelFn).toHaveBeenCalledWith('job-1');
+    expect(result.current.status).toBe('error');
+  });
 });
 
 describe('useLongJob stale-state fixes (#36)', () => {

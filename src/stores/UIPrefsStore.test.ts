@@ -92,21 +92,25 @@ describe('createUIPrefsStore (#164)', () => {
     expect(store.getState().getStatusColor('mismatch')).toBe('var(--mismatch)');
   });
 
-  it('getAccentColor() returns CSS var fallbacks by default', async () => {
+  it('getAccentColor() returns CSS var fallbacks by default — fg=var(--accent-ink), bg=var(--accent)', async () => {
     const store = createUIPrefsStore(makeConfig());
     await new Promise((r) => setTimeout(r, 0));
     const { fg, bg } = store.getState().getAccentColor();
-    expect(fg).toBe('var(--accent)');
-    expect(bg).toBe('var(--accent-ink)');
+    // fg is the INK color (text drawn ON the accent bg) → --accent-ink
+    // bg is the ACCENT background color → --accent
+    expect(fg).toBe('var(--accent-ink)');
+    expect(bg).toBe('var(--accent)');
   });
 
-  it('getAccentColor() returns override when set', async () => {
+  it('getAccentColor() returns override when set — fg=accentInkColor, bg=accentColor (WS4)', async () => {
+    // accentInkColor is the ink/text color to draw ON the accent bg → fg
+    // accentColor    is the accent background              → bg
     const config = makeConfig({ accentColor: '#ff6600', accentInkColor: '#ffffff' });
     const store = createUIPrefsStore(config);
     await new Promise((r) => setTimeout(r, 0));
     const { fg, bg } = store.getState().getAccentColor();
-    expect(fg).toBe('#ff6600');
-    expect(bg).toBe('#ffffff');
+    expect(fg).toBe('#ffffff'); // accentInkColor → fg
+    expect(bg).toBe('#ff6600'); // accentColor    → bg
   });
 
   it('survives load() failure and sets loading=false', async () => {

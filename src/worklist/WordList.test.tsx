@@ -249,3 +249,58 @@ describe('<WordList> filter-clamping (issue #39)', () => {
     expect(onSelect).not.toHaveBeenCalled();
   });
 });
+
+// ── emptySlot (WS5) ────────────────────────────────────────────────────────────
+
+describe('<WordList> emptySlot (WS5)', () => {
+  it('renders emptySlot when items is empty', () => {
+    render(<WordList items={[]} emptySlot={<div data-testid="empty-state">No words found</div>} />);
+    expect(screen.getByTestId('empty-state')).toBeTruthy();
+  });
+
+  it('does not render emptySlot when items are present', () => {
+    render(
+      <WordList
+        items={THREE_WORDS}
+        emptySlot={<div data-testid="empty-state">No words found</div>}
+      />,
+    );
+    expect(screen.queryByTestId('empty-state')).toBeNull();
+  });
+});
+
+// ── aria-activedescendant + roving tabIndex (WS6) ────────────────────────────
+
+describe('<WordList> ARIA activedescendant + roving tabIndex (WS6)', () => {
+  it('sets aria-activedescendant on listbox when an item is selected', () => {
+    render(<WordList items={THREE_WORDS} selectedIndex={1} />);
+    const list = screen.getByRole('listbox');
+    const activeDescendant = list.getAttribute('aria-activedescendant');
+    expect(activeDescendant).toBeTruthy();
+    // The referenced element must exist in the DOM
+    const activeEl = document.getElementById(activeDescendant!);
+    expect(activeEl).toBeTruthy();
+  });
+
+  it('does not set aria-activedescendant when nothing is selected', () => {
+    render(<WordList items={THREE_WORDS} selectedIndex={null} />);
+    const list = screen.getByRole('listbox');
+    expect(list.getAttribute('aria-activedescendant')).toBeFalsy();
+  });
+
+  it('only the selected row has tabIndex=0; others have tabIndex=-1 (roving focus)', () => {
+    render(<WordList items={THREE_WORDS} selectedIndex={1} />);
+    const options = screen.getAllByRole('option');
+    expect(options[0]?.getAttribute('tabindex')).toBe('-1');
+    expect(options[1]?.getAttribute('tabindex')).toBe('0');
+    expect(options[2]?.getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('all rows have tabIndex=-1 when nothing is selected', () => {
+    render(<WordList items={THREE_WORDS} selectedIndex={null} />);
+    const options = screen.getAllByRole('option');
+    options.forEach((opt) => {
+      expect(opt.getAttribute('tabindex')).toBe('-1');
+    });
+  });
+});

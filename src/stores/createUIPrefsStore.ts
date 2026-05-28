@@ -279,9 +279,11 @@ export function createUIPrefsStore(config: UIPrefsConfig) {
 
       getAccentColor: () => {
         const prefs = get().prefs;
+        // fg = ink/text color to draw ON the accent background → accentInkColor
+        // bg = accent background color                        → accentColor
         return {
-          fg: prefs.accentColor ?? 'var(--accent)',
-          bg: prefs.accentInkColor ?? 'var(--accent-ink)',
+          fg: prefs.accentInkColor ?? 'var(--accent-ink)',
+          bg: prefs.accentColor ?? 'var(--accent)',
         };
       },
 

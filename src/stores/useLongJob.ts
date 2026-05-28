@@ -5,6 +5,10 @@
  * local mode. Phase 1 ships a polling stub that can be wired to real
  * pdomain-ops job routes.
  *
+ * @note SSE transport is deferred to Phase 2. Current implementation uses
+ * polling only. To migrate: replace the poll loop with an EventSource
+ * listener; the `status`, `progress`, and `events` contract is identical.
+ *
  * Transport contract URL:
  *   GET /api/jobs/<jobId>          → { status, progress, events }
  *   POST /api/jobs/<jobId>/cancel  → { ok: true }
@@ -107,9 +111,14 @@ export function useLongJob(jobId: string | null, options: UseLongJobOptions = {}
 
   const cancel = React.useCallback(() => {
     if (!jobId || !cancelFn) return;
-    void cancelFn(jobId).then(() => {
-      setStatus('cancelled');
-    });
+    cancelFn(jobId).then(
+      () => {
+        setStatus('cancelled');
+      },
+      () => {
+        setStatus('error');
+      },
+    );
   }, [jobId, cancelFn]);
 
   return { status, progress, events, cancel };

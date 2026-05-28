@@ -225,8 +225,9 @@ describe('useTheme / useDensity / useLayerColor / useStatusColor / useAccentColo
       </UIPrefsStoreProvider>,
     );
     await act(() => Promise.resolve());
-    expect(screen.getByTestId('accent-fg').textContent).toBe('var(--accent)');
-    expect(screen.getByTestId('accent-bg').textContent).toBe('var(--accent-ink)');
+    // fg = ink/text on accent bg → --accent-ink; bg = accent background → --accent (WS4 fix)
+    expect(screen.getByTestId('accent-fg').textContent).toBe('var(--accent-ink)');
+    expect(screen.getByTestId('accent-bg').textContent).toBe('var(--accent)');
   });
 
   it('useTheme re-renders when setTheme called', async () => {

@@ -154,6 +154,13 @@ export interface WordListProps<TWord extends WordListItem = WordListItem> {
 
   /** Additional CSS class applied to the outer container. */
   className?: string | undefined;
+
+  /**
+   * Node rendered instead of the virtualized list when `items` is empty.
+   * The listbox wrapper is still present; only the row content is replaced.
+   * Use this to show "No results" / search-empty-state prompts.
+   */
+  emptySlot?: ReactNode;
 }
 
 /**
