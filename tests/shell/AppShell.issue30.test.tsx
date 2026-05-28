@@ -68,7 +68,7 @@ function renderWithSiblings(
   launch: (id: string) => Promise<LaunchResult> = vi.fn(),
 ) {
   return render(
-    <SuiteSiblingsContext.Provider value={{ siblings, launch, loading: false }}>
+    <SuiteSiblingsContext.Provider value={{ siblings, launch, loading: false, error: null }}>
       <AppShell {...props} />
     </SuiteSiblingsContext.Provider>,
   );

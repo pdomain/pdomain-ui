@@ -92,10 +92,12 @@ export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel }
         position: 'relative',
       }}
     >
-      {/* Done-shimmer overlay */}
+      {/* Done-shimmer overlay — uses the .shimmer class from primitives.css
+          which provides the pgd-shimmer keyframe animation. */}
       {done ? (
         <div
           aria-hidden
+          className="shimmer"
           style={{
             position: 'absolute',
             inset: 0,
@@ -103,7 +105,6 @@ export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel }
             background:
               'linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--exact) 22%, transparent) 50%, transparent 100%)',
             backgroundSize: '200% 100%',
-            animation: 'pgd-shimmer 2.8s linear infinite',
             opacity: 0.7,
           }}
         />

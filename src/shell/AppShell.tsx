@@ -167,7 +167,7 @@ export function AppShell({
                 ? '"header header header header" "rail drawer main right" "footer footer footer footer"'
                 : '"header header header header" "rail drawer main right"',
               gridTemplateColumns:
-                'var(--shell-rail-w, 0px) var(--shell-drawer-w, 0px) 1fr var(--shell-right-w, 0px)',
+                'var(--shell-rail-w, 64px) var(--shell-drawer-w, 0px) 1fr var(--shell-right-w, 0px)',
               gridTemplateRows: footer
                 ? 'var(--shell-header-h, 56px) 1fr var(--shell-footer-h, auto)'
                 : 'var(--shell-header-h, 56px) 1fr',
@@ -177,50 +177,53 @@ export function AppShell({
             }}
           >
             {/* Header zone — always rendered (built-in or custom) */}
-            <div
+            <header
               data-testid="app-shell-header"
               style={{ gridArea: 'header' }}
               className="min-w-0 overflow-hidden"
             >
               {resolvedHeader}
-            </div>
+            </header>
 
             {/* Rail zone — when launcherSlot='rail', LauncherSlot is appended here */}
-            <div
+            <nav
               data-testid="app-shell-rail"
+              aria-label="App rail"
               style={{ gridArea: 'rail' }}
               className="min-w-0 overflow-hidden"
             >
               {rail}
               {launcherSlot === 'rail' && <LauncherSlot />}
-            </div>
+            </nav>
 
             {/* Drawer zone */}
-            <div
+            <aside
               data-testid="app-shell-drawer"
+              aria-label="Drawer"
               style={{ gridArea: 'drawer' }}
               className="min-w-0 overflow-hidden"
             >
               {drawer}
-            </div>
+            </aside>
 
             {/* Main content zone (required) */}
-            <div
+            <main
               data-testid="app-shell-main"
               style={{ gridArea: 'main' }}
               className="min-w-0 min-h-0 overflow-hidden"
             >
               {main}
-            </div>
+            </main>
 
             {/* Right panel zone */}
-            <div
+            <aside
               data-testid="app-shell-right"
+              aria-label="Right panel"
               style={{ gridArea: 'right' }}
               className="min-w-0 overflow-hidden"
             >
               {rightPanel}
-            </div>
+            </aside>
 
             {/* Footer zone (issue #14) — only rendered when footer prop is provided */}
             {footer !== undefined && (

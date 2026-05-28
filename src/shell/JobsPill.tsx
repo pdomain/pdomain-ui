@@ -33,6 +33,8 @@ export interface JobsPillProps {
   open?: boolean;
   /** Called when the pill button is clicked. */
   onClick?: () => void;
+  /** Called when "View all jobs" footer link is clicked. */
+  onViewAll?: () => void;
   className?: string;
 }
 
@@ -83,13 +85,19 @@ const popoverStyle: React.CSSProperties = {
   borderRadius: 10,
   background: 'var(--bg-surface)',
   border: '1px solid var(--border-1)',
-  boxShadow: '0 12px 32px rgba(15,23,42,.18), 0 2px 6px rgba(15,23,42,.08)',
+  boxShadow: 'var(--shadow-overlay)',
   zIndex: 50,
 };
 
 // ─── JobsPill ─────────────────────────────────────────────────────────────────
 
-export function JobsPill({ activeJobs = [], open = false, onClick, className }: JobsPillProps) {
+export function JobsPill({
+  activeJobs = [],
+  open = false,
+  onClick,
+  onViewAll,
+  className,
+}: JobsPillProps) {
   const [hover, setHover] = React.useState(false);
   const show = open || hover;
   const isActive = activeJobs.length > 0;
@@ -244,7 +252,10 @@ export function JobsPill({ activeJobs = [], open = false, onClick, className }: 
             </div>
           )}
 
-          <div
+          <button
+            type="button"
+            data-testid="jobs-pill-view-all"
+            onClick={onViewAll}
             style={{
               marginTop: 4,
               padding: '8px 10px',
@@ -253,11 +264,18 @@ export function JobsPill({ activeJobs = [], open = false, onClick, className }: 
               alignItems: 'center',
               justifyContent: 'space-between',
               cursor: 'pointer',
+              width: '100%',
+              background: 'transparent',
+              border: 0,
+              borderTopWidth: 1,
+              borderTopStyle: 'solid',
+              borderTopColor: 'var(--border-1)',
+              textAlign: 'left',
             }}
           >
             <span style={{ fontSize: 12, color: 'var(--ink-2)' }}>View all jobs</span>
-            <ArrowRight size={12} style={{ color: 'var(--ink-3)' }} />
-          </div>
+            <ArrowRight size={12} aria-hidden style={{ color: 'var(--ink-3)' }} />
+          </button>
         </div>
       ) : null}
     </div>

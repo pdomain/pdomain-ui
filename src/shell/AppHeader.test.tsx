@@ -39,9 +39,11 @@ describe('AppHeader', () => {
     expect(screen.getByText('my-app')).toBeDefined();
   });
 
-  it('defaults appName to pgdp-prep', () => {
+  it('renders without crashing when appName is not provided (empty default)', () => {
+    // OQ-3 audit fix: placeholder defaults removed; appName defaults to ''.
+    // Consumer SPAs must pass their own appName.
     render(<AppHeader />);
-    expect(screen.getByText('pgdp-prep')).toBeDefined();
+    expect(screen.getByTestId('app-header')).toBeDefined();
   });
 
   it('renders search area with placeholder text', () => {

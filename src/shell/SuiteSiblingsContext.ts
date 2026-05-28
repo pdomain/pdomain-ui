@@ -12,6 +12,8 @@ export interface SuiteSiblingsContextValue {
   siblings: InstalledApp[];
   launch: (id: string) => Promise<LaunchResult>;
   loading: boolean;
+  /** Non-null when fetchInstalled() rejected; null while loading or on success. */
+  error: unknown;
 }
 
 export const SuiteSiblingsContext = React.createContext<SuiteSiblingsContextValue | null>(null);

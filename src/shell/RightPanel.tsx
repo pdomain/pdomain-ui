@@ -23,6 +23,7 @@ export function RightPanel({ children, className, width = '520px' }: RightPanelP
         flexDirection: 'column',
         height: '100%',
         width,
+        minWidth: 0,
         background: 'var(--bg-surface)',
         borderLeft: '1px solid var(--border-1)',
         overflow: 'hidden',
