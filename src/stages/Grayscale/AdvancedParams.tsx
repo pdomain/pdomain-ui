@@ -92,6 +92,7 @@ export const AdvancedParams = React.forwardRef<HTMLDivElement, AdvancedParamsPro
                       data-testid="advanced-params-slider-samplerRadius"
                       onChange={(e) => handleSamplerRadiusChange(e.target.valueAsNumber)}
                       className="adv-params-slider"
+                      aria-label="Sampler radius"
                     />
                     <input
                       type="number"
@@ -136,6 +137,7 @@ export const AdvancedParams = React.forwardRef<HTMLDivElement, AdvancedParamsPro
                       data-testid="advanced-params-slider-gamma"
                       onChange={(e) => handleGammaChange(e.target.valueAsNumber)}
                       className="adv-params-slider"
+                      aria-label="Gamma"
                     />
                     <input
                       type="number"

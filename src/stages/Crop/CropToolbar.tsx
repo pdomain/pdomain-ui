@@ -3,11 +3,13 @@ import { Button } from '../../primitives/Button.js';
 import { Segmented } from '../../primitives/Segmented.js';
 import { StageToolbar } from '../../primitives/StageToolbar.js';
 import type { SegmentedOption } from '../../primitives/Segmented.js';
+import type { CropFlagKind } from './types.js';
+
+export type { CropFlagKind };
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type CropFilter = 'all' | 'flagged' | 'clean' | 'reviewed' | 'errors';
-export type CropFlagKind = 'overCrop' | 'underCrop' | 'deskewFail' | 'edgeNoise';
 export type CropDensity = 's' | 'm' | 'l';
 
 export interface CropFilterCounts {
@@ -162,7 +164,7 @@ export function CropToolbar({
   );
 
   const centerSlot = (
-    <div data-testid={`crop-toolbar-density-${density}`}>
+    <div data-testid="crop-toolbar-density">
       <Segmented
         options={DENSITY_OPTIONS}
         value={density}

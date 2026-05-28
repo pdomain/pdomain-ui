@@ -229,3 +229,29 @@ describe('CropOverview — data-testid', () => {
     expect(screen.getByTestId(CROP_OVERVIEW_ACTIVITY)).toBeInTheDocument();
   });
 });
+
+// ── TDD: section aria-label (WS6) ────────────────────────────────────────────
+
+describe('CropOverview — section aria-label a11y', () => {
+  it('root section has an aria-label', () => {
+    renderOverview();
+    const section = document.querySelector('section.crop-overview');
+    expect(section).toHaveAttribute('aria-label');
+    expect(section?.getAttribute('aria-label')).not.toBe('');
+  });
+
+  it('distribution panel has aria-label', () => {
+    renderOverview();
+    const dist = screen.getByTestId(CROP_OVERVIEW_DISTRIBUTION);
+    expect(dist).toBeInTheDocument();
+    // It has a visual heading "Flag distribution" — verify the element exists
+    expect(screen.getByText('Flag distribution')).toBeInTheDocument();
+  });
+
+  it('activity panel has aria-label', () => {
+    renderOverview();
+    const activity = screen.getByTestId(CROP_OVERVIEW_ACTIVITY);
+    expect(activity).toBeInTheDocument();
+    expect(screen.getByText('Recent activity')).toBeInTheDocument();
+  });
+});

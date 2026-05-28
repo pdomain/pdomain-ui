@@ -223,3 +223,24 @@ describe('CropStepSettings', () => {
     expect(screen.getByText('30%')).toBeInTheDocument();
   });
 });
+
+// ── TDD: testid fallback (WS7) ────────────────────────────────────────────────
+
+describe('CropStepSettings — testid fallback', () => {
+  it('uses a default testid "crop-step-settings" when none provided', () => {
+    render(<CropStepSettings settings={makeSettings()} onChange={vi.fn()} />);
+    expect(screen.getByTestId('crop-step-settings')).toBeInTheDocument();
+  });
+
+  it('custom testid overrides the default', () => {
+    render(
+      <CropStepSettings
+        settings={makeSettings()}
+        onChange={vi.fn()}
+        data-testid="my-crop-settings"
+      />,
+    );
+    expect(screen.getByTestId('my-crop-settings')).toBeInTheDocument();
+    expect(screen.queryByTestId('crop-step-settings')).not.toBeInTheDocument();
+  });
+});

@@ -184,3 +184,33 @@ describe('CropBanner — each state renders distinct content', () => {
     expect(screen.getByText('Crops ready')).toBeInTheDocument();
   });
 });
+
+// ── TDD: error state (WS5) ────────────────────────────────────────────────────
+
+describe('CropBanner — error state', () => {
+  it('renders in error state with danger tone', () => {
+    render(<CropBanner state="error" data-testid={CROP_BANNER} />);
+    const banner = screen.getByTestId(CROP_BANNER);
+    expect(banner).toHaveAttribute('data-tone', 'danger');
+  });
+
+  it('renders a meaningful error headline', () => {
+    render(<CropBanner state="error" />);
+    expect(screen.getByText(/pipeline/i)).toBeInTheDocument();
+  });
+
+  it('renders Re-run button in error state when onRerun is provided', () => {
+    render(<CropBanner state="error" onRerun={vi.fn()} />);
+    expect(screen.getByTestId(CROP_BANNER_RERUN)).toBeInTheDocument();
+  });
+
+  it('does not render Re-run button in error state when onRerun is absent', () => {
+    render(<CropBanner state="error" />);
+    expect(screen.queryByTestId(CROP_BANNER_RERUN)).not.toBeInTheDocument();
+  });
+
+  it('error state has optional errorMessage in subtext', () => {
+    render(<CropBanner state="error" errorMessage="Disk full" />);
+    expect(screen.getByText('Disk full')).toBeInTheDocument();
+  });
+});

@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { Thumbnail } from '../../primitives/Thumbnail.js';
 import { CROP_CARD, cropCardTestId, cropCardFlagTestId } from '../../testids/index.js';
+import type { CropFlagKind } from './types.js';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-/** Detected flag kinds for a crop page. */
-export type CropFlagKind = 'overCrop' | 'underCrop' | 'deskewFail' | 'edgeNoise';
+export type { CropFlagKind };
 
 /** Density of the crop grid. */
 export type CropDensity = 's' | 'm' | 'l';
@@ -74,7 +72,7 @@ function BboxOverlay({ bbox }: BboxOverlayProps): React.ReactElement {
         top: `${y * 100}%`,
         width: `${w * 100}%`,
         height: `${h * 100}%`,
-        border: '2px solid var(--color-brand)',
+        border: '2px solid var(--accent)',
         boxSizing: 'border-box',
         pointerEvents: 'none',
       }}

@@ -165,3 +165,46 @@ describe('ModeCard — data-testid', () => {
     expect(screen.getByTestId(MODE_CARD_GROUP)).toBeInTheDocument();
   });
 });
+
+// ── TDD: radiogroup arrow-key nav (WS6) ──────────────────────────────────────
+
+describe('ModeCard — radiogroup arrow-key navigation', () => {
+  it('ArrowRight on Standard card moves focus to Perceptual and calls onModeChange', async () => {
+    const onModeChange = vi.fn();
+    renderModeCard({ selectedMode: 'standard', onModeChange });
+
+    const standardCard = screen.getByTestId(modeCardTestId('standard'));
+    standardCard.focus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    expect(onModeChange).toHaveBeenCalledWith('perceptual');
+  });
+
+  it('ArrowLeft on Perceptual card moves focus to Standard and calls onModeChange', async () => {
+    const onModeChange = vi.fn();
+    renderModeCard({ selectedMode: 'perceptual', onModeChange });
+
+    const perceptualCard = screen.getByTestId(modeCardTestId('perceptual'));
+    perceptualCard.focus();
+    await userEvent.keyboard('{ArrowLeft}');
+
+    expect(onModeChange).toHaveBeenCalledWith('standard');
+  });
+
+  it('ArrowRight on last card wraps to first and calls onModeChange', async () => {
+    const onModeChange = vi.fn();
+    renderModeCard({ selectedMode: 'perceptual', onModeChange });
+
+    const perceptualCard = screen.getByTestId(modeCardTestId('perceptual'));
+    perceptualCard.focus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    expect(onModeChange).toHaveBeenCalledWith('standard');
+  });
+
+  it('selected card has tabIndex=0; non-selected has tabIndex=-1', () => {
+    renderModeCard({ selectedMode: 'standard' });
+    expect(screen.getByTestId(modeCardTestId('standard'))).toHaveAttribute('tabindex', '0');
+    expect(screen.getByTestId(modeCardTestId('perceptual'))).toHaveAttribute('tabindex', '-1');
+  });
+});

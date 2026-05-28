@@ -99,3 +99,20 @@ describe('AdvancedParams', () => {
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ outputRange: [0, 230] }));
   });
 });
+
+// ── TDD: range aria-label (WS6) ──────────────────────────────────────────────
+
+describe('AdvancedParams — range inputs have aria-label', () => {
+  it('samplerRadius range input has an aria-label', () => {
+    render(<AdvancedParams params={defaultParams} onChange={vi.fn()} defaultOpen={true} />);
+    const slider = screen.getByTestId('advanced-params-slider-samplerRadius');
+    expect(slider).toHaveAttribute('aria-label');
+    expect(slider.getAttribute('aria-label')).not.toBe('');
+  });
+
+  it('gamma range input has an aria-label', () => {
+    render(<AdvancedParams params={defaultParams} onChange={vi.fn()} defaultOpen={true} />);
+    const slider = screen.getByTestId('advanced-params-slider-gamma');
+    expect(slider).toHaveAttribute('aria-label');
+  });
+});

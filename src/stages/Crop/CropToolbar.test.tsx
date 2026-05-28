@@ -239,8 +239,8 @@ describe('CropToolbar', () => {
       />,
     );
 
-    // The density wrapper div carries the testid crop-toolbar-density-<d>
-    expect(screen.getByTestId('crop-toolbar-density-l')).toBeInTheDocument();
+    // The density wrapper uses a stable testid (not density-suffixed)
+    expect(screen.getByTestId('crop-toolbar-density')).toBeInTheDocument();
   });
 
   it('Re-run button appears and fires onRerun', async () => {
@@ -291,5 +291,35 @@ describe('CropToolbar', () => {
     );
 
     expect(screen.getByTestId('my-crop-toolbar')).toBeInTheDocument();
+  });
+});
+
+// ── TDD: stable density testid (WS6) ─────────────────────────────────────────
+
+describe('CropToolbar — stable density testid', () => {
+  it('density wrapper has stable testid "crop-toolbar-density" regardless of density value', () => {
+    render(
+      <CropToolbar
+        filter="all"
+        onFilterChange={() => undefined}
+        counts={COUNTS}
+        density="s"
+        onDensityChange={() => undefined}
+      />,
+    );
+    expect(screen.getByTestId('crop-toolbar-density')).toBeInTheDocument();
+  });
+
+  it('stable testid present for density m', () => {
+    render(
+      <CropToolbar
+        filter="all"
+        onFilterChange={() => undefined}
+        counts={COUNTS}
+        density="m"
+        onDensityChange={() => undefined}
+      />,
+    );
+    expect(screen.getByTestId('crop-toolbar-density')).toBeInTheDocument();
   });
 });

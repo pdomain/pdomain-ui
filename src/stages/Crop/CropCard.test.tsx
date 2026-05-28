@@ -253,3 +253,36 @@ describe('CropCard', () => {
     });
   });
 });
+
+// ─── TDD: flag-render guard (WS5) ─────────────────────────────────────────────
+
+describe('CropCard — flag overlayBottomLeft guard', () => {
+  it('does not render overlayBottomLeft container when flags is empty (density m)', () => {
+    const { container } = render(<CropCard page={makePage({ flags: [] })} density="m" />);
+    // Neither the chips div nor the count badge should be present
+    expect(container.querySelector('.crop-card__flags')).not.toBeInTheDocument();
+    expect(container.querySelector('.crop-card__flag-count')).not.toBeInTheDocument();
+  });
+
+  it('does not pass overlayBottomLeft when flags is empty (density l)', () => {
+    const { container } = render(<CropCard page={makePage({ flags: [] })} density="l" />);
+    expect(container.querySelector('.crop-card__flags')).not.toBeInTheDocument();
+    expect(container.querySelector('.crop-card__flag-overflow')).not.toBeInTheDocument();
+  });
+});
+
+// ─── A11y: status dot has human-readable aria-label (WS6) ────────────────────
+
+describe('CropCard — status dot a11y', () => {
+  it('status dot has aria-label matching status value', () => {
+    const { container } = render(<CropCard page={makePage({ status: 'flagged' })} density="m" />);
+    const dot = container.querySelector('.crop-card__status');
+    expect(dot).toHaveAttribute('aria-label', 'flagged');
+  });
+
+  it('status dot is NOT aria-hidden (must be announced)', () => {
+    const { container } = render(<CropCard page={makePage({ status: 'clean' })} density="m" />);
+    const dot = container.querySelector('.crop-card__status');
+    expect(dot).not.toHaveAttribute('aria-hidden', 'true');
+  });
+});

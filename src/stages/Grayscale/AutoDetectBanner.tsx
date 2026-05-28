@@ -2,15 +2,9 @@ import * as React from 'react';
 import { Sparkles } from '../../icons/lucide.js';
 import { Button } from '../../primitives/Button.js';
 import { AUTO_DETECT_BANNER, AUTO_DETECT_BANNER_REDETECT } from '../../testids/index.js';
+import type { GrayscaleMode } from './types.js';
 
-/**
- * Grayscale conversion mode.
- *
- * - `'standard'`    — luminance-weighted ITU-R BT.709 conversion.
- * - `'perceptual'`  — LAB-aware perceptual conversion tuned for
- *                     printed-book content (newsprint, engravings).
- */
-export type GrayscaleMode = 'standard' | 'perceptual';
+export type { GrayscaleMode };
 
 export interface AutoDetectBannerProps {
   /** Auto-detected grayscale conversion mode. */

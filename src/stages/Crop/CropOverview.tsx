@@ -5,10 +5,9 @@ import {
   CROP_OVERVIEW_ACTIVITY,
   cropOverviewActivityTestId,
 } from '../../testids/index.js';
+import type { CropFlagKind } from './types.js';
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-export type CropFlagKind = 'overCrop' | 'underCrop' | 'deskewFail' | 'edgeNoise';
+export type { CropFlagKind };
 
 export interface FlagDistributionEntry {
   kind: CropFlagKind;
@@ -85,34 +84,11 @@ function FlagDistribution({
   const total = flagDistribution.reduce((sum, e) => sum + e.count, 0);
 
   return (
-    <div
-      className="crop-overview__distribution"
-      data-testid={testId}
-      style={{
-        background: 'var(--bg-surface)',
-        border: '1px solid var(--border-1)',
-        borderRadius: 8,
-        padding: '14px 16px',
-      }}
-    >
-      <div
-        style={{
-          fontSize: 13,
-          fontWeight: 600,
-          color: 'var(--ink-1)',
-          marginBottom: 12,
-        }}
-      >
-        Flag distribution
-      </div>
+    <div className="crop-overview__distribution" data-testid={testId}>
+      <div className="crop-overview__head">Flag distribution</div>
 
       {flagDistribution.length === 0 ? (
-        <div
-          className="crop-overview__distribution-empty"
-          style={{ fontSize: 12, color: 'var(--ink-4)', padding: '4px 0' }}
-        >
-          No flags recorded.
-        </div>
+        <div className="crop-overview__distribution-empty">No flags recorded.</div>
       ) : (
         <>
           {/* Stacked bar */}
@@ -120,14 +96,6 @@ function FlagDistribution({
             className="crop-overview__stacked-bar"
             role="img"
             aria-label="Flag distribution stacked bar"
-            style={{
-              display: 'flex',
-              height: 12,
-              borderRadius: 6,
-              overflow: 'hidden',
-              background: 'var(--bg-sunk)',
-              marginBottom: 12,
-            }}
           >
             {flagDistribution.map((entry) => {
               const pct = total > 0 ? (entry.count / total) * 100 : 0;
@@ -139,51 +107,22 @@ function FlagDistribution({
                   aria-valuenow={entry.count}
                   aria-valuemax={total}
                   aria-label={`${FLAG_LABEL[entry.kind]}: ${entry.count}`}
-                  style={{
-                    width: `${pct}%`,
-                    background: FLAG_TOKEN[entry.kind],
-                    flexShrink: 0,
-                  }}
+                  style={{ width: `${pct}%`, background: FLAG_TOKEN[entry.kind] }}
                 />
               );
             })}
           </div>
 
           {/* Legend */}
-          <div
-            className="crop-overview__legend"
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '6px 16px',
-            }}
-          >
+          <div className="crop-overview__legend">
             {flagDistribution.map((entry) => (
-              <div
-                key={entry.kind}
-                className="crop-overview__legend-item"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  fontSize: 12,
-                }}
-              >
+              <div key={entry.kind} className="crop-overview__legend-item">
                 <span
                   className="crop-overview__legend-chip"
-                  style={{
-                    display: 'inline-block',
-                    width: 10,
-                    height: 10,
-                    borderRadius: 2,
-                    background: FLAG_TOKEN[entry.kind],
-                    flexShrink: 0,
-                  }}
+                  style={{ background: FLAG_TOKEN[entry.kind] }}
                 />
-                <span style={{ color: 'var(--ink-2)' }}>{FLAG_LABEL[entry.kind]}</span>
-                <span className="mono" style={{ fontWeight: 600, color: 'var(--ink-1)' }}>
-                  {entry.count}
-                </span>
+                <span className="crop-overview__label">{FLAG_LABEL[entry.kind]}</span>
+                <span className="mono crop-overview__stat">{entry.count}</span>
               </div>
             ))}
           </div>
@@ -205,95 +144,25 @@ function RecentActivity({
   const now = Date.now();
 
   return (
-    <div
-      className="crop-overview__activity"
-      data-testid={testId}
-      style={{
-        background: 'var(--bg-surface)',
-        border: '1px solid var(--border-1)',
-        borderRadius: 8,
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        style={{
-          padding: '12px 16px',
-          borderBottom: '1px solid var(--border-1)',
-          fontSize: 13,
-          fontWeight: 600,
-          color: 'var(--ink-1)',
-        }}
-      >
-        Recent activity
-      </div>
+    <div className="crop-overview__activity" data-testid={testId}>
+      <div className="crop-overview__head">Recent activity</div>
 
       {recentActivity.length === 0 ? (
-        <div
-          className="crop-overview__activity-empty"
-          style={{
-            padding: '12px 16px',
-            fontSize: 12,
-            color: 'var(--ink-4)',
-          }}
-        >
-          No recent activity.
-        </div>
+        <div className="crop-overview__activity-empty">No recent activity.</div>
       ) : (
-        <ul
-          style={{
-            listStyle: 'none',
-            margin: 0,
-            padding: 0,
-          }}
-        >
+        <ul className="crop-overview__activity-list">
           {recentActivity.map((entry, i) => (
             <li
               key={entry.id}
+              className={`crop-overview__activity-row${i > 0 ? ' crop-overview__activity-row--bordered' : ''}`}
               data-testid={cropOverviewActivityTestId(entry.id)}
-              style={{
-                padding: '10px 16px',
-                borderTop: i === 0 ? undefined : '1px solid var(--border-1)',
-                display: 'grid',
-                gridTemplateColumns: '80px 1fr',
-                gridTemplateRows: 'auto auto',
-                columnGap: 12,
-                rowGap: 2,
-              }}
             >
-              <span
-                className="mono"
-                style={{
-                  fontSize: 11,
-                  color: 'var(--ink-4)',
-                  gridColumn: 1,
-                  gridRow: '1 / -1',
-                  alignSelf: 'start',
-                }}
-              >
+              <span className="mono crop-overview__activity-time">
                 {relativeTime(entry.timestamp, now)}
               </span>
-              <div
-                style={{
-                  fontSize: 12.5,
-                  color: 'var(--ink-1)',
-                  gridColumn: 2,
-                  gridRow: 1,
-                }}
-              >
-                {entry.message}
-              </div>
+              <div className="crop-overview__activity-msg">{entry.message}</div>
               {entry.actor != null && (
-                <div
-                  className="mono"
-                  style={{
-                    fontSize: 11,
-                    color: 'var(--ink-3)',
-                    gridColumn: 2,
-                    gridRow: 2,
-                  }}
-                >
-                  {entry.actor}
-                </div>
+                <div className="mono crop-overview__activity-actor">{entry.actor}</div>
               )}
             </li>
           ))}
@@ -320,15 +189,7 @@ export function CropOverview({
   'data-testid': testId = CROP_OVERVIEW,
 }: CropOverviewProps): React.ReactElement {
   return (
-    <section
-      className="crop-overview"
-      data-testid={testId}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 16,
-      }}
-    >
+    <section className="crop-overview" data-testid={testId} aria-label="Crop stage overview">
       <FlagDistribution flagDistribution={flagDistribution} />
       <RecentActivity recentActivity={recentActivity} />
     </section>
