@@ -32,6 +32,11 @@
   --ocr: #5d9fdf; /* OCR-only · running · style */
   --gt: #a888d4; /* GT-only · component */
 
+  /* Subtle translucent fills — canvas overlays (Konva) */
+  --accent-subtle: rgba(214, 146, 90, 0.16);
+  --ocr-subtle: rgba(93, 159, 223, 0.14);
+  --exact-subtle: rgba(95, 191, 106, 0.14);
+
   /* Layers — 4 (canvas + UI chips only) */
   --block: #a89074;
   --para: #7fb56a;
@@ -104,6 +109,10 @@
   --mismatch: #b13d32;
   --ocr: #2d6fb5;
   --gt: #6e4ea5;
+
+  --accent-subtle: rgba(184, 90, 46, 0.14);
+  --ocr-subtle: rgba(45, 111, 181, 0.12);
+  --exact-subtle: rgba(45, 140, 58, 0.12);
 
   --block: #7a5e3a;
   --para: #4d8a3a;
