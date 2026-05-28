@@ -62,11 +62,11 @@ function InteractiveStory() {
   return (
     <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {lastAction !== null && (
-        <p style={{ color: 'var(--color-text-secondary)', margin: 0 }}>
+        <p style={{ color: 'var(--ink-3)', margin: 0 }}>
           Last action: <strong>{lastAction}</strong>
         </p>
       )}
-      <p style={{ color: 'var(--color-text-secondary)', margin: 0 }}>
+      <p style={{ color: 'var(--ink-3)', margin: 0 }}>
         {count} items selected —{' '}
         <button
           onClick={() => setCount((c) => c + 1)}

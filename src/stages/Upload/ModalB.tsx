@@ -15,7 +15,7 @@
  * Constraints (pdomain-ui CLAUDE.md):
  *   - No CVA.
  *   - No hex literals — all colors are var(--token).
- *   - No direct lucide-react imports.
+ *   - No direct lucide-react imports (use Icon dispatcher from ../../icons/Icon.js).
  *   - exactOptionalPropertyTypes — no spread of optional props without conditional.
  */
 
@@ -27,6 +27,7 @@ import {
   DialogTitle,
   DialogClose,
 } from '../../primitives/Dialog.js';
+import { Icon } from '../../icons/Icon.js';
 import {
   UPLOAD_MODAL_B,
   UPLOAD_MODAL_B_DROP_ZONE,
@@ -138,22 +139,7 @@ export const ModalB: React.FC<ModalBProps> = ({
           onKeyDown={handleDropZoneKeyDown}
         >
           <span className="upload-modal-b__drop-icon" aria-hidden="true">
-            {/* Upload icon — inline SVG to avoid lucide-react direct import */}
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
+            <Icon name="upload" size={32} aria-hidden={true} />
           </span>
           <span className="upload-modal-b__drop-primary">Drop images here</span>
           <span className="upload-modal-b__drop-secondary">or click to browse (PNG, JPG, JP2)</span>

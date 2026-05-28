@@ -53,7 +53,8 @@ export function CheckRow({
   check,
   expanded,
   onToggle,
-  lastRow,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  lastRow: _lastRow, // kept in API; border suppression is via CSS :last-child
   'data-testid': testId,
 }: CheckRowProps): React.ReactElement {
   const { id, name, state, affectedPages } = check;
@@ -76,62 +77,35 @@ export function CheckRow({
     <div
       data-testid={testId ?? validationCheckRowTestId(id)}
       data-check-row={VALIDATION_CHECK_ROW}
-      style={{
-        borderBottom: lastRow === true ? 'none' : '1px solid var(--border-1)',
-        background: expanded ? 'var(--bg-raised)' : 'transparent',
-      }}
+      className={['check-row', expanded ? 'check-row--expanded' : ''].filter(Boolean).join(' ')}
     >
       {/* Row header */}
       <button
         type="button"
-        aria-expanded={expanded}
+        {...(canToggle ? { 'aria-expanded': expanded } : {})}
         onClick={handleToggle}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          padding: '12px 16px',
-          cursor: 'pointer',
-          width: '100%',
-          background: 'transparent',
-          border: 'none',
-          textAlign: 'left',
-        }}
+        className="check-row__trigger"
       >
         <CheckIcon state={state} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              flexWrap: 'wrap',
-            }}
-          >
-            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-1)' }}>{name}</span>
-            {/* Collapsed page chips */}
-            {!expanded && collapsedChips.length > 0 && (
-              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' }}>
-                {collapsedChips.map((page) => (
-                  <PageChip key={page.id} prefix={page.prefix} />
-                ))}
-                {overflow > 0 && (
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: 'var(--ink-3)',
-                      fontStyle: 'normal',
-                    }}
-                  >
-                    +{overflow} more
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
+        <div className="check-row__meta">
+          <span className="check-row__name">{name}</span>
+          {/* Collapsed page chips */}
+          {!expanded && collapsedChips.length > 0 && (
+            <span
+              style={{ display: 'inline-flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' }}
+            >
+              {collapsedChips.map((page) => (
+                <PageChip key={page.id} prefix={page.prefix} />
+              ))}
+              {overflow > 0 && <span className="check-row__hint">+{overflow} more</span>}
+            </span>
+          )}
         </div>
         {canToggle && (
-          <span style={{ color: 'var(--ink-4)', flexShrink: 0, display: 'inline-flex' }}>
+          <span
+            style={{ color: 'var(--ink-4)', flexShrink: 0, display: 'inline-flex' }}
+            aria-hidden="true"
+          >
             <Icon name={expanded ? 'chevD' : 'chevR'} size={14} />
           </span>
         )}
@@ -139,22 +113,8 @@ export function CheckRow({
 
       {/* Expanded affected-pages region */}
       {expanded && expandedPages.length > 0 && (
-        <div
-          style={{
-            padding: '0 16px 14px 50px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 10,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 11.5,
-              color: 'var(--ink-3)',
-            }}
-          >
-            Affected pages
-          </div>
+        <div className="check-row__body">
+          <div className="check-row__hint">Affected pages</div>
           <ul
             style={{
               display: 'flex',

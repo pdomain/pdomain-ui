@@ -91,11 +91,13 @@ export function PageThumb({
     ) : undefined;
 
   const isInteractive = onSelect != null;
+  const hasImage = page.thumbnailUrl !== undefined && page.thumbnailUrl !== '';
 
   // Inner Thumbnail always gets QUALITY_PAGE_THUMB testid (generic constant).
-  const innerThumbnail = (
+  // When imageUrl is absent, render a skeleton placeholder to avoid a broken <img>.
+  const innerThumbnail = hasImage ? (
     <Thumbnail
-      imageUrl={page.thumbnailUrl ?? ''}
+      imageUrl={page.thumbnailUrl as string}
       imageAlt={`Page ${String(page.number)}`}
       pageNumber={String(page.number)}
       {...(selected !== undefined ? { selected } : {})}
@@ -103,6 +105,24 @@ export function PageThumb({
       className="quality-page-thumb__inner"
       data-testid={QUALITY_PAGE_THUMB}
     />
+  ) : (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--bg-sunk)',
+        borderRadius: 'var(--radius-md)',
+        aspectRatio: '3/4',
+        width: '100%',
+        color: 'var(--ink-4)',
+        fontSize: 'var(--text-sm)',
+      }}
+      aria-label={`Page ${String(page.number)} — image loading`}
+      data-testid={QUALITY_PAGE_THUMB}
+    >
+      {page.number}
+    </div>
   );
 
   if (isInteractive) {

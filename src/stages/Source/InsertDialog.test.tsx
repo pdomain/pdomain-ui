@@ -233,4 +233,15 @@ describe('InsertDialog', () => {
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
   });
+
+  // ── WS5: Insert submit closes dialog ─────────────────────────────────────
+  describe('Insert submit (WS5)', () => {
+    it('calls onOpenChange(false) after successful insert', async () => {
+      const user = userEvent.setup();
+      const { onInsert, onOpenChange } = renderOpen({ defaultAnchor: 'p001.png' });
+      await user.click(screen.getByTestId(INSERT_DIALOG_SUBMIT));
+      expect(onInsert).toHaveBeenCalledOnce();
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+  });
 });

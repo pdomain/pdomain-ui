@@ -174,4 +174,25 @@ describe('CheckRow', () => {
     render(<CheckRow check={baseCheck} expanded={false} onToggle={() => undefined} />);
     expect(screen.getByTestId('validation-check-row-check-1')).toBeInTheDocument();
   });
+
+  // ── WS6: conditional aria-expanded ───────────────────────────────────────
+  it('toggle button does NOT have aria-expanded when state=pass (non-expandable)', () => {
+    // baseCheck has state='pass' → canToggle=false → aria-expanded must be absent
+    render(<CheckRow check={baseCheck} expanded={false} onToggle={() => undefined} />);
+    const btn = screen.getByRole('button');
+    expect(btn).not.toHaveAttribute('aria-expanded');
+  });
+
+  it('toggle button does NOT have aria-expanded when state=running', () => {
+    const runningCheck: CheckRowCheck = { id: 'c-run', name: 'Running check', state: 'running' };
+    render(<CheckRow check={runningCheck} expanded={false} onToggle={() => undefined} />);
+    const btn = screen.getByRole('button');
+    expect(btn).not.toHaveAttribute('aria-expanded');
+  });
+
+  it('toggle button has aria-expanded when state=warn (expandable)', () => {
+    render(<CheckRow check={warnCheck} expanded={false} onToggle={() => undefined} />);
+    const btn = screen.getByRole('button');
+    expect(btn).toHaveAttribute('aria-expanded', 'false');
+  });
 });

@@ -170,7 +170,8 @@ export const InsertDialog: React.FC<InsertDialogProps> = ({
       ...(file !== undefined ? { file } : {}),
     };
     onInsert(submission);
-  }, [insertEnabled, position, anchor, kind, note, file, onInsert]);
+    onOpenChange(false);
+  }, [insertEnabled, position, anchor, kind, note, file, onInsert, onOpenChange]);
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (

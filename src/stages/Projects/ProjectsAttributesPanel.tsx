@@ -116,88 +116,94 @@ const CustomSectionsRenderer = ({
 
   return (
     <div className="pap-custom-sections">
-      {sections.map((section) => (
-        <div
-          key={section.id}
-          className={`ap-section${section.fullWidth === true ? ' ap-section--full' : ' ap-section--col'}`}
-        >
-          {/* Section header */}
+      {sections.map((section) => {
+        const headerId = `pap-sec-hdr-${section.id}`;
+        const bodyId = `pap-sec-body-${section.id}`;
+        return (
           <div
-            role="button"
-            tabIndex={0}
-            aria-expanded={open[section.id] ?? true}
-            onClick={() => toggle(section.id)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggle(section.id);
-              }
-            }}
-            className="ap-section-header"
+            key={section.id}
+            className={`ap-section${section.fullWidth === true ? ' ap-section--full' : ' ap-section--col'}`}
           >
-            <span className="ap-section-header__left">
-              <span
-                className="ap-section-header__chev"
-                aria-hidden="true"
-                style={{
-                  display: 'inline-flex',
-                  transform: (open[section.id] ?? true) ? 'rotate(0deg)' : 'rotate(-90deg)',
-                  transition: 'transform .15s',
-                }}
-              >
-                &#8964;
-              </span>
-              <span className="label ap-section-header__label">{section.label}</span>
-              {section.fields.length > 0 ? (
-                <span className="mono ap-section-header__count">
-                  {section.fields.length} fields
+            {/* Section header */}
+            <div
+              id={headerId}
+              role="button"
+              tabIndex={0}
+              aria-expanded={open[section.id] ?? true}
+              aria-controls={bodyId}
+              onClick={() => toggle(section.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggle(section.id);
+                }
+              }}
+              className="ap-section-header"
+            >
+              <span className="ap-section-header__left">
+                <span
+                  className="ap-section-header__chev"
+                  aria-hidden="true"
+                  style={{
+                    display: 'inline-flex',
+                    transform: (open[section.id] ?? true) ? 'rotate(0deg)' : 'rotate(-90deg)',
+                    transition: 'transform .15s',
+                  }}
+                >
+                  &#8964;
                 </span>
-              ) : null}
-            </span>
-            {/* Prevent toggle propagation from action slot */}
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-            <span className="ap-section-header__actions" onClick={(e) => e.stopPropagation()}>
-              <button className="btn btn--ghost btn--sm ap-section-header__edit" type="button">
-                Edit
-              </button>
-            </span>
-          </div>
+                <span className="label ap-section-header__label">{section.label}</span>
+                {section.fields.length > 0 ? (
+                  <span className="mono ap-section-header__count">
+                    {section.fields.length} fields
+                  </span>
+                ) : null}
+              </span>
+              {/* Prevent toggle propagation from action slot */}
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+              <span className="ap-section-header__actions" onClick={(e) => e.stopPropagation()}>
+                <button className="btn ghost sm ap-section-header__edit" type="button">
+                  Edit
+                </button>
+              </span>
+            </div>
 
-          {/* Section body */}
-          {(open[section.id] ?? true) ? (
-            <div className="ap-section__body">
-              {section.id === 'comments' && section.fields.length === 0 ? (
-                <div className="ap-comments__body">
-                  {comments !== undefined ? (
-                    <p className="ap-comments__default">{comments}</p>
-                  ) : null}
-                </div>
-              ) : (
-                section.fields.map((field, i) => (
-                  <div key={field.id} className="ap-field-row" data-index={i}>
-                    <span className="ap-field-row__key">{field.label}</span>
-                    <span
-                      className={
-                        field.mono === true ? 'mono ap-field-row__value' : 'ap-field-row__value'
-                      }
-                    >
-                      {field.value}
-                    </span>
-                    {onChange !== undefined ? (
-                      <input
-                        className="sr-only"
-                        aria-label={field.label}
-                        defaultValue={field.value}
-                        onChange={(e) => onChange(section.id, field.id, e.target.value)}
-                      />
+            {/* Section body */}
+            {(open[section.id] ?? true) ? (
+              <div id={bodyId} className="ap-section__body" aria-labelledby={headerId}>
+                {section.id === 'comments' && section.fields.length === 0 ? (
+                  <div className="ap-comments__body">
+                    {comments !== undefined ? (
+                      <p className="ap-comments__default">{comments}</p>
                     ) : null}
                   </div>
-                ))
-              )}
-            </div>
-          ) : null}
-        </div>
-      ))}
+                ) : (
+                  section.fields.map((field, i) => (
+                    <div key={field.id} className="ap-field-row" data-index={i}>
+                      <span className="ap-field-row__key">{field.label}</span>
+                      <span
+                        className={
+                          field.mono === true ? 'mono ap-field-row__value' : 'ap-field-row__value'
+                        }
+                      >
+                        {field.value}
+                      </span>
+                      {onChange !== undefined ? (
+                        <input
+                          className="sr-only"
+                          aria-label={field.label}
+                          defaultValue={field.value}
+                          onChange={(e) => onChange(section.id, field.id, e.target.value)}
+                        />
+                      ) : null}
+                    </div>
+                  ))
+                )}
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
     </div>
   );
 };

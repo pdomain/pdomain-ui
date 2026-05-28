@@ -104,22 +104,18 @@ export function PageRow({ page, flags, className }: PageRowProps): React.ReactEl
   return (
     <div
       className={cn('quality-page-row', className)}
-      role="row"
+      role="listitem"
       data-testid={QUALITY_PAGE_ROW}
       data-page-id={page.id}
       aria-label={`Page ${page.number}`}
     >
       {/* Page number */}
-      <span
-        className="quality-page-row__number"
-        data-testid={qualityPageRowTestId(page.id)}
-        role="cell"
-      >
+      <span className="quality-page-row__number" data-testid={qualityPageRowTestId(page.id)}>
         {page.number}
       </span>
 
       {/* Flag pills */}
-      <span className="quality-page-row__flags" role="cell">
+      <span className="quality-page-row__flags">
         {resolvedFlags.length === 0 ? (
           <span className="quality-page-row__no-flags">—</span>
         ) : (
@@ -139,7 +135,7 @@ export function PageRow({ page, flags, className }: PageRowProps): React.ReactEl
 
       {/* Score cells */}
       {page.scores != null && Object.keys(page.scores).length > 0 ? (
-        <span className="quality-page-row__scores" role="cell">
+        <span className="quality-page-row__scores">
           {Object.entries(page.scores).map(([key, value]) => (
             <ScoreCell key={key} pageId={page.id} scoreKey={key} value={value} />
           ))}

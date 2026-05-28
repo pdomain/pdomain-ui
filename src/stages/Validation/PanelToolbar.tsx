@@ -55,21 +55,12 @@ export function PanelToolbar({
   const lastRunLabel = lastRun != null ? `Last run ${formatLastRun(lastRun)}` : 'Never validated';
 
   return (
-    <div
-      data-testid={testId}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: '10px 16px',
-        borderTop: '1px solid var(--border-1)',
-        borderBottom: '1px solid var(--border-1)',
-        background: 'var(--bg-page)',
-      }}
-    >
-      <span style={{ fontSize: 11.5, color: 'var(--ink-3)' }}>{lastRunLabel}</span>
-      <span style={{ color: 'var(--ink-4)' }}>·</span>
-      <span style={{ fontSize: 11.5, color: 'var(--ink-3)' }}>Auto re-runs after fixes</span>
+    <div data-testid={testId} className="panel-toolbar">
+      <span className="panel-toolbar__timestamp">{lastRunLabel}</span>
+      <span className="panel-toolbar__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="panel-toolbar__hint">Auto re-runs after fixes</span>
       <div style={{ flex: 1 }} />
       <Button
         variant="ghost"
@@ -82,3 +73,5 @@ export function PanelToolbar({
     </div>
   );
 }
+
+PanelToolbar.displayName = 'PanelToolbar';

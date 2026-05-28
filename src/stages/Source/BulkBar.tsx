@@ -5,8 +5,8 @@
  * role-assignment actions (Page / Cover / Back / Blank / Duplicate), and a
  * danger Remove action.
  *
- * Sticky-bottom positioning is via the `.bulk-bar` CSS class; consumers may
- * override via their own layout if needed.
+ * Sticky-bottom positioning is via the `.bulk-action-bar` CSS class; consumers
+ * may override via their own layout if needed.
  */
 import * as React from 'react';
 import { Button } from '../../primitives/Button.js';
@@ -28,14 +28,14 @@ export const BulkBar = React.forwardRef<HTMLDivElement, BulkBarProps>(function B
   ref,
 ) {
   return (
-    <div ref={ref} className="bulk-bar" data-testid={testId}>
-      <span className="bulk-bar__count">{selectedCount} selected</span>
+    <div ref={ref} className="bulk-action-bar" data-testid={testId}>
+      <span className="bulk-action-bar__count">{selectedCount} selected</span>
       {onClear !== undefined ? (
         <Button variant="ghost" onClick={onClear} data-testid="bulk-bar-clear">
           Clear
         </Button>
       ) : null}
-      <div className="bulk-bar__actions">
+      <div className="bulk-action-bar__actions" aria-label="Bulk actions">
         <Button onClick={() => onAction('page')}>Page</Button>
         <Button onClick={() => onAction('cover')}>Cover</Button>
         <Button onClick={() => onAction('back')}>Back</Button>

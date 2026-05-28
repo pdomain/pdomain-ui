@@ -67,25 +67,18 @@ export function DownloadFooter({
   // ── Pass ──────────────────────────────────────────────────────────────────
   if (state === 'pass') {
     return (
-      <div
-        data-testid={testId}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          padding: '16px',
-          borderTop: '1px solid var(--border-1)',
-        }}
-      >
-        <div style={{ flex: 1 }} />
-        <Button
-          variant="primary"
-          size="lg"
-          data-testid={VALIDATION_DOWNLOAD_FOOTER_DOWNLOAD}
-          {...(onDownload != null ? { onClick: onDownload } : { disabled: true })}
-        >
-          Download
-        </Button>
+      <div data-testid={testId} className="download-footer download-footer--pass">
+        <div className="download-footer__label" />
+        <div className="download-footer__actions">
+          <Button
+            variant="primary"
+            size="lg"
+            data-testid={VALIDATION_DOWNLOAD_FOOTER_DOWNLOAD}
+            {...(onDownload != null ? { onClick: onDownload } : { disabled: true })}
+          >
+            Download
+          </Button>
+        </div>
       </div>
     );
   }
@@ -93,24 +86,42 @@ export function DownloadFooter({
   // ── Warn ──────────────────────────────────────────────────────────────────
   if (state === 'warn') {
     return (
-      <div
-        data-testid={testId}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          padding: '16px',
-          borderTop: '1px solid var(--border-1)',
-        }}
-      >
-        <div style={{ flex: 1 }} />
+      <div data-testid={testId} className="download-footer download-footer--warn">
+        <div className="download-footer__label" />
+        <div className="download-footer__actions">
+          <Button
+            variant="ghost"
+            size="lg"
+            data-testid={VALIDATION_DOWNLOAD_FOOTER_DOWNLOAD}
+            {...(onDownload != null ? { onClick: onDownload } : { disabled: true })}
+          >
+            Download anyway
+          </Button>
+          <Button
+            variant="primary"
+            size="lg"
+            data-testid={VALIDATION_DOWNLOAD_FOOTER_FIX}
+            {...(onFix != null ? { onClick: onFix } : { disabled: true })}
+          >
+            Fix &amp; rebuild
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Error ─────────────────────────────────────────────────────────────────
+  return (
+    <div data-testid={testId} className="download-footer download-footer--error">
+      <div className="download-footer__label">Download disabled until errors resolved.</div>
+      <div className="download-footer__actions">
         <Button
           variant="ghost"
           size="lg"
+          disabled
           data-testid={VALIDATION_DOWNLOAD_FOOTER_DOWNLOAD}
-          {...(onDownload != null ? { onClick: onDownload } : { disabled: true })}
         >
-          Download anyway
+          Download
         </Button>
         <Button
           variant="primary"
@@ -118,38 +129,9 @@ export function DownloadFooter({
           data-testid={VALIDATION_DOWNLOAD_FOOTER_FIX}
           {...(onFix != null ? { onClick: onFix } : { disabled: true })}
         >
-          Fix &amp; rebuild
+          Fix all ({fixableCount})
         </Button>
       </div>
-    );
-  }
-
-  // ── Error ─────────────────────────────────────────────────────────────────
-  return (
-    <div
-      data-testid={testId}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        padding: '16px',
-        borderTop: '1px solid var(--border-1)',
-      }}
-    >
-      <div style={{ flex: 1, fontSize: 12.5, color: 'var(--ink-2)' }}>
-        Download disabled until errors resolved.
-      </div>
-      <Button variant="ghost" size="lg" disabled data-testid={VALIDATION_DOWNLOAD_FOOTER_DOWNLOAD}>
-        Download
-      </Button>
-      <Button
-        variant="primary"
-        size="lg"
-        data-testid={VALIDATION_DOWNLOAD_FOOTER_FIX}
-        {...(onFix != null ? { onClick: onFix } : { disabled: true })}
-      >
-        Fix all ({fixableCount})
-      </Button>
     </div>
   );
 }

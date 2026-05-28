@@ -78,29 +78,40 @@ interface RailItemProps {
 }
 
 const RailItem: React.FC<RailItemProps> = ({ step, index, isCurrent, isPast, onClick }) => {
+  const isFuture = !isCurrent && !isPast;
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Future steps are not navigable — suppress Enter/Space
+    if (isFuture) return;
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onClick();
     }
   };
 
+  const handleClick = () => {
+    // Future steps are not navigable — suppress click
+    if (isFuture) return;
+    onClick();
+  };
+
   return (
     <div
       role="button"
-      tabIndex={0}
+      tabIndex={isFuture ? -1 : 0}
       data-step={step}
       data-testid={uploadModalCStepTestId(step)}
       aria-current={isCurrent ? 'step' : undefined}
+      aria-disabled={isFuture ? true : undefined}
       className={[
         'modal-c__rail-item',
         isCurrent ? 'modal-c__rail-item--current' : '',
         isPast ? 'modal-c__rail-item--past' : '',
-        !isCurrent && !isPast ? 'modal-c__rail-item--future' : '',
+        isFuture ? 'modal-c__rail-item--future' : '',
       ]
         .filter(Boolean)
         .join(' ')}
-      onClick={onClick}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
       {/* Step indicator circle */}

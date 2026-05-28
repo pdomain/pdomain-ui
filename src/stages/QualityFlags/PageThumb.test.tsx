@@ -86,4 +86,27 @@ describe('PageThumb', () => {
     render(<PageThumb page={page} flags={[]} />);
     expect(screen.getByTestId(qualityPageThumbTestId('p1'))).toBeInTheDocument();
   });
+
+  // ── WS5: placeholder for empty imageUrl ──────────────────────────────────
+
+  it('renders a placeholder div (no broken img) when thumbnailUrl is empty string', () => {
+    const emptyPage = { id: 'p-empty', number: 99, thumbnailUrl: '' };
+    const { container } = render(<PageThumb page={emptyPage} flags={[]} />);
+    // No <img> element should be present
+    expect(container.querySelector('img')).toBeNull();
+    // Placeholder div should have the correct testid
+    expect(screen.getByTestId(QUALITY_PAGE_THUMB)).toBeInTheDocument();
+  });
+
+  it('renders a placeholder div when thumbnailUrl is undefined', () => {
+    const noUrlPage = { id: 'p-nurl', number: 5 };
+    const { container } = render(<PageThumb page={noUrlPage} flags={[]} />);
+    expect(container.querySelector('img')).toBeNull();
+    expect(screen.getByTestId(QUALITY_PAGE_THUMB)).toBeInTheDocument();
+  });
+
+  it('renders img when thumbnailUrl is provided', () => {
+    const { container } = render(<PageThumb page={page} flags={[]} />);
+    expect(container.querySelector('img')).not.toBeNull();
+  });
 });

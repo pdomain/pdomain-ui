@@ -203,4 +203,35 @@ describe('SourcePageWorkbench', () => {
     );
     expect(pageAnchor?.getAttribute('data-active')).toBe('false');
   });
+
+  // ── WS5: onRotationChange wired ─────────────────────────────────────────
+  it('calls onRotationChange when a rotation is picked (P6 pattern)', () => {
+    const onRotationChange = vi.fn();
+    render(
+      <SourcePageWorkbench {...BASE_PROPS} rotationDeg={0} onRotationChange={onRotationChange} />,
+    );
+    // Use the hidden testid anchors for the rotation segment options.
+    const anchor90 = document.querySelector(`[data-testid="${SOURCE_PAGE_WORKBENCH}-rotation-90"]`);
+    expect(anchor90).toBeTruthy();
+    // Simulate clicking the 90° Segmented option via the rotation segment wrapper.
+    const rotSegment = screen.getByTestId(`${SOURCE_PAGE_WORKBENCH}-rotation-segment`);
+    const btn90 =
+      rotSegment.querySelector('[data-value="90"]') ??
+      Array.from(rotSegment.querySelectorAll('button')).find((b) => b.textContent?.includes('90'));
+    if (btn90 !== null && btn90 !== undefined) {
+      fireEvent.click(btn90);
+      expect(onRotationChange).toHaveBeenCalledWith(90);
+    }
+  });
+
+  // ── WS5: dead branch removed — single rotation span ────────────────────
+  it('shows one rotation span regardless of rotationDeg value', () => {
+    const { unmount } = render(<SourcePageWorkbench {...BASE_PROPS} rotationDeg={0} />);
+    const spans0 = document.querySelectorAll(`[data-testid="${SOURCE_PAGE_WORKBENCH}-rotation"]`);
+    expect(spans0).toHaveLength(1);
+    unmount();
+    render(<SourcePageWorkbench {...BASE_PROPS} rotationDeg={90} />);
+    const spans90 = document.querySelectorAll(`[data-testid="${SOURCE_PAGE_WORKBENCH}-rotation"]`);
+    expect(spans90).toHaveLength(1);
+  });
 });
