@@ -28,6 +28,9 @@ export {
   useCanvasCoords,
   useCanvasSelection,
   bboxToRect,
+  isValidBBox,
+  validatePageDimensions,
+  makeRafThrottle,
 } from './canvas/index.js';
 export type {
   CanvasProps,
@@ -160,6 +163,15 @@ export {
   Select,
   Tabs,
   ToggleGroup,
+  StepDots,
+  JobStatusPip,
+  PopoverClose,
+} from './primitives/index.js';
+export type {
+  StepDotsProps,
+  StepDotsState,
+  JobStatusPipProps,
+  JobState,
 } from './primitives/index.js';
 
 // Cross-stage molecules re-exports (batch 1 + batch 2, #344)
