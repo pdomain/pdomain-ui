@@ -4,7 +4,7 @@
  * Slot-based Konva canvas for page-image rendering with overlay layers.
  *
  * Primary export: `<PageImageCanvas>` — the stage shell.
- * Slot helpers:   `BBoxLayer`, `WordHitLayer`, `MarqueeSelectLayer`.
+ * Slot helpers:   `BBoxLayer`, `WordHitLayer`, `MarqueeSelectLayer`, `RectOverlayLayer`.
  * Hooks:          `useCanvasCoords`, `useViewport`, `useCanvasSelection`.
  * Types:          `CanvasProps`, `SlotRenderProps`, `WordSlotProps`,
  *                 `CoordContext`, `SelectionState`, `ViewportState`,
@@ -24,6 +24,12 @@ export { makeRafThrottle } from './rafThrottle';
 export { BBoxLayer } from './layers/BBoxLayer';
 export { WordHitLayer } from './layers/WordHitLayer';
 export { MarqueeSelectLayer } from './layers/MarqueeSelectLayer';
+export { RectOverlayLayer } from './layers/RectOverlayLayer';
+export type {
+  RectOverlayColorSpec,
+  RectOverlayItem,
+  RectOverlayLayerProps,
+} from './layers/RectOverlayLayer';
 
 // Hooks
 export { useCanvasCoords } from './hooks/useCanvasCoords';
@@ -54,3 +60,11 @@ export type {
   PagePoint,
 } from './types';
 export { bboxToRect, isValidBBox } from './types';
+export type { EncodedImageDims } from './geometry';
+export {
+  displayToSrcRect,
+  isNormalizedRect,
+  rectItemsToDisplay,
+  rectToDisplay,
+  srcToDisplayRect,
+} from './geometry';
