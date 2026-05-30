@@ -6,9 +6,9 @@
     }
   },
   "pdomain-ops": {
-    "version": "0.2.3",
+    "version": "0.3.0",
     "sha256": {
-      "pdomain_ops-0.2.3-py3-none-any.whl": "3462e705adb565d438d7909c81be83c7260b831e997f4b6aadbb830b256cc56e"
+      "pdomain_ops-0.3.0-py3-none-any.whl": "f4217f11cd441d8ac7e37127a3e633ea809e05a61c6f90628e2b729ae7c59897"
     }
   }
 }

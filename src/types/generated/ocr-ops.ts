@@ -57,6 +57,11 @@ export type components = {
       /** Display Name */
       display_name: string;
       /**
+       * Description
+       * @default null
+       */
+      description: string | null;
+      /**
        * Enabled
        * @default true
        */

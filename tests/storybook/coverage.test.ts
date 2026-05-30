@@ -32,6 +32,7 @@ const WHITELIST: ReadonlySet<string> = new Set([
   // Canvas internal slot helpers — covered by PageImageCanvas.stories.tsx
   'canvas/layers/BBoxLayer.tsx',
   'canvas/layers/MarqueeSelectLayer.tsx',
+  'canvas/layers/RectOverlayLayer.tsx',
   'canvas/layers/WordHitLayer.tsx',
 
   // Icons files — covered by Icons.stories.tsx (catalogue + dispatcher gallery)

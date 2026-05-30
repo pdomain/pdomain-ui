@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { InsertDialog } from './InsertDialog.js';
 import type { InsertAnchorOption, InsertSubmission } from './InsertDialog.js';
@@ -158,14 +158,14 @@ describe('InsertDialog', () => {
       expect(screen.getByTestId(INSERT_DIALOG_NOTE_COUNTER)).toHaveTextContent('5/280');
     });
 
-    it('disables Insert when note exceeds 280 chars (even with anchor set)', async () => {
-      const user = userEvent.setup();
+    it('disables Insert when note exceeds 280 chars (even with anchor set)', () => {
       renderOpen({ defaultAnchor: 'p001.png' });
       // Insert is initially enabled because defaultAnchor is set
       expect(screen.getByTestId(INSERT_DIALOG_SUBMIT)).not.toBeDisabled();
-      // Type 281 chars
       const overLimit = 'a'.repeat(281);
-      await user.type(screen.getByTestId(INSERT_DIALOG_NOTE), overLimit);
+      fireEvent.change(screen.getByTestId(INSERT_DIALOG_NOTE), {
+        target: { value: overLimit },
+      });
       expect(screen.getByTestId(INSERT_DIALOG_SUBMIT)).toBeDisabled();
     });
   });

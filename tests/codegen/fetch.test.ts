@@ -132,6 +132,23 @@ describe('codegen:fetch script', () => {
     expect(output).toMatch(/pdomain-index-pip|concavetrillion.*pd-index|pd-index/);
   });
 
+  it('script --dry-run downloads wheels from pdomain GitHub releases', () => {
+    const env = {
+      ...process.env,
+      PATH: `${shimBinDir}:${process.env['PATH'] ?? ''}`,
+    };
+
+    const output = execFileSync('node', [SCRIPT, '--dry-run'], {
+      env,
+      cwd: REPO_ROOT,
+      encoding: 'utf-8',
+    });
+
+    expect(output).toContain('https://github.com/pdomain/pdomain-book-tools/releases/download/');
+    expect(output).toContain('https://github.com/pdomain/pdomain-ops/releases/download/');
+    expect(output).not.toContain('https://github.com/ConcaveTrillion/pdomain-ops/');
+  });
+
   // -------------------------------------------------------------------------
   // Hash verification tests
   // -------------------------------------------------------------------------

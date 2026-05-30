@@ -35,7 +35,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
 
 const PD_INDEX_PIP_URL = 'https://pdomain.github.io/pdomain-index-pip/simple/'
-const GH_RELEASES_BASE = 'https://github.com/ConcaveTrillion'
+const GH_RELEASES_BASE = 'https://github.com/pdomain'
 
 function parseArgs(argv) {
   const args = argv.slice(2)

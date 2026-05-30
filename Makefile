@@ -12,6 +12,7 @@
         mise-download mise-trust-worktrees mise-setup mise-doctor
 
 LOG_FILE := .ci-ai.log
+export UV_LINK_MODE ?= symlink
 
 # Prefer mise exec so tool versions match mise.toml.
 # Falls back to plain pnpm on PATH for contributors who manage Node themselves.
