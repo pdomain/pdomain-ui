@@ -182,6 +182,8 @@
     "lint": "eslint src tests",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:unit": "vitest run --exclude tests/build.contract.test.ts --exclude tests/build.smoke.test.ts --exclude tests/pack.contract.test.ts --exclude tests/pack/testids.contract.test.ts",
+    "test:package": "vitest run tests/build.smoke.test.ts && vitest run tests/build.contract.test.ts tests/pack.contract.test.ts tests/pack/testids.contract.test.ts",
     "build": "vite build",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\"",

@@ -3,8 +3,8 @@
 #
 # AI=1 captures verbose output to .ci-ai.log; stdout shows pass/fail.
 
-.PHONY: install lint typecheck test build codegen codegen-check theme-check storybook storybook-build ci e2e e2e-ci help \
-        format format-check pre-commit-check \
+.PHONY: setup install lint lint-check typecheck test test-unit test-package build codegen codegen-check theme-check storybook storybook-build ci e2e e2e-ci help \
+        format format-check pre-commit-check static-check \
         upgrade-deps update-pd-deps \
         release-patch release-minor release-major _do-release \
         frontend-install frontend-build frontend-dev frontend-test frontend-lint \
@@ -38,14 +38,19 @@ endif
 
 help:
 	@echo "Targets:"
+	@echo "  setup                install project dependencies"
 	@echo "  install              pnpm install --frozen-lockfile"
 	@echo "  lint                 ESLint flat config"
+	@echo "  lint-check           read-only format + ESLint checks"
 	@echo "  typecheck            tsc --noEmit"
 	@echo "  test                 vitest run"
+	@echo "  test-unit            vitest unit/component suite, excluding dist/package contracts"
+	@echo "  test-package         build/package contract tests"
 	@echo "  build                vite library build"
 	@echo "  format               apply Prettier to src/ and tests/"
 	@echo "  format-check         check Prettier formatting without writing"
 	@echo "  pre-commit-check     lint + typecheck + format-check (no pre-commit config)"
+	@echo "  static-check         lint-check + typecheck"
 	@echo "  upgrade-deps         pnpm update --latest"
 	@echo "  update-pd-deps       Bump pd-* codegen inputs to registry latest; runs codegen; leaves diff staged"
 	@echo "  codegen              fetch wheels + emit JSON + generate TS"
@@ -74,17 +79,27 @@ help:
 	@echo "  mise-setup           Install pinned tools from mise.toml"
 	@echo "  mise-doctor          Show resolved tool versions"
 
+setup: install
+
 install:
 	$(call _pnpm,install --frozen-lockfile)
 
 lint:
 	$(call _pnpm,run lint)
 
+lint-check: format-check lint
+
 typecheck:
 	$(call _pnpm,run typecheck)
 
 test:
 	$(call _pnpm,run test)
+
+test-unit:
+	$(call _pnpm,run test:unit)
+
+test-package:
+	$(call _pnpm,run test:package)
 
 build:
 	$(call _pnpm,run build)
@@ -118,6 +133,8 @@ format-check:
 
 # No .pre-commit-config.yaml in this repo — alias for lint + typecheck + format-check.
 pre-commit-check: lint typecheck format-check
+
+static-check: lint-check typecheck
 
 upgrade-deps:
 	$(call _pnpm,update --latest)
@@ -168,7 +185,7 @@ frontend-format-check: format-check
 frontend-knip:
 	$(call _pnpm,run knip)
 
-ci: install lint format-check typecheck test build codegen-check theme-check
+ci: install static-check test build codegen-check theme-check
 
 mise-download:
 	@if [ -x "$(MISE)" ]; then \
