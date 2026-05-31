@@ -480,7 +480,7 @@ model: sonnet  effort: M  area: pdomain-ui-frontend
 
 Context: Per **OQ-5**: design `AppHeader` is the opinionated suite
 chrome bar — app icon + search + jobs pill + bell + user avatar.
-Every pd-* SPA will need this; centralize.
+Every pdomain-* SPA will need this; centralize.
 
 Approach: Implement `src/shell/AppHeader.tsx` composing pdomain-ui
 primitives. Slots: `logo`, `search?`, `jobsPill?`, `notifications?`,
@@ -595,7 +595,7 @@ model: sonnet  effort: S  area: pdomain-ui-frontend
 Context: Per **OQ-10**: extract the 8-item settings nav rail
 (general / bibliographic / pgdp / format / defaults / members /
 storage / danger) from `final/pipeline/project-settings.jsx` as a
-reusable molecule. Other pd-* SPAs with settings will reuse this
+reusable molecule. Other pdomain-* SPAs with settings will reuse this
 pattern.
 
 Approach: Implement `src/templates/SettingsNav.tsx` as a typed

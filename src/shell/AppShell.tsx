@@ -1,5 +1,5 @@
 /**
- * AppShell — top-level 5-zone CSS grid layout wrapper for pd-* SPAs.
+ * AppShell — top-level 5-zone CSS grid layout wrapper for pdomain-* SPAs.
  *
  * Grid template:
  *   "header header header header"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# scripts/update-pd-deps.sh — bump pd-* codegen inputs to registry latest.
+# scripts/update-pdomain-deps.sh — bump pdomain-* codegen inputs to registry latest.
 #
-# pdomain-ui SPECIAL CASE: pdomain-ui does not import sibling pd-* code at runtime.
+# pdomain-ui SPECIAL CASE: pdomain-ui does not import sibling pdomain-* code at runtime.
 # It consumes pdomain-book-tools and pdomain-ops ONLY as codegen inputs: pinned
 # wheel versions → fetch wheels → emit JSON Schema → generate TS types into
 # src/types/generated/.
@@ -19,7 +19,7 @@
 #      Does NOT commit.
 #   4. Idempotent: prints "✓ <name> already at X" for each sibling at latest.
 #
-# Usage: make update-pd-deps   (or ./scripts/update-pd-deps.sh directly)
+# Usage: make update-pdomain-deps   (or ./scripts/update-pdomain-deps.sh directly)
 set -euo pipefail
 
 # ─── Config ──────────────────────────────────────────────────────────────────
@@ -30,7 +30,7 @@ PD_INDEX_PIP="https://pdomain.github.io/pdomain-index-pip"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 VERSIONS_JSON="$REPO_ROOT/codegen.versions.json"
 
-say() { echo "[update-pd-deps] $*"; }
+say() { echo "[update-pdomain-deps] $*"; }
 
 # ─── Validate codegen.versions.json exists ───────────────────────────────────
 if [[ ! -f "$VERSIONS_JSON" ]]; then

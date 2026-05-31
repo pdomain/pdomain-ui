@@ -6,7 +6,7 @@
  *
  * Renders a vertical list of settings group items with icon, active highlight
  * (accent left-border + bg-raised), and danger-zone tone. Slot-based API so
- * any pd-* SPA can supply a custom `groups` list.
+ * any pdomain-* SPA can supply a custom `groups` list.
  *
  * Constraints:
  * - No hex literals — all colors via var(--token).

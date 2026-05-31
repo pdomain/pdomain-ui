@@ -129,7 +129,9 @@ describe('codegen:fetch script', () => {
     }
 
     // Must reference the self-hosted index
-    expect(output).toMatch(/pdomain-index-pip|concavetrillion.*pd-index|pd-index/);
+    expect(output).toContain('pdomain-index-pip');
+    expect(output).not.toContain('pd-index');
+    expect(output).not.toMatch(/concavetrillion.*pd-index/i);
   });
 
   it('script --dry-run downloads wheels from pdomain GitHub releases', () => {

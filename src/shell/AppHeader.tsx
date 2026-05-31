@@ -1,5 +1,5 @@
 /**
- * AppHeader — opinionated top chrome for all pd-* SPAs.
+ * AppHeader — opinionated top chrome for all pdomain-* SPAs.
  *
  * Ported from docs/templates/design_handoff_pdomain_ui/design-system/template.jsx
  * per OQ-5 decision: port into src/shell/ composing existing JobsPill.

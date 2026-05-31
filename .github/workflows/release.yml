@@ -8,7 +8,7 @@ name: release
 #      persist-credentials:false so the write-scoped GITHUB_TOKEN is NOT
 #      available to pnpm install / build.
 #   2. publish job — attests provenance, publishes GitHub Release, and
-#      dispatches pd-npm-publish.  Only this job holds write permissions.
+#      dispatches pdomain-npm-publish.  Only this job holds write permissions.
 #
 # Quality gates intentionally excluded:
 #   - codegen-check: fetches Python wheels from the self-hosted pdomain-index-pip
@@ -148,6 +148,6 @@ jobs:
           TARBALL_NAME=$(ls dist/*.tgz | xargs basename)
           TARBALL_URL="https://github.com/pdomain/pdomain-ui/releases/download/${TAG}/${TARBALL_NAME}"
           gh api -X POST /repos/pdomain/pdomain-index-npm/dispatches \
-            -f event_type=pd-npm-publish \
+            -f event_type=pdomain-npm-publish \
             -f "client_payload[tarball_url]=${TARBALL_URL}" || \
             echo "::warning::pdomain-index-npm dispatch failed; publish manually via workflow_dispatch"

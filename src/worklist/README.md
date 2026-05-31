@@ -1,6 +1,6 @@
 # `@pdomain/pdomain-ui/worklist`
 
-Virtualized, keyboard-navigable list panels for the pd-\* review workflow.
+Virtualized, keyboard-navigable list panels for the pdomain-\* review workflow.
 
 ## Components
 

@@ -1,5 +1,5 @@
 /**
- * createApiUIPrefsConfig — builds a UIPrefsConfig backed by the pd-*
+ * createApiUIPrefsConfig — builds a UIPrefsConfig backed by the pdomain-*
  * standard `/api/ui-prefs` REST contract.
  *
  * Contract
@@ -39,7 +39,7 @@ const DEFAULT_PREFS: UIPrefs = {
 };
 
 /**
- * Create a UIPrefsConfig that loads from and persists to a pd-*-standard
+ * Create a UIPrefsConfig that loads from and persists to a pdomain-*-standard
  * `/api/ui-prefs` REST endpoint.
  *
  * @param url - Absolute or relative URL for the prefs endpoint.

@@ -1,7 +1,7 @@
 /**
  * @pdomain/pdomain-ui/worklist
  *
- * Virtualized, keyboard-navigable list panels for the pd-* review workflow.
+ * Virtualized, keyboard-navigable list panels for the pdomain-* review workflow.
  *
  * Primary exports:
  *   <WordList>        — word review panel with render-prop rows

@@ -957,7 +957,7 @@ a {
   gap: 12px;
 }
 
-/* ── Jobs table (recent jobs lists across pd-* apps) ──────────────── */
+/* ── Jobs table (recent jobs lists across pdomain-* apps) ─────────── */
 .jobs-table {
   width: 100%;
   border-collapse: collapse;

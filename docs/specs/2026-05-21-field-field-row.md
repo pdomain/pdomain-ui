@@ -10,7 +10,7 @@
 
 ## 1. Purpose
 
-A labelled form-row primitive that gives all pd-* app config screens a
+A labelled form-row primitive that gives all pdomain-* app config screens a
 consistent layout: a label, a control slot, an optional expandable help
 slot, and an error slot. Works with the existing pdomain-ui `Input`, `Textarea`,
 `Select`, and `Accordion` primitives.

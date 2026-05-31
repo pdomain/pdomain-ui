@@ -1,7 +1,7 @@
 /**
  * @pdomain/pdomain-ui/stores
  *
- * Zustand store factories and context-bound hooks for pd-* SPAs.
+ * Zustand store factories and context-bound hooks for pdomain-* SPAs.
  *
  * Store factories (never singletons — apps instantiate per-AppShell):
  *   createSelectionStore()   → SelectionStore

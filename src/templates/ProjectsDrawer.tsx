@@ -2,7 +2,7 @@
  * ProjectsDrawer — suite-wide projects list molecule.
  *
  * OQ-12 decision: ProjectsDrawer is a NEW suite-wide molecule that templates
- * embed. It is NOT an AppShell zone. Every pd-* SPA can drop it in wherever
+ * embed. It is NOT an AppShell zone. Every pdomain-* SPA can drop it in wherever
  * it needs a projects-selection rail.
  *
  * Target path: src/templates/ProjectsDrawer.tsx

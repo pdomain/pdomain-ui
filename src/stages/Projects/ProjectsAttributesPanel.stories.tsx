@@ -81,7 +81,7 @@ const customSections: AttributesPanelSection[] = [
     id: 'workflow',
     label: 'Workflow status',
     fields: [
-      { id: 'ocr', label: 'OCR engine', value: 'pd-ocr v2.1', mono: true },
+      { id: 'ocr', label: 'OCR engine', value: 'pdomain-ocr v2.1', mono: true },
       { id: 'stage', label: 'Current stage', value: 'P1 proofread' },
       { id: 'assigned', label: 'Assigned to', value: 'volunteer-42' },
     ],

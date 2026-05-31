@@ -304,12 +304,12 @@ All 12 open questions resolved. Decisions below are authoritative for Phase 2/3 
 | **OQ-2** Button icon/iconRight/full | **Extend pdomain-ui Button** with `icon`, `iconRight`, `full` optional props | Non-breaking; pdomain-ui callers can ignore the new props |
 | **OQ-3** Input composite wrapper + suffix | **Extend pdomain-ui Input** (or add `InputField` composite) with wrapper + `suffix` slot + `autoFocus` ring | Same rationale; non-breaking additions |
 | **OQ-4** Badge tone system | **Extend pdomain-ui Badge** with `tone` prop carrying 13 semantic values (exact / fuzzy / mismatch / ocr / gt / review / running / clean / dirty / etc. — full list per design) | Status-tone is domain vocabulary used across every stage; structural variants (default/primary/danger) stay |
-| **OQ-5** AppHeader + JobsPill / JobsDrawer / JobRow | **Port all four** into `src/shell/` | Every pd-* SPA needs a jobs indicator + user avatar; centralizing avoids per-SPA re-implementation |
+| **OQ-5** AppHeader + JobsPill / JobsDrawer / JobRow | **Port all four** into `src/shell/` | Every pdomain-* SPA needs a jobs indicator + user avatar; centralizing avoids per-SPA re-implementation |
 | **OQ-6** `--font-sans` / `--font-mono` aliases | **Do NOT add** | Consumers use canonical `--ui-font` / `--mono-font`; port-time rewrites at consumer side |
 | **OQ-7** `alert` icon → lucide name | **`AlertTriangle`** (lucide-react ^0.400.0 confirmed in package.json) | Mechanical |
 | **OQ-8** `swap` icon | **`ArrowLeftRight`** | Straight bidirectional matches design SVG |
 | **OQ-9** Toggle primitive | **Radix `Switch` in `src/primitives/Toggle.tsx`** | Matches existing pattern (Radix for behavior-heavy primitives) |
-| **OQ-10** SettingsNav extraction | **Extract as `src/templates/SettingsNav.tsx`** | Pattern recurs across pd-* SPAs with settings; cheap now, free reuse later |
+| **OQ-10** SettingsNav extraction | **Extract as `src/templates/SettingsNav.tsx`** | Pattern recurs across pdomain-* SPAs with settings; cheap now, free reuse later |
 | **OQ-11** ProjectsPage emptyState | **Merge into single `ProjectsLandingTemplate`** with `state: 'populated' \| 'empty'` discriminated union | Same conceptual page; shared chrome |
 | **OQ-12** AppTemplate → AppShell | **Revised AppShell to 3 zones (header + rail + main)**; deprecate `drawer` / `rightPanel` props in JSDoc (kept for back-compat with `pdomain-ocr-labeler-spa` + `pdomain-prep-for-pgdp`); templates own internal sub-layouts. Add **`ProjectsDrawer`** as a suite-wide molecule (embed in templates, not a shell zone). | Cleaner separation: shell = consistent suite chrome; templates = pluggable interior layouts. Breaking removal of `drawer` / `rightPanel` from AppShell deferred to a future spec after labeler-spa + prep-for-pgdp migrate. |
 

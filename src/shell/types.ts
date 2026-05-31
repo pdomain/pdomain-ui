@@ -115,7 +115,7 @@ export interface SettingsPanelDescriptor {
 // ─── AppShell props ───────────────────────────────────────────────────────────
 
 /**
- * Props for `<AppShell>` — the top-level layout wrapper for every pd-* SPA.
+ * Props for `<AppShell>` — the top-level layout wrapper for every pdomain-* SPA.
  *
  * Grid zones:
  *   "header header header header"

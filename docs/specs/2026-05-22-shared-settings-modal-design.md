@@ -14,7 +14,7 @@ prop for app-injected panels. `AppShell` also gains a `headerActions` slot and a
 
 ## Context
 
-Every pd-* SPA needs the same shape of surface: a theme / `UIPrefs` control plus
+Every pdomain-* SPA needs the same shape of surface: a theme / `UIPrefs` control plus
 app-specific configuration. Today the results are scattered and inconsistent:
 
 - `pdomain-ui` `AppShell` exposes a built-in `SettingsSlot` — a gear opening a Radix

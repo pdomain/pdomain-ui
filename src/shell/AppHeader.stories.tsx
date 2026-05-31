@@ -14,7 +14,7 @@ const meta: Meta<typeof AppHeader> = {
     docs: {
       description: {
         component:
-          'Opinionated top-chrome header for pd-* SPAs. Composes JobsPill, bell ' +
+          'Opinionated top-chrome header for pdomain-* SPAs. Composes JobsPill, bell ' +
           'notification button, and user avatar. All colors via var(--token).',
       },
     },

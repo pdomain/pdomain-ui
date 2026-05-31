@@ -391,7 +391,7 @@ for the header pill which reflects background work.
 Inter and JetBrains Mono must come from `@fontsource/inter` and
 `@fontsource/jetbrains-mono`. Vendored font files bypass the weight-subset
 discipline and drift from the pdomain-ui token `--ui-font` / `--mono-font`
-stacks. The fontsource packages are already in the lock file of every pd-* SPA.
+stacks. The fontsource packages are already in the lock file of every pdomain-* SPA.
 
 **Hand-roll buttons, tables, or chrome that exist as primitives.**
 `@pdomain/pdomain-ui/primitives` exports `Button`, `Badge`, `Input`, `Toggle`,

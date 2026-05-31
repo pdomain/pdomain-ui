@@ -9,7 +9,7 @@
 
 Port the visual language and component surface from the
 `design_handoff_pdomain_ui/` design bundle into pdomain-ui as **generic, typed,
-shared** components — so that every present and future pd-* SPA
+shared** components — so that every present and future pdomain-* SPA
 (`pdomain-prep-for-pgdp`, `pdomain-ocr-simple-gui`, `pdomain-ocr-labeler-spa`, future
 trainer SPA, etc.) implements its UI by composing pdomain-ui exports rather
 than reimplementing chrome.
@@ -213,8 +213,8 @@ Final issue under this spec: write `pdomain-ui/MIGRATION_NOTES.md` describing:
   `docs/research/2026-05-24-design-handoff-port-plan.md`.
 
 **No `src/pd-prep/` folder.** PROMPT.md's suggested
-pd-prep-prefixed naming is wrong for pdomain-ui — these components are
-generic and shared across every pd-* SPA.
+pdomain-prep-prefixed naming is wrong for pdomain-ui — these components are
+generic and shared across every pdomain-* SPA.
 
 ## 6 · Icon strategy
 

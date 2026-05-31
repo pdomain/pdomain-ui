@@ -20,7 +20,7 @@ export interface PageChipProps {
  * Font is driven by `var(--mono-font)`; colors are CSS custom properties only.
  *
  * Promoted to `src/primitives/` in Phase 2 M2 — generic enough to be shared
- * across every pd-* app that needs page navigation chips.
+ * across every pdomain-* app that needs page navigation chips.
  */
 export function PageChip({
   prefix,
