@@ -62,6 +62,13 @@ describe('JobsPill', () => {
     expect(screen.getByText('Project x')).toBeDefined();
   });
 
+  it('does not render the hover popover when hoverPopover is false', () => {
+    const jobs = [makeJob('x', 75)];
+    render(<JobsPill activeJobs={jobs} hoverPopover={false} />);
+    fireEvent.mouseEnter(screen.getByRole('button', { name: /jobs/i }));
+    expect(screen.queryByTestId('jobs-pill-popover')).toBeNull();
+  });
+
   it('renders idle message in popover when no active jobs and open', () => {
     render(<JobsPill activeJobs={[]} open />);
     expect(screen.getByTestId('jobs-pill-popover')).toBeDefined();

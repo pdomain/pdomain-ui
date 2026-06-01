@@ -154,6 +154,11 @@ export function AppShell({
       />
     );
 
+  const drawerColumn =
+    drawer !== undefined ? 'var(--shell-drawer-w, 320px)' : 'var(--shell-drawer-w, 0px)';
+  const rightColumn =
+    rightPanel !== undefined ? 'var(--shell-right-w, 520px)' : 'var(--shell-right-w, 0px)';
+
   return (
     <UIPrefsStoreProvider value={uiPrefsStore}>
       <AppShellContext.Provider value={ctx}>
@@ -166,8 +171,7 @@ export function AppShell({
               gridTemplateAreas: footer
                 ? '"header header header header" "rail drawer main right" "footer footer footer footer"'
                 : '"header header header header" "rail drawer main right"',
-              gridTemplateColumns:
-                'var(--shell-rail-w, 64px) var(--shell-drawer-w, 0px) 1fr var(--shell-right-w, 0px)',
+              gridTemplateColumns: `var(--shell-rail-w, 64px) ${drawerColumn} 1fr ${rightColumn}`,
               gridTemplateRows: footer
                 ? 'var(--shell-header-h, 56px) 1fr var(--shell-footer-h, auto)'
                 : 'var(--shell-header-h, 56px) 1fr',

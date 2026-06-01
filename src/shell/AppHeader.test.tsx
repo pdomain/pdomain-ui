@@ -131,6 +131,20 @@ describe('AppHeader', () => {
     expect(screen.getByTestId('jobs-pill-popover')).toBeDefined();
   });
 
+  it('forwards jobs click handling to JobsPill', () => {
+    const onJobsClick = vi.fn();
+    render(<AppHeader activeJobs={[]} onJobsClick={onJobsClick} />);
+    fireEvent.click(screen.getByRole('button', { name: /jobs/i }));
+    expect(onJobsClick).toHaveBeenCalledOnce();
+  });
+
+  it('can disable JobsPill hover popover when an app owns the jobs panel', () => {
+    const jobs = [makeJob('x', 75)];
+    render(<AppHeader activeJobs={jobs} jobsHoverPopover={false} />);
+    fireEvent.mouseEnter(screen.getByRole('button', { name: /jobs/i }));
+    expect(screen.queryByTestId('jobs-pill-popover')).toBeNull();
+  });
+
   it('accepts optional className and applies it', () => {
     render(<AppHeader className="extra-class" />);
     const header = screen.getByRole('banner');

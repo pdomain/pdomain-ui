@@ -92,6 +92,15 @@ describe('AppShell — grid skeleton (#158)', () => {
     expect(screen.getByTestId('slot-rightPanel')).toBeTruthy();
   });
 
+  it('reserves default grid width for rightPanel when provided', () => {
+    render(
+      <AppShell {...minimalProps({ rightPanel: <div data-testid="slot-rightPanel">rp</div> })} />,
+    );
+    expect(screen.getByTestId('app-shell').style.gridTemplateColumns).toContain(
+      'var(--shell-right-w, 520px)',
+    );
+  });
+
   it('built-in header renders the settings gear button', () => {
     render(<AppShell {...minimalProps()} />);
     expect(screen.getByTestId('settings-slot-trigger')).toBeTruthy();

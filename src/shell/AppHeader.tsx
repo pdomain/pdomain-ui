@@ -30,6 +30,8 @@ export interface AppHeaderProps {
   activeJobs?: ActiveJob[];
   /** Force the JobsPill popover open (for Storybook artboards / testing). */
   jobsOpen?: boolean;
+  /** Whether hovering the JobsPill opens its inline popover. Defaults to true. */
+  jobsHoverPopover?: boolean;
   /** Username shown in the right-hand user area. */
   username?: string;
   /** Two-letter initials shown in the avatar circle. */
@@ -40,6 +42,10 @@ export interface AppHeaderProps {
   onSearchClick?: () => void;
   /** Called when the bell button is clicked. */
   onBellClick?: () => void;
+  /** Called when the jobs pill is clicked. */
+  onJobsClick?: () => void;
+  /** Called when the jobs pill "View all jobs" action is clicked. */
+  onJobsViewAll?: () => void;
   /** Called when the user area is clicked. */
   onUserClick?: () => void;
   /** Extra CSS class applied to the <header> element. */
@@ -56,11 +62,14 @@ export function AppHeader({
   searchPlaceholder = 'Search…',
   activeJobs = [],
   jobsOpen = false,
+  jobsHoverPopover = true,
   username = '',
   initials = '',
   unread = 0,
   onSearchClick,
   onBellClick,
+  onJobsClick,
+  onJobsViewAll,
   onUserClick,
   className,
   actions,
@@ -192,7 +201,13 @@ export function AppHeader({
       >
         {actions}
 
-        <JobsPill activeJobs={activeJobs} open={jobsOpen} />
+        <JobsPill
+          activeJobs={activeJobs}
+          open={jobsOpen}
+          hoverPopover={jobsHoverPopover}
+          {...(onJobsClick !== undefined ? { onClick: onJobsClick } : {})}
+          {...(onJobsViewAll !== undefined ? { onViewAll: onJobsViewAll } : {})}
+        />
 
         {/* Bell button */}
         <button

@@ -35,6 +35,8 @@ export interface JobsPillProps {
   onClick?: () => void;
   /** Called when "View all jobs" footer link is clicked. */
   onViewAll?: () => void;
+  /** Whether mouse hover opens the inline popover. Defaults to true. */
+  hoverPopover?: boolean;
   className?: string;
 }
 
@@ -96,10 +98,11 @@ export function JobsPill({
   open = false,
   onClick,
   onViewAll,
+  hoverPopover = true,
   className,
 }: JobsPillProps) {
   const [hover, setHover] = React.useState(false);
-  const show = open || hover;
+  const show = open || (hoverPopover && hover);
   const isActive = activeJobs.length > 0;
 
   return (
