@@ -37,7 +37,7 @@ vi.mock('../PageWorkbench/ArtifactViewer.js', () => ({
 }));
 
 import { HyphenPageWorkbench } from './HyphenPageWorkbench.js';
-import type { HyphenPageWorkbenchPage } from './HyphenPageWorkbench.js';
+import type { HJWorkbenchDecision, HyphenPageWorkbenchPage } from './HyphenPageWorkbench.js';
 import type { HJDecisionCase } from './HJDecisionCard.js';
 import {
   HYPHEN_PAGE_WORKBENCH,
@@ -76,10 +76,10 @@ const MOCK_CASES: HJDecisionCase[] = [
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe('HyphenPageWorkbench', () => {
-  let onDecide: ReturnType<typeof vi.fn>;
+  let onDecide: (caseId: string, decision: HJWorkbenchDecision) => void;
 
   beforeEach(() => {
-    onDecide = vi.fn();
+    onDecide = vi.fn<(caseId: string, decision: HJWorkbenchDecision) => void>();
   });
 
   it('renders the root testid', () => {

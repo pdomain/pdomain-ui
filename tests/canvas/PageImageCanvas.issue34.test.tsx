@@ -11,7 +11,7 @@
  * window.Image is mocked to control load/error timing.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import React from 'react';
 
@@ -76,34 +76,35 @@ type MockImageInstance = {
 
 let capturedImages: MockImageInstance[] = [];
 let OriginalImage: typeof window.Image;
-let ImageSpy: MockInstance;
 
 function setupImageMock() {
   capturedImages = [];
   OriginalImage = window.Image;
-  const MockImage = vi.fn().mockImplementation(() => {
-    const instance: MockImageInstance = {
-      src: '',
-      onload: null,
-      onerror: null,
-      triggerLoad() {
-        this.onload?.();
-      },
-      triggerError() {
-        this.onerror?.();
-      },
-    };
-    capturedImages.push(instance);
-    return instance;
-  });
-  window.Image = MockImage as typeof window.Image;
-  ImageSpy = MockImage;
+
+  class MockImage implements MockImageInstance {
+    src = '';
+    onload: (() => void) | null = null;
+    onerror: (() => void) | null = null;
+
+    constructor() {
+      capturedImages.push(this);
+    }
+
+    triggerLoad() {
+      this.onload?.();
+    }
+
+    triggerError() {
+      this.onerror?.();
+    }
+  }
+
+  window.Image = MockImage as unknown as typeof window.Image;
   return capturedImages;
 }
 
 function teardownImageMock() {
   window.Image = OriginalImage;
-  ImageSpy.mockRestore();
 }
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
