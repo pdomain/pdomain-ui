@@ -133,16 +133,17 @@ jobs:
       # Notify pdomain/pdomain-index-npm so it indexes the new version
       # immediately instead of requiring a manual dispatch.
       #
-      # Requires repo secret PD_NPM_DISPATCH_TOKEN (fine-grained PAT with
-      # Contents: read+write on pdomain/pdomain-index-npm).
+      # Requires org-level secret PDOMAIN_INDEX_DISPATCH (a fine-grained PAT,
+      # resource owner = pdomain org, with Contents: write on
+      # pdomain/pdomain-index-npm).
       # Non-fatal: the registry can be updated manually via workflow_dispatch.
       - name: Notify pdomain-index-npm of new release
         env:
-          GH_TOKEN: ${{ secrets.PD_NPM_DISPATCH_TOKEN }}
+          GH_TOKEN: ${{ secrets.PDOMAIN_INDEX_DISPATCH }}
           TAG: ${{ github.ref_name }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
-            echo "::warning::PD_NPM_DISPATCH_TOKEN not set; pdomain-index-npm will need a manual dispatch"
+            echo "::warning::PDOMAIN_INDEX_DISPATCH not set; pdomain-index-npm will need a manual dispatch"
             exit 0
           fi
           TARBALL_NAME=$(ls dist/*.tgz | xargs basename)
