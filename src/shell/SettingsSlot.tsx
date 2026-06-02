@@ -1,25 +1,26 @@
 /**
- * SettingsSlot — gear button that opens the shared SettingsModal.
+ * SettingsSlot — gear button that toggles the shared utility-dock settings surface.
  *
- * The Radix Popover from M7 is replaced: the gear now calls
- * useSettingsModal().openModal() to open the full tabbed dialog.
+ * After M5: calls useUtilityDock().toggle('settings') to open/close the dock.
+ * Reflects open state via aria-expanded.
  * The testid `settings-slot-trigger` is preserved as a Playwright contract.
  *
  * Icon imported from src/icons to respect the no-direct-lucide rule.
  */
 import * as React from 'react';
 import { Settings } from '../icons/lucide.js';
-import { useSettingsModal } from './SettingsModalContext.js';
+import { useUtilityDock } from './UtilityDockContext.js';
 
 export function SettingsSlot() {
-  const { openModal } = useSettingsModal();
+  const { active, toggle } = useUtilityDock();
 
   return (
     <button
       type="button"
       aria-label="Settings and preferences"
+      aria-expanded={active === 'settings'}
       data-testid="settings-slot-trigger"
-      onClick={openModal}
+      onClick={() => toggle('settings')}
       style={{
         display: 'inline-flex',
         alignItems: 'center',

@@ -1,26 +1,30 @@
 /**
- * SettingsSlot tests — verifies gear button calls openModal from context.
+ * SettingsSlot tests — verifies gear button toggles the utility dock settings surface.
  *
- * After issue #19: SettingsSlot no longer owns a Popover. It calls
- * useSettingsModal().openModal() to open the shared SettingsModal.
- * Tests here verify the button renders and wires to the context.
+ * After M5: SettingsSlot no longer calls useSettingsModal().openModal(). It
+ * calls useUtilityDock().toggle('settings') to open/close the shared dock.
+ * Tests verify the button renders, wires to the dock context, and reflects
+ * open state via aria-expanded.
  */
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { SettingsSlot } from './SettingsSlot.js';
-import { SettingsModalContext } from './SettingsModalContext.js';
-import type { SettingsModalContextValue } from './SettingsModalContext.js';
+import { UtilityDockContext } from './UtilityDockContext.js';
+import type { UtilityDockContextValue } from './UtilityDockContext.js';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function makeCtx(overrides?: Partial<SettingsModalContextValue>): SettingsModalContextValue {
+function makeCtx(overrides?: Partial<UtilityDockContextValue>): UtilityDockContextValue {
   return {
-    open: false,
-    activePanel: 'appearance',
-    openModal: vi.fn(),
-    closeModal: vi.fn(),
-    openPanel: vi.fn(),
+    active: null,
+    pinned: false,
+    width: 420,
+    open: vi.fn(),
+    close: vi.fn(),
+    toggle: vi.fn(),
+    setPinned: vi.fn(),
+    setWidth: vi.fn(),
     ...overrides,
   };
 }
@@ -30,9 +34,9 @@ function Wrapper({
   ctx = makeCtx(),
 }: {
   children: React.ReactNode;
-  ctx?: SettingsModalContextValue;
+  ctx?: UtilityDockContextValue;
 }) {
-  return <SettingsModalContext.Provider value={ctx}>{children}</SettingsModalContext.Provider>;
+  return <UtilityDockContext.Provider value={ctx}>{children}</UtilityDockContext.Provider>;
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
@@ -44,33 +48,46 @@ describe('SettingsSlot', () => {
         <SettingsSlot />
       </Wrapper>,
     );
-    const trigger = screen.getByTestId('settings-slot-trigger');
-    expect(trigger).toBeTruthy();
+    expect(screen.getByTestId('settings-slot-trigger')).toBeTruthy();
   });
 
-  it('button has aria-label matching "settings" or "preferences"', () => {
+  it('button aria-label matches settings/preferences', () => {
     render(
       <Wrapper>
         <SettingsSlot />
       </Wrapper>,
     );
-    const trigger = screen.getByTestId('settings-slot-trigger');
-    const ariaLabel = trigger.getAttribute('aria-label') ?? '';
+    const ariaLabel = screen.getByTestId('settings-slot-trigger').getAttribute('aria-label') ?? '';
     expect(ariaLabel.toLowerCase()).toMatch(/settings|preferences/);
   });
 
-  it('clicking the gear calls openModal()', () => {
-    const openModal = vi.fn();
-    const ctx = makeCtx({ openModal });
-
+  it('clicking the gear calls toggle("settings")', () => {
+    const toggle = vi.fn();
     render(
-      <Wrapper ctx={ctx}>
+      <Wrapper ctx={makeCtx({ toggle })}>
         <SettingsSlot />
       </Wrapper>,
     );
-
     fireEvent.click(screen.getByTestId('settings-slot-trigger'));
-    expect(openModal).toHaveBeenCalledOnce();
+    expect(toggle).toHaveBeenCalledWith('settings');
+  });
+
+  it('reflects open state via aria-expanded when settings is active', () => {
+    render(
+      <Wrapper ctx={makeCtx({ active: 'settings' })}>
+        <SettingsSlot />
+      </Wrapper>,
+    );
+    expect(screen.getByTestId('settings-slot-trigger').getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('aria-expanded is false when a different surface is active', () => {
+    render(
+      <Wrapper ctx={makeCtx({ active: 'keybinds' })}>
+        <SettingsSlot />
+      </Wrapper>,
+    );
+    expect(screen.getByTestId('settings-slot-trigger').getAttribute('aria-expanded')).toBe('false');
   });
 
   it('does NOT render a popover or inline controls', () => {
@@ -79,7 +96,6 @@ describe('SettingsSlot', () => {
         <SettingsSlot />
       </Wrapper>,
     );
-    // The old Popover no longer exists
     expect(screen.queryByTestId('settings-slot-popover')).toBeNull();
     expect(screen.queryByTestId('settings-theme-dark')).toBeNull();
   });
