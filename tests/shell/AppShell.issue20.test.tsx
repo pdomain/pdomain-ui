@@ -3,13 +3,14 @@
  *
  * Tests the AppShell-level prop wiring introduced in issue #20:
  *   - headerActions?: ReactNode rendered in header before launcher + gear
- *   - settingsPanels?: SettingsPanelDescriptor[] injected into SettingsModal
+ *   - settingsPanels?: SettingsPanelDescriptor[] injected into Settings dock
  *   - useSettingsModal() hook: open / openModal / closeModal / openPanel(id)
  *   - SettingsModalContext provided by AppShell to all descendants
  *
- * The implementation landed as part of #19 but its contract (AppShell props +
- * context hook) is owned by #20. These tests are the authoritative acceptance
- * tests for that contract.
+ * After the M4 utility-dock migration, Settings renders inside the right-side
+ * UtilityDock (SettingsPanel body) rather than the centered SettingsModal dialog.
+ * Tests updated to assert the dock while preserving all behavior intent.
+ * The `settings-modal-tab-*` and `settings-modal-panel-*` testids are preserved.
  */
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -109,7 +110,7 @@ describe('AppShell #20 — headerActions prop', () => {
 // ─── settingsPanels prop ──────────────────────────────────────────────────────
 
 describe('AppShell #20 — settingsPanels prop', () => {
-  it('injected panels appear as tabs in SettingsModal after Appearance', () => {
+  it('injected panels appear as tabs in Settings dock after Appearance', () => {
     const panels: SettingsPanelDescriptor[] = [
       { id: 'ocr', label: 'OCR Config', content: <div>OCR</div> },
     ];
@@ -209,13 +210,15 @@ describe('AppShell #20 — useSettingsModal() hook', () => {
     expect(screen.getByTestId('open-state').textContent).toBe('closed');
   });
 
-  it('openModal() opens the modal', () => {
+  it('openModal() opens the settings dock', () => {
     render(<AppShell {...minimalProps()} main={<OpenModalBtn />} />);
     fireEvent.click(screen.getByTestId('hook-open'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    // Dock is open and settings panel is rendered
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
+    expect(screen.getByTestId('settings-panel')).toBeTruthy();
   });
 
-  it('closeModal() closes the modal after openModal()', () => {
+  it('closeModal() closes the dock after openModal()', () => {
     render(
       <AppShell
         {...minimalProps()}
@@ -228,12 +231,12 @@ describe('AppShell #20 — useSettingsModal() hook', () => {
       />,
     );
     fireEvent.click(screen.getByTestId('hook-open'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
     fireEvent.click(screen.getByTestId('hook-close'));
-    expect(screen.queryByTestId('settings-modal')).toBeNull();
+    expect(screen.queryByTestId('utility-dock')).toBeNull();
   });
 
-  it('openPanel(id) opens the modal with that panel active', () => {
+  it('openPanel(id) opens the dock with that panel active', () => {
     const panels: SettingsPanelDescriptor[] = [
       {
         id: 'ocr',
@@ -247,7 +250,7 @@ describe('AppShell #20 — useSettingsModal() hook', () => {
 
     fireEvent.click(screen.getByTestId('hook-open-panel'));
 
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
     expect(screen.getByTestId('settings-modal-panel-ocr')).toBeTruthy();
     expect(screen.getByTestId('ocr-body')).toBeTruthy();
   });
@@ -257,7 +260,7 @@ describe('AppShell #20 — useSettingsModal() hook', () => {
 
     fireEvent.click(screen.getByTestId('hook-open-panel'));
 
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
     expect(screen.getByTestId('settings-modal-panel-appearance')).toBeTruthy();
   });
 

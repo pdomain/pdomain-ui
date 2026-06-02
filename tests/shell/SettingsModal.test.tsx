@@ -1,10 +1,16 @@
 /**
  * SettingsModal + AppearancePanel + useSettingsModal tests (issue #19).
  *
+ * After the M4 utility-dock migration, Settings renders inside the right-side
+ * UtilityDock (SettingsPanel body) rather than the centered SettingsModal dialog.
+ * Tests updated to assert the dock (`utility-dock` / `settings-panel` / `slide-over-panel-close`)
+ * while preserving all behavior intent. The `settings-modal-tab-*` and
+ * `settings-modal-panel-*` testids are preserved in SettingsPanel per the plan.
+ *
  * Tests:
- *  1. Gear opens SettingsModal (not Popover).
- *  2. SettingsModal close button dismisses it.
- *  3. Escape dismisses it.
+ *  1. Gear opens utility dock settings surface (not a modal).
+ *  2. Dock close button (✕) dismisses settings.
+ *  3. Escape dismisses the dock.
  *  4. Appearance tab is always first.
  *  5. Tab switching renders the correct panel content.
  *  6. headerActions rendered in header.
@@ -14,7 +20,7 @@
  * 10. AppearancePanel store wiring — theme, density, fontScale, color reset.
  */
 import * as React from 'react';
-import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { AppShell } from '../../src/shell/AppShell.js';
 import { useSettingsModal } from '../../src/shell/SettingsModalContext.js';
@@ -48,125 +54,75 @@ function minimalProps(overrides?: Partial<AppShellProps>): AppShellProps {
   };
 }
 
-// ─── 1. Gear opens SettingsModal (not Popover) ────────────────────────────────
+// ─── 1. Gear opens utility dock (replaces centered modal) ────────────────────
 
-describe('SettingsModal — gear trigger', () => {
-  it('clicking gear opens settings-modal (not a popover)', () => {
+describe('Settings — gear trigger', () => {
+  it('clicking gear opens the utility dock settings surface (not a popover/modal)', () => {
     render(<AppShell {...minimalProps()} />);
 
-    expect(screen.queryByTestId('settings-modal')).toBeNull();
+    expect(screen.queryByTestId('utility-dock')).toBeNull();
     fireEvent.click(screen.getByTestId('settings-slot-trigger'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
-    // Old popover should NOT exist
+    // Now opens the dock, not the old modal
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
+    expect(screen.getByTestId('settings-panel')).toBeTruthy();
+    // Old popover and modal should NOT exist
     expect(screen.queryByTestId('settings-slot-popover')).toBeNull();
+    expect(screen.queryByTestId('settings-modal')).toBeNull();
   });
 });
 
-// ─── 2. Close button / Escape / outside-click dismisses ──────────────────────
+// ─── 2. Close button dismisses ──────────────────────────────────────────────
 
-describe('SettingsModal — close', () => {
-  it('close button dismisses the modal', () => {
+describe('Settings — close', () => {
+  it('SlideOverPanel close button (✕) dismisses settings', () => {
     render(<AppShell {...minimalProps()} />);
 
     fireEvent.click(screen.getByTestId('settings-slot-trigger'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
 
-    fireEvent.click(screen.getByTestId('settings-modal-close'));
-    expect(screen.queryByTestId('settings-modal')).toBeNull();
+    fireEvent.click(screen.getByTestId('slide-over-panel-close'));
+    expect(screen.queryByTestId('utility-dock')).toBeNull();
   });
 
-  /**
-   * Issue #32: Settings modal must close on Escape.
-   *
-   * Radix Dialog handles Escape via its DismissableLayer. Firing a
-   * KeyDown Escape event on the dialog content must call onOpenChange(false),
-   * which routes through closeModal() in the SettingsModal wrapper.
-   */
-  it('Escape key dismisses the modal (issue #32)', () => {
+  it('Escape key dismisses the settings dock', () => {
     render(<AppShell {...minimalProps()} />);
 
     fireEvent.click(screen.getByTestId('settings-slot-trigger'));
-    const modal = screen.getByTestId('settings-modal');
-    expect(modal).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
 
-    fireEvent.keyDown(modal, { key: 'Escape', code: 'Escape', bubbles: true });
-    expect(screen.queryByTestId('settings-modal')).toBeNull();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByTestId('utility-dock')).toBeNull();
   });
 
-  /**
-   * Issue #32: Settings modal must close when the overlay (outside the dialog
-   * content) is clicked.
-   *
-   * Radix DismissableLayer attaches a `pointerdown` listener to `document` inside
-   * a `setTimeout(0)` (so the open-animation doesn't immediately re-close the
-   * dialog). When that event fires and the pointer did NOT land inside the React
-   * subtree (i.e. `onPointerDownCapture` on the content was not triggered first),
-   * Radix fires `onPointerDownOutside` → `onOpenChange(false)`.
-   *
-   * We must flush the `setTimeout(0)` via fake timers before dispatching, then
-   * dispatch a native `pointerdown` on `document.body` (outside the dialog
-   * content, so `isPointerInsideReactTree` stays false).
-   */
-  it('outside pointerdown dismisses the modal — onOpenChange not blocked (issue #32)', async () => {
-    vi.useFakeTimers();
-
+  it('clicking ✕ and reopening still works (state round-trips)', () => {
     render(<AppShell {...minimalProps()} />);
 
     fireEvent.click(screen.getByTestId('settings-slot-trigger'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
 
-    // Flush the setTimeout(0) used by Radix's DismissableLayer to register
-    // the document-level pointerdown listener.
-    act(() => {
-      vi.runAllTimers();
-    });
+    fireEvent.click(screen.getByTestId('slide-over-panel-close'));
+    expect(screen.queryByTestId('utility-dock')).toBeNull();
 
-    // Dispatch natively on document.body — this is OUTSIDE the React dialog
-    // subtree, so Radix's `isPointerInsideReactTree` stays false and the
-    // outside-pointer-down handler runs.
-    act(() => {
-      document.body.dispatchEvent(
-        new PointerEvent('pointerdown', { bubbles: true, cancelable: true }),
-      );
-    });
-
-    vi.useRealTimers();
-
-    // Modal must no longer be in the DOM.
-    await waitFor(() => {
-      expect(screen.queryByTestId('settings-modal')).toBeNull();
-    });
+    fireEvent.click(screen.getByTestId('settings-slot-trigger'));
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
   });
 
-  /**
-   * Issue #32: onOpenChange is wired — closeModal() is called when Dialog
-   * reports isOpen=false. This is a unit-level guard ensuring the SettingsModal
-   * wrapper does not suppress the close signal.
-   */
-  it('onOpenChange(false) triggers closeModal (issue #32 — wiring guard)', () => {
-    // Render with a spy on closeModal via context override.
-    // We use the full AppShell so onOpenChange is the real wire path.
+  // Outside-click does NOT close — the dock is non-modal. This test documents that contract.
+  it('outside click does NOT close the settings dock (non-modal behavior)', () => {
     render(<AppShell {...minimalProps()} />);
 
-    // Open
     fireEvent.click(screen.getByTestId('settings-slot-trigger'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
 
-    // Close via X button (exercises the same onOpenChange(false) path that
-    // overlay-click and Escape use at the Radix level).
-    fireEvent.click(screen.getByTestId('settings-modal-close'));
-    expect(screen.queryByTestId('settings-modal')).toBeNull();
-
-    // Re-open to confirm the state round-trips — if closeModal() was a no-op
-    // the modal would stay closed/broken forever.
-    fireEvent.click(screen.getByTestId('settings-slot-trigger'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    // Click outside (on the shell body) — dock stays open
+    fireEvent.pointerDown(screen.getByTestId('app-shell'));
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
   });
 });
 
 // ─── 3. Appearance tab is always first ───────────────────────────────────────
 
-describe('SettingsModal — Appearance tab', () => {
+describe('Settings — Appearance tab', () => {
   it('has appearance tab with testid settings-modal-tab-appearance', () => {
     render(<AppShell {...minimalProps()} />);
 
@@ -184,7 +140,7 @@ describe('SettingsModal — Appearance tab', () => {
 
 // ─── 4. Tab switching ─────────────────────────────────────────────────────────
 
-describe('SettingsModal — tab switching', () => {
+describe('Settings — tab switching', () => {
   it('clicking a custom panel tab shows that panel content', () => {
     const panels: SettingsPanelDescriptor[] = [
       { id: 'ocr', label: 'OCR Config', content: <div data-testid="ocr-panel-content">OCR</div> },
@@ -277,18 +233,19 @@ function CloseModalButton() {
 }
 
 describe('useSettingsModal()', () => {
-  it('openModal() opens the modal', () => {
+  it('openModal() opens the settings dock', () => {
     const panels: SettingsPanelDescriptor[] = [
       { id: 'ocr', label: 'OCR', content: <div>ocr content</div> },
     ];
     render(<AppShell {...minimalProps({ settingsPanels: panels })} main={<OpenModalButton />} />);
 
-    expect(screen.queryByTestId('settings-modal')).toBeNull();
+    expect(screen.queryByTestId('utility-dock')).toBeNull();
     fireEvent.click(screen.getByTestId('open-btn'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
+    expect(screen.getByTestId('settings-panel')).toBeTruthy();
   });
 
-  it('closeModal() dismisses the modal', () => {
+  it('closeModal() dismisses the settings dock', () => {
     render(
       <AppShell
         {...minimalProps()}
@@ -302,13 +259,13 @@ describe('useSettingsModal()', () => {
     );
 
     fireEvent.click(screen.getByTestId('open-btn'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
 
     fireEvent.click(screen.getByTestId('close-btn'));
-    expect(screen.queryByTestId('settings-modal')).toBeNull();
+    expect(screen.queryByTestId('utility-dock')).toBeNull();
   });
 
-  it('openPanel(id) opens the modal with that panel active', () => {
+  it('openPanel(id) opens the dock with that panel active', () => {
     const panels: SettingsPanelDescriptor[] = [
       { id: 'ocr', label: 'OCR', content: <div data-testid="ocr-content">ocr content</div> },
     ];
@@ -320,7 +277,7 @@ describe('useSettingsModal()', () => {
     );
 
     fireEvent.click(screen.getByTestId('open-panel-btn'));
-    expect(screen.getByTestId('settings-modal')).toBeTruthy();
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
     expect(screen.getByTestId('settings-modal-panel-ocr')).toBeTruthy();
     expect(screen.getByTestId('ocr-content')).toBeTruthy();
   });

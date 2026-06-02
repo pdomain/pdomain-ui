@@ -20,16 +20,22 @@
  * `types.ts` for full migration guidance. Both props remain functional for back-compat.
  *
  * Provides AppShellContext so nested components can call useAppShell().
- * Provides SettingsModalContext so nested components can call useSettingsModal().
+ * Provides UtilityDockContext so nested components can call useUtilityDock().
+ * Provides SettingsModalContext for back-compat; it now delegates to the utility dock.
  * UIPrefsApplicator applies UIPrefs changes to the DOM (data-density, zoom, data-theme).
+ *
+ * Settings now renders via UtilityDock (right-side dock). SettingsModal is deprecated;
+ * AppShell no longer renders it directly. The SettingsModalContext shim ensures that
+ * existing consumers calling useSettingsModal().openModal()/openPanel() still work.
  *
  * Issue #19 additions:
  *   - headerActions prop — app-specific header controls before launcher + gear
- *   - settingsPanels prop — app-injected panels in the shared SettingsModal
+ *   - settingsPanels prop — app-injected panels in the shared SettingsModal / dock
  *   - SettingsModalContext provided here with open/activePanel state
- *   - SettingsModal rendered inside the provider tree (outside the grid, same as children)
+ *   - UtilityDock rendered inside the provider tree (outside the grid, replaces SettingsModal)
  */
 import * as React from 'react';
+import { useStore } from 'zustand';
 import { AppShellContext } from './AppShellContext.js';
 import { UIPrefsStoreProvider } from '../stores/StoreContexts.js';
 import { createUIPrefsStore } from '../stores/createUIPrefsStore.js';
@@ -38,7 +44,9 @@ import { SettingsSlot } from './SettingsSlot.js';
 import { UIPrefsApplicator } from './UIPrefsApplicator.js';
 import { TopNav } from './TopNav.js';
 import { SettingsModalContext } from './SettingsModalContext.js';
-import { SettingsModal } from './SettingsModal.js';
+import { UtilityDockContext } from './UtilityDockContext.js';
+import type { DockSurface, UtilityDockContextValue } from './UtilityDockContext.js';
+import { UtilityDock } from './UtilityDock.js';
 import type { AppShellProps, AppShellContextValue } from './types.js';
 
 // ─── Built-in header ──────────────────────────────────────────────────────────
@@ -117,27 +125,62 @@ export function AppShell({
     [appId, appDisplayName, appIconUrl, deployMode, launcherSlot],
   );
 
-  // ── SettingsModal state ──────────────────────────────────────────────────
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [activePanel, setActivePanel] = React.useState('appearance');
+  // ── Utility dock state ──────────────────────────────────────────────────
+  // `active` is ephemeral; `pinned`/`width` are persisted via UIPrefs.
+  const [dockActive, setDockActive] = React.useState<DockSurface | null>(null);
+  const dockPinned = useStore(uiPrefsStore, (s) => s.prefs.dockPinned ?? false);
+  const dockWidth = useStore(uiPrefsStore, (s) => s.prefs.dockWidth ?? 420);
+  const setDockPinned = useStore(uiPrefsStore, (s) => s.setDockPinned);
+  const setDockWidth = useStore(uiPrefsStore, (s) => s.setDockWidth);
+
+  const utilityDockCtx = React.useMemo<UtilityDockContextValue>(
+    () => ({
+      active: dockActive,
+      pinned: dockPinned,
+      width: dockWidth,
+      open: (surface) => {
+        setDockActive(surface);
+      },
+      close: () => {
+        setDockActive(null);
+      },
+      toggle: (surface) => {
+        setDockActive((cur) => (cur === surface ? null : surface));
+      },
+      setPinned: setDockPinned,
+      setWidth: setDockWidth,
+    }),
+    [dockActive, dockPinned, dockWidth, setDockPinned, setDockWidth],
+  );
+
+  // ── SettingsModal back-compat shim ──────────────────────────────────────
+  // openModal → open('settings'); openPanel(id) → open('settings') + select sub-panel id.
+  // The shim state `shimSettingsPanel` is passed to UtilityDock as initialSettingsPanel
+  // so that openPanel(id) causes the dock to show that sub-panel.
+  const [shimSettingsPanel, setShimSettingsPanel] = React.useState('appearance');
 
   const settingsModalCtx = React.useMemo(
     () => ({
-      open: modalOpen,
-      activePanel,
+      open: dockActive === 'settings',
+      activePanel: shimSettingsPanel,
       openModal: () => {
-        setModalOpen(true);
+        setDockActive('settings');
       },
       closeModal: () => {
-        setModalOpen(false);
+        setDockActive((cur) => (cur === 'settings' ? null : cur));
       },
       openPanel: (panelId: string) => {
-        setActivePanel(panelId);
-        setModalOpen(true);
+        setShimSettingsPanel(panelId);
+        setDockActive('settings');
       },
     }),
-    [modalOpen, activePanel],
+    [dockActive, shimSettingsPanel],
   );
+
+  // When pinned, the utility dock drives --shell-right-w so main reflows.
+  // When not pinned (overlay) or closed, leave the existing rightPanel logic alone.
+  const shellRightWStyle: React.CSSProperties =
+    dockPinned && dockActive !== null ? { ['--shell-right-w' as string]: `${dockWidth}px` } : {};
 
   // Determine the resolved header content.
   // When `header` is undefined, use the built-in AppShellHeader.
@@ -162,24 +205,26 @@ export function AppShell({
   return (
     <UIPrefsStoreProvider value={uiPrefsStore}>
       <AppShellContext.Provider value={ctx}>
-        <SettingsModalContext.Provider value={settingsModalCtx}>
-          <UIPrefsApplicator />
-          <div
-            data-testid="app-shell"
-            style={{
-              display: 'grid',
-              gridTemplateAreas: footer
-                ? '"header header header header" "rail drawer main right" "footer footer footer footer"'
-                : '"header header header header" "rail drawer main right"',
-              gridTemplateColumns: `var(--shell-rail-w, 64px) ${drawerColumn} 1fr ${rightColumn}`,
-              gridTemplateRows: footer
-                ? 'var(--shell-header-h, 56px) 1fr var(--shell-footer-h, auto)'
-                : 'var(--shell-header-h, 56px) 1fr',
-              height: '100%',
-              width: '100%',
-              overflow: 'hidden',
-            }}
-          >
+        <UtilityDockContext.Provider value={utilityDockCtx}>
+          <SettingsModalContext.Provider value={settingsModalCtx}>
+            <UIPrefsApplicator />
+            <div
+              data-testid="app-shell"
+              style={{
+                display: 'grid',
+                gridTemplateAreas: footer
+                  ? '"header header header header" "rail drawer main right" "footer footer footer footer"'
+                  : '"header header header header" "rail drawer main right"',
+                gridTemplateColumns: `var(--shell-rail-w, 64px) ${drawerColumn} 1fr ${rightColumn}`,
+                gridTemplateRows: footer
+                  ? 'var(--shell-header-h, 56px) 1fr var(--shell-footer-h, auto)'
+                  : 'var(--shell-header-h, 56px) 1fr',
+                height: '100%',
+                width: '100%',
+                overflow: 'hidden',
+                ...shellRightWStyle,
+              }}
+            >
             {/* Header zone — always rendered (built-in or custom) */}
             <header
               data-testid="app-shell-header"
@@ -241,16 +286,16 @@ export function AppShell({
             )}
           </div>
 
-          {/* SettingsModal — rendered outside the grid so it portal-overlays correctly */}
-          {settingsPanels !== undefined ? (
-            <SettingsModal settingsPanels={settingsPanels} />
-          ) : (
-            <SettingsModal />
-          )}
+            {/* Utility dock — rendered outside the grid so it overlays / docks the right edge. */}
+            <UtilityDock
+              {...(settingsPanels !== undefined ? { settingsPanels } : {})}
+              initialSettingsPanel={shimSettingsPanel}
+            />
 
-          {/* children slot — for context consumers rendered outside the grid zones */}
-          {children}
-        </SettingsModalContext.Provider>
+            {/* children slot — for context consumers rendered outside the grid zones */}
+            {children}
+          </SettingsModalContext.Provider>
+        </UtilityDockContext.Provider>
       </AppShellContext.Provider>
     </UIPrefsStoreProvider>
   );
