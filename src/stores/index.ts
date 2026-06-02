@@ -70,6 +70,8 @@ export {
   useLayerColor,
   useStatusColor,
   useAccentColor,
+  useDockPinned,
+  useDockWidth,
 } from './StoreContexts.js';
 
 // ─── SuiteSiblings ────────────────────────────────────────────────────────────

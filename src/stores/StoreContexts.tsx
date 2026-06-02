@@ -141,3 +141,15 @@ export function useAccentColor() {
   if (!store) throw new Error('useAccentColor() must be used inside <UIPrefsStoreProvider>');
   return useStore(store, (s) => s.getAccentColor());
 }
+
+export function useDockPinned() {
+  const store = React.useContext(UIPrefsStoreContext);
+  if (!store) throw new Error('useDockPinned() must be used inside <UIPrefsStoreProvider>');
+  return useStore(store, (s) => s.prefs.dockPinned ?? false);
+}
+
+export function useDockWidth() {
+  const store = React.useContext(UIPrefsStoreContext);
+  if (!store) throw new Error('useDockWidth() must be used inside <UIPrefsStoreProvider>');
+  return useStore(store, (s) => s.prefs.dockWidth ?? 420);
+}
