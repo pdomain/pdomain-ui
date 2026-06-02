@@ -10,7 +10,8 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { AppShell } from './AppShell.js';
 import { useUtilityDock } from './UtilityDockContext.js';
-import type { UIPrefsConfig } from './types.js';
+import type { UIPrefsConfig, AppShellJobsProps } from './types.js';
+import type { Job } from './JobRow.js';
 
 function makeConfig(
   prefs: Partial<{ dockPinned: boolean; dockWidth: number }> = {},
@@ -171,5 +172,82 @@ describe('AppShell — utility dock focus return on close', () => {
     fireEvent.click(screen.getByTestId('close'));
     expect(screen.getByTestId('active').textContent).toBe('none');
     expect(document.activeElement).toBe(openBtn);
+  });
+});
+
+// ─── jobs data path ───────────────────────────────────────────────────────────
+
+const RUNNING_JOB: Job = {
+  id: 'j-test',
+  project: 'belloc-path-to-rome',
+  phase: 'OCR — page 5 of 20',
+  pct: 25,
+  status: 'running',
+  cancelable: true,
+};
+
+async function renderShellWithJobs(jobsProps: AppShellJobsProps, config = makeConfig()) {
+  // DockControls is declared above and provides a 'toggle-jobs' button.
+  let result!: ReturnType<typeof render>;
+  await act(async () => {
+    result = render(
+      <AppShell
+        appId="t"
+        appDisplayName="Test"
+        appIconUrl=""
+        uiPrefsConfig={config}
+        jobs={jobsProps}
+        main={<DockControls />}
+      />,
+    );
+    await new Promise((r) => setTimeout(r, 0));
+  });
+  return result;
+}
+
+describe('AppShell — jobs data path', () => {
+  it('renders a job-row when jobs.activeJobs is provided and the jobs surface is open', async () => {
+    await renderShellWithJobs({ activeJobs: [RUNNING_JOB] });
+
+    // Open the jobs surface.
+    fireEvent.click(screen.getByTestId('toggle-jobs'));
+
+    expect(screen.getByTestId('jobs-panel-body')).toBeTruthy();
+    // The job's project name is rendered inside the dock (not the empty state).
+    expect(screen.getByText(RUNNING_JOB.project)).toBeTruthy();
+    // The empty-state message must not be present.
+    expect(screen.queryByText(/No active jobs/)).toBeNull();
+  });
+
+  it('shows the empty state when jobs prop is omitted', async () => {
+    // Render without the `jobs` prop — default empty behavior must be preserved.
+    await act(async () => {
+      render(
+        <AppShell
+          appId="t"
+          appDisplayName="Test"
+          appIconUrl=""
+          uiPrefsConfig={makeConfig()}
+          main={<DockControls />}
+        />,
+      );
+      await new Promise((r) => setTimeout(r, 0));
+    });
+
+    fireEvent.click(screen.getByTestId('toggle-jobs'));
+    expect(screen.getByText(/No active jobs/)).toBeTruthy();
+  });
+
+  it('fires onJobOpen when the Open button is clicked on a done job', async () => {
+    const onJobOpen = vi.fn();
+    const doneJob: Job = { ...RUNNING_JOB, id: 'j-done', status: 'done', cancelable: false };
+    await renderShellWithJobs({ activeJobs: [doneJob], onJobOpen });
+
+    fireEvent.click(screen.getByTestId('toggle-jobs'));
+
+    // Done jobs render an Open button (not gated behind hover in the dock).
+    const openBtn = screen.getByTestId('job-row-open');
+    fireEvent.click(openBtn);
+    expect(onJobOpen).toHaveBeenCalledWith('j-done');
   });
 });

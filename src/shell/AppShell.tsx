@@ -115,6 +115,7 @@ export function AppShell({
   uiPrefsConfig,
   deployMode = 'local',
   settingsPanels,
+  jobs,
   children,
 }: AppShellProps & { children?: React.ReactNode }) {
   // Stable store instance: created once per AppShell mount.
@@ -317,6 +318,13 @@ export function AppShell({
                 {...(settingsPanels !== undefined ? { settingsPanels } : {})}
                 initialSettingsPanel={shimSettingsPanel}
                 bindings={allBindings}
+                {...(jobs?.activeJobs !== undefined ? { activeJobs: jobs.activeJobs } : {})}
+                {...(jobs?.onJobOpen !== undefined ? { onJobOpen: jobs.onJobOpen } : {})}
+                {...(jobs?.onJobPauseResume !== undefined
+                  ? { onJobPauseResume: jobs.onJobPauseResume }
+                  : {})}
+                {...(jobs?.onJobCancel !== undefined ? { onJobCancel: jobs.onJobCancel } : {})}
+                {...(jobs?.onViewAll !== undefined ? { onJobsViewAll: jobs.onViewAll } : {})}
               />
             )}
 

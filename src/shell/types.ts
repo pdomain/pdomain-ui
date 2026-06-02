@@ -7,6 +7,7 @@
  * used only within the shell and stores subpaths.
  */
 import type * as React from 'react';
+import type { Job, JobRowProps } from './JobRow.js';
 
 // ─── Suite types (local stubs — will be replaced by codegen from pdomain-ops) ───
 
@@ -116,6 +117,31 @@ export interface SettingsPanelDescriptor {
   content: React.ReactNode;
 }
 
+// ─── AppShellJobsProps ────────────────────────────────────────────────────────
+
+/**
+ * Live jobs data forwarded from `AppShell` to the Jobs utility-dock surface.
+ *
+ * Pass this as the `jobs` prop on `<AppShell>` to populate the right-side
+ * Jobs panel. All members are optional — omitting `jobs` entirely (or any
+ * member) leaves the panel in its empty-state behavior.
+ *
+ * Data-flow: `AppShell.jobs` → `UtilityDock` props → `JobsPanelBody` props.
+ * Compare: Settings via `settingsPanels`, Keybinds via `useShortcutsContext().allBindings`.
+ */
+export interface AppShellJobsProps {
+  /** Currently active jobs rendered in the Jobs panel. */
+  activeJobs?: Job[];
+  /** Called with job.id when a row's Open button is clicked. */
+  onJobOpen?: JobRowProps['onOpen'];
+  /** Called with job.id when a row's Pause/Resume button is clicked. */
+  onJobPauseResume?: JobRowProps['onPauseResume'];
+  /** Called with job.id when a row's Cancel button is clicked. */
+  onJobCancel?: JobRowProps['onCancel'];
+  /** Called when the "View all jobs" footer link is clicked. */
+  onViewAll?: () => void;
+}
+
 // ─── AppShell props ───────────────────────────────────────────────────────────
 
 /**
@@ -194,6 +220,13 @@ export interface AppShellProps {
    * appended after the built-in Appearance panel.
    */
   settingsPanels?: SettingsPanelDescriptor[];
+  /**
+   * Live jobs data forwarded to the right-side Jobs utility-dock surface.
+   *
+   * When omitted, the Jobs panel shows its empty state ("No active jobs").
+   * All members of `AppShellJobsProps` are individually optional.
+   */
+  jobs?: AppShellJobsProps;
 }
 
 // ─── AppShell context value ────────────────────────────────────────────────────

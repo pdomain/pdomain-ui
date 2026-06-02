@@ -52,6 +52,7 @@ const REQUIRED_EXPORTS: ReadonlyArray<string> = [
   'settingsAppearanceColor',
   // JobRow
   'JOB_ROW',
+  'JOB_ROW_OPEN',
   'JOB_ROW_STATUS_FAILED',
   // PipelineTemplate
   'PIPELINE_TEMPLATE',

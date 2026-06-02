@@ -82,6 +82,28 @@ When `pinned`, AppShell sets `--shell-right-w` to the dock width so main reflows
 - **Keybinds** — `ShortcutsCheatsheet` as-is.
 - **Jobs** — job-row list extracted/reused from `JobsDrawer`.
 
+### Jobs data path
+
+Each surface receives its data through a dedicated channel:
+
+- **Settings** — `AppShell settingsPanels` prop forwarded to `UtilityDock` → `SettingsPanel`.
+- **Keybinds** — `useShortcutsContext().allBindings` read by `AppShell`, forwarded as `UtilityDock bindings`.
+- **Jobs** — `AppShell jobs` prop (type `AppShellJobsProps`) forwarded to `UtilityDock` as individual props → `JobsPanelBody`.
+
+`AppShellJobsProps` shape (all members optional; omitting `jobs` entirely gives the empty-state):
+
+```ts
+interface AppShellJobsProps {
+  activeJobs?: Job[];
+  onJobOpen?: (jobId: string) => void;
+  onJobPauseResume?: (jobId: string) => void;
+  onJobCancel?: (jobId: string) => void;
+  onViewAll?: () => void;
+}
+```
+
+The consuming app provides live job data via `<AppShell jobs={{ activeJobs, onJobOpen, ... }} />`.
+
 ## Behavior
 
 - Click a trigger → opens its surface. Click the **active** trigger again → closes (toggle). Esc / ✕ → close. Outside-click → no-op.

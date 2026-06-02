@@ -147,6 +147,7 @@ export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel }
         {done ? (
           <button
             type="button"
+            data-testid="job-row-open"
             onClick={() => onOpen?.(job.id)}
             style={{
               display: 'inline-flex',

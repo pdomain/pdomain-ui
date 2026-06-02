@@ -97,4 +97,42 @@ describe('UtilityDock', () => {
     fireEvent.click(screen.getByTestId('slide-over-panel-pin'));
     expect(setPinned).toHaveBeenCalledWith(true);
   });
+
+  it('forwards activeJobs to JobsPanelBody — job renders instead of empty state', async () => {
+    await renderDock(makeCtx({ active: 'jobs' as DockSurface }), {
+      activeJobs: [
+        {
+          id: 'j-fwd',
+          project: 'forward-test-project',
+          phase: 'OCR',
+          pct: 50,
+          status: 'running',
+          cancelable: true,
+        },
+      ],
+    });
+    expect(screen.getByText('forward-test-project')).toBeTruthy();
+    expect(screen.queryByText(/No active jobs/)).toBeNull();
+  });
+
+  it('forwards onJobOpen to JobsPanelBody — clicking Open fires the callback', async () => {
+    const onJobOpen = vi.fn();
+    await renderDock(makeCtx({ active: 'jobs' as DockSurface }), {
+      activeJobs: [
+        {
+          id: 'j-cb',
+          project: 'callback-test',
+          phase: 'Done',
+          pct: 100,
+          status: 'done',
+          cancelable: false,
+        },
+      ],
+      onJobOpen,
+    });
+
+    const openBtn = screen.getByTestId('job-row-open');
+    fireEvent.click(openBtn);
+    expect(onJobOpen).toHaveBeenCalledWith('j-cb');
+  });
 });

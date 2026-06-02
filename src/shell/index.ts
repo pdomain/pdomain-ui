@@ -21,6 +21,7 @@ export type {
   InstalledApp,
   LaunchResult,
   SettingsPanelDescriptor,
+  AppShellJobsProps,
 } from './types.js';
 
 // ─── AppShell ─────────────────────────────────────────────────────────────────

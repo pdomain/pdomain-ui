@@ -52,6 +52,7 @@ export const settingsAppearanceColorReset = (key: string) =>
 // ─── JobRow ───────────────────────────────────────────────────────────────────
 
 export const JOB_ROW = 'job-row' as const;
+export const JOB_ROW_OPEN = 'job-row-open' as const;
 export const JOB_ROW_STATUS_FAILED = 'job-row-status-failed' as const;
 
 // ─── PipelineTemplate (#345) ──────────────────────────────────────────────────

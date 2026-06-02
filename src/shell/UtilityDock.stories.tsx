@@ -158,7 +158,13 @@ export const KeybindsPinned: Story = {
 // ─── Jobs surface ─────────────────────────────────────────────────────────────
 
 export const JobsOverlay: Story = {
-  args: { activeJobs: SAMPLE_JOBS },
+  args: {
+    activeJobs: SAMPLE_JOBS,
+    onJobOpen: (id: string) => alert(`Open job: ${id}`),
+    onJobPauseResume: (id: string) => alert(`Pause/resume job: ${id}`),
+    onJobCancel: (id: string) => alert(`Cancel job: ${id}`),
+    onJobsViewAll: () => alert('View all jobs'),
+  },
   decorators: [
     (Story) => (
       <WithProviders active="jobs" pinned={false}>
@@ -173,10 +179,31 @@ export const JobsOverlay: Story = {
 };
 
 export const JobsPinned: Story = {
-  args: { activeJobs: SAMPLE_JOBS },
+  args: {
+    activeJobs: SAMPLE_JOBS,
+    onJobOpen: (id: string) => alert(`Open job: ${id}`),
+    onJobPauseResume: (id: string) => alert(`Pause/resume job: ${id}`),
+    onJobCancel: (id: string) => alert(`Cancel job: ${id}`),
+    onJobsViewAll: () => alert('View all jobs'),
+  },
   decorators: [
     (Story) => (
       <WithProviders active="jobs" pinned width={420}>
+        <div
+          style={{ position: 'relative', height: '100vh', background: 'var(--bg-page, #1a1a1a)' }}
+        >
+          <Story />
+        </div>
+      </WithProviders>
+    ),
+  ],
+};
+
+export const JobsEmpty: Story = {
+  args: {},
+  decorators: [
+    (Story) => (
+      <WithProviders active="jobs" pinned={false}>
         <div
           style={{ position: 'relative', height: '100vh', background: 'var(--bg-page, #1a1a1a)' }}
         >

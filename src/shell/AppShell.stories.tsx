@@ -234,6 +234,56 @@ export const MinimalMain: Story = {
 };
 
 /**
+ * Jobs surface populated via the `jobs` prop — open the Jobs surface from the
+ * utility dock to see active jobs rendered inside the panel. Demonstrates the
+ * AppShell→UtilityDock→JobsPanelBody data path.
+ */
+export const WithActiveJobs: Story = {
+  render: () => (
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <AppShell
+        appId="demo-jobs"
+        appDisplayName="pdomain-ui Demo App"
+        appIconUrl=""
+        uiPrefsConfig={STUB_PREFS_CONFIG}
+        jobs={{
+          activeJobs: [
+            {
+              id: 'j1',
+              project: 'belloc-path-to-rome',
+              phase: 'OCR — page 12 of 40',
+              pct: 30,
+              status: 'running',
+              cancelable: true,
+            },
+            {
+              id: 'j2',
+              project: 'chesterton-orthodoxy',
+              phase: 'Ingest',
+              pct: 100,
+              status: 'done',
+              cancelable: false,
+            },
+          ],
+          onJobOpen: (id) => alert(`Open job: ${id}`),
+          onJobPauseResume: (id) => alert(`Pause/resume job: ${id}`),
+          onJobCancel: (id) => alert(`Cancel job: ${id}`),
+          onViewAll: () => alert('View all jobs'),
+        }}
+        main={
+          <div style={{ padding: '24px', color: 'var(--ink-1)' }}>
+            <p>Click the Jobs trigger in the header to open the Jobs panel.</p>
+            <p>
+              Two sample jobs are wired via the AppShell <code>jobs</code> prop.
+            </p>
+          </div>
+        }
+      />
+    </div>
+  ),
+};
+
+/**
  * Built-in header — no custom `header` prop; AppShell renders icon + name +
  * settings gear automatically.
  */
