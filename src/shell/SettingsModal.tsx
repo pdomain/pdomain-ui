@@ -1,4 +1,8 @@
 /**
+ * @deprecated since the right-side utility panels change (M4): Settings now renders
+ * via `UtilityDock`/`SettingsPanel`. `SettingsModal` is retained for one release for
+ * any consumer that mounted it directly; AppShell no longer renders it.
+ *
  * SettingsModal — tabbed dialog (built on the Dialog primitive) with:
  *  - Left vertical tab nav listing all panels
  *  - Right content pane rendering the active panel
@@ -12,7 +16,7 @@
  *   settings-modal-panel-<id>      — active panel wrapper
  *
  * Controlled externally via SettingsModalContext (open + activePanel state
- * live in AppShell).
+ * live in AppShell). NOTE: SettingsModalContext now delegates to the utility dock shim.
  */
 import * as React from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogClose } from '../primitives/Dialog.js';
