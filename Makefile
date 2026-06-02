@@ -185,7 +185,9 @@ frontend-format-check: format-check
 frontend-knip:
 	$(call _pnpm,run knip)
 
-ci: install static-check test build codegen-check theme-check
+# Package contract tests (tests/pack, build.contract) validate the BUILT dist,
+# so they must run after `build`. test-unit excludes them; test-package runs them.
+ci: install static-check test-unit build test-package codegen-check theme-check
 
 mise-download:
 	@if [ -x "$(MISE)" ]; then \
