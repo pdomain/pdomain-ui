@@ -147,3 +147,29 @@ describe('AppShell — utility dock (M4 review fixes)', () => {
     expect(screen.getAllByTestId('utility-dock').length).toBe(1);
   });
 });
+
+describe('AppShell — utility dock focus return on close', () => {
+  it('returns focus to the trigger button when close() unmounts the dock', async () => {
+    // Regression guard: SlideOverPanel must restore focus on unmount-while-open.
+    // AppShell conditionally renders UtilityDock (`{dockActive !== null && <UtilityDock/>}`),
+    // so close() unmounts the entire dock tree while SlideOverPanel's open prop is still true.
+    await renderShell();
+
+    const openBtn = screen.getByTestId('open-settings');
+    // Explicitly focus the trigger so triggerRef is captured on dock open.
+    openBtn.focus();
+    expect(document.activeElement).toBe(openBtn);
+
+    // Open the dock — SlideOverPanel mounts with open=true, captures triggerRef.
+    fireEvent.click(openBtn);
+    expect(screen.getByTestId('active').textContent).toBe('settings');
+    // Focus has moved into the panel.
+    expect(document.activeElement).not.toBe(openBtn);
+
+    // Close the dock — sets dockActive to null, unmounting UtilityDock (and SlideOverPanel).
+    // The cleanup effect must fire and restore focus to openBtn.
+    fireEvent.click(screen.getByTestId('close'));
+    expect(screen.getByTestId('active').textContent).toBe('none');
+    expect(document.activeElement).toBe(openBtn);
+  });
+});

@@ -67,14 +67,18 @@ export function SlideOverPanel({
   }, [onResize]);
 
   React.useEffect(() => {
-    if (open) {
-      triggerRef.current = document.activeElement;
-      // Move focus into the panel for keyboard users (non-trapping).
-      panelRef.current?.focus();
-    } else if (triggerRef.current instanceof HTMLElement) {
-      triggerRef.current.focus();
-      triggerRef.current = null;
-    }
+    if (!open) return undefined;
+    triggerRef.current = document.activeElement;
+    // Move focus into the panel for keyboard users (non-trapping).
+    panelRef.current?.focus();
+    return () => {
+      // Runs on both the open→false transition and on unmount-while-open,
+      // ensuring focus always returns to the trigger when the dock unmounts.
+      if (triggerRef.current instanceof HTMLElement) {
+        triggerRef.current.focus();
+        triggerRef.current = null;
+      }
+    };
   }, [open]);
 
   // Esc closes (window-level, only while open).

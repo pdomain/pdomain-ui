@@ -135,6 +135,37 @@ describe('SlideOverPanel — focus return', () => {
     fireEvent.keyDown(window, { key: 'Escape' }); // closes
     expect(document.activeElement).toBe(trigger);
   });
+
+  it('returns focus to the trigger when SlideOverPanel is UNMOUNTED while open', () => {
+    // Regression guard: UtilityDock closes the dock by unmounting SlideOverPanel
+    // while `open` is still `true`. The old else-if branch never ran on unmount,
+    // so focus was silently lost. The cleanup now fires on unmount-while-open.
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const trigger = document.createElement('button');
+    trigger.dataset['testid'] = 'trigger-unmount';
+    document.body.appendChild(trigger);
+    trigger.focus();
+    expect(document.activeElement).toBe(trigger);
+
+    const { unmount } = render(
+      <SlideOverPanel open title="Settings" onClose={vi.fn()}>
+        <p>body</p>
+      </SlideOverPanel>,
+      { container },
+    );
+    // After mount, focus is inside the panel.
+    expect(document.activeElement).not.toBe(trigger);
+
+    // Unmount with open still true — simulates AppShell conditional render
+    // (`{dockActive !== null && <UtilityDock/>}`) being switched off.
+    unmount();
+    expect(document.activeElement).toBe(trigger);
+
+    // Clean up.
+    document.body.removeChild(container);
+    document.body.removeChild(trigger);
+  });
 });
 
 describe('SlideOverPanel — pin button visibility', () => {
