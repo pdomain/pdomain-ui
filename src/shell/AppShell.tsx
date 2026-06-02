@@ -47,6 +47,7 @@ import { SettingsModalContext } from './SettingsModalContext.js';
 import { UtilityDockContext } from './UtilityDockContext.js';
 import type { DockSurface, UtilityDockContextValue } from './UtilityDockContext.js';
 import { UtilityDock } from './UtilityDock.js';
+import { useShortcutsContext } from '../hooks/ShortcutsContext.js';
 import type { AppShellProps, AppShellContextValue } from './types.js';
 
 // ─── Built-in header ──────────────────────────────────────────────────────────
@@ -119,6 +120,11 @@ export function AppShell({
   // Stable store instance: created once per AppShell mount.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const uiPrefsStore = React.useMemo(() => createUIPrefsStore(uiPrefsConfig), []);
+
+  // Read bindings from the nearest ShortcutsProvider (or the no-op default, which
+  // has allBindings: []). This feeds the keybinds dock surface so it is non-empty
+  // whenever shortcuts are registered.
+  const { allBindings } = useShortcutsContext();
 
   const ctx: AppShellContextValue = React.useMemo(
     () => ({ appId, appDisplayName, appIconUrl, deployMode, launcherSlot }),
@@ -310,6 +316,7 @@ export function AppShell({
               <UtilityDock
                 {...(settingsPanels !== undefined ? { settingsPanels } : {})}
                 initialSettingsPanel={shimSettingsPanel}
+                bindings={allBindings}
               />
             )}
 

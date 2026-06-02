@@ -1,9 +1,9 @@
 /**
- * ShortcutsHelpButton — ghost icon button that opens the global shortcuts cheatsheet.
+ * ShortcutsHelpButton — ghost icon button that opens the keybinds dock surface.
  *
- * Lives beside SettingsSlot in the AppShell header. Calls
- * `openCheatsheet()` from the nearest ShortcutsProvider. Safe to render
- * without a provider — the button renders but clicks are no-ops.
+ * After M5: calls useUtilityDock().toggle('keybinds') to open/close the dock
+ * keybinds panel. Reflects open state via aria-expanded.
+ * Lives beside SettingsSlot in the AppShell header.
  *
  * Sizing / visual treatment mirrors SettingsSlot (30×30px, border-radius 6,
  * var(--border-2) border, var(--bg-raised) background).
@@ -12,17 +12,18 @@
  */
 import * as React from 'react';
 import { Keyboard } from '../icons/lucide.js';
-import { useShortcutsContext } from '../hooks/ShortcutsContext.js';
+import { useUtilityDock } from './UtilityDockContext.js';
 
 export function ShortcutsHelpButton(): React.ReactElement {
-  const { openCheatsheet } = useShortcutsContext();
+  const { active, toggle } = useUtilityDock();
 
   return (
     <button
       type="button"
       aria-label="Keyboard shortcuts"
+      aria-expanded={active === 'keybinds'}
       data-testid="shortcuts-help-button"
-      onClick={openCheatsheet}
+      onClick={() => toggle('keybinds')}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
