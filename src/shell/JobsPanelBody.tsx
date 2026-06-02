@@ -62,29 +62,31 @@ export function JobsPanelBody({
               />
             </div>
           ))}
-          <button
-            type="button"
-            data-testid="jobs-panel-body-view-all"
-            onClick={onViewAll}
-            style={{
-              marginTop: 8,
-              padding: '8px 4px',
-              background: 'transparent',
-              border: 0,
-              borderTopWidth: 1,
-              borderTopStyle: 'solid',
-              borderTopColor: 'var(--border-1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              cursor: 'pointer',
-              width: '100%',
-              textAlign: 'left',
-            }}
-          >
-            <span style={{ fontSize: 12, color: 'var(--ink-2)' }}>View all jobs</span>
-            <ArrowRight size={12} aria-hidden style={{ color: 'var(--ink-3)' }} />
-          </button>
+          {onViewAll !== undefined ? (
+            <button
+              type="button"
+              data-testid="jobs-panel-body-view-all"
+              onClick={onViewAll}
+              style={{
+                marginTop: 8,
+                padding: '8px 4px',
+                background: 'transparent',
+                border: 0,
+                borderTopWidth: 1,
+                borderTopStyle: 'solid',
+                borderTopColor: 'var(--border-1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                width: '100%',
+                textAlign: 'left',
+              }}
+            >
+              <span style={{ fontSize: 12, color: 'var(--ink-2)' }}>View all jobs</span>
+              <ArrowRight size={12} aria-hidden style={{ color: 'var(--ink-3)' }} />
+            </button>
+          ) : null}
         </>
       )}
     </div>

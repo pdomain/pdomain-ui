@@ -36,6 +36,8 @@ export function SettingsPanel({
   settingsPanels,
 }: SettingsPanelProps): React.ReactElement {
   const tablistId = React.useId();
+  // Ref array holding each tab button DOM node, indexed by panels array order.
+  const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
   const panels: PanelEntry[] = [
     { id: 'appearance', label: 'Appearance', content: <AppearancePanel /> },
@@ -49,9 +51,8 @@ export function SettingsPanel({
       data-testid="settings-panel"
       style={{ display: 'flex', flexDirection: 'row', gap: 0, height: '100%', minHeight: 0 }}
     >
-      {/* Left tab nav */}
+      {/* Left tab nav — no aria-label here; the tablist owns the label. */}
       <nav
-        aria-label="Settings panels"
         style={{
           width: 148,
           flexShrink: 0,
@@ -73,6 +74,9 @@ export function SettingsPanel({
             return (
               <button
                 key={panel.id}
+                ref={(el) => {
+                  tabRefs.current[idx] = el;
+                }}
                 type="button"
                 role="tab"
                 id={`${tablistId}-tab-${panel.id}`}
@@ -93,6 +97,7 @@ export function SettingsPanel({
                   else return;
                   e.preventDefault();
                   onSelectPanel(panels[next]?.id ?? panel.id);
+                  tabRefs.current[next]?.focus();
                 }}
                 style={{
                   display: 'flex',
