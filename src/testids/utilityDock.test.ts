@@ -8,6 +8,7 @@ import {
   SETTINGS_PANEL,
   SHORTCUTS_CHEATSHEET_BODY,
   JOBS_PANEL_BODY,
+  JOBS_PANEL_BODY_VIEW_ALL,
 } from './index.js';
 
 describe('utility dock testids', () => {
@@ -20,5 +21,6 @@ describe('utility dock testids', () => {
     expect(SETTINGS_PANEL).toBe('settings-panel');
     expect(SHORTCUTS_CHEATSHEET_BODY).toBe('shortcuts-cheatsheet-body');
     expect(JOBS_PANEL_BODY).toBe('jobs-panel-body');
+    expect(JOBS_PANEL_BODY_VIEW_ALL).toBe('jobs-panel-body-view-all');
   });
 });

@@ -22,6 +22,7 @@ describe('utility dock public exports', () => {
     expect(typeof shell.UtilityDock).toBe('function');
     expect(typeof shell.SettingsPanel).toBe('function');
     expect(typeof shell.JobsPanelBody).toBe('function');
+    expect(shell.UtilityDockContext).toBeDefined();
   });
   it('primitives barrel exports SlideOverPanel + ShortcutsCheatsheetBody', () => {
     expect(typeof primitives.SlideOverPanel).toBe('function');
@@ -30,5 +31,6 @@ describe('utility dock public exports', () => {
   it('root barrel re-exports the dock API', () => {
     expect(typeof root.useUtilityDock).toBe('function');
     expect(typeof root.SlideOverPanel).toBe('function');
+    expect(root.UtilityDockContext).toBeDefined();
   });
 });

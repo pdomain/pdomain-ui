@@ -6,6 +6,7 @@ const meta: Meta<typeof SlideOverPanel> = {
   title: 'Primitives/SlideOverPanel',
   component: SlideOverPanel,
   parameters: { layout: 'fullscreen' },
+  tags: ['autodocs'],
 };
 
 export default meta;
@@ -35,7 +36,7 @@ function InteractiveWrapper(): React.ReactElement {
   );
 }
 
-export const Default: Story = {
+export const Overlay: Story = {
   render: () => <InteractiveWrapper />,
 };
 
