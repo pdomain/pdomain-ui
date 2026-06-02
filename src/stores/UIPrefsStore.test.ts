@@ -225,6 +225,33 @@ describe('createUIPrefsStore — hydration race (#37)', () => {
     // theme was not edited before load — server value applies
     expect(store.getState().prefs.theme).toBe('light');
   });
+
+  it('setDockPinned edit before load: dock pinned state survives late hydration', async () => {
+    // Server will send dockPinned: false; user sets it to true before load resolves.
+    const { store, resolve } = makeDeferred({ dockPinned: false });
+    store.getState().setDockPinned(true);
+    expect(store.getState().prefs.dockPinned).toBe(true);
+    // Load arrives late with conflicting value — user edit must win.
+    resolve();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(store.getState().prefs.dockPinned).toBe(true);
+    expect(store.getState().loading).toBe(false);
+  });
+
+  it('setDockWidth edit before load: dock width survives late hydration (clamp still applies)', async () => {
+    // Server will send dockWidth: 400; user sets it to 500 before load resolves.
+    const { store, resolve } = makeDeferred({ dockWidth: 400 });
+    store.getState().setDockWidth(500);
+    expect(store.getState().prefs.dockWidth).toBe(500);
+    // Load arrives late with conflicting value — user edit must win.
+    resolve();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(store.getState().prefs.dockWidth).toBe(500);
+    expect(store.getState().loading).toBe(false);
+    // Verify clamp still applies on a fresh edit after hydration.
+    store.getState().setDockWidth(9999);
+    expect(store.getState().prefs.dockWidth).toBe(640);
+  });
 });
 
 describe('createUIPrefsStore — utility dock prefs', () => {
