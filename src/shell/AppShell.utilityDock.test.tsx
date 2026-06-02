@@ -36,9 +36,13 @@ function DockControls() {
     <div>
       <button data-testid="open-settings" onClick={() => dock.open('settings')} />
       <button data-testid="toggle-jobs" onClick={() => dock.toggle('jobs')} />
-      <button data-testid="pin" onClick={() => dock.setPinned(!dock.pinned)} />
+      <button data-testid="toggle-keybinds" onClick={() => dock.toggle('keybinds')} />
+      <button data-testid="close" onClick={() => dock.close()} />
+      <button data-testid="pin" onClick={() => dock.setPinned(true)} />
+      <button data-testid="unpin" onClick={() => dock.setPinned(false)} />
       <span data-testid="active">{dock.active ?? 'none'}</span>
       <span data-testid="pinned">{String(dock.pinned)}</span>
+      <span data-testid="width">{String(dock.width)}</span>
     </div>
   );
 }
@@ -102,5 +106,44 @@ describe('AppShell — utility dock', () => {
     const shell = screen.getByTestId('app-shell');
     expect(shell.style.getPropertyValue('--shell-right-w')).toBe('500px');
     expect(screen.getByTestId('pinned').textContent).toBe('true');
+  });
+});
+
+describe('AppShell — utility dock (M4 review fixes)', () => {
+  it('pinned drives --shell-right-w; unpin clears it; close while pinned also clears it', async () => {
+    // Start unpinned, default width (420)
+    await renderShell(makeConfig({ dockPinned: false, dockWidth: 420 }));
+    const shell = screen.getByTestId('app-shell');
+
+    // Open a surface then pin → CSS variable should be set
+    fireEvent.click(screen.getByTestId('open-settings'));
+    fireEvent.click(screen.getByTestId('pin'));
+    expect(shell.style.getPropertyValue('--shell-right-w')).toBe('420px');
+
+    // Unpin → variable should clear
+    fireEvent.click(screen.getByTestId('unpin'));
+    expect(shell.style.getPropertyValue('--shell-right-w')).toBe('');
+
+    // Re-pin and then close → closed while pinned, variable should clear (dockActive === null)
+    fireEvent.click(screen.getByTestId('pin'));
+    expect(shell.style.getPropertyValue('--shell-right-w')).toBe('420px');
+    fireEvent.click(screen.getByTestId('close'));
+    expect(shell.style.getPropertyValue('--shell-right-w')).toBe('');
+  });
+
+  it('mutual exclusion: opening keybinds replaces settings', async () => {
+    await renderShell();
+
+    // Open settings first
+    fireEvent.click(screen.getByTestId('open-settings'));
+    expect(screen.getByTestId('active').textContent).toBe('settings');
+    // Settings body present
+    expect(screen.getByTestId('utility-dock')).toBeTruthy();
+
+    // Toggle keybinds → settings replaced, keybinds active
+    fireEvent.click(screen.getByTestId('toggle-keybinds'));
+    expect(screen.getByTestId('active').textContent).toBe('keybinds');
+    // Only one dock panel at a time
+    expect(screen.getAllByTestId('utility-dock').length).toBe(1);
   });
 });

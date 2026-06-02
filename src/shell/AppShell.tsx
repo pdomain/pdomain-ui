@@ -133,24 +133,35 @@ export function AppShell({
   const setDockPinned = useStore(uiPrefsStore, (s) => s.setDockPinned);
   const setDockWidth = useStore(uiPrefsStore, (s) => s.setDockWidth);
 
+  // Stable callbacks — deps are only the stable state setters (never recreated).
+  const dockOpen = React.useCallback((s: DockSurface) => setDockActive(s), []);
+  const dockClose = React.useCallback(() => setDockActive(null), []);
+  const dockToggle = React.useCallback(
+    (s: DockSurface) => setDockActive((c) => (c === s ? null : s)),
+    [],
+  );
+
   const utilityDockCtx = React.useMemo<UtilityDockContextValue>(
     () => ({
       active: dockActive,
       pinned: dockPinned,
       width: dockWidth,
-      open: (surface) => {
-        setDockActive(surface);
-      },
-      close: () => {
-        setDockActive(null);
-      },
-      toggle: (surface) => {
-        setDockActive((cur) => (cur === surface ? null : surface));
-      },
+      open: dockOpen,
+      close: dockClose,
+      toggle: dockToggle,
       setPinned: setDockPinned,
       setWidth: setDockWidth,
     }),
-    [dockActive, dockPinned, dockWidth, setDockPinned, setDockWidth],
+    [
+      dockActive,
+      dockPinned,
+      dockWidth,
+      dockOpen,
+      dockClose,
+      dockToggle,
+      setDockPinned,
+      setDockWidth,
+    ],
   );
 
   // ── SettingsModal back-compat shim ──────────────────────────────────────
@@ -159,22 +170,27 @@ export function AppShell({
   // so that openPanel(id) causes the dock to show that sub-panel.
   const [shimSettingsPanel, setShimSettingsPanel] = React.useState('appearance');
 
+  // Stable shim callbacks — close over only stable setters.
+  const shimOpenModal = React.useCallback(() => dockOpen('settings'), [dockOpen]);
+  // Per spec: closeModal closes unconditionally regardless of which surface is active.
+  const shimCloseModal = React.useCallback(() => dockClose(), [dockClose]);
+  const shimOpenPanel = React.useCallback(
+    (panelId: string) => {
+      setShimSettingsPanel(panelId);
+      dockOpen('settings');
+    },
+    [dockOpen],
+  );
+
   const settingsModalCtx = React.useMemo(
     () => ({
       open: dockActive === 'settings',
       activePanel: shimSettingsPanel,
-      openModal: () => {
-        setDockActive('settings');
-      },
-      closeModal: () => {
-        setDockActive((cur) => (cur === 'settings' ? null : cur));
-      },
-      openPanel: (panelId: string) => {
-        setShimSettingsPanel(panelId);
-        setDockActive('settings');
-      },
+      openModal: shimOpenModal,
+      closeModal: shimCloseModal,
+      openPanel: shimOpenPanel,
     }),
-    [dockActive, shimSettingsPanel],
+    [dockActive, shimSettingsPanel, shimOpenModal, shimCloseModal, shimOpenPanel],
   );
 
   // When pinned, the utility dock drives --shell-right-w so main reflows.
@@ -286,11 +302,16 @@ export function AppShell({
               )}
             </div>
 
-            {/* Utility dock — rendered outside the grid so it overlays / docks the right edge. */}
-            <UtilityDock
-              {...(settingsPanels !== undefined ? { settingsPanels } : {})}
-              initialSettingsPanel={shimSettingsPanel}
-            />
+            {/* Utility dock — rendered outside the grid so it overlays / docks the right edge.
+                Conditional render (not just early-return in the child) ensures UtilityDock
+                truly mounts/unmounts on open/close, so useState(initialSettingsPanel) always
+                picks up the current prop value without needing an effect-sync. */}
+            {dockActive !== null && (
+              <UtilityDock
+                {...(settingsPanels !== undefined ? { settingsPanels } : {})}
+                initialSettingsPanel={shimSettingsPanel}
+              />
+            )}
 
             {/* children slot — for context consumers rendered outside the grid zones */}
             {children}

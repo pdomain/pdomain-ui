@@ -14,11 +14,12 @@ import { ShortcutsCheatsheetBody } from '../primitives/ShortcutsCheatsheetBody.j
 import { SettingsPanel } from './SettingsPanel.js';
 import { JobsPanelBody } from './JobsPanelBody.js';
 import { useUtilityDock } from './UtilityDockContext.js';
+import type { DockSurface } from './UtilityDockContext.js';
 import type { SettingsPanelDescriptor } from './types.js';
 import type { ShortcutBinding } from '../hooks/useShortcuts.js';
 import type { Job, JobRowProps } from './JobRow.js';
 
-const SURFACE_TITLES: Record<'settings' | 'keybinds' | 'jobs', string> = {
+const SURFACE_TITLES: Record<DockSurface, string> = {
   settings: 'Settings',
   keybinds: 'Keyboard shortcuts',
   jobs: 'Jobs',
@@ -51,15 +52,12 @@ export function UtilityDock({
   initialSettingsPanel,
 }: UtilityDockProps): React.ReactElement | null {
   const { active, pinned, width, close, setPinned, setWidth } = useUtilityDock();
-  const [settingsSubPanel, setSettingsSubPanel] = React.useState('appearance');
-
-  // When the dock requests a specific settings sub-panel (via openPanel(id)),
-  // adopt it. The shim sets initialSettingsPanel before opening.
-  React.useEffect(() => {
-    if (initialSettingsPanel !== undefined) {
-      setSettingsSubPanel(initialSettingsPanel);
-    }
-  }, [initialSettingsPanel]);
+  // Initialize directly from prop: the dock unmounts when active===null and re-mounts
+  // on each open, so each re-mount picks up the current initialSettingsPanel value.
+  // No effect needed — stale-override risk eliminated.
+  const [settingsSubPanel, setSettingsSubPanel] = React.useState(
+    initialSettingsPanel ?? 'appearance',
+  );
 
   if (active === null) return null;
 
