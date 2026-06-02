@@ -15,7 +15,9 @@ import type { UIPrefsConfig } from './types.js';
 
 function makeConfig(): UIPrefsConfig {
   return {
-    load: vi.fn(() => Promise.resolve({ theme: 'dark' as const, density: 'normal' as const, fontScale: 1.0 })),
+    load: vi.fn(() =>
+      Promise.resolve({ theme: 'dark' as const, density: 'normal' as const, fontScale: 1.0 }),
+    ),
     persistCommon: vi.fn(() => Promise.resolve()),
     persistApp: vi.fn(() => Promise.resolve()),
   };
@@ -35,7 +37,10 @@ function makeCtx(overrides?: Partial<UtilityDockContextValue>): UtilityDockConte
   };
 }
 
-async function renderDock(ctx: UtilityDockContextValue, props?: React.ComponentProps<typeof UtilityDock>) {
+async function renderDock(
+  ctx: UtilityDockContextValue,
+  props?: React.ComponentProps<typeof UtilityDock>,
+) {
   const store = createUIPrefsStore(makeConfig());
   await act(async () => {
     await new Promise((r) => setTimeout(r, 0));
@@ -72,7 +77,9 @@ describe('UtilityDock', () => {
 
   it('renders the Jobs surface when active is jobs', async () => {
     await renderDock(makeCtx({ active: 'jobs' as DockSurface }), {
-      activeJobs: [{ id: 'j1', project: 'belloc', phase: 'OCR', pct: 40, status: 'running', cancelable: true }],
+      activeJobs: [
+        { id: 'j1', project: 'belloc', phase: 'OCR', pct: 40, status: 'running', cancelable: true },
+      ],
     });
     expect(screen.getByTestId('jobs-panel-body')).toBeTruthy();
   });

@@ -12,7 +12,9 @@ import type { UIPrefsConfig } from './types.js';
 
 function makeConfig(): UIPrefsConfig {
   return {
-    load: vi.fn(() => Promise.resolve({ theme: 'dark' as const, density: 'normal' as const, fontScale: 1.0 })),
+    load: vi.fn(() =>
+      Promise.resolve({ theme: 'dark' as const, density: 'normal' as const, fontScale: 1.0 }),
+    ),
     persistCommon: vi.fn(() => Promise.resolve()),
     persistApp: vi.fn(() => Promise.resolve()),
   };

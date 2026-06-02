@@ -225,66 +225,66 @@ export function AppShell({
                 ...shellRightWStyle,
               }}
             >
-            {/* Header zone — always rendered (built-in or custom) */}
-            <header
-              data-testid="app-shell-header"
-              style={{ gridArea: 'header' }}
-              className="min-w-0 overflow-hidden"
-            >
-              {resolvedHeader}
-            </header>
-
-            {/* Rail zone — when launcherSlot='rail', LauncherSlot is appended here */}
-            <nav
-              data-testid="app-shell-rail"
-              aria-label="App rail"
-              style={{ gridArea: 'rail' }}
-              className="min-w-0 overflow-hidden"
-            >
-              {rail}
-              {launcherSlot === 'rail' && <LauncherSlot />}
-            </nav>
-
-            {/* Drawer zone */}
-            <aside
-              data-testid="app-shell-drawer"
-              aria-label="Drawer"
-              style={{ gridArea: 'drawer' }}
-              className="min-w-0 overflow-hidden"
-            >
-              {drawer}
-            </aside>
-
-            {/* Main content zone (required) */}
-            <main
-              data-testid="app-shell-main"
-              style={{ gridArea: 'main' }}
-              className="min-w-0 min-h-0 overflow-hidden"
-            >
-              {main}
-            </main>
-
-            {/* Right panel zone */}
-            <aside
-              data-testid="app-shell-right"
-              aria-label="Right panel"
-              style={{ gridArea: 'right' }}
-              className="min-w-0 overflow-hidden"
-            >
-              {rightPanel}
-            </aside>
-
-            {/* Footer zone (issue #14) — only rendered when footer prop is provided */}
-            {footer !== undefined && (
-              <div
-                data-testid="app-shell-footer"
-                style={{ gridArea: 'footer' }}
+              {/* Header zone — always rendered (built-in or custom) */}
+              <header
+                data-testid="app-shell-header"
+                style={{ gridArea: 'header' }}
                 className="min-w-0 overflow-hidden"
               >
-                {footer}
-              </div>
-            )}
-          </div>
+                {resolvedHeader}
+              </header>
+
+              {/* Rail zone — when launcherSlot='rail', LauncherSlot is appended here */}
+              <nav
+                data-testid="app-shell-rail"
+                aria-label="App rail"
+                style={{ gridArea: 'rail' }}
+                className="min-w-0 overflow-hidden"
+              >
+                {rail}
+                {launcherSlot === 'rail' && <LauncherSlot />}
+              </nav>
+
+              {/* Drawer zone */}
+              <aside
+                data-testid="app-shell-drawer"
+                aria-label="Drawer"
+                style={{ gridArea: 'drawer' }}
+                className="min-w-0 overflow-hidden"
+              >
+                {drawer}
+              </aside>
+
+              {/* Main content zone (required) */}
+              <main
+                data-testid="app-shell-main"
+                style={{ gridArea: 'main' }}
+                className="min-w-0 min-h-0 overflow-hidden"
+              >
+                {main}
+              </main>
+
+              {/* Right panel zone */}
+              <aside
+                data-testid="app-shell-right"
+                aria-label="Right panel"
+                style={{ gridArea: 'right' }}
+                className="min-w-0 overflow-hidden"
+              >
+                {rightPanel}
+              </aside>
+
+              {/* Footer zone (issue #14) — only rendered when footer prop is provided */}
+              {footer !== undefined && (
+                <div
+                  data-testid="app-shell-footer"
+                  style={{ gridArea: 'footer' }}
+                  className="min-w-0 overflow-hidden"
+                >
+                  {footer}
+                </div>
+              )}
+            </div>
 
             {/* Utility dock — rendered outside the grid so it overlays / docks the right edge. */}
             <UtilityDock

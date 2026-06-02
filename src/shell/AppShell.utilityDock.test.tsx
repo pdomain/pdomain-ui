@@ -12,10 +12,17 @@ import { AppShell } from './AppShell.js';
 import { useUtilityDock } from './UtilityDockContext.js';
 import type { UIPrefsConfig } from './types.js';
 
-function makeConfig(prefs: Partial<{ dockPinned: boolean; dockWidth: number }> = {}): UIPrefsConfig {
+function makeConfig(
+  prefs: Partial<{ dockPinned: boolean; dockWidth: number }> = {},
+): UIPrefsConfig {
   return {
     load: vi.fn(() =>
-      Promise.resolve({ theme: 'dark' as const, density: 'normal' as const, fontScale: 1.0, ...prefs }),
+      Promise.resolve({
+        theme: 'dark' as const,
+        density: 'normal' as const,
+        fontScale: 1.0,
+        ...prefs,
+      }),
     ),
     persistCommon: vi.fn(() => Promise.resolve()),
     persistApp: vi.fn(() => Promise.resolve()),
@@ -40,7 +47,13 @@ async function renderShell(config: UIPrefsConfig = makeConfig()) {
   let result!: ReturnType<typeof render>;
   await act(async () => {
     result = render(
-      <AppShell appId="t" appDisplayName="Test" appIconUrl="" uiPrefsConfig={config} main={<DockControls />} />,
+      <AppShell
+        appId="t"
+        appDisplayName="Test"
+        appIconUrl=""
+        uiPrefsConfig={config}
+        main={<DockControls />}
+      />,
     );
     await new Promise((r) => setTimeout(r, 0));
   });
