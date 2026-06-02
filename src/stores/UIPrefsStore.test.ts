@@ -226,3 +226,41 @@ describe('createUIPrefsStore — hydration race (#37)', () => {
     expect(store.getState().prefs.theme).toBe('light');
   });
 });
+
+describe('createUIPrefsStore — utility dock prefs', () => {
+  it('setDockPinned() updates prefs.dockPinned and calls persistCommon', async () => {
+    const config = makeConfig();
+    const store = createUIPrefsStore(config);
+    await new Promise((r) => setTimeout(r, 0));
+    store.getState().setDockPinned(true);
+    expect(store.getState().prefs.dockPinned).toBe(true);
+    expect(config.persistCommon).toHaveBeenCalledWith(
+      expect.objectContaining({ dockPinned: true }),
+    );
+  });
+
+  it('setDockWidth() updates prefs.dockWidth and calls persistCommon', async () => {
+    const config = makeConfig();
+    const store = createUIPrefsStore(config);
+    await new Promise((r) => setTimeout(r, 0));
+    store.getState().setDockWidth(500);
+    expect(store.getState().prefs.dockWidth).toBe(500);
+    expect(config.persistCommon).toHaveBeenCalledWith(
+      expect.objectContaining({ dockWidth: 500 }),
+    );
+  });
+
+  it('setDockWidth() clamps below 320 up to 320', async () => {
+    const store = createUIPrefsStore(makeConfig());
+    await new Promise((r) => setTimeout(r, 0));
+    store.getState().setDockWidth(100);
+    expect(store.getState().prefs.dockWidth).toBe(320);
+  });
+
+  it('setDockWidth() clamps above 640 down to 640', async () => {
+    const store = createUIPrefsStore(makeConfig());
+    await new Promise((r) => setTimeout(r, 0));
+    store.getState().setDockWidth(9999);
+    expect(store.getState().prefs.dockWidth).toBe(640);
+  });
+});

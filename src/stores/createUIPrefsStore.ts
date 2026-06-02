@@ -50,6 +50,8 @@ function commonPrefs(prefs: UIPrefs): Omit<UIPrefs, 'app'> {
   if (prefs.statusColors !== undefined) out.statusColors = prefs.statusColors;
   if (prefs.accentColor !== undefined) out.accentColor = prefs.accentColor;
   if (prefs.accentInkColor !== undefined) out.accentInkColor = prefs.accentInkColor;
+  if (prefs.dockPinned !== undefined) out.dockPinned = prefs.dockPinned;
+  if (prefs.dockWidth !== undefined) out.dockWidth = prefs.dockWidth;
   return out;
 }
 
@@ -90,6 +92,12 @@ export interface UIPrefsStoreState {
   setAccentColor: (color: string | undefined) => void;
   /** Set the accent ink (foreground on accent) color override and persist. */
   setAccentInkColor: (color: string | undefined) => void;
+
+  // ── Utility dock prefs ─────────────────────────────────────────────────────
+  /** Set whether the utility dock is pinned and persist. */
+  setDockPinned: (pinned: boolean) => void;
+  /** Set the pinned utility-dock width (clamped to [320, 640]) and persist. */
+  setDockWidth: (px: number) => void;
 
   // ── Derived helpers (stable references; computed inline for simplicity) ────
   /** Returns the CSS color for the given layer (override or token fallback). */
@@ -141,6 +149,8 @@ export function createUIPrefsStore(config: UIPrefsConfig) {
           const scSrc = _editedKeys.has('statusColors') ? current : serverPrefs;
           const acSrc = _editedKeys.has('accentColor') ? current : serverPrefs;
           const aiSrc = _editedKeys.has('accentInkColor') ? current : serverPrefs;
+          const dpSrc = _editedKeys.has('dockPinned') ? current : serverPrefs;
+          const dwSrc = _editedKeys.has('dockWidth') ? current : serverPrefs;
           const appSrc = _editedKeys.has('app') ? current : serverPrefs;
 
           const merged: UIPrefs = { theme, density, fontScale };
@@ -148,6 +158,8 @@ export function createUIPrefsStore(config: UIPrefsConfig) {
           if (scSrc.statusColors !== undefined) merged.statusColors = scSrc.statusColors;
           if (acSrc.accentColor !== undefined) merged.accentColor = acSrc.accentColor;
           if (aiSrc.accentInkColor !== undefined) merged.accentInkColor = aiSrc.accentInkColor;
+          if (dpSrc.dockPinned !== undefined) merged.dockPinned = dpSrc.dockPinned;
+          if (dwSrc.dockWidth !== undefined) merged.dockWidth = dwSrc.dockWidth;
           if (appSrc.app !== undefined) merged.app = appSrc.app;
 
           set({ prefs: merged, loading: false });
@@ -263,6 +275,21 @@ export function createUIPrefsStore(config: UIPrefsConfig) {
         } else {
           delete prefs.accentInkColor;
         }
+        set({ prefs });
+        handlePersist(config.persistCommon(commonPrefs(prefs)));
+      },
+
+      setDockPinned: (pinned) => {
+        _editedKeys.add('dockPinned');
+        const prefs = { ...get().prefs, dockPinned: pinned };
+        set({ prefs });
+        handlePersist(config.persistCommon(commonPrefs(prefs)));
+      },
+
+      setDockWidth: (px) => {
+        _editedKeys.add('dockWidth');
+        const dockWidth = Math.min(640, Math.max(320, px));
+        const prefs = { ...get().prefs, dockWidth };
         set({ prefs });
         handlePersist(config.persistCommon(commonPrefs(prefs)));
       },
