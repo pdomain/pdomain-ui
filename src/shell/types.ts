@@ -38,6 +38,10 @@ export interface UIPrefs {
   accentColor?: string;
   /** Accent foreground override. When absent `--accent-ink` is used. */
   accentInkColor?: string;
+  /** Whether the right-side utility dock is pinned (docked column vs. overlay). Default false. */
+  dockPinned?: boolean;
+  /** Pinned utility-dock width in px. Clamped to [320, 640]. Default 420. */
+  dockWidth?: number;
   /** App-specific arbitrary preferences. */
   app?: Record<string, unknown>;
 }
