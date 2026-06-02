@@ -93,10 +93,13 @@ const countBadgeStyle: React.CSSProperties = {
 
 export function JobsPill({
   activeJobs = [],
-  open: _open = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  open: _open = false, // @deprecated — ignored; retained one release
   onClick,
-  onViewAll: _onViewAll,
-  hoverPopover: _hoverPopover = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onViewAll: _onViewAll, // @deprecated — ignored; retained one release
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  hoverPopover: _hoverPopover = false, // @deprecated — ignored; retained one release
   className,
 }: JobsPillProps) {
   const isActive = activeJobs.length > 0;

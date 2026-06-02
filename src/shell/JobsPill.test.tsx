@@ -76,9 +76,7 @@ describe('JobsPill', () => {
 
 describe('JobsPill — popover removed', () => {
   it('does not render the inline popover even on hover (hoverPopover defaults false)', () => {
-    render(
-      <JobsPill activeJobs={[{ id: 'j', title: 'T', phase: 'p', pct: 1, project: 'x' }]} />,
-    );
+    render(<JobsPill activeJobs={[{ id: 'j', title: 'T', phase: 'p', pct: 1, project: 'x' }]} />);
     // hover would previously open jobs-pill-popover; that markup no longer exists.
     expect(screen.queryByTestId('jobs-pill-popover')).toBeNull();
   });
@@ -91,9 +89,7 @@ describe('JobsPill — popover removed', () => {
   });
 
   it('still renders the count badge when there are active jobs', () => {
-    render(
-      <JobsPill activeJobs={[{ id: 'j', title: 'T', phase: 'p', pct: 1, project: 'x' }]} />,
-    );
+    render(<JobsPill activeJobs={[{ id: 'j', title: 'T', phase: 'p', pct: 1, project: 'x' }]} />);
     expect(screen.getByTestId('jobs-pill-count')).toBeTruthy();
   });
 

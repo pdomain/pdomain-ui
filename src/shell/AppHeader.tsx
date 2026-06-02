@@ -67,8 +67,10 @@ export function AppHeader({
   appInitial,
   searchPlaceholder = 'Search…',
   activeJobs = [],
-  jobsOpen: _jobsOpen = false,
-  jobsHoverPopover: _jobsHoverPopover = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  jobsOpen: _jobsOpen = false, // @deprecated — ignored; retained one release
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  jobsHoverPopover: _jobsHoverPopover = false, // @deprecated — ignored; retained one release
   username = '',
   initials = '',
   unread = 0,

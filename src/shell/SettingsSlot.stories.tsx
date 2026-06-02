@@ -1,31 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { SettingsSlot } from './SettingsSlot.js';
-import { SettingsModalContext } from './SettingsModalContext.js';
+import { UtilityDockContext } from './UtilityDockContext.js';
+import type { UtilityDockContextValue } from './UtilityDockContext.js';
 
-// ─── Stub modal context ───────────────────────────────────────────────────────
+// ─── Stub dock context ─────────────────────────────────────────────────────────
 
-function WithModalCtx({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = React.useState(false);
-  const [activePanel, setActivePanel] = React.useState('appearance');
+function WithDockCtx({ children }: { children: React.ReactNode }) {
+  const [active, setActive] = React.useState<UtilityDockContextValue['active']>(null);
+
+  const ctx: UtilityDockContextValue = {
+    active,
+    pinned: false,
+    width: 420,
+    open: (s) => setActive(s),
+    close: () => setActive(null),
+    toggle: (s) => setActive((c) => (c === s ? null : s)),
+    setPinned: () => undefined,
+    setWidth: () => undefined,
+  };
 
   return (
-    <SettingsModalContext.Provider
-      value={{
-        open,
-        activePanel,
-        openModal: () => {
-          setOpen(true);
-        },
-        closeModal: () => {
-          setOpen(false);
-        },
-        openPanel: (id) => {
-          setActivePanel(id);
-          setOpen(true);
-        },
-      }}
-    >
+    <UtilityDockContext.Provider value={ctx}>
       <div
         style={{
           display: 'flex',
@@ -36,32 +32,32 @@ function WithModalCtx({ children }: { children: React.ReactNode }) {
         }}
       >
         {children}
-        {open && (
+        {active === 'settings' && (
           <span style={{ fontSize: 12, color: 'var(--ink-3)' }}>
-            Modal open (panel: {activePanel})
+            Settings dock open (aria-expanded=true)
           </span>
         )}
       </div>
-    </SettingsModalContext.Provider>
+    </UtilityDockContext.Provider>
   );
 }
 
-function withModalCtx(Story: React.ComponentType) {
+function withDockCtx(Story: React.ComponentType) {
   return (
-    <WithModalCtx>
+    <WithDockCtx>
       <Story />
-    </WithModalCtx>
+    </WithDockCtx>
   );
 }
 
 const meta: Meta<typeof SettingsSlot> = {
   title: 'Shell/SettingsSlot',
   component: SettingsSlot,
-  decorators: [withModalCtx],
+  decorators: [withDockCtx],
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Gear button — click to open the shared SettingsModal. */
+/** Gear button — click to toggle the shared utility dock settings surface. */
 export const Default: Story = {};

@@ -1,61 +1,55 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { ShortcutsHelpButton } from './ShortcutsHelpButton.js';
-import { ShortcutsProvider } from '../hooks/ShortcutsContext.js';
-import { useShortcuts } from '../hooks/ShortcutsContext.js';
+import { UtilityDockContext } from './UtilityDockContext.js';
+import type { UtilityDockContextValue } from './UtilityDockContext.js';
 
-// ─── Decorator ────────────────────────────────────────────────────────────────
+// ─── Stub dock context ─────────────────────────────────────────────────────────
 
-/** Wraps the button in a ShortcutsProvider so clicking actually opens the dialog. */
-function WithProvider({ children }: { children: React.ReactNode }) {
+function WithDockCtx({ children }: { children: React.ReactNode }) {
+  const [active, setActive] = React.useState<UtilityDockContextValue['active']>(null);
+
+  const ctx: UtilityDockContextValue = {
+    active,
+    pinned: false,
+    width: 420,
+    open: (s) => setActive(s),
+    close: () => setActive(null),
+    toggle: (s) => setActive((c) => (c === s ? null : s)),
+    setPinned: () => undefined,
+    setWidth: () => undefined,
+  };
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', padding: '16px', gap: '8px' }}>
-      <ShortcutsProvider>{children}</ShortcutsProvider>
-    </div>
+    <UtilityDockContext.Provider value={ctx}>
+      <div style={{ display: 'flex', alignItems: 'center', padding: '16px', gap: '8px' }}>
+        {children}
+        {active === 'keybinds' && (
+          <span style={{ fontSize: 12, color: 'var(--ink-3)' }}>
+            Keybinds dock open (aria-expanded=true)
+          </span>
+        )}
+      </div>
+    </UtilityDockContext.Provider>
   );
 }
 
-function withProvider(Story: React.ComponentType) {
+function withDockCtx(Story: React.ComponentType) {
   return (
-    <WithProvider>
+    <WithDockCtx>
       <Story />
-    </WithProvider>
+    </WithDockCtx>
   );
 }
-
-// ─── Story with sample bindings ───────────────────────────────────────────────
-
-function WithBindings() {
-  useShortcuts([
-    { keys: 'mod+s', label: 'Save edits', group: 'Editing', handler: () => undefined },
-    { keys: 'j', label: 'Next item', group: 'Navigation', handler: () => undefined },
-    { keys: 'k', label: 'Previous item', group: 'Navigation', handler: () => undefined },
-    { keys: '?', label: 'Show shortcuts', group: 'General', handler: () => undefined },
-  ]);
-  return null;
-}
-
-// ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<typeof ShortcutsHelpButton> = {
   title: 'Shell/ShortcutsHelpButton',
   component: ShortcutsHelpButton,
-  decorators: [withProvider],
+  decorators: [withDockCtx],
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Ghost icon button — click to open the global shortcuts cheatsheet. */
+/** Ghost icon button — click to toggle the keybinds dock surface. */
 export const Default: Story = {};
-
-/** Button with sample bindings registered — clicking shows the cheatsheet. */
-export const WithSampleBindings: Story = {
-  render: () => (
-    <ShortcutsProvider>
-      <WithBindings />
-      <ShortcutsHelpButton />
-    </ShortcutsProvider>
-  ),
-  decorators: [],
-};
