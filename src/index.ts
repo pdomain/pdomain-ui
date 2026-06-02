@@ -251,10 +251,7 @@ export type { ShortcutsCheatsheetProps } from './primitives/index.js';
 
 // ─── Utility dock primitives (from primitives) ────────────────────────────────
 export { SlideOverPanel, ShortcutsCheatsheetBody } from './primitives/index.js';
-export type {
-  SlideOverPanelProps,
-  ShortcutsCheatsheetBodyProps,
-} from './primitives/index.js';
+export type { SlideOverPanelProps, ShortcutsCheatsheetBodyProps } from './primitives/index.js';
 
 // ─── Utility dock shell API ───────────────────────────────────────────────────
 export {
