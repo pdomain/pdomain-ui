@@ -46,6 +46,8 @@ describe('icons barrel (src/icons/index.ts)', () => {
     'Package',
     'PanelRightClose',
     'Pause',
+    'Pin',
+    'PinOff',
     'Play',
     'Plus',
     'RefreshCw',

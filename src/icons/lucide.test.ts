@@ -45,6 +45,8 @@ describe('lucide re-exports', () => {
     'Package', // design "package"
     'PanelRightClose',
     'Pause', // design "pause"
+    'Pin', // design "pin"
+    'PinOff', // design "pinOff"
     'Play', // design "play"
     'Plus',
     'RefreshCw', // design "refresh"

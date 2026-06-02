@@ -126,7 +126,13 @@ describe('SlideOverPanel — pin + resize', () => {
   it('pin toggle calls onTogglePin with the inverted value', () => {
     const onTogglePin = vi.fn();
     render(
-      <SlideOverPanel open title="Settings" onClose={vi.fn()} pinned={false} onTogglePin={onTogglePin}>
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned={false}
+        onTogglePin={onTogglePin}
+      >
         <p>body</p>
       </SlideOverPanel>,
     );
@@ -146,7 +152,14 @@ describe('SlideOverPanel — pin + resize', () => {
   it('renders a resize handle when pinned and reports dragged width', () => {
     const onResize = vi.fn();
     render(
-      <SlideOverPanel open title="Settings" onClose={vi.fn()} pinned width={420} onResize={onResize}>
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={420}
+        onResize={onResize}
+      >
         <p>body</p>
       </SlideOverPanel>,
     );
@@ -162,7 +175,14 @@ describe('SlideOverPanel — pin + resize', () => {
   it('clamps resize within [320, 640]', () => {
     const onResize = vi.fn();
     render(
-      <SlideOverPanel open title="Settings" onClose={vi.fn()} pinned width={420} onResize={onResize}>
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={420}
+        onResize={onResize}
+      >
         <p>body</p>
       </SlideOverPanel>,
     );
