@@ -245,9 +245,7 @@ describe('createUIPrefsStore — utility dock prefs', () => {
     await new Promise((r) => setTimeout(r, 0));
     store.getState().setDockWidth(500);
     expect(store.getState().prefs.dockWidth).toBe(500);
-    expect(config.persistCommon).toHaveBeenCalledWith(
-      expect.objectContaining({ dockWidth: 500 }),
-    );
+    expect(config.persistCommon).toHaveBeenCalledWith(expect.objectContaining({ dockWidth: 500 }));
   });
 
   it('setDockWidth() clamps below 320 up to 320', async () => {
