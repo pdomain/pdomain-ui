@@ -1,6 +1,10 @@
 /**
  * JobsPill stories — idle, running, and high-count variants.
- * Uses the `open` prop to force the popover visible for static artboards.
+ *
+ * The hover popover was removed in the right-side utility panels change (M5).
+ * Jobs now surface in the shared UtilityDock (click the pill to toggle the
+ * Jobs dock surface). The `RunningWithPopover` and `IdlePopoverOpen` stories
+ * have been removed; the `open` and `onViewAll` props are deprecated no-ops.
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -49,27 +53,10 @@ export const Running: Story = {
   },
 };
 
-/** Running with popover open (forced via `open` prop). */
-export const RunningWithPopover: Story = {
-  args: {
-    activeJobs: [sampleJobs[0]!],
-    open: true,
-  },
-};
-
-/** Idle with popover open — shows "No active jobs" empty message. */
-export const IdlePopoverOpen: Story = {
-  args: {
-    activeJobs: [],
-    open: true,
-  },
-};
-
-/** Multiple jobs — count badge and popover list. */
+/** Multiple jobs — count badge. */
 export const MultipleJobs: Story = {
   args: {
     activeJobs: sampleJobs,
-    open: true,
   },
 };
 
