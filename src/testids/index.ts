@@ -761,3 +761,24 @@ export const SCANNO_RULE_DETAIL_AUTO_APPLY = 'scanno-rule-detail-auto-apply' as 
 
 /** Conflicts warning Banner inside RuleDetail — only present when conflicts non-empty. */
 export const SCANNO_RULE_DETAIL_CONFLICTS = 'scanno-rule-detail-conflicts' as const;
+
+// ─── SlideOverPanel / UtilityDock (right-side utility panels) ────────────────
+
+/** Root div of the SlideOverPanel (role="dialog", aria-modal="false"). */
+export const SLIDE_OVER_PANEL = 'slide-over-panel' as const;
+/** ✕ close button inside the SlideOverPanel header. */
+export const SLIDE_OVER_PANEL_CLOSE = 'slide-over-panel-close' as const;
+/** Pin/unpin toggle button inside the SlideOverPanel header. */
+export const SLIDE_OVER_PANEL_PIN = 'slide-over-panel-pin' as const;
+/** Left-edge resize handle — rendered only when pinned. */
+export const SLIDE_OVER_PANEL_RESIZE = 'slide-over-panel-resize' as const;
+/** Wrapper rendered by UtilityDock when a surface is active. */
+export const UTILITY_DOCK = 'utility-dock' as const;
+/** Root of SettingsPanel (the dock body for the Settings surface). */
+export const SETTINGS_PANEL = 'settings-panel' as const;
+/** Root of ShortcutsCheatsheetBody (the dock body for the Keybinds surface). */
+export const SHORTCUTS_CHEATSHEET_BODY = 'shortcuts-cheatsheet-body' as const;
+/** Root of JobsPanelBody (the dock body for the Jobs surface). */
+export const JOBS_PANEL_BODY = 'jobs-panel-body' as const;
+/** "View all jobs" footer button inside JobsPanelBody. */
+export const JOBS_PANEL_BODY_VIEW_ALL = 'jobs-panel-body-view-all' as const;

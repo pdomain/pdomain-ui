@@ -245,3 +245,7 @@ export type { ThumbnailProps, ThumbnailDensity } from './Thumbnail.js';
 // Keyboard shortcut cheatsheet dialog
 export { ShortcutsCheatsheet } from './ShortcutsCheatsheet.js';
 export type { ShortcutsCheatsheetProps } from './ShortcutsCheatsheet.js';
+
+// Right-side utility dock primitive
+export { SlideOverPanel } from './SlideOverPanel.js';
+export type { SlideOverPanelProps } from './SlideOverPanel.js';

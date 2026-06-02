@@ -49,6 +49,8 @@ export {
   Package, // design name: "package"
   PanelRightClose,
   Pause, // design name: "pause"
+  Pin, // design name: "pin"
+  PinOff, // design name: "pinOff"
   Play, // design name: "play"
   Plus,
   RefreshCw, // design name: "refresh"
