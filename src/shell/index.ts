@@ -92,6 +92,12 @@ export type { AppHeaderProps } from './AppHeader.js';
 export { JobsDrawer } from './JobsDrawer.js';
 export type { JobsDrawerProps, JobsDrawerMode, JobToast } from './JobsDrawer.js';
 
-// ─── UtilityDockContext (M1 dock state foundation) ────────────────────────────
+// ─── Utility dock (right-side panels) ─────────────────────────────────────────
 export { UtilityDockContext, useUtilityDock } from './UtilityDockContext.js';
 export type { UtilityDockContextValue, DockSurface } from './UtilityDockContext.js';
+export { UtilityDock } from './UtilityDock.js';
+export type { UtilityDockProps } from './UtilityDock.js';
+export { SettingsPanel } from './SettingsPanel.js';
+export type { SettingsPanelProps } from './SettingsPanel.js';
+export { JobsPanelBody } from './JobsPanelBody.js';
+export type { JobsPanelBodyProps } from './JobsPanelBody.js';

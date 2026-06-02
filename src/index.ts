@@ -249,6 +249,29 @@ export type {
 export { ShortcutsCheatsheet } from './primitives/index.js';
 export type { ShortcutsCheatsheetProps } from './primitives/index.js';
 
+// ─── Utility dock primitives (from primitives) ────────────────────────────────
+export { SlideOverPanel, ShortcutsCheatsheetBody } from './primitives/index.js';
+export type {
+  SlideOverPanelProps,
+  ShortcutsCheatsheetBodyProps,
+} from './primitives/index.js';
+
+// ─── Utility dock shell API ───────────────────────────────────────────────────
+export {
+  UtilityDockContext,
+  useUtilityDock,
+  UtilityDock,
+  SettingsPanel,
+  JobsPanelBody,
+} from './shell/index.js';
+export type {
+  UtilityDockContextValue,
+  DockSurface,
+  UtilityDockProps,
+  SettingsPanelProps,
+  JobsPanelBodyProps,
+} from './shell/index.js';
+
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 export { useShortcuts, formatShortcut } from './hooks/index.js';
 export type { ShortcutBinding, UseShortcutsOptions } from './hooks/index.js';
