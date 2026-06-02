@@ -28,9 +28,15 @@ export interface AppHeaderProps {
   searchPlaceholder?: string;
   /** Currently-running background jobs forwarded to JobsPill. */
   activeJobs?: ActiveJob[];
-  /** Force the JobsPill popover open (for Storybook artboards / testing). */
+  /**
+   * @deprecated Retained one release; ignored. The inline popover was removed in M5.
+   * Force-opening a popover is no longer meaningful — use the jobs dock surface instead.
+   */
   jobsOpen?: boolean;
-  /** Whether hovering the JobsPill opens its inline popover. Defaults to true. */
+  /**
+   * @deprecated Retained one release; ignored. The hover popover was removed in M5.
+   * The jobs dock surface replaced it.
+   */
   jobsHoverPopover?: boolean;
   /** Username shown in the right-hand user area. */
   username?: string;
@@ -61,8 +67,8 @@ export function AppHeader({
   appInitial,
   searchPlaceholder = 'Search…',
   activeJobs = [],
-  jobsOpen = false,
-  jobsHoverPopover = true,
+  jobsOpen: _jobsOpen = false,
+  jobsHoverPopover: _jobsHoverPopover = false,
   username = '',
   initials = '',
   unread = 0,
@@ -203,8 +209,6 @@ export function AppHeader({
 
         <JobsPill
           activeJobs={activeJobs}
-          open={jobsOpen}
-          hoverPopover={jobsHoverPopover}
           {...(onJobsClick !== undefined ? { onClick: onJobsClick } : {})}
           {...(onJobsViewAll !== undefined ? { onViewAll: onJobsViewAll } : {})}
         />

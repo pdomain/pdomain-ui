@@ -125,12 +125,6 @@ describe('AppHeader', () => {
     expect(count.textContent).toBe('2');
   });
 
-  it('forwards jobsOpen to JobsPill (popover visible)', () => {
-    const jobs = [makeJob('x', 75)];
-    render(<AppHeader activeJobs={jobs} jobsOpen />);
-    expect(screen.getByTestId('jobs-pill-popover')).toBeDefined();
-  });
-
   it('forwards jobs click handling to JobsPill', () => {
     const onJobsClick = vi.fn();
     render(<AppHeader activeJobs={[]} onJobsClick={onJobsClick} />);
@@ -138,9 +132,9 @@ describe('AppHeader', () => {
     expect(onJobsClick).toHaveBeenCalledOnce();
   });
 
-  it('can disable JobsPill hover popover when an app owns the jobs panel', () => {
+  it('hover does not open a popover (popover was removed in M5)', () => {
     const jobs = [makeJob('x', 75)];
-    render(<AppHeader activeJobs={jobs} jobsHoverPopover={false} />);
+    render(<AppHeader activeJobs={jobs} />);
     fireEvent.mouseEnter(screen.getByRole('button', { name: /jobs/i }));
     expect(screen.queryByTestId('jobs-pill-popover')).toBeNull();
   });
