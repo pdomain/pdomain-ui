@@ -91,3 +91,7 @@ export type { AppHeaderProps } from './AppHeader.js';
 // ─── JobsDrawer (OQ-5 shell molecule) ─────────────────────────────────────────
 export { JobsDrawer } from './JobsDrawer.js';
 export type { JobsDrawerProps, JobsDrawerMode, JobToast } from './JobsDrawer.js';
+
+// ─── UtilityDockContext (M1 dock state foundation) ────────────────────────────
+export { UtilityDockContext, useUtilityDock } from './UtilityDockContext.js';
+export type { UtilityDockContextValue, DockSurface } from './UtilityDockContext.js';
