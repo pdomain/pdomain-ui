@@ -3,7 +3,8 @@
  *
  * Covers: render + title + ✕, Esc closes, ✕ closes, outside-click does NOT
  * close, no scrim / main stays interactive, focus returns to trigger on close,
- * pin toggle, resize handle (pinned only) updates + clamps width.
+ * pin toggle, resize handle (pinned only) updates + clamps width, keyboard
+ * resize, Esc guard (defaultPrevented), pin button visibility, a11y attrs.
  */
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -64,6 +65,20 @@ describe('SlideOverPanel — basics', () => {
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(onClose).toHaveBeenCalledOnce();
   });
+
+  it('Escape with defaultPrevented does NOT call onClose', () => {
+    const onClose = vi.fn();
+    render(
+      <SlideOverPanel open title="Settings" onClose={onClose}>
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    // Simulate a nested dialog (e.g. Radix) that has already handled Esc.
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    event.preventDefault();
+    window.dispatchEvent(event);
+    expect(onClose).not.toHaveBeenCalled();
+  });
 });
 
 describe('SlideOverPanel — non-modal behavior', () => {
@@ -122,6 +137,47 @@ describe('SlideOverPanel — focus return', () => {
   });
 });
 
+describe('SlideOverPanel — pin button visibility', () => {
+  it('does NOT render the pin button when onTogglePin is undefined', () => {
+    render(
+      <SlideOverPanel open title="Settings" onClose={vi.fn()}>
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    expect(screen.queryByTestId('slide-over-panel-pin')).toBeNull();
+  });
+
+  it('renders the pin button when onTogglePin is provided', () => {
+    render(
+      <SlideOverPanel open title="Settings" onClose={vi.fn()} onTogglePin={vi.fn()}>
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    expect(screen.getByTestId('slide-over-panel-pin')).toBeTruthy();
+  });
+
+  it('pin button has dynamic aria-label but no aria-pressed', () => {
+    const { rerender } = render(
+      <SlideOverPanel open title="Settings" onClose={vi.fn()} pinned={false} onTogglePin={vi.fn()}>
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const btn = screen.getByTestId('slide-over-panel-pin');
+    expect(btn.getAttribute('aria-label')).toBe('Pin panel');
+    expect(btn.hasAttribute('aria-pressed')).toBe(false);
+
+    rerender(
+      <SlideOverPanel open title="Settings" onClose={vi.fn()} pinned={true} onTogglePin={vi.fn()}>
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    expect(screen.getByTestId('slide-over-panel-pin').getAttribute('aria-label')).toBe(
+      'Unpin panel',
+    );
+    expect(screen.getByTestId('slide-over-panel-pin').hasAttribute('aria-pressed')).toBe(false);
+  });
+});
+
 describe('SlideOverPanel — pin + resize', () => {
   it('pin toggle calls onTogglePin with the inverted value', () => {
     const onTogglePin = vi.fn();
@@ -166,7 +222,7 @@ describe('SlideOverPanel — pin + resize', () => {
     const handle = screen.getByTestId('slide-over-panel-resize');
     expect(handle).toBeTruthy();
     // Start drag at x=1000, move left to x=900 → +100px → 520.
-    fireEvent.pointerDown(handle, { clientX: 1000 });
+    fireEvent.pointerDown(handle, { clientX: 1000, pointerId: 1 });
     fireEvent(window, new PointerEvent('pointermove', { clientX: 900 }));
     expect(onResize).toHaveBeenLastCalledWith(520);
     fireEvent(window, new PointerEvent('pointerup', {}));
@@ -187,7 +243,7 @@ describe('SlideOverPanel — pin + resize', () => {
       </SlideOverPanel>,
     );
     const handle = screen.getByTestId('slide-over-panel-resize');
-    fireEvent.pointerDown(handle, { clientX: 1000 });
+    fireEvent.pointerDown(handle, { clientX: 1000, pointerId: 1 });
     // Move far right (shrink past min) → clamps to 320.
     fireEvent(window, new PointerEvent('pointermove', { clientX: 1500 }));
     expect(onResize).toHaveBeenLastCalledWith(320);
@@ -195,5 +251,140 @@ describe('SlideOverPanel — pin + resize', () => {
     fireEvent(window, new PointerEvent('pointermove', { clientX: 200 }));
     expect(onResize).toHaveBeenLastCalledWith(640);
     fireEvent(window, new PointerEvent('pointerup', {}));
+  });
+
+  it('pointercancel during drag also removes listeners (no leak)', () => {
+    const onResize = vi.fn();
+    render(
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={420}
+        onResize={onResize}
+      >
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const handle = screen.getByTestId('slide-over-panel-resize');
+    fireEvent.pointerDown(handle, { clientX: 1000, pointerId: 1 });
+    // Cancel instead of up — listeners must be removed.
+    fireEvent(window, new PointerEvent('pointercancel', {}));
+    onResize.mockClear();
+    // Subsequent pointermove must NOT call onResize.
+    fireEvent(window, new PointerEvent('pointermove', { clientX: 900 }));
+    expect(onResize).not.toHaveBeenCalled();
+  });
+});
+
+describe('SlideOverPanel — resize handle a11y + keyboard', () => {
+  it('resize handle has correct a11y attributes when pinned', () => {
+    render(
+      <SlideOverPanel open title="Settings" onClose={vi.fn()} pinned width={420} onResize={vi.fn()}>
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const handle = screen.getByTestId('slide-over-panel-resize');
+    expect(handle.getAttribute('role')).toBe('separator');
+    expect(handle.getAttribute('aria-orientation')).toBe('vertical');
+    expect(handle.getAttribute('aria-valuenow')).toBe('420');
+    expect(handle.getAttribute('aria-valuemin')).toBe('320');
+    expect(handle.getAttribute('aria-valuemax')).toBe('640');
+    expect(handle.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('ArrowLeft increases width (panel grows left) and is clamped at max', () => {
+    const onResize = vi.fn();
+    render(
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={420}
+        onResize={onResize}
+      >
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const handle = screen.getByTestId('slide-over-panel-resize');
+    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+    expect(onResize).toHaveBeenLastCalledWith(436);
+    // At max, clamped.
+    onResize.mockClear();
+    // Re-render with width near max.
+    const { rerender } = render(
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={636}
+        onResize={onResize}
+      >
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const handles = screen.getAllByTestId('slide-over-panel-resize');
+    fireEvent.keyDown(handles[handles.length - 1]!, { key: 'ArrowLeft' });
+    expect(onResize).toHaveBeenLastCalledWith(640);
+    rerender(<></>);
+  });
+
+  it('ArrowRight decreases width (panel shrinks) and is clamped at min', () => {
+    const onResize = vi.fn();
+    render(
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={420}
+        onResize={onResize}
+      >
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const handle = screen.getByTestId('slide-over-panel-resize');
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
+    expect(onResize).toHaveBeenLastCalledWith(404);
+    // At min, clamped.
+    onResize.mockClear();
+    const { rerender } = render(
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={324}
+        onResize={onResize}
+      >
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const handles = screen.getAllByTestId('slide-over-panel-resize');
+    fireEvent.keyDown(handles[handles.length - 1]!, { key: 'ArrowRight' });
+    expect(onResize).toHaveBeenLastCalledWith(320);
+    rerender(<></>);
+  });
+
+  it('other keys on the resize handle do nothing', () => {
+    const onResize = vi.fn();
+    render(
+      <SlideOverPanel
+        open
+        title="Settings"
+        onClose={vi.fn()}
+        pinned
+        width={420}
+        onResize={onResize}
+      >
+        <p>body</p>
+      </SlideOverPanel>,
+    );
+    const handle = screen.getByTestId('slide-over-panel-resize');
+    fireEvent.keyDown(handle, { key: 'Home' });
+    expect(onResize).not.toHaveBeenCalled();
   });
 });

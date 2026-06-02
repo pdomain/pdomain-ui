@@ -41,6 +41,7 @@ export const Default: Story = {
 
 function PinnedWrapper(): React.ReactElement {
   const [open, setOpen] = useState(true);
+  const [pinned, setPinned] = useState(true);
   const [width, setWidth] = useState(420);
   return (
     <div style={{ position: 'relative', height: '100vh', background: 'var(--bg-canvas)' }}>
@@ -48,7 +49,8 @@ function PinnedWrapper(): React.ReactElement {
         open={open}
         title="Settings (Pinned)"
         onClose={() => setOpen(false)}
-        pinned
+        pinned={pinned}
+        onTogglePin={setPinned}
         width={width}
         onResize={setWidth}
       >
