@@ -22,8 +22,6 @@ MANAGED_ACTIONS = (
     "actions/upload-artifact",
     "actions/download-artifact",
     "peter-evans/create-pull-request",
-    "pnpm/action-setup",
-    "softprops/action-gh-release",
 )
 USES_PATTERN = re.compile(r"(?m)^\s*uses:\s*([^\s#]+)")
 
