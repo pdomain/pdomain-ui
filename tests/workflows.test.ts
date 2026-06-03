@@ -96,7 +96,7 @@ describe('workflow action policy', () => {
       const workflowPath = join(dir, 'ci.yml');
       await writeFile(
         workflowPath,
-        'jobs:\n  ci:\n    steps:\n      - uses: "actions/checkout@oldoldoldoldoldoldoldoldoldoldoldoldoldoldoldoldold1"\n      - uses: \'astral-sh/setup-uv@oldoldoldoldoldoldoldoldoldoldoldoldoldoldoldoldold2\'\n        with:\n          version: "0.1.0"\n',
+        'jobs:\n  ci:\n    steps:\n      - uses: "actions/checkout@oldoldoldoldoldoldoldoldoldoldoldoldoldoldoldoldold1"\n      - uses: \'astral-sh/setup-uv@oldoldoldoldoldoldoldoldoldoldoldoldoldoldoldoldold2\'  # v8.1.0\n        with:\n          version: "0.1.0"\n',
       );
 
       const updated = updateQuotedWorkflowRefs(workflowPath);
