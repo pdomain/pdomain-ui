@@ -31,6 +31,36 @@ function verifyManagedActions(workflowDir: string): string {
   );
 }
 
+function updateQuotedWorkflowRefs(workflowPath: string): string {
+  return execFileSync(
+    'python3',
+    [
+      '-c',
+      [
+        'import importlib.util',
+        'import sys',
+        'from pathlib import Path',
+        'root = Path.cwd()',
+        'path = root / "scripts" / "update_github_actions.py"',
+        'spec = importlib.util.spec_from_file_location("update_github_actions", path)',
+        'mod = importlib.util.module_from_spec(spec)',
+        'assert spec.loader is not None',
+        'spec.loader.exec_module(mod)',
+        'workflow = Path(sys.argv[1])',
+        'releases = {',
+        "    'actions/checkout': mod.ActionRelease(tag='v-test', sha='a' * 40),",
+        "    'astral-sh/setup-uv': mod.ActionRelease(tag='v-test', sha='b' * 40),",
+        '}',
+        'assert mod.update_workflow_refs(workflow, releases=releases)',
+        "assert mod.update_uv_version_refs(workflow, version='0.11.16')",
+        "print(workflow.read_text(encoding='utf-8'))",
+      ].join('\n'),
+      workflowPath,
+    ],
+    { cwd: process.cwd(), encoding: 'utf8' },
+  );
+}
+
 describe('workflow action policy', () => {
   test('detects unmanaged actions', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'workflow-policy-'));
@@ -55,6 +85,29 @@ describe('workflow action policy', () => {
       );
 
       expect(verifyManagedActions(dir)).toContain('managed actions ok');
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  test('rewrites quoted action refs and setup-uv version', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'workflow-update-'));
+    try {
+      const workflowPath = join(dir, 'ci.yml');
+      await writeFile(
+        workflowPath,
+        'jobs:\n  ci:\n    steps:\n      - uses: "actions/checkout@oldoldoldoldoldoldoldoldoldoldoldoldoldoldoldoldold1"\n      - uses: \'astral-sh/setup-uv@oldoldoldoldoldoldoldoldoldoldoldoldoldoldoldoldold2\'\n        with:\n          version: "0.1.0"\n',
+      );
+
+      const updated = updateQuotedWorkflowRefs(workflowPath);
+
+      expect(updated).toContain(
+        'uses: "actions/checkout@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"',
+      );
+      expect(updated).toContain(
+        "uses: 'astral-sh/setup-uv@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'",
+      );
+      expect(updated).toContain('version: "0.11.16"');
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
