@@ -1,53 +1,38 @@
-import { describe, expect, it } from 'vitest';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { describe, expect, test } from 'vitest';
 
-const MANAGED_ACTIONS = new Set([
-  'actions/attest-build-provenance',
-  'actions/checkout',
-  'actions/download-artifact',
-  'actions/setup-node',
-  'actions/upload-artifact',
-  'astral-sh/setup-uv',
-  'pnpm/action-setup',
-  'softprops/action-gh-release',
-]);
-
-const USES_PATTERN = /^\s*-?\s*uses:\s*([^@\s#]+)(?:@[^\s#]+)?/gm;
-
-function workflowActionNames(text: string): Set<string> {
-  const names = new Set<string>();
-  for (const match of text.matchAll(USES_PATTERN)) {
-    const name = match[1];
-    if (!name.startsWith('./')) {
-      names.add(name);
-    }
-  }
-  return names;
-}
-
-async function verifyManagedActions(workflowDir: string): Promise<void> {
-  const unmanaged = new Map<string, string[]>();
-  for (const file of (await readdir(workflowDir)).filter((name) => name.endsWith('.yml'))) {
-    const text = await readFile(join(workflowDir, file), 'utf8');
-    for (const name of workflowActionNames(text)) {
-      if (!MANAGED_ACTIONS.has(name)) {
-        unmanaged.set(name, [...(unmanaged.get(name) ?? []), file]);
-      }
-    }
-  }
-  if (unmanaged.size > 0) {
-    const details = [...unmanaged]
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([name, files]) => `${name} in ${files.join(', ')}`)
-      .join(', ');
-    throw new Error(`unmanaged workflow actions: ${details}`);
-  }
+function verifyManagedActions(workflowDir: string): string {
+  return execFileSync(
+    'python3',
+    [
+      '-c',
+      [
+        'import importlib.util',
+        'import sys',
+        'from pathlib import Path',
+        'root = Path.cwd()',
+        'path = root / "scripts" / "update_github_actions.py"',
+        'spec = importlib.util.spec_from_file_location("update_github_actions", path)',
+        'mod = importlib.util.module_from_spec(spec)',
+        'assert spec.loader is not None',
+        'spec.loader.exec_module(mod)',
+        'try:',
+        '    mod.verify_managed_actions(Path(sys.argv[1]))',
+        'except ValueError as exc:',
+        '    raise SystemExit(str(exc))',
+        'print("managed actions ok")',
+      ].join('\n'),
+      workflowDir,
+    ],
+    { cwd: process.cwd(), encoding: 'utf8' },
+  );
 }
 
 describe('workflow action policy', () => {
-  it('detects unmanaged actions', async () => {
+  test('detects unmanaged actions', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'workflow-policy-'));
     try {
       await writeFile(
@@ -55,27 +40,27 @@ describe('workflow action policy', () => {
         'name: ci\njobs:\n  ci:\n    steps:\n      - uses: example/not-managed@abc123\n',
       );
 
-      await expect(verifyManagedActions(dir)).rejects.toThrow(/example\/not-managed/);
+      expect(() => verifyManagedActions(dir)).toThrow(/example\/not-managed/);
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
   });
 
-  it('accepts local workflow calls', async () => {
+  test('accepts quoted managed actions and local workflow calls', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'workflow-policy-'));
     try {
       await writeFile(
         join(dir, 'release.yml'),
-        'jobs:\n  regen:\n    uses: ./.github/workflows/regen.yml\n',
+        'jobs:\n  regen:\n    uses: \'./.github/workflows/regen.yml\'\n  ci:\n    steps:\n      - uses: "actions/checkout@abc123"\n',
       );
 
-      await expect(verifyManagedActions(dir)).resolves.toBeUndefined();
+      expect(verifyManagedActions(dir)).toContain('managed actions ok');
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
   });
 
-  it('keeps current workflows on managed actions', async () => {
-    await expect(verifyManagedActions('.github/workflows')).resolves.toBeUndefined();
+  test('keeps current workflows on updater-managed actions', () => {
+    expect(verifyManagedActions('.github/workflows')).toContain('managed actions ok');
   });
 });
