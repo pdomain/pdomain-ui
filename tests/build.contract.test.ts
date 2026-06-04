@@ -131,3 +131,42 @@ describe('dist/types.d.ts — consumer-critical exports (pdomain-ui#15)', () => 
     expect(content, 'JobState must be exported from dist/types.d.ts').toContain('JobState');
   });
 });
+
+describe('dist/shell.d.ts — compute+update panel exports (Milestone D)', () => {
+  const dtsPath = resolve(__dirname, '../dist/shell.d.ts');
+
+  it('dist/shell.d.ts exists (build must run first)', () => {
+    expect(existsSync(dtsPath), 'dist/shell.d.ts missing — run pnpm build').toBe(true);
+  });
+
+  const REQUIRED_SYMBOLS = [
+    'ComputeTargetPanel',
+    'ComputeTargetPanelProps',
+    'UpdatePanel',
+    'UpdatePanelProps',
+  ];
+
+  for (const sym of REQUIRED_SYMBOLS) {
+    it(`exports ${sym}`, () => {
+      if (!existsSync(dtsPath)) return;
+      const content = readFileSync(dtsPath, 'utf-8');
+      expect(content, `${sym} must be exported from dist/shell.d.ts`).toContain(sym);
+    });
+  }
+});
+
+describe('dist/stores.d.ts — useDeviceInfo hook export (Milestone D)', () => {
+  const dtsPath = resolve(__dirname, '../dist/stores.d.ts');
+
+  it('dist/stores.d.ts exists (build must run first)', () => {
+    expect(existsSync(dtsPath), 'dist/stores.d.ts missing — run pnpm build').toBe(true);
+  });
+
+  it('exports useDeviceInfo', () => {
+    if (!existsSync(dtsPath)) return;
+    const content = readFileSync(dtsPath, 'utf-8');
+    expect(content, 'useDeviceInfo must be exported from dist/stores.d.ts').toContain(
+      'useDeviceInfo',
+    );
+  });
+});

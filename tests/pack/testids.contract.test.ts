@@ -78,6 +78,13 @@ const REQUIRED_EXPORTS: ReadonlyArray<string> = [
   'SCANNO_CANDIDATE_DETAIL',
   // PageReorder
   'REORDER_SCANS_BANNER',
+  // ComputeTargetPanel
+  'COMPUTE_TARGET_PANEL',
+  'COMPUTE_DEVICE_OPTION',
+  // UpdatePanel
+  'UPDATE_PANEL',
+  'UPDATE_BADGE',
+  'UPDATE_APPLY_BUTTON',
 ] as const;
 
 describe('dist/testids.js — built artifact content (pdomain-ui#28)', () => {
