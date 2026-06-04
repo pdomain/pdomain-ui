@@ -6,6 +6,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.6.0] — 2026-06-04
+
+### Added
+
+- `onJobDelete` callback prop on `AppShell` jobs configuration. When provided, a
+  trash-icon button appears on finished job rows in the jobs panel, letting consumers
+  remove completed jobs from the list.
+
+### Fixed
+
+- Done (succeeded/failed/cancelled) job rows in the jobs panel no longer show an
+  infinite shimmer animation. Only in-progress jobs animate; finished jobs render
+  as static rows.
+- `PageSplitView` editor slot now fills the full panel height by default
+  (`flex: 1 1 0; min-height: 0`). Previously the slot shrank to content height,
+  requiring consumers to add height overrides.
+- Pinned utility dock no longer collapses content in the main layout area.
+  Added `min-width: 0` to the main-content flex child so it reflows correctly
+  when the dock occupies right-side space.
+
+[0.6.0]: https://github.com/pdomain/pdomain-ui/releases/tag/v0.6.0
+
 ## [0.2.1] — 2026-05-25
 
 ### Fixed
