@@ -17,9 +17,13 @@ const stubPrefsConfig = {
 describe('AppShell reflow under pinned dock', () => {
   it('app-shell-main element has data-testid="app-shell-main"', () => {
     const { container } = render(
-      <AppShell appId="test" appDisplayName="Test" uiPrefsConfig={stubPrefsConfig}>
-        <div>content</div>
-      </AppShell>,
+      <AppShell
+        appId="test"
+        appDisplayName="Test"
+        appIconUrl=""
+        main={<div>content</div>}
+        uiPrefsConfig={stubPrefsConfig}
+      />,
     );
     const main = container.querySelector('[data-testid="app-shell-main"]') as HTMLElement;
     expect(main).toBeTruthy();
@@ -27,9 +31,13 @@ describe('AppShell reflow under pinned dock', () => {
 
   it('app-shell-main has min-w-0 class (Tailwind) for reflow', () => {
     const { container } = render(
-      <AppShell appId="test" appDisplayName="Test" uiPrefsConfig={stubPrefsConfig}>
-        <div>content</div>
-      </AppShell>,
+      <AppShell
+        appId="test"
+        appDisplayName="Test"
+        appIconUrl=""
+        main={<div>content</div>}
+        uiPrefsConfig={stubPrefsConfig}
+      />,
     );
     const main = container.querySelector('[data-testid="app-shell-main"]') as HTMLElement;
     // Tailwind min-w-0 class ensures min-width:0px — verified via className
