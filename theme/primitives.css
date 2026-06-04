@@ -3571,26 +3571,6 @@ button.page-chip:hover {
   box-shadow: var(--shadow-dock);
 }
 
-/* ─── @keyframes pgd-shimmer — added 2026-05-28 audit remediation ─ */
-/* Consumed by shell/JobRow shimmer placeholder animation */
-@keyframes pgd-shimmer {
-  from {
-    background-position: -400px 0;
-  }
-  to {
-    background-position: 400px 0;
-  }
-}
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--bg-raised) 0%,
-    var(--bg-surface) 50%,
-    var(--bg-raised) 100%
-  );
-  background-size: 800px 100%;
-  animation: pgd-shimmer 1.5s infinite linear;
-}
 
 /* ─── dialog--sheet-right modifier — added 2026-05-28 audit remediation ─ */
 /* Upload/ModalC right-side sheet variant */

@@ -146,4 +146,27 @@ describe('JobRow (#355)', () => {
     render(<JobRow job={makeJob()} />);
     expect(screen.getByTestId('job-row')).toBeTruthy();
   });
+
+  // ─── Task 1: done jobs must be visually static ─────────────────────────────
+
+  it('done job renders NO .shimmer element', () => {
+    const { container } = render(
+      <JobRow job={makeJob({ status: 'done', pct: 100 })} />,
+    );
+    expect(container.querySelector('.shimmer')).toBeNull();
+  });
+
+  it('done job status dot has no infinite animation', () => {
+    render(<JobRow job={makeJob({ status: 'done', pct: 100 })} />);
+    const dot = screen.getByTestId('job-status-dot');
+    expect(dot).toBeTruthy();
+    const anim = (dot as HTMLElement).style.animation;
+    expect(anim === '' || anim === 'none').toBe(true);
+  });
+
+  it('status dot exists for running job', () => {
+    render(<JobRow job={makeJob({ status: 'running', pct: 30 })} />);
+    expect(screen.getByTestId('job-status-dot')).toBeTruthy();
+  });
+
 });

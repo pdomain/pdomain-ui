@@ -2,7 +2,7 @@
  * JobRow — single row inside JobsDrawer expanded list.
  *
  * Displays a job's project name, current phase, progress percentage, and
- * progress bar. Shows a shimmer overlay and Open button for done/succeeded
+ * progress bar. Shows a static success background and Open button for done/succeeded
  * jobs; shows hover actions (Open project, Pause/Resume, Discard) when
  * `hovered` is true and the job is not yet done.
  *
@@ -45,7 +45,7 @@ export interface JobRowProps {
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
-/** Jobs that are fully complete (show shimmer + Open button instead of bar). */
+/** Jobs that are fully complete (show Open button instead of progress bar). */
 function isDone(status: JobStatus): boolean {
   return status === 'done' || status === 'succeeded';
 }
@@ -92,23 +92,7 @@ export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel }
         position: 'relative',
       }}
     >
-      {/* Done-shimmer overlay — uses the .shimmer class from primitives.css
-          which provides the pgd-shimmer keyframe animation. */}
-      {done ? (
-        <div
-          aria-hidden
-          className="shimmer"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            background:
-              'linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--exact) 22%, transparent) 50%, transparent 100%)',
-            backgroundSize: '200% 100%',
-            opacity: 0.7,
-          }}
-        />
-      ) : null}
+
 
       {/* Title row: status dot, project name, pct / Open */}
       <div
@@ -121,6 +105,7 @@ export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel }
       >
         <span
           aria-hidden
+          data-testid="job-status-dot"
           style={{
             width: 8,
             height: 8,
