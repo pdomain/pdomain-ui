@@ -1,3 +1,10 @@
+/**
+ * PageSplitView — two-column view with a toolbar, canvas panel, and editor panel.
+ *
+ * The editor slot fills the panel height by default: the editor panel is a flex
+ * column and its direct child receives `flex:1; min-height:0; overflow:auto`, so
+ * a bare `<textarea>` or custom editor fills and scrolls without a fixed `rows`.
+ */
 import * as React from 'react';
 
 export interface PageSplitViewProps {

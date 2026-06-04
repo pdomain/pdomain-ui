@@ -905,7 +905,16 @@ a {
   background: var(--bg-surface);
   display: flex;
   flex-direction: column;
+  /* min-height:0 allows the panel to shrink in the parent grid cell */
+  min-height: 0;
   overflow: hidden;
+}
+
+/* Editor slot fills the panel by default — no fixed rows needed on textarea */
+.page-split-view__editor-panel > * {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 /* ── PageHeader ────────────────────────────────────────────────────── */
