@@ -5,7 +5,7 @@ describe('createApiDeviceConfig', () => {
   it('fetchDevice calls the device endpoint', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({
+      json: () => ({
         mode: 'local',
         available: [{ id: 'cpu', label: 'CPU' }],
         current: 'cpu',
@@ -33,7 +33,7 @@ describe('createApiDeviceConfig', () => {
     };
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => mockResponse,
+      json: () => mockResponse,
     });
     vi.stubGlobal('fetch', mockFetch);
 
@@ -51,7 +51,7 @@ describe('createApiDeviceConfig', () => {
   it('respects custom deviceUrl option', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ mode: 'local', available: [], current: null, effective_source: null }),
+      json: () => ({ mode: 'local', available: [], current: null, effective_source: null }),
     });
     vi.stubGlobal('fetch', mockFetch);
 

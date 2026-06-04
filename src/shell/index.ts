@@ -102,3 +102,22 @@ export { SettingsPanel } from './SettingsPanel.js';
 export type { SettingsPanelProps } from './SettingsPanel.js';
 export { JobsPanelBody } from './JobsPanelBody.js';
 export type { JobsPanelBodyProps } from './JobsPanelBody.js';
+
+// ─── Compute-target panel ──────────────────────────────────────────────────────
+export { ComputeTargetPanel } from './ComputeTargetPanel.js';
+export type { ComputeTargetPanelProps } from './ComputeTargetPanel.js';
+
+// ─── Update panel + badge ──────────────────────────────────────────────────────
+export { UpdatePanel, UpdateBadge } from './UpdatePanel.js';
+export type { UpdatePanelProps, UpdateBadgeProps } from './UpdatePanel.js';
+
+// ─── Device API config factory ────────────────────────────────────────────────
+export { createApiDeviceConfig } from './createApiDeviceConfig.js';
+export type { ApiDeviceOptions } from './createApiDeviceConfig.js';
+
+// ─── Update API config factory ────────────────────────────────────────────────
+export { createApiUpdateConfig } from './createApiUpdateConfig.js';
+export type { ApiUpdateOptions } from './createApiUpdateConfig.js';
+
+// ─── Device + update types ────────────────────────────────────────────────────
+export type { DeviceInfo, DeviceEntry, DevicePutBody, UpdateInfo, UpdatePolicy } from './types.js';

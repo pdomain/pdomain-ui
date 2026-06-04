@@ -83,3 +83,10 @@ export type { StageCallState, StageCallStatus, UseStageCallOptions } from './use
 
 export { useLongJob } from './useLongJob.js';
 export type { LongJobState, LongJobStatus, LongJobEvent, UseLongJobOptions } from './useLongJob.js';
+
+// ─── Compute-device + update hooks ────────────────────────────────────────────
+export { useDeviceInfo } from './useDeviceInfo.js';
+export type { UseDeviceInfoOptions, DeviceInfoState } from './useDeviceInfo.js';
+
+export { useUpdateCheck } from './useUpdateCheck.js';
+export type { UseUpdateCheckOptions, UpdateCheckState } from './useUpdateCheck.js';

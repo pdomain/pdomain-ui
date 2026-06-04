@@ -79,6 +79,11 @@ export {
   RightPanel,
   createApiUIPrefsConfig,
   createApiSuiteSiblingsConfig,
+  ComputeTargetPanel,
+  UpdatePanel,
+  UpdateBadge,
+  createApiDeviceConfig,
+  createApiUpdateConfig,
 } from './shell/index.js';
 export type {
   AppShellProps,
@@ -97,6 +102,16 @@ export type {
   RightPanelProps,
   SuiteSiblingsContextValue,
   ApiSuiteSiblingsOptions,
+  ComputeTargetPanelProps,
+  UpdatePanelProps,
+  UpdateBadgeProps,
+  ApiDeviceOptions,
+  ApiUpdateOptions,
+  DeviceInfo,
+  DeviceEntry,
+  DevicePutBody,
+  UpdateInfo,
+  UpdatePolicy,
 } from './shell/index.js';
 
 // ─── Stores ───────────────────────────────────────────────────────────────────
@@ -121,6 +136,8 @@ export {
   useSuiteSiblings,
   useStageCall,
   useLongJob,
+  useDeviceInfo,
+  useUpdateCheck,
 } from './stores/index.js';
 export type {
   SelectionState,
@@ -138,6 +155,10 @@ export type {
   LongJobStatus,
   LongJobEvent,
   UseLongJobOptions,
+  UseDeviceInfoOptions,
+  DeviceInfoState,
+  UseUpdateCheckOptions,
+  UpdateCheckState,
 } from './stores/index.js';
 
 // ─── Primitives ───────────────────────────────────────────────────────────────

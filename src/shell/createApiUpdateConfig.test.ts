@@ -12,7 +12,7 @@ describe('createApiUpdateConfig', () => {
     };
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => mockBody,
+      json: () => mockBody,
     });
     vi.stubGlobal('fetch', mockFetch);
 
@@ -29,7 +29,7 @@ describe('createApiUpdateConfig', () => {
   it('applyUpdate calls POST to the update endpoint', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ restart_required: true }),
+      json: () => ({ restart_required: true }),
     });
     vi.stubGlobal('fetch', mockFetch);
 
@@ -47,7 +47,7 @@ describe('createApiUpdateConfig', () => {
   it('respects custom updateUrl option', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ current: '1.0.0', latest: '1.0.0', update_available: false, changelog_url: '', channel: 'stable' }),
+      json: () => ({ current: '1.0.0', latest: '1.0.0', update_available: false, changelog_url: '', channel: 'stable' }),
     });
     vi.stubGlobal('fetch', mockFetch);
 

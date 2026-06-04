@@ -2,16 +2,18 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { useDeviceInfo } from './useDeviceInfo.js';
 
+const mockDeviceInfo = {
+  mode: 'local' as const,
+  available: [{ id: 'cpu', label: 'CPU' }],
+  current: 'cpu',
+  effective_source: 'auto',
+};
+
 describe('useDeviceInfo', () => {
   it('loads device info via injected fetcher', async () => {
     const { result } = renderHook(() =>
       useDeviceInfo({
-        fetchDevice: async () => ({
-          mode: 'local',
-          available: [{ id: 'cpu', label: 'CPU' }],
-          current: 'cpu',
-          effective_source: 'auto',
-        }),
+        fetchDevice: () => Promise.resolve(mockDeviceInfo),
       }),
     );
     await waitFor(() => expect(result.current.info?.current).toBe('cpu'));
@@ -20,12 +22,7 @@ describe('useDeviceInfo', () => {
   it('loading is true initially, false after fetch', async () => {
     const { result } = renderHook(() =>
       useDeviceInfo({
-        fetchDevice: async () => ({
-          mode: 'local',
-          available: [{ id: 'cpu', label: 'CPU' }],
-          current: 'cpu',
-          effective_source: 'auto',
-        }),
+        fetchDevice: () => Promise.resolve(mockDeviceInfo),
       }),
     );
     expect(result.current.loading).toBe(true);
@@ -34,19 +31,12 @@ describe('useDeviceInfo', () => {
 
   it('setDevice calls putDevice with correct args', async () => {
     const putDevice = vi.fn().mockResolvedValue({
-      mode: 'local',
-      available: [{ id: 'cpu', label: 'CPU' }],
-      current: 'cpu',
+      ...mockDeviceInfo,
       effective_source: 'app',
     });
     const { result } = renderHook(() =>
       useDeviceInfo({
-        fetchDevice: async () => ({
-          mode: 'local',
-          available: [{ id: 'cpu', label: 'CPU' }],
-          current: 'cpu',
-          effective_source: 'auto',
-        }),
+        fetchDevice: () => Promise.resolve(mockDeviceInfo),
         putDevice,
       }),
     );
@@ -58,9 +48,7 @@ describe('useDeviceInfo', () => {
   it('error state is set on fetch failure', async () => {
     const { result } = renderHook(() =>
       useDeviceInfo({
-        fetchDevice: async () => {
-          throw new Error('network error');
-        },
+        fetchDevice: () => Promise.reject(new Error('network error')),
       }),
     );
     await waitFor(() => expect(result.current.error).not.toBeNull());

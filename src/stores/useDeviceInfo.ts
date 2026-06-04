@@ -70,7 +70,6 @@ export function useDeviceInfo(options: UseDeviceInfoOptions = {}): DeviceInfoSta
     return () => {
       cancelled = true;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // intentionally mount-only; fetchDevice updates via ref
 
   const setDevice = React.useCallback(
