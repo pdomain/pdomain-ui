@@ -40,16 +40,47 @@ describe('ComputeTargetPanel', () => {
     expect(screen.getByText(/8192/)).toBeInTheDocument();
   });
 
-  it('calls onSelect when a device is clicked', () => {
+  it('calls onSelect when a radio is changed', () => {
     const onSelect = vi.fn();
     render(<ComputeTargetPanel info={localInfo} onSelect={onSelect} />);
     fireEvent.click(screen.getByTestId(COMPUTE_DEVICE_OPTION('cuda:0')));
     expect(onSelect).toHaveBeenCalledWith('cuda:0');
   });
 
-  it('marks the current device as selected', () => {
+  it('marks the current device radio as checked', () => {
     render(<ComputeTargetPanel info={localInfo} onSelect={() => {}} />);
-    const cpuOption = screen.getByTestId(COMPUTE_DEVICE_OPTION('cpu'));
-    expect(cpuOption).toHaveAttribute('aria-current', 'true');
+    const cpuRadio = screen.getByTestId(COMPUTE_DEVICE_OPTION('cpu'));
+    expect(cpuRadio).toBeChecked();
+    const gpuRadio = screen.getByTestId(COMPUTE_DEVICE_OPTION('cuda:0'));
+    expect(gpuRadio).not.toBeChecked();
+  });
+
+  it('shows CUDA link only when a non-CPU device is available', () => {
+    // With a GPU in the list — link should appear
+    render(<ComputeTargetPanel info={localInfo} onSelect={() => {}} />);
+    expect(screen.getByText(/CUDA install docs/)).toBeInTheDocument();
+  });
+
+  it('hides CUDA link when only CPU is available', () => {
+    const cpuOnly = { ...localInfo, available: [{ id: 'cpu', label: 'CPU' }] };
+    render(<ComputeTargetPanel info={cpuOnly} onSelect={() => {}} />);
+    expect(screen.queryByText(/CUDA install docs/)).toBeNull();
+  });
+
+  it('hides Force CPU button when current is null', () => {
+    const noCurrent = { ...localInfo, current: null };
+    render(<ComputeTargetPanel info={noCurrent} onSelect={() => {}} />);
+    expect(screen.queryByText('Force CPU')).toBeNull();
+  });
+
+  it('hides Force CPU button when current is already cpu', () => {
+    render(<ComputeTargetPanel info={localInfo} onSelect={() => {}} />);
+    expect(screen.queryByText('Force CPU')).toBeNull();
+  });
+
+  it('shows Force CPU button when a non-CPU device is current', () => {
+    const gpuCurrent = { ...localInfo, current: 'cuda:0' };
+    render(<ComputeTargetPanel info={gpuCurrent} onSelect={() => {}} />);
+    expect(screen.getByText('Force CPU')).toBeInTheDocument();
   });
 });

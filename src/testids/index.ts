@@ -788,7 +788,7 @@ export const JOBS_PANEL_BODY_VIEW_ALL = 'jobs-panel-body-view-all' as const;
 
 /** Root of ComputeTargetPanel (device picker, local-deploy-mode-gated). */
 export const COMPUTE_TARGET_PANEL = 'compute-target-panel' as const;
-/** Radio option for a specific device id: `compute-device-option-${id}` */
+/** Radio input for a specific device id: `compute-device-option-${id}` */
 export const COMPUTE_DEVICE_OPTION = (id: string) => `compute-device-option-${id}` as const;
 
 // ─── UpdatePanel ──────────────────────────────────────────────────────────────

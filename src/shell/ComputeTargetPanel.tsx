@@ -59,12 +59,10 @@ export function ComputeTargetPanel({
         Compute target
       </h3>
 
-      {/* Device list */}
-      <ul
-        role="listbox"
-        aria-label="Select compute device"
+      {/* Device list — native radio group for valid ARIA ownership */}
+      <fieldset
         style={{
-          listStyle: 'none',
+          border: 'none',
           margin: 0,
           padding: 0,
           display: 'flex',
@@ -72,45 +70,47 @@ export function ComputeTargetPanel({
           gap: 'var(--space-2)',
         }}
       >
+        <legend style={{ display: 'none' }}>Select compute device</legend>
         {info.available.map((device) => {
           const isCurrent = device.id === current;
           return (
-            <li key={device.id}>
-              <button
-                data-testid={COMPUTE_DEVICE_OPTION(device.id)}
-                role="option"
-                aria-selected={isCurrent}
-                aria-current={isCurrent ? 'true' : undefined}
-                onClick={() => onSelect(device.id)}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  gap: 'var(--space-1)',
-                  padding: 'var(--space-2) var(--space-3)',
-                  borderRadius: 'var(--radius-sm)',
-                  border: isCurrent ? '1px solid var(--accent)' : '1px solid var(--border)',
-                  background: isCurrent ? 'var(--accent-subtle)' : 'var(--surface)',
-                  color: 'var(--fg)',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                }}
-              >
+            <label
+              key={device.id}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-1)',
+                padding: 'var(--space-2) var(--space-3)',
+                borderRadius: 'var(--radius-sm)',
+                border: isCurrent ? '1px solid var(--accent)' : '1px solid var(--border)',
+                background: isCurrent ? 'var(--accent-subtle)' : 'var(--surface)',
+                color: 'var(--fg)',
+                cursor: 'pointer',
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                <input
+                  type="radio"
+                  name="compute-device"
+                  data-testid={COMPUTE_DEVICE_OPTION(device.id)}
+                  value={device.id}
+                  checked={isCurrent}
+                  onChange={() => onSelect(device.id)}
+                />
                 <span style={{ fontWeight: isCurrent ? 'var(--font-semibold)' : undefined }}>
                   {device.label}
                 </span>
-                {device.vram_total_mb != null && (
-                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--fg-subtle)' }}>
-                    {device.vram_total_mb} MB VRAM
-                    {device.vram_free_mb != null && ` (${device.vram_free_mb} MB free)`}
-                  </span>
-                )}
-              </button>
-            </li>
+              </span>
+              {device.vram_total_mb != null && (
+                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--fg-subtle)' }}>
+                  {device.vram_total_mb} MB VRAM
+                  {device.vram_free_mb != null && ` (${device.vram_free_mb} MB free)`}
+                </span>
+              )}
+            </label>
           );
         })}
-      </ul>
+      </fieldset>
 
       {/* Current device + effective source */}
       <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--fg-subtle)' }}>
@@ -118,8 +118,8 @@ export function ComputeTargetPanel({
         {effectiveSource && <span> (via {effectiveSource})</span>}
       </p>
 
-      {/* Force-CPU shortcut */}
-      {current !== 'cpu' && (
+      {/* Force-CPU shortcut — only when a non-CPU device is currently selected */}
+      {current !== null && current !== 'cpu' && (
         <button
           onClick={() => onSelect('cpu')}
           style={{
@@ -137,15 +137,17 @@ export function ComputeTargetPanel({
         </button>
       )}
 
-      {/* CUDA install link */}
-      <a
-        href="https://pytorch.org/get-started/locally/"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)' }}
-      >
-        Speed this up → CUDA install docs
-      </a>
+      {/* CUDA install link — only when at least one non-CPU device is available */}
+      {info.available.some((d) => d.id !== 'cpu') && (
+        <a
+          href="https://pytorch.org/get-started/locally/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)' }}
+        >
+          Speed this up → CUDA install docs
+        </a>
+      )}
     </section>
   );
 }

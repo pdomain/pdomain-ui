@@ -51,6 +51,7 @@ export function createApiUpdateConfig(opts: ApiUpdateOptions = {}): {
       const res = await fetch(updateUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
       });
       if (!res.ok) throw new Error(`POST ${updateUrl} → ${res.status}`);
       return (await res.json()) as { restart_required: boolean };

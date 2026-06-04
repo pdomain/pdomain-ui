@@ -261,7 +261,7 @@ export interface DeviceEntry {
  * - Non-local mode: `mode !== "local"`, `available` is empty, panel hides itself.
  */
 export interface DeviceInfo {
-  mode: string;
+  mode: 'local' | 'hosted';
   available: DeviceEntry[];
   current?: string | null;
   effective_source?: string | null; // "app" | "suite" | "auto"

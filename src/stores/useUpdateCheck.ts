@@ -52,7 +52,10 @@ export function useUpdateCheck(options: UseUpdateCheckOptions = {}): UpdateCheck
 
   const doFetch = React.useCallback(async () => {
     const fn = fetchUpdateRef.current;
-    if (!fn) return;
+    if (!fn) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {

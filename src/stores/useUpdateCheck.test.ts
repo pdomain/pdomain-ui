@@ -56,6 +56,18 @@ describe('useUpdateCheck', () => {
     expect(applyUpdate).toHaveBeenCalledOnce();
   });
 
+  it('auto policy calls applyUpdate when update_available is true', async () => {
+    const applyUpdate = vi.fn().mockResolvedValue(undefined);
+    renderHook(() =>
+      useUpdateCheck({
+        fetchUpdate: vi.fn().mockResolvedValue(mockUpdateInfo),
+        applyUpdate,
+        policy: 'auto',
+      }),
+    );
+    await waitFor(() => expect(applyUpdate).toHaveBeenCalledOnce());
+  });
+
   it('loading is true initially then false', async () => {
     const { result } = renderHook(() =>
       useUpdateCheck({
