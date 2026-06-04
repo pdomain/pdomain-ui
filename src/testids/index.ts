@@ -783,3 +783,19 @@ export const SHORTCUTS_CHEATSHEET_BODY = 'shortcuts-cheatsheet-body' as const;
 export const JOBS_PANEL_BODY = 'jobs-panel-body' as const;
 /** "View all jobs" footer button inside JobsPanelBody. */
 export const JOBS_PANEL_BODY_VIEW_ALL = 'jobs-panel-body-view-all' as const;
+
+// ─── ComputeTargetPanel ────────────────────────────────────────────────────────
+
+/** Root of ComputeTargetPanel (device picker, local-deploy-mode-gated). */
+export const COMPUTE_TARGET_PANEL = 'compute-target-panel' as const;
+/** Radio option for a specific device id: `compute-device-option-${id}` */
+export const COMPUTE_DEVICE_OPTION = (id: string) => `compute-device-option-${id}` as const;
+
+// ─── UpdatePanel ──────────────────────────────────────────────────────────────
+
+/** Root of UpdatePanel (in-app update control). */
+export const UPDATE_PANEL = 'update-panel' as const;
+/** Small badge shown in the header/dock when an update is available. */
+export const UPDATE_BADGE = 'update-badge' as const;
+/** "Update & Restart" button inside UpdatePanel. */
+export const UPDATE_APPLY_BUTTON = 'update-apply-button' as const;
