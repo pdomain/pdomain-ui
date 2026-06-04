@@ -71,7 +71,14 @@ function accentVar(status: JobStatus): string {
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
-export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel, onJobDelete }: JobRowProps) {
+export function JobRow({
+  job,
+  hovered = false,
+  onOpen,
+  onPauseResume,
+  onCancel,
+  onJobDelete,
+}: JobRowProps) {
   const done = isDone(job.status);
   const paused = isPaused(job.status);
   const failed = isFailed(job.status);
@@ -94,8 +101,6 @@ export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel, 
         position: 'relative',
       }}
     >
-
-
       {/* Title row: status dot, project name, pct / Open */}
       <div
         style={{
