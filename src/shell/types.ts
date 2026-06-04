@@ -241,3 +241,51 @@ export interface AppShellContextValue {
   deployMode: 'local' | 'hosted';
   launcherSlot: 'header' | 'rail' | 'off';
 }
+
+// ─── DeviceInfo (compute-target panel) ───────────────────────────────────────
+
+/**
+ * A single available compute device reported by `/api/suite/device`.
+ * Matches the `DeviceInfoEntry` dataclass in pdomain-ops.
+ */
+export interface DeviceEntry {
+  id: string;           // "cpu" | "cuda:0" | "mps"
+  label: string;
+  vram_total_mb?: number | null;
+  vram_free_mb?: number | null;
+}
+
+/**
+ * Response from `GET /api/suite/device`.
+ * - Local mode: `mode === "local"`, `available` list populated.
+ * - Non-local mode: `mode !== "local"`, `available` is empty, panel hides itself.
+ */
+export interface DeviceInfo {
+  mode: string;
+  available: DeviceEntry[];
+  current?: string | null;
+  effective_source?: string | null;  // "app" | "suite" | "auto"
+  offload_target?: string | null;
+}
+
+/** Body for `PUT /api/suite/device`. */
+export interface DevicePutBody {
+  scope: 'app' | 'suite';
+  device: string;
+}
+
+// ─── UpdateInfo (update panel) ────────────────────────────────────────────────
+
+/** Policy governing when the update check runs. */
+export type UpdatePolicy = 'notify' | 'auto' | 'manual';
+
+/**
+ * Response from `GET /api/suite/update`.
+ */
+export interface UpdateInfo {
+  current: string;
+  latest: string;
+  update_available: boolean;
+  changelog_url: string;
+  channel: string;
+}
