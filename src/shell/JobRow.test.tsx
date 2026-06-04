@@ -158,7 +158,7 @@ describe('JobRow (#355)', () => {
     render(<JobRow job={makeJob({ status: 'done', pct: 100 })} />);
     const dot = screen.getByTestId('job-status-dot');
     expect(dot).toBeTruthy();
-    const anim = (dot as HTMLElement).style.animation;
+    const anim = dot.style.animation;
     expect(anim === '' || anim === 'none').toBe(true);
   });
 
