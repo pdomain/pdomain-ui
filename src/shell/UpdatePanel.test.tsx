@@ -27,12 +27,7 @@ describe('UpdatePanel', () => {
   it('apply button fires onApply', () => {
     const apply = vi.fn();
     render(
-      <UpdatePanel
-        info={updateInfo}
-        policy="notify"
-        onPolicyChange={() => {}}
-        onApply={apply}
-      />,
+      <UpdatePanel info={updateInfo} policy="notify" onPolicyChange={() => {}} onApply={apply} />,
     );
     fireEvent.click(screen.getByTestId(UPDATE_APPLY_BUTTON));
     expect(apply).toHaveBeenCalled();
@@ -91,12 +86,7 @@ describe('UpdatePanel', () => {
 
   it('renders even with null info', () => {
     render(
-      <UpdatePanel
-        info={null}
-        policy="notify"
-        onPolicyChange={() => {}}
-        onApply={() => {}}
-      />,
+      <UpdatePanel info={null} policy="notify" onPolicyChange={() => {}} onApply={() => {}} />,
     );
     expect(screen.getByTestId(UPDATE_PANEL)).toBeInTheDocument();
   });

@@ -63,7 +63,14 @@ export function ComputeTargetPanel({
       <ul
         role="listbox"
         aria-label="Select compute device"
-        style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
+        style={{
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--space-2)',
+        }}
       >
         {info.available.map((device) => {
           const isCurrent = device.id === current;
@@ -83,9 +90,7 @@ export function ComputeTargetPanel({
                   gap: 'var(--space-1)',
                   padding: 'var(--space-2) var(--space-3)',
                   borderRadius: 'var(--radius-sm)',
-                  border: isCurrent
-                    ? '1px solid var(--accent)'
-                    : '1px solid var(--border)',
+                  border: isCurrent ? '1px solid var(--accent)' : '1px solid var(--border)',
                   background: isCurrent ? 'var(--accent-subtle)' : 'var(--surface)',
                   color: 'var(--fg)',
                   cursor: 'pointer',
@@ -109,11 +114,8 @@ export function ComputeTargetPanel({
 
       {/* Current device + effective source */}
       <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--fg-subtle)' }}>
-        Active:{' '}
-        <strong style={{ color: 'var(--fg)' }}>{current ?? 'auto'}</strong>
-        {effectiveSource && (
-          <span> (via {effectiveSource})</span>
-        )}
+        Active: <strong style={{ color: 'var(--fg)' }}>{current ?? 'auto'}</strong>
+        {effectiveSource && <span> (via {effectiveSource})</span>}
       </p>
 
       {/* Force-CPU shortcut */}

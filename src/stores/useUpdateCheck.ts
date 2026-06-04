@@ -69,7 +69,7 @@ export function useUpdateCheck(options: UseUpdateCheckOptions = {}): UpdateCheck
   React.useEffect(() => {
     if (policy === 'manual') return;
     void doFetch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // intentionally mount-only; policy and doFetch are stable
 
   // For "auto" policy: apply update automatically when available

@@ -160,10 +160,7 @@ export interface UpdateBadgeProps {
  * Tiny badge rendered in the AppShell header when an update is available.
  * Returns null when `available` is false.
  */
-export function UpdateBadge({
-  available,
-  className,
-}: UpdateBadgeProps): React.ReactElement | null {
+export function UpdateBadge({ available, className }: UpdateBadgeProps): React.ReactElement | null {
   if (!available) return null;
   return (
     <span

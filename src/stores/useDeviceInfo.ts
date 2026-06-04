@@ -72,19 +72,16 @@ export function useDeviceInfo(options: UseDeviceInfoOptions = {}): DeviceInfoSta
     };
   }, []); // intentionally mount-only; fetchDevice updates via ref
 
-  const setDevice = React.useCallback(
-    async (scope: 'app' | 'suite', device: string) => {
-      const fn = putDeviceRef.current;
-      if (!fn) return;
-      try {
-        const updated = await fn({ scope, device });
-        setInfo(updated);
-      } catch (err: unknown) {
-        setError(err);
-      }
-    },
-    [],
-  );
+  const setDevice = React.useCallback(async (scope: 'app' | 'suite', device: string) => {
+    const fn = putDeviceRef.current;
+    if (!fn) return;
+    try {
+      const updated = await fn({ scope, device });
+      setInfo(updated);
+    } catch (err: unknown) {
+      setError(err);
+    }
+  }, []);
 
   return { info, loading, error, setDevice };
 }

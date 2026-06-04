@@ -40,9 +40,12 @@ describe('createApiDeviceConfig', () => {
     const cfg = createApiDeviceConfig();
     const result = await cfg.putDevice({ scope: 'app', device: 'cpu' });
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/suite/device', expect.objectContaining({
-      method: 'PUT',
-    }));
+    expect(mockFetch).toHaveBeenCalledWith(
+      '/api/suite/device',
+      expect.objectContaining({
+        method: 'PUT',
+      }),
+    );
     expect(result.effective_source).toBe('app');
 
     vi.unstubAllGlobals();

@@ -249,7 +249,7 @@ export interface AppShellContextValue {
  * Matches the `DeviceInfoEntry` dataclass in pdomain-ops.
  */
 export interface DeviceEntry {
-  id: string;           // "cpu" | "cuda:0" | "mps"
+  id: string; // "cpu" | "cuda:0" | "mps"
   label: string;
   vram_total_mb?: number | null;
   vram_free_mb?: number | null;
@@ -264,7 +264,7 @@ export interface DeviceInfo {
   mode: string;
   available: DeviceEntry[];
   current?: string | null;
-  effective_source?: string | null;  // "app" | "suite" | "auto"
+  effective_source?: string | null; // "app" | "suite" | "auto"
   offload_target?: string | null;
 }
 

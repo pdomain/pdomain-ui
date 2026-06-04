@@ -36,9 +36,12 @@ describe('createApiUpdateConfig', () => {
     const cfg = createApiUpdateConfig();
     const result = await cfg.applyUpdate();
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/suite/update', expect.objectContaining({
-      method: 'POST',
-    }));
+    expect(mockFetch).toHaveBeenCalledWith(
+      '/api/suite/update',
+      expect.objectContaining({
+        method: 'POST',
+      }),
+    );
     expect(result.restart_required).toBe(true);
 
     vi.unstubAllGlobals();
@@ -47,7 +50,13 @@ describe('createApiUpdateConfig', () => {
   it('respects custom updateUrl option', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => ({ current: '1.0.0', latest: '1.0.0', update_available: false, changelog_url: '', channel: 'stable' }),
+      json: () => ({
+        current: '1.0.0',
+        latest: '1.0.0',
+        update_available: false,
+        changelog_url: '',
+        channel: 'stable',
+      }),
     });
     vi.stubGlobal('fetch', mockFetch);
 
