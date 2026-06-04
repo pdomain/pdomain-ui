@@ -138,6 +138,8 @@ export interface AppShellJobsProps {
   onJobPauseResume?: JobRowProps['onPauseResume'];
   /** Called with job.id when a row's Cancel button is clicked. */
   onJobCancel?: JobRowProps['onCancel'];
+  /** Permanently delete a finished/failed run. */
+  onJobDelete?: JobRowProps['onJobDelete'];
   /** Called when the "View all jobs" footer link is clicked. */
   onViewAll?: () => void;
 }

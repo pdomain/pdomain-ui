@@ -324,6 +324,7 @@ export function AppShell({
                   ? { onJobPauseResume: jobs.onJobPauseResume }
                   : {})}
                 {...(jobs?.onJobCancel !== undefined ? { onJobCancel: jobs.onJobCancel } : {})}
+                {...(jobs?.onJobDelete !== undefined ? { onJobDelete: jobs.onJobDelete } : {})}
                 {...(jobs?.onViewAll !== undefined ? { onJobsViewAll: jobs.onViewAll } : {})}
               />
             )}

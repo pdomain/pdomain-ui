@@ -169,4 +169,59 @@ describe('JobRow (#355)', () => {
     expect(screen.getByTestId('job-status-dot')).toBeTruthy();
   });
 
+
+  // ─── Task 2: onJobDelete + trash button ────────────────────────────────────
+
+  it('finished job with onJobDelete shows trash button', () => {
+    const onJobDelete = vi.fn();
+    render(
+      <JobRow
+        job={makeJob({ status: 'done', pct: 100 })}
+        onJobDelete={onJobDelete}
+      />,
+    );
+    const btn = screen.getByTestId('job-delete-job-1');
+    expect(btn).toBeTruthy();
+  });
+
+  it('trash button calls onJobDelete with job id', () => {
+    const onJobDelete = vi.fn();
+    render(
+      <JobRow
+        job={makeJob({ status: 'done', pct: 100 })}
+        onJobDelete={onJobDelete}
+      />,
+    );
+    fireEvent.click(screen.getByTestId('job-delete-job-1'));
+    expect(onJobDelete).toHaveBeenCalledTimes(1);
+    expect(onJobDelete).toHaveBeenCalledWith('job-1');
+  });
+
+  it('failed job with onJobDelete shows trash button', () => {
+    const onJobDelete = vi.fn();
+    render(
+      <JobRow
+        job={makeJob({ status: 'failed', pct: 60 })}
+        onJobDelete={onJobDelete}
+      />,
+    );
+    expect(screen.getByTestId('job-delete-job-1')).toBeTruthy();
+  });
+
+  it('running job does NOT show trash button even with onJobDelete', () => {
+    const onJobDelete = vi.fn();
+    render(
+      <JobRow
+        job={makeJob({ status: 'running', pct: 30 })}
+        onJobDelete={onJobDelete}
+      />,
+    );
+    expect(screen.queryByTestId('job-delete-job-1')).toBeNull();
+  });
+
+  it('no trash button when onJobDelete is absent (done job)', () => {
+    render(<JobRow job={makeJob({ status: 'done', pct: 100 })} />);
+    expect(screen.queryByTestId('job-delete-job-1')).toBeNull();
+  });
+
 });

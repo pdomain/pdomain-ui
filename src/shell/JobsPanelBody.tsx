@@ -19,6 +19,8 @@ export interface JobsPanelBodyProps {
   onJobPauseResume?: JobRowProps['onPauseResume'];
   /** Called with job.id when a row's Cancel button is clicked. */
   onJobCancel?: JobRowProps['onCancel'];
+  /** Permanently delete a finished/failed run. */
+  onJobDelete?: JobRowProps['onJobDelete'];
   /** Called when the "View all jobs" footer is clicked. */
   onViewAll?: () => void;
 }
@@ -28,6 +30,7 @@ export function JobsPanelBody({
   onJobOpen,
   onJobPauseResume,
   onJobCancel,
+  onJobDelete,
   onViewAll,
 }: JobsPanelBodyProps): React.ReactElement {
   const [hoveredId, setHoveredId] = React.useState<string | undefined>(undefined);
@@ -59,6 +62,7 @@ export function JobsPanelBody({
                 {...(onJobOpen !== undefined ? { onOpen: onJobOpen } : {})}
                 {...(onJobPauseResume !== undefined ? { onPauseResume: onJobPauseResume } : {})}
                 {...(onJobCancel !== undefined ? { onCancel: onJobCancel } : {})}
+                {...(onJobDelete !== undefined ? { onJobDelete: onJobDelete } : {})}
               />
             </div>
           ))}

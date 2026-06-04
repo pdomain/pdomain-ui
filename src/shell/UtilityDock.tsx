@@ -36,6 +36,8 @@ export interface UtilityDockProps {
   onJobOpen?: JobRowProps['onOpen'];
   onJobPauseResume?: JobRowProps['onPauseResume'];
   onJobCancel?: JobRowProps['onCancel'];
+  /** Permanently delete a finished/failed run. */
+  onJobDelete?: JobRowProps['onJobDelete'];
   onJobsViewAll?: () => void;
   /** Controlled initial Settings sub-panel (e.g. when openPanel(id) was called). */
   initialSettingsPanel?: string;
@@ -48,6 +50,7 @@ export function UtilityDock({
   onJobOpen,
   onJobPauseResume,
   onJobCancel,
+  onJobDelete,
   onJobsViewAll,
   initialSettingsPanel,
 }: UtilityDockProps): React.ReactElement | null {
@@ -79,6 +82,7 @@ export function UtilityDock({
         {...(onJobOpen !== undefined ? { onJobOpen } : {})}
         {...(onJobPauseResume !== undefined ? { onJobPauseResume } : {})}
         {...(onJobCancel !== undefined ? { onJobCancel } : {})}
+        {...(onJobDelete !== undefined ? { onJobDelete } : {})}
         {...(onJobsViewAll !== undefined ? { onViewAll: onJobsViewAll } : {})}
       />
     );

@@ -41,6 +41,8 @@ export interface JobRowProps {
   onPauseResume?: (jobId: string) => void;
   /** Called with job.id when Discard is clicked. */
   onCancel?: (jobId: string) => void;
+  /** Permanently delete a finished/failed run. Only shown for done or failed jobs. */
+  onJobDelete?: (id: string) => void;
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -69,7 +71,7 @@ function accentVar(status: JobStatus): string {
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
-export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel }: JobRowProps) {
+export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel, onJobDelete }: JobRowProps) {
   const done = isDone(job.status);
   const paused = isPaused(job.status);
   const failed = isFailed(job.status);
@@ -204,6 +206,35 @@ export function JobRow({ job, hovered = false, onOpen, onPauseResume, onCancel }
                 : 'none',
             }}
           />
+        </div>
+      ) : null}
+
+      {/* Delete button — shown for done/failed jobs when onJobDelete is provided */}
+      {(done || failed) && onJobDelete !== undefined ? (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
+          <button
+            type="button"
+            data-testid={`job-delete-${job.id}`}
+            aria-label="Delete run"
+            onClick={() => onJobDelete(job.id)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              height: 22,
+              padding: '0 8px',
+              borderRadius: 5,
+              background: 'transparent',
+              color: 'var(--mismatch)',
+              border: '1px solid var(--mismatch)',
+              cursor: 'pointer',
+              fontSize: 11,
+              fontWeight: 500,
+            }}
+          >
+            <Trash2 size={11} />
+            Delete
+          </button>
         </div>
       ) : null}
 
