@@ -11,6 +11,7 @@
  * HTTP contract:
  *   GET /api/suite/device  → DeviceInfo
  *   PUT /api/suite/device  body: DevicePutBody → DeviceInfo
+ *   PUT /api/suite/device  body: { scope, device: "" } → DeviceInfo
  */
 import * as React from 'react';
 import type { DeviceInfo, DevicePutBody } from '../shell/types.js';
@@ -20,6 +21,8 @@ export interface UseDeviceInfoOptions {
   fetchDevice?: () => Promise<DeviceInfo>;
   /** Async function that updates the device preference. */
   putDevice?: (body: DevicePutBody) => Promise<DeviceInfo>;
+  /** Async function that clears the device preference for a scope. */
+  clearDevice?: (scope: 'app' | 'suite') => Promise<DeviceInfo>;
 }
 
 export interface DeviceInfoState {
@@ -28,10 +31,12 @@ export interface DeviceInfoState {
   error: unknown;
   /** Set the preferred device. */
   setDevice: (scope: 'app' | 'suite', device: string) => Promise<void>;
+  /** Clear the preferred device and return to the inherited or automatic choice. */
+  clearDevice: (scope: 'app' | 'suite') => Promise<void>;
 }
 
 export function useDeviceInfo(options: UseDeviceInfoOptions = {}): DeviceInfoState {
-  const { fetchDevice, putDevice } = options;
+  const { fetchDevice, putDevice, clearDevice } = options;
 
   const [info, setInfo] = React.useState<DeviceInfo | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -44,6 +49,9 @@ export function useDeviceInfo(options: UseDeviceInfoOptions = {}): DeviceInfoSta
 
   const putDeviceRef = React.useRef(putDevice);
   putDeviceRef.current = putDevice;
+
+  const clearDeviceRef = React.useRef(clearDevice);
+  clearDeviceRef.current = clearDevice;
 
   React.useEffect(() => {
     const fn = fetchDeviceRef.current;
@@ -83,5 +91,16 @@ export function useDeviceInfo(options: UseDeviceInfoOptions = {}): DeviceInfoSta
     }
   }, []);
 
-  return { info, loading, error, setDevice };
+  const clearSelectedDevice = React.useCallback(async (scope: 'app' | 'suite') => {
+    const fn = clearDeviceRef.current;
+    if (!fn) return;
+    try {
+      const updated = await fn(scope);
+      setInfo(updated);
+    } catch (err: unknown) {
+      setError(err);
+    }
+  }, []);
+
+  return { info, loading, error, setDevice, clearDevice: clearSelectedDevice };
 }

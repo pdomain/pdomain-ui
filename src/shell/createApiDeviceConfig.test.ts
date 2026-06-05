@@ -51,6 +51,33 @@ describe('createApiDeviceConfig', () => {
     vi.unstubAllGlobals();
   });
 
+  it('clearDevice sends an empty device string for the requested scope', async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            mode: 'local',
+            available: [],
+            current: 'cpu',
+            effective_source: 'auto',
+          }),
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const cfg = createApiDeviceConfig();
+    await cfg.clearDevice('app');
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/suite/device', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scope: 'app', device: '' }),
+    });
+
+    vi.unstubAllGlobals();
+  });
+
   it('respects custom deviceUrl option', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,

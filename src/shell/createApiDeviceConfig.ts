@@ -19,7 +19,7 @@
  * import { ComputeTargetPanel } from '@pdomain/pdomain-ui/shell';
  *
  * const deviceApi = createApiDeviceConfig();
- * const { info, setDevice } = useDeviceInfo(deviceApi);
+ * const { info, setDevice, clearDevice } = useDeviceInfo(deviceApi);
  * ```
  */
 
@@ -37,8 +37,19 @@ export interface ApiDeviceOptions {
 export function createApiDeviceConfig(opts: ApiDeviceOptions = {}): {
   fetchDevice: () => Promise<DeviceInfo>;
   putDevice: (body: DevicePutBody) => Promise<DeviceInfo>;
+  clearDevice: (scope: 'app' | 'suite') => Promise<DeviceInfo>;
 } {
   const deviceUrl = opts.deviceUrl ?? '/api/suite/device';
+
+  async function putDevice(body: DevicePutBody): Promise<DeviceInfo> {
+    const res = await fetch(deviceUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(`PUT ${deviceUrl} → ${res.status}`);
+    return (await res.json()) as DeviceInfo;
+  }
 
   return {
     async fetchDevice(): Promise<DeviceInfo> {
@@ -47,14 +58,10 @@ export function createApiDeviceConfig(opts: ApiDeviceOptions = {}): {
       return (await res.json()) as DeviceInfo;
     },
 
-    async putDevice(body: DevicePutBody): Promise<DeviceInfo> {
-      const res = await fetch(deviceUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) throw new Error(`PUT ${deviceUrl} → ${res.status}`);
-      return (await res.json()) as DeviceInfo;
+    putDevice,
+
+    async clearDevice(scope: 'app' | 'suite'): Promise<DeviceInfo> {
+      return putDevice({ scope, device: '' });
     },
   };
 }

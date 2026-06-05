@@ -253,6 +253,9 @@ export interface DeviceEntry {
   label: string;
   vram_total_mb?: number | null;
   vram_free_mb?: number | null;
+  available?: boolean;
+  kind?: 'cpu' | 'cuda' | 'mps' | 'nvidia' | (string & {});
+  reason?: string | null;
 }
 
 /**
@@ -264,8 +267,9 @@ export interface DeviceInfo {
   mode: 'local' | 'hosted';
   available: DeviceEntry[];
   current?: string | null;
-  effective_source?: string | null; // "app" | "suite" | "auto"
+  effective_source?: 'app' | 'suite' | 'auto' | (string & {}) | null;
   offload_target?: string | null;
+  cuda_docs_url?: string | null;
 }
 
 /** Body for `PUT /api/suite/device`. */
