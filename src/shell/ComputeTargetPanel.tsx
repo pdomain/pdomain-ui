@@ -2,8 +2,8 @@
  * ComputeTargetPanel — device picker for compute-target selection.
  *
  * Local-deploy-mode-gated: returns null when `info.mode !== "local"`.
- * Renders the available device list (CPU + GPU VRAM), a "force CPU" shortcut,
- * the current device and its effective source, and a CUDA install docs link.
+ * Renders the available device list (CPU + GPU VRAM), unavailable NVIDIA
+ * hardware, persistent CPU override controls, and a CUDA setup guide link.
  *
  * No hex colors — all styling uses `var(--token)` references.
  */
@@ -16,8 +16,22 @@ export interface ComputeTargetPanelProps {
   info: DeviceInfo | null | undefined;
   /** Called with the device id when the user selects a device. */
   onSelect: (deviceId: string) => void;
+  /** Clears a persisted compute target override for a scope. */
+  onClear?: (scope: 'app' | 'suite') => void;
+  /** Override URL for CUDA setup guidance. */
+  cudaDocsUrl?: string;
   /** Optional CSS class. */
   className?: string;
+}
+
+const DEFAULT_CUDA_DOCS_URL = 'https://pytorch.org/get-started/locally/';
+
+function isUnavailableNvidia(device: DeviceInfo['available'][number]): boolean {
+  return device.available === false && device.kind === 'nvidia';
+}
+
+function isUsableCuda(device: DeviceInfo['available'][number]): boolean {
+  return device.available !== false && (device.kind === 'cuda' || device.id.startsWith('cuda:'));
 }
 
 /**
@@ -27,12 +41,19 @@ export interface ComputeTargetPanelProps {
 export function ComputeTargetPanel({
   info,
   onSelect,
+  onClear,
+  cudaDocsUrl,
   className,
 }: ComputeTargetPanelProps): React.ReactElement | null {
   if (!info || info.mode !== 'local') return null;
 
   const current = info.current ?? null;
   const effectiveSource = info.effective_source ?? 'auto';
+  const unavailableNvidiaDevices = info.available.filter(isUnavailableNvidia);
+  const showCudaGuide = info.available.some(isUsableCuda) || unavailableNvidiaDevices.length > 0;
+  const cudaGuideUrl = cudaDocsUrl ?? info.cuda_docs_url ?? DEFAULT_CUDA_DOCS_URL;
+  const cudaGuideIsExternal = /^https?:\/\//i.test(cudaGuideUrl);
+  const isAppForcedCpu = current === 'cpu' && effectiveSource === 'app';
 
   return (
     <section
@@ -73,6 +94,31 @@ export function ComputeTargetPanel({
         <legend style={{ display: 'none' }}>Select compute device</legend>
         {info.available.map((device) => {
           const isCurrent = device.id === current;
+          if (isUnavailableNvidia(device)) {
+            return (
+              <div
+                key={device.id}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--space-1)',
+                  padding: 'var(--space-2) var(--space-3)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--border)',
+                  background: 'var(--surface)',
+                  color: 'var(--fg)',
+                }}
+              >
+                <span style={{ fontWeight: 'var(--font-semibold)' }}>{device.label}</span>
+                {device.reason && (
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--fg-subtle)' }}>
+                    {device.reason}
+                  </span>
+                )}
+              </div>
+            );
+          }
+
           return (
             <label
               key={device.id}
@@ -118,9 +164,42 @@ export function ComputeTargetPanel({
         {effectiveSource && <span> (via {effectiveSource})</span>}
       </p>
 
+      {isAppForcedCpu && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-2)',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--fg-subtle)' }}>
+            CPU forced for this app
+          </span>
+          {onClear && (
+            <button
+              type="button"
+              onClick={() => onClear('app')}
+              style={{
+                padding: 'var(--space-1) var(--space-2)',
+                fontSize: 'var(--text-xs)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-xs)',
+                background: 'var(--surface)',
+                color: 'var(--fg-muted)',
+                cursor: 'pointer',
+              }}
+            >
+              Reset to auto
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Force-CPU shortcut — only when a non-CPU device is currently selected */}
       {current !== null && current !== 'cpu' && (
         <button
+          type="button"
           onClick={() => onSelect('cpu')}
           style={{
             padding: 'var(--space-1) var(--space-2)',
@@ -137,15 +216,14 @@ export function ComputeTargetPanel({
         </button>
       )}
 
-      {/* CUDA install link — only when at least one non-CPU device is available */}
-      {info.available.some((d) => d.id !== 'cpu') && (
+      {showCudaGuide && (
         <a
-          href="https://pytorch.org/get-started/locally/"
-          target="_blank"
-          rel="noopener noreferrer"
+          href={cudaGuideUrl}
+          target={cudaGuideIsExternal ? '_blank' : undefined}
+          rel={cudaGuideIsExternal ? 'noopener noreferrer' : undefined}
           style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)' }}
         >
-          Speed this up → CUDA install docs
+          CUDA setup guide
         </a>
       )}
     </section>
