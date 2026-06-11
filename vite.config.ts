@@ -8,6 +8,18 @@ export default defineConfig({
     react(),
     dts({ tsconfigPath: './tsconfig.build.json', rollupTypes: true }),
   ],
+  // Force production JSX transform regardless of NODE_ENV.
+  //
+  // Without this, running `pnpm build` with NODE_ENV=test (which Vitest sets
+  // when build.smoke.test.ts calls execSync('pnpm build')) causes esbuild to
+  // emit jsxDEV() calls that import from "react/jsx-dev-runtime".  In React 19
+  // production builds jsxDEV = undefined → "jsxDEV is not a function" on
+  // every page load in consuming apps.
+  //
+  // Vite 6 resolves the esbuild config as:
+  //   { jsxDev: !isProduction, ...config.esbuild }
+  // so this user-supplied jsxDev: false overrides the ambient NODE_ENV check.
+  esbuild: { jsxDev: false },
   build: {
     lib: {
       entry: {
