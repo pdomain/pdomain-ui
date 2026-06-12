@@ -48,6 +48,20 @@ describe('AlertDialog', () => {
     expect(actionBtn.classList.contains('primary')).toBe(true);
   });
 
+  it('content is nested inside the overlay so it always paints above the scrim', async () => {
+    // Same default-stacking contract as Dialog: content must be a DOM
+    // descendant of the scrim overlay so paint order is guaranteed by
+    // construction, independent of consumer CSS z-index rules.
+    const user = userEvent.setup();
+    renderAlert();
+    await user.click(screen.getByText('Open Alert'));
+
+    const content = screen.getByRole('alertdialog');
+    const overlay = document.querySelector('.dialog-overlay');
+    expect(overlay).not.toBeNull();
+    expect(overlay!.contains(content)).toBe(true);
+  });
+
   it('AlertDialogContent accepts and forwards data-testid (WS7)', async () => {
     const user = userEvent.setup();
     render(

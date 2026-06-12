@@ -65,9 +65,8 @@ describe('Dialog', () => {
     const content = screen.getByRole('dialog');
     expect(content.classList.contains('dialog')).toBe(true);
 
-    // Radix sets data-state="open" on the Content + Overlay portal nodes; the
-    // overlay sibling is rendered in the same portal container.
-    const overlay = content.parentElement?.querySelector('.dialog-overlay');
+    // The scrim overlay is rendered in the same portal as the content.
+    const overlay = document.querySelector('.dialog-overlay');
     expect(overlay).not.toBeNull();
 
     // Header / footer / description classes propagate to consumers.
@@ -77,6 +76,33 @@ describe('Dialog', () => {
     expect(description.classList.contains('dialog-description')).toBe(true);
     const footer = screen.getByText('Cancel').closest('.dialog-footer');
     expect(footer).not.toBeNull();
+  });
+
+  it('content is nested inside the overlay so it always paints above the scrim', async () => {
+    // Default-stacking contract: DialogContent must be a DOM descendant of the
+    // scrim overlay. A positioned descendant always paints above its ancestor's
+    // background regardless of z-index, so consumers that load neither
+    // theme/primitives.css nor any z-index rules still get a clickable dialog.
+    // Regression: with overlay as a *preceding sibling*, any consumer CSS that
+    // gives .dialog-overlay an explicit z-index (and none to .dialog) paints
+    // the scrim over the content — every mouse click lands on the overlay
+    // (labeler-spa parity audit 2026-06-12, rows A-48/A-49).
+    const user = userEvent.setup();
+    render(
+      <Dialog>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent aria-describedby="desc">
+          <DialogTitle>Title</DialogTitle>
+          <DialogDescription id="desc">Description</DialogDescription>
+        </DialogContent>
+      </Dialog>,
+    );
+    await user.click(screen.getByText('Open'));
+
+    const content = screen.getByRole('dialog');
+    const overlay = document.querySelector('.dialog-overlay');
+    expect(overlay).not.toBeNull();
+    expect(overlay!.contains(content)).toBe(true);
   });
 
   it('DialogTitle renders with dialog-title class', async () => {

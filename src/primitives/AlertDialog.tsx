@@ -21,8 +21,12 @@ const AlertDialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
 >(({ className, ...props }, ref) => (
   <AlertDialogPortal>
-    <AlertDialogOverlay />
-    <AlertDialogPrimitive.Content ref={ref} className={cn('dialog', className)} {...props} />
+    {/* Content nested INSIDE the overlay — same default-stacking guarantee as
+        Dialog.tsx: descendants always paint above the ancestor's scrim, so no
+        consumer z-index rules are required for the dialog to be clickable. */}
+    <AlertDialogOverlay>
+      <AlertDialogPrimitive.Content ref={ref} className={cn('dialog', className)} {...props} />
+    </AlertDialogOverlay>
   </AlertDialogPortal>
 ));
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;

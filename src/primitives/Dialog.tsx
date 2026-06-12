@@ -23,10 +23,17 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content ref={ref} className={cn('dialog', className)} {...props}>
-      {children}
-    </DialogPrimitive.Content>
+    {/* Content is nested INSIDE the overlay (Radix's documented composition).
+        A positioned descendant always paints above its ancestor's background,
+        so the dialog stays clickable even when consumer CSS gives
+        .dialog-overlay an explicit z-index and .dialog none. Do not flatten
+        back to siblings — that reintroduces the mouse-dead-dialog bug
+        (labeler-spa parity audit 2026-06-12, rows A-48/A-49). */}
+    <DialogOverlay>
+      <DialogPrimitive.Content ref={ref} className={cn('dialog', className)} {...props}>
+        {children}
+      </DialogPrimitive.Content>
+    </DialogOverlay>
   </DialogPortal>
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
