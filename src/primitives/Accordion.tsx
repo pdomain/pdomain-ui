@@ -11,11 +11,21 @@ import { cn } from './cn.js';
 
 const Accordion = AccordionPrimitive.Root;
 
+export type AccordionTone = 'default' | 'accent' | 'danger';
+
+type AccordionItemProps = React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item> & {
+  tone?: AccordionTone;
+};
+
 const AccordionItem = React.forwardRef<
   React.ComponentRef<typeof AccordionPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
->(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item ref={ref} className={cn('acc', className)} {...props} />
+  AccordionItemProps
+>(({ className, tone = 'default', ...props }, ref) => (
+  <AccordionPrimitive.Item
+    ref={ref}
+    className={cn('acc', tone !== 'default' ? tone : undefined, className)}
+    {...props}
+  />
 ));
 AccordionItem.displayName = AccordionPrimitive.Item.displayName;
 

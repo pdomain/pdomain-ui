@@ -2,6 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion.js';
+import type { AccordionTone } from './Accordion.js';
+
+const accordionTones = ['default', 'accent', 'danger'] satisfies AccordionTone[];
 
 describe('Accordion', () => {
   function renderAccordion() {
@@ -55,5 +58,55 @@ describe('Accordion', () => {
     items.forEach((item) => {
       expect(item.classList.contains('acc')).toBe(true);
     });
+  });
+
+  it('adds tone modifier classes when requested and preserves consumer className', () => {
+    expect(accordionTones).toEqual(['default', 'accent', 'danger']);
+
+    render(
+      <Accordion type="single" collapsible>
+        <AccordionItem value="accent-item" tone="accent" className="consumer-item">
+          <AccordionTrigger>Accent</AccordionTrigger>
+          <AccordionContent>Accent content</AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="danger-item" tone="danger">
+          <AccordionTrigger>Danger</AccordionTrigger>
+          <AccordionContent>Danger content</AccordionContent>
+        </AccordionItem>
+      </Accordion>,
+    );
+
+    const accentItem = screen.getByText('Accent').closest('.acc');
+    const dangerItem = screen.getByText('Danger').closest('.acc');
+
+    expect(accentItem).toHaveClass('acc', 'accent', 'consumer-item');
+    expect(accentItem).not.toHaveClass('danger');
+    expect(dangerItem).toHaveClass('acc', 'danger');
+    expect(dangerItem).not.toHaveClass('accent');
+  });
+
+  it('does not add tone modifiers for default or omitted tone', () => {
+    render(
+      <Accordion type="single" collapsible>
+        <AccordionItem value="default-item" tone="default">
+          <AccordionTrigger>Default</AccordionTrigger>
+          <AccordionContent>Default content</AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="omitted-item">
+          <AccordionTrigger>Omitted</AccordionTrigger>
+          <AccordionContent>Omitted content</AccordionContent>
+        </AccordionItem>
+      </Accordion>,
+    );
+
+    const defaultItem = screen.getByText('Default').closest('.acc');
+    const omittedItem = screen.getByText('Omitted').closest('.acc');
+
+    expect(defaultItem).toHaveClass('acc');
+    expect(defaultItem).not.toHaveClass('accent');
+    expect(defaultItem).not.toHaveClass('danger');
+    expect(omittedItem).toHaveClass('acc');
+    expect(omittedItem).not.toHaveClass('accent');
+    expect(omittedItem).not.toHaveClass('danger');
   });
 });
