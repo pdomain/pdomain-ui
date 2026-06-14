@@ -30,6 +30,9 @@ export type { BadgeProps, BadgeVariant } from './Badge.js';
 export { Chip } from './Chip.js';
 export type { ChipProps, ChipVariant } from './Chip.js';
 
+export { TriStateChip } from './TriStateChip.js';
+export type { TriStateChipProps, TriStateValue } from './TriStateChip.js';
+
 export { StatusPip } from './StatusPip.js';
 export type { StatusPipProps, StatusPipStatus } from './StatusPip.js';
 
