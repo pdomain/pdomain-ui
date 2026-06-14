@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { Slot, Slottable } from '@radix-ui/react-slot';
 import { cn } from './cn.js';
 
-export type ButtonVariant = 'primary' | 'ghost' | 'danger';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'destructive';
+export type ButtonSize = 'sm' | 'md' | 'default' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -22,19 +23,33 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * Adds the CSS class "full" which sets width: 100% in primitives.css.
    */
   full?: boolean;
+  asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant, size, icon, iconRight, full, children, ...props },
+  {
+    className,
+    variant = 'primary',
+    size = 'md',
+    icon,
+    iconRight,
+    full,
+    asChild,
+    children,
+    ...props
+  },
   ref,
 ) {
+  const Component = asChild === true ? Slot : 'button';
+  const sizeClass = size === 'md' || size === 'default' ? undefined : size;
+
   return (
-    <button
+    <Component
       ref={ref}
       className={cn(
         'btn',
         variant,
-        size === 'md' ? undefined : size,
+        sizeClass,
         full === true ? 'full' : undefined,
         className,
       )}
@@ -45,13 +60,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
           {icon}
         </span>
       ) : null}
-      {children}
+      {asChild === true ? <Slottable>{children}</Slottable> : children}
       {iconRight != null ? (
         <span className="btn-icon btn-icon--right" aria-hidden="true">
           {iconRight}
         </span>
       ) : null}
-    </button>
+    </Component>
   );
 });
 
