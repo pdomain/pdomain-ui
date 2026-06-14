@@ -3,8 +3,7 @@ import { cn } from './cn.js';
 
 export type TriStateValue = 'off' | 'on' | 'mixed';
 
-export interface TriStateChipProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface TriStateChipProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   value?: TriStateValue;
   onChange?: (next: TriStateValue) => void;
 }
