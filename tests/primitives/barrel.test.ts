@@ -19,6 +19,7 @@ const EXPECTED_COMPONENTS = [
   'Textarea',
   'Badge',
   'Chip',
+  'TriStateChip',
   'StatusPip',
   // Job-state components — must stay exported (see pdomain-ui#15; these gate pdomain-ocr-simple-gui)
   'JobStatusPip',

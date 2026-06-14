@@ -107,6 +107,14 @@ describe('dist/primitives.d.ts — consumer-critical exports (pdomain-ui#15)', (
     'PageSplitView', // used in PageViewPage.tsx
     // StatusPip (the generic variant) must also stay
     'StatusPip',
+    // PGDP app migration components and typed primitive contracts
+    'ButtonVariant',
+    'ButtonSize',
+    'TriStateChip',
+    'TriStateChipProps',
+    'TriStateValue',
+    'TabsAppearance',
+    'AccordionTone',
   ];
 
   for (const sym of REQUIRED_SYMBOLS) {
