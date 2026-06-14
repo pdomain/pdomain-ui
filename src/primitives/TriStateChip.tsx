@@ -4,7 +4,10 @@ import { cn } from './cn.js';
 export type TriStateValue = 'off' | 'on' | 'mixed';
 
 export interface TriStateChipProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    'aria-pressed' | 'onChange' | 'role' | 'tabIndex'
+  > {
   value?: TriStateValue;
   onChange?: (next: TriStateValue) => void;
 }
@@ -34,6 +37,7 @@ export const TriStateChip = React.forwardRef<HTMLDivElement, TriStateChipProps>(
 
     return (
       <div
+        {...props}
         ref={ref}
         role="button"
         tabIndex={0}
@@ -59,7 +63,6 @@ export const TriStateChip = React.forwardRef<HTMLDivElement, TriStateChipProps>(
             cycle();
           }
         }}
-        {...props}
       >
         <span aria-hidden="true" className="tri-dot" />
         {children}

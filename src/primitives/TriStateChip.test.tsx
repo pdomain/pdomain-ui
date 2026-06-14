@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { createRef } from 'react';
+import { createElement, createRef, type ComponentType } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { TriStateChip } from './TriStateChip.js';
 
@@ -112,5 +112,32 @@ describe('TriStateChip', () => {
     );
 
     expect(screen.getByTestId('tri').classList.contains('some')).toBe(true);
+  });
+
+  it('keeps component-owned state and accessibility props invariant', () => {
+    const UnsafeTriStateChip = TriStateChip as ComponentType<Record<string, unknown>>;
+
+    render(
+      createElement(
+        UnsafeTriStateChip,
+        {
+          value: 'mixed',
+          role: 'checkbox',
+          tabIndex: -1,
+          'aria-pressed': 'true',
+          'data-testid': 'tri',
+          'data-tristate': 'custom',
+          'data-tristate-value': 'off',
+        },
+        'Mode',
+      ),
+    );
+
+    const chip = screen.getByTestId('tri');
+    expect(chip.getAttribute('role')).toBe('button');
+    expect(chip.getAttribute('tabindex')).toBe('0');
+    expect(chip.getAttribute('aria-pressed')).toBe('mixed');
+    expect(chip.getAttribute('data-tristate')).toBe('');
+    expect(chip.getAttribute('data-tristate-value')).toBe('mixed');
   });
 });
