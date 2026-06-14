@@ -26,6 +26,24 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   asChild?: boolean;
 }
 
+type SlottedChildProps = {
+  className?: string;
+  children?: React.ReactNode;
+  disabled?: boolean | undefined;
+  'aria-disabled'?: React.AriaAttributes['aria-disabled'];
+  tabIndex?: number;
+  ref?: React.Ref<HTMLElement>;
+  onClick?: React.MouseEventHandler<HTMLElement>;
+  onClickCapture?: React.MouseEventHandler<HTMLElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLElement>;
+  onKeyDownCapture?: React.KeyboardEventHandler<HTMLElement>;
+};
+
+const suppressDisabledEvent = (event: React.SyntheticEvent<HTMLElement>) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
+
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     className,
@@ -44,32 +62,57 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const Component = asChild === true ? Slot : 'button';
   const sizeClass = size === 'md' || size === 'default' ? undefined : size;
   const isDisabledAsChild = asChild === true && disabled === true;
-  const suppressDisabledEvent = (event: React.SyntheticEvent<HTMLElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
+  const buttonClassName = cn(
+    'btn',
+    variant,
+    sizeClass,
+    full === true ? 'full' : undefined,
+    isDisabledAsChild ? 'disabled' : undefined,
+    className,
+  );
+
+  if (isDisabledAsChild) {
+    const child = React.Children.only(children);
+
+    if (!React.isValidElement<SlottedChildProps>(child)) {
+      return null;
+    }
+
+    return React.cloneElement(child, {
+      ...props,
+      ref,
+      'aria-disabled': true,
+      tabIndex: -1,
+      disabled: undefined,
+      onClick: suppressDisabledEvent,
+      onClickCapture: suppressDisabledEvent,
+      onKeyDown: suppressDisabledEvent,
+      onKeyDownCapture: suppressDisabledEvent,
+      className: cn(buttonClassName, child.props.className),
+      children: (
+        <>
+          {icon != null ? (
+            <span className="btn-icon btn-icon--left" aria-hidden="true">
+              {icon}
+            </span>
+          ) : null}
+          {child.props.children}
+          {iconRight != null ? (
+            <span className="btn-icon btn-icon--right" aria-hidden="true">
+              {iconRight}
+            </span>
+          ) : null}
+        </>
+      ),
+    });
+  }
 
   return (
     <Component
       ref={ref}
       {...props}
       {...(asChild === true ? undefined : { disabled })}
-      {...(isDisabledAsChild
-        ? {
-            'aria-disabled': true,
-            tabIndex: -1,
-            onClickCapture: suppressDisabledEvent,
-            onKeyDownCapture: suppressDisabledEvent,
-          }
-        : undefined)}
-      className={cn(
-        'btn',
-        variant,
-        sizeClass,
-        full === true ? 'full' : undefined,
-        isDisabledAsChild ? 'disabled' : undefined,
-        className,
-      )}
+      className={buttonClassName}
     >
       {icon != null ? (
         <span className="btn-icon btn-icon--left" aria-hidden="true">

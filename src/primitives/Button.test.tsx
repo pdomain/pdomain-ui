@@ -74,6 +74,21 @@ describe('Button', () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
+  it('suppresses click capture handlers for disabled slotted anchors', () => {
+    const onClickCapture = vi.fn();
+    render(
+      <Button asChild disabled>
+        <a href="/projects" onClickCapture={onClickCapture}>
+          Projects
+        </a>
+      </Button>,
+    );
+
+    fireEvent.click(screen.getByRole('link', { name: 'Projects' }));
+
+    expect(onClickCapture).not.toHaveBeenCalled();
+  });
+
   it('suppresses keyboard handlers for disabled slotted anchors', () => {
     const onKeyDown = vi.fn();
     render(
@@ -88,6 +103,22 @@ describe('Button', () => {
     fireEvent.keyDown(screen.getByRole('link', { name: 'Projects' }), { key: ' ' });
 
     expect(onKeyDown).not.toHaveBeenCalled();
+  });
+
+  it('suppresses keyboard capture handlers for disabled slotted anchors', () => {
+    const onKeyDownCapture = vi.fn();
+    render(
+      <Button asChild disabled>
+        <a href="/projects" onKeyDownCapture={onKeyDownCapture}>
+          Projects
+        </a>
+      </Button>,
+    );
+
+    fireEvent.keyDown(screen.getByRole('link', { name: 'Projects' }), { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('link', { name: 'Projects' }), { key: ' ' });
+
+    expect(onKeyDownCapture).not.toHaveBeenCalled();
   });
 
   it('fires click handlers', () => {
