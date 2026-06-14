@@ -5317,3 +5317,76 @@ button.page-chip:hover {
   background: var(--border-1);
   opacity: 0.4;
 }
+
+/* ── ButtonGroup ──────────────────────────────────────────────────────────────
+ * Groups related buttons under a single accessible label (role="group").
+ * Children are laid out in a flex row. The --separator modifier adds a
+ * visible divider between children via a CSS border on the right side of
+ * each child (except the last).
+ */
+.btn-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-group--separator {
+  gap: 0;
+}
+
+.btn-group--separator > *:not(:last-child) {
+  border-right: 1px solid var(--border-2);
+}
+
+/* ── IconButton ───────────────────────────────────────────────────────────────
+ * Square icon-only button. Renders as a ghost-style button by default.
+ * The .icon-btn__icon wrapper is aria-hidden so only aria-label is exposed.
+ * Size modifiers mirror .btn: .sm and .lg.
+ */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    color 0.12s;
+  user-select: none;
+}
+
+.icon-btn:hover {
+  background: var(--bg-raised);
+  border-color: var(--border-2);
+  color: var(--ink-1);
+}
+
+.icon-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.icon-btn.sm {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+
+.icon-btn.lg {
+  width: 34px;
+  height: 34px;
+}
+
+.icon-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}

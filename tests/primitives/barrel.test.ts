@@ -13,6 +13,8 @@ import * as primitives from '../../src/primitives/index.js';
 const EXPECTED_COMPONENTS = [
   // Non-Radix
   'Button',
+  'ButtonGroup',
+  'IconButton',
   'Input',
   'Textarea',
   'Badge',

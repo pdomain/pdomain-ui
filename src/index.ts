@@ -164,6 +164,8 @@ export type {
 // ─── Primitives ───────────────────────────────────────────────────────────────
 export {
   Button,
+  ButtonGroup,
+  IconButton,
   Input,
   Textarea,
   Badge,
@@ -193,6 +195,9 @@ export type {
   StepDotsState,
   JobStatusPipProps,
   JobState,
+  ButtonGroupProps,
+  IconButtonProps,
+  IconButtonSize,
 } from './primitives/index.js';
 
 // Cross-stage molecules re-exports (batch 1 + batch 2, #344)

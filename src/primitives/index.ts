@@ -12,6 +12,12 @@ export type {
 export { Button } from './Button.js';
 export type { ButtonProps, ButtonVariant, ButtonSize } from './Button.js';
 
+export { ButtonGroup } from './ButtonGroup.js';
+export type { ButtonGroupProps } from './ButtonGroup.js';
+
+export { IconButton } from './IconButton.js';
+export type { IconButtonProps, IconButtonSize } from './IconButton.js';
+
 export { Input } from './Input.js';
 export type { InputProps, InputSize } from './Input.js';
 
