@@ -124,6 +124,7 @@ export {
 } from './Select.js';
 
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './Tabs.js';
+export type { TabsAppearance } from './Tabs.js';
 
 export { ToggleGroup, ToggleGroupItem } from './ToggleGroup.js';
 

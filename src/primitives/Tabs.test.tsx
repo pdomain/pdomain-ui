@@ -29,6 +29,42 @@ describe('Tabs', () => {
     expect(tab1!.classList.contains('tab')).toBe(true);
   });
 
+  it('keeps default tabs classes without underline modifiers', () => {
+    renderTabs();
+    const list = screen.getByRole('tablist');
+    const [tab1] = screen.getAllByRole('tab');
+    expect(list.classList.contains('tabs')).toBe(true);
+    expect(list.classList.contains('tabs--underline')).toBe(false);
+    expect(tab1!.classList.contains('tab')).toBe(true);
+    expect(tab1!.classList.contains('tab--underline')).toBe(false);
+  });
+
+  it('adds underline modifier classes when requested', () => {
+    render(
+      <Tabs defaultValue="tab1">
+        <TabsList appearance="underline">
+          <TabsTrigger appearance="underline" value="tab1">
+            Tab 1
+          </TabsTrigger>
+          <TabsTrigger appearance="underline" value="tab2">
+            Tab 2
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="tab1">Content 1</TabsContent>
+        <TabsContent value="tab2">Content 2</TabsContent>
+      </Tabs>,
+    );
+
+    const list = screen.getByRole('tablist');
+    const [tab1, tab2] = screen.getAllByRole('tab');
+    expect(list.classList.contains('tabs')).toBe(true);
+    expect(list.classList.contains('tabs--underline')).toBe(true);
+    expect(tab1!.classList.contains('tab')).toBe(true);
+    expect(tab1!.classList.contains('tab--underline')).toBe(true);
+    expect(tab2!.classList.contains('tab')).toBe(true);
+    expect(tab2!.classList.contains('tab--underline')).toBe(true);
+  });
+
   it('shows the default tab content', () => {
     renderTabs();
     expect(screen.getByText('Content 1')).toBeTruthy();

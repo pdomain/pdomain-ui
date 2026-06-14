@@ -4,19 +4,36 @@ import { cn } from './cn.js';
 
 const Tabs = TabsPrimitive.Root;
 
-const TabsList = React.forwardRef<
-  React.ComponentRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List ref={ref} className={cn('tabs', className)} {...props} />
-));
+export type TabsAppearance = 'default' | 'underline';
+
+type TabsListProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & {
+  appearance?: TabsAppearance;
+};
+
+const TabsList = React.forwardRef<React.ComponentRef<typeof TabsPrimitive.List>, TabsListProps>(
+  ({ appearance = 'default', className, ...props }, ref) => (
+    <TabsPrimitive.List
+      ref={ref}
+      className={cn('tabs', appearance === 'underline' && 'tabs--underline', className)}
+      {...props}
+    />
+  ),
+);
 TabsList.displayName = TabsPrimitive.List.displayName;
+
+type TabsTriggerProps = React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
+  appearance?: TabsAppearance;
+};
 
 const TabsTrigger = React.forwardRef<
   React.ComponentRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger ref={ref} className={cn('tab', className)} {...props} />
+  TabsTriggerProps
+>(({ appearance = 'default', className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn('tab', appearance === 'underline' && 'tab--underline', className)}
+    {...props}
+  />
 ));
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 

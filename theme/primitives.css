@@ -2640,6 +2640,11 @@ a {
   border-bottom: 1px solid var(--border-2);
 }
 
+.tabs.tabs--underline {
+  gap: 0;
+  border-bottom-color: var(--border-1);
+}
+
 .tab {
   padding: 6px 12px;
   font-size: 13px;
@@ -2651,8 +2656,27 @@ a {
   outline: none;
 }
 
+.tab.tab--underline {
+  position: relative;
+  padding: 8px 12px 9px;
+  color: var(--ink-3);
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+.tab.tab--underline:hover {
+  color: var(--ink-2);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
 .tab[data-state='active'] {
   color: var(--ink-1);
+  border-bottom-color: var(--accent);
+}
+
+.tab.tab--underline[data-state='active'] {
+  color: var(--ink-1);
+  background: transparent;
   border-bottom-color: var(--accent);
 }
 
