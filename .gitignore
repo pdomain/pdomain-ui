@@ -49,3 +49,7 @@ Thumbs.db
 
 # ship-issue bot temp cache
 .ship-issue-tmp/
+
+# Python bytecode cache (left by codegen scripts)
+__pycache__/
+*.pyc
