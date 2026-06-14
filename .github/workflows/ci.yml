@@ -1,6 +1,6 @@
 name: ci
 
-# Runs on every push to main and on every pull request targeting main.
+# Runs on every pull request targeting main.
 # This is the primary quality gate for @pdomain/pdomain-ui.
 #
 # Jobs:
@@ -19,8 +19,6 @@ name: ci
 #     Run `make theme-check` from the ocr-container workspace locally.
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
