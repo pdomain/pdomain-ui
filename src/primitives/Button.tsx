@@ -35,6 +35,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     iconRight,
     full,
     asChild,
+    disabled,
     children,
     ...props
   },
@@ -42,18 +43,33 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
 ) {
   const Component = asChild === true ? Slot : 'button';
   const sizeClass = size === 'md' || size === 'default' ? undefined : size;
+  const isDisabledAsChild = asChild === true && disabled === true;
+  const suppressDisabledEvent = (event: React.SyntheticEvent<HTMLElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
 
   return (
     <Component
       ref={ref}
+      {...props}
+      {...(asChild === true ? undefined : { disabled })}
+      {...(isDisabledAsChild
+        ? {
+            'aria-disabled': true,
+            tabIndex: -1,
+            onClickCapture: suppressDisabledEvent,
+            onKeyDownCapture: suppressDisabledEvent,
+          }
+        : undefined)}
       className={cn(
         'btn',
         variant,
         sizeClass,
         full === true ? 'full' : undefined,
+        isDisabledAsChild ? 'disabled' : undefined,
         className,
       )}
-      {...props}
     >
       {icon != null ? (
         <span className="btn-icon btn-icon--left" aria-hidden="true">

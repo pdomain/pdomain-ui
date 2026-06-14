@@ -45,6 +45,51 @@ describe('Button', () => {
     expect(link).toHaveClass('btn', 'outline', 'sm');
   });
 
+  it('applies accessible disabled semantics to slotted anchors', () => {
+    render(
+      <Button asChild disabled>
+        <a href="/projects">Projects</a>
+      </Button>,
+    );
+
+    const link = screen.getByRole('link', { name: 'Projects' });
+    expect(link).toHaveAttribute('aria-disabled', 'true');
+    expect(link).toHaveAttribute('tabindex', '-1');
+    expect(link).toHaveClass('btn', 'primary', 'disabled');
+    expect(link).not.toHaveAttribute('disabled');
+  });
+
+  it('suppresses click handlers for disabled slotted anchors', () => {
+    const onClick = vi.fn();
+    render(
+      <Button asChild disabled>
+        <a href="/projects" onClick={onClick}>
+          Projects
+        </a>
+      </Button>,
+    );
+
+    fireEvent.click(screen.getByRole('link', { name: 'Projects' }));
+
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('suppresses keyboard handlers for disabled slotted anchors', () => {
+    const onKeyDown = vi.fn();
+    render(
+      <Button asChild disabled>
+        <a href="/projects" onKeyDown={onKeyDown}>
+          Projects
+        </a>
+      </Button>,
+    );
+
+    fireEvent.keyDown(screen.getByRole('link', { name: 'Projects' }), { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('link', { name: 'Projects' }), { key: ' ' });
+
+    expect(onKeyDown).not.toHaveBeenCalled();
+  });
+
   it('fires click handlers', () => {
     const onClick = vi.fn();
     render(<Button onClick={onClick}>Run</Button>);
