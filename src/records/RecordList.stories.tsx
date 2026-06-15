@@ -8,36 +8,35 @@ const rows = [
   { id: 'beta', name: 'Beta project with a longer name', meta: '4 pages', status: 'Running' },
 ];
 
+type ProjectRow = (typeof rows)[number];
+const ProjectRecordList = RecordList<ProjectRow>;
+
 const meta = {
   title: 'Records/RecordList',
-  component: RecordList,
-} satisfies Meta<typeof RecordList>;
+  component: ProjectRecordList,
+} satisfies Meta<typeof ProjectRecordList>;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <RecordList
-      ariaLabel="Projects"
-      items={rows}
-      getKey={(row) => row.id}
-      renderPrimary={(row) => row.name}
-      renderSecondary={(row) => row.id}
-      renderMeta={(row) => row.meta}
-      renderStatus={(row) => row.status}
-      renderActions={() => <Button size="sm">Open</Button>}
-    />
-  ),
+  args: {
+    ariaLabel: 'Projects',
+    items: rows,
+    getKey: (row) => row.id,
+    renderPrimary: (row) => row.name,
+    renderSecondary: (row) => row.id,
+    renderMeta: (row) => row.meta,
+    renderStatus: (row) => row.status,
+    renderActions: () => <Button size="sm">Open</Button>,
+  },
 };
 
 export const Empty: Story = {
-  render: () => (
-    <RecordList
-      items={[]}
-      getKey={(row: (typeof rows)[number]) => row.id}
-      renderPrimary={(row) => row.name}
-      empty={<EmptyState title="No projects" description="Open a source folder to get started." />}
-    />
-  ),
+  args: {
+    items: [],
+    getKey: (row) => row.id,
+    renderPrimary: (row) => row.name,
+    empty: <EmptyState title="No projects" description="Open a source folder to get started." />,
+  },
 };

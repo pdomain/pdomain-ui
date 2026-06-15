@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex, jsx-a11y/role-supports-aria-props -- RecordList intentionally exposes list/listitem rows with activation and selected/disabled state. */
+/* eslint-disable jsx-a11y/no-static-element-interactions -- The actions slot wrapper only stops event propagation so nested controls do not activate the row. */
 import type { KeyboardEvent, ReactNode } from 'react';
 import { cn } from '../primitives/cn.js';
 import { EmptyState } from './EmptyState.js';
@@ -26,10 +26,6 @@ function isActivationKey(event: KeyboardEvent) {
   return event.key === 'Enter' || event.key === ' ';
 }
 
-function isFromActions(target: EventTarget | null) {
-  return target instanceof Element && target.closest('.pdui-record-list__actions') !== null;
-}
-
 function getAccessibleLabel(node: ReactNode) {
   return typeof node === 'string' || typeof node === 'number' ? String(node) : undefined;
 }
@@ -51,9 +47,11 @@ export function RecordList<T>({
   ariaLabel,
   className,
 }: RecordListProps<T>) {
+  const rootClassName = cn('pdui-record-list', className);
+
   if (loading) {
     return (
-      <div className={cn('pdui-record-list', className)} role="status">
+      <div className={rootClassName} role="status">
         Loading records
       </div>
     );
@@ -61,23 +59,26 @@ export function RecordList<T>({
 
   if (error) {
     return (
-      <div className={cn('pdui-record-list', className)} role="alert">
+      <div className={rootClassName} role="alert">
         {error}
       </div>
     );
   }
 
   if (items.length === 0) {
-    return <>{empty ?? <EmptyState title="No records" />}</>;
+    return (
+      <div className={rootClassName} data-density={density}>
+        {empty ?? <EmptyState title="No records" />}
+      </div>
+    );
   }
 
+  const selectable = selection !== undefined;
+  const listRole = selectable ? 'listbox' : 'list';
+  const itemRole = selectable ? 'option' : 'listitem';
+
   return (
-    <div
-      className={cn('pdui-record-list', className)}
-      data-density={density}
-      role="list"
-      aria-label={ariaLabel}
-    >
+    <div className={rootClassName} data-density={density} role={listRole} aria-label={ariaLabel}>
       {items.map((item) => {
         const key = getKey(item);
         const primary = renderPrimary(item);
@@ -89,17 +90,17 @@ export function RecordList<T>({
           <div
             key={key}
             className="pdui-record-list__item"
-            role="listitem"
+            role={itemRole}
             aria-label={getAccessibleLabel(primary)}
-            aria-selected={selected || undefined}
+            aria-selected={selectable ? selected : undefined}
             aria-disabled={disabled || undefined}
             tabIndex={activatable ? 0 : undefined}
-            onClick={(event) => {
-              if (!activatable || isFromActions(event.target)) return;
+            onClick={() => {
+              if (!activatable) return;
               onActivate?.(item);
             }}
             onKeyDown={(event) => {
-              if (!activatable || isFromActions(event.target) || !isActivationKey(event)) return;
+              if (!activatable || !isActivationKey(event)) return;
               event.preventDefault();
               onActivate?.(item);
             }}
@@ -115,7 +116,17 @@ export function RecordList<T>({
               <div className="pdui-record-list__status">{renderStatus(item)}</div>
             ) : null}
             {renderActions ? (
-              <div className="pdui-record-list__actions">{renderActions(item)}</div>
+              <div
+                className="pdui-record-list__actions"
+                onClick={(event) => {
+                  event.stopPropagation();
+                }}
+                onKeyDown={(event) => {
+                  event.stopPropagation();
+                }}
+              >
+                {renderActions(item)}
+              </div>
             ) : null}
           </div>
         );

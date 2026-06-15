@@ -5441,6 +5441,16 @@ button.page-chip:hover {
   color: var(--mismatch);
 }
 
+.pdui-empty-state[data-tone='info'] {
+  border-color: var(--ocr);
+  color: var(--ocr);
+}
+
+.pdui-empty-state[data-tone='warning'] {
+  border-color: var(--fuzzy);
+  color: var(--fuzzy);
+}
+
 .pdui-empty-state__title {
   color: var(--ink-1);
   font-weight: 600;
