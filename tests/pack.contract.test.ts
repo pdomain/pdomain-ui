@@ -81,6 +81,10 @@ describe('pnpm pack tarball contents', () => {
     expect(packResult.files).toContain('theme/tokens.css');
   });
 
+  it('tarball includes theme/reset.css', () => {
+    expect(packResult.files).toContain('theme/reset.css');
+  });
+
   it('tarball includes theme/primitives.css', () => {
     expect(packResult.files).toContain('theme/primitives.css');
   });

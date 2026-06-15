@@ -1,32 +1,16 @@
-/* ─── ocr-project-prep · primitives ────────────────────────────────
+/* ─── @pdomain/pdomain-ui · primitives ──────────────────────────────
  * Requires tokens.css. Every rule references CSS vars — never literals.
  * Load Inter + JetBrains Mono separately (see README).
+ *
+ * This file is RESET-FREE. It contains component primitive class rules only.
+ * If your app has no CSS reset and no Tailwind preflight, also import
+ * theme/reset.css BEFORE this file:
+ *
+ *   import '@pdomain/pdomain-ui/theme/tokens.css';
+ *   import '@pdomain/pdomain-ui/theme/reset.css';   // only if needed
+ *   import '@pdomain/pdomain-ui/theme/primitives.css';
  * ────────────────────────────────────────────────────────────────── */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html,
-body {
-  margin: 0;
-  background: var(--bg-page);
-  color: var(--ink-1);
-}
-body {
-  font-family: var(--ui-font);
-  font-size: 12px;
-  line-height: 1.45;
-  -webkit-font-smoothing: antialiased;
-  transition:
-    background 0.15s,
-    color 0.15s;
-}
-a {
-  color: inherit;
-  text-decoration: none;
-}
 .mono {
   font-family: var(--mono-font);
 }

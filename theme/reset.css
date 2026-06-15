@@ -1,0 +1,40 @@
+/* ─── @pdomain/pdomain-ui · opt-in reset ────────────────────────────────────
+ * Import this file ONLY if your app does NOT have its own CSS reset and does
+ * NOT use Tailwind preflight. It provides baseline box-sizing, margin, font,
+ * and link normalisations that primitives.css assumes are in place.
+ *
+ * Consumers that DO NOT need this (they already zero things out themselves):
+ *   - Tailwind apps (preflight covers it): labeler-spa, simple-gui
+ *   - Apps with an explicit CSS reset
+ *
+ * Consumers that DO need this:
+ *   - trainer-spa (no Tailwind, no other reset)
+ *   - pdomain-ui's own Storybook (imported in .storybook/preview.ts)
+ *
+ * Load order:  tokens.css  →  reset.css  →  primitives.css
+ * ───────────────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  background: var(--bg-page);
+  color: var(--ink-1);
+}
+body {
+  font-family: var(--ui-font);
+  font-size: 12px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}

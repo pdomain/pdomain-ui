@@ -6,6 +6,42 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.9.0] — 2026-06-15
+
+### Breaking change
+
+- `theme/primitives.css` no longer includes a global CSS reset. Consumers that
+  imported `primitives.css` and relied on its implicit reset (`*` box-sizing,
+  `html/body` margin/font, `a` color/decoration) must now also import
+  `theme/reset.css` **before** `primitives.css` — or supply their own reset.
+
+  Tailwind apps (`labeler-spa`, `simple-gui`) are **unaffected**: Tailwind
+  preflight already covers the same ground and importing the old reset caused
+  conflicts. Those apps should NOT add `reset.css`.
+
+### Added
+
+- `theme/reset.css` — new opt-in global reset export. Contains exactly the
+  element/universal selectors that were previously embedded in `primitives.css`
+  (`*`, `*::before`, `*::after`, `html`, `body`, `a`). Import it only when
+  your app has no Tailwind preflight and no other CSS reset.
+- `./theme/reset.css` subpath export in `package.json` (mirrors the existing
+  `./theme/tokens.css` and `./theme/primitives.css` entries).
+
+### Migration
+
+```diff
+  // tokens always first
+  import '@pdomain/pdomain-ui/theme/tokens.css';
++ // add reset.css ONLY if you have no Tailwind preflight / CSS reset
++ import '@pdomain/pdomain-ui/theme/reset.css';
+  import '@pdomain/pdomain-ui/theme/primitives.css';
+```
+
+Tailwind consumers: no change needed.
+
+[0.9.0]: https://github.com/pdomain/pdomain-ui/releases/tag/v0.9.0
+
 ## [0.6.0] — 2026-06-04
 
 ### Added

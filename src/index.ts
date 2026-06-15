@@ -16,7 +16,8 @@
  *   ./templates         — composed molecules and page-level template components
  *   ./stages/Source     — Source ingestion stage components (SourceBanner, …)
  *   ./theme/tokens.css      — dark/light CSS custom properties
- *   ./theme/primitives.css  — component-level CSS classes
+ *   ./theme/reset.css       — opt-in global reset (skip if using Tailwind preflight)
+ *   ./theme/primitives.css  — component-level CSS classes (reset-free)
  */
 
 // ─── Canvas ───────────────────────────────────────────────────────────────────

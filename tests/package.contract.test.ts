@@ -28,6 +28,7 @@ describe('package.json contract', () => {
       './testids',
       './templates',
       './theme/tokens.css',
+      './theme/reset.css',
       './theme/primitives.css',
     ];
     for (const subpath of required) {
@@ -75,6 +76,12 @@ describe('package.json contract', () => {
     const exports = pkg['exports'] as Record<string, unknown>;
     expect(exports).toHaveProperty('./theme/primitives.css');
     expect(exports['./theme/primitives.css']).toBe('./theme/primitives.css');
+  });
+
+  it('exports has ./theme/reset.css subpath', () => {
+    const exports = pkg['exports'] as Record<string, unknown>;
+    expect(exports).toHaveProperty('./theme/reset.css');
+    expect(exports['./theme/reset.css']).toBe('./theme/reset.css');
   });
 
   it('files includes "theme" directory', () => {

@@ -82,9 +82,10 @@ describe('dist/ output completeness', () => {
     }
   });
 
-  it('theme/ directory contains tokens.css and primitives.css', () => {
+  it('theme/ directory contains tokens.css, reset.css and primitives.css', () => {
     const THEME = resolve(__dirname, '../theme');
     expect(existsSync(resolve(THEME, 'tokens.css')), 'theme/tokens.css missing').toBe(true);
+    expect(existsSync(resolve(THEME, 'reset.css')), 'theme/reset.css missing').toBe(true);
     expect(existsSync(resolve(THEME, 'primitives.css')), 'theme/primitives.css missing').toBe(true);
   });
 });
