@@ -9,10 +9,12 @@
  *   5. RotateMode — rotation handle overlay
  *   6. NarrowContainer — 320px wide (mobile-ish context)
  *   7. LargeImage — 4000×5000px source dimensions (scale stress test)
+ *   8. WithViewportToolbar — controlled zoom and fit controls
  */
 
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { ZoomFitMode } from '../../viewport/index.js';
 import { ArtifactViewer } from './ArtifactViewer.js';
 import type { IllustBbox, WordBbox } from './ArtifactViewer.js';
 
@@ -211,4 +213,38 @@ export const LargeImage: Story = {
       </div>
     ),
   ],
+};
+
+/**
+ * 8. WithViewportToolbar — controlled zoom and fit controls.
+ */
+function WithViewportToolbarStory(args: React.ComponentProps<typeof ArtifactViewer>) {
+  const [zoom, setZoom] = useState(args.zoom ?? 1);
+  const [fitMode, setFitMode] = useState<ZoomFitMode>(args.fitMode ?? 'none');
+
+  return (
+    <div style={{ height: 600, display: 'flex', flexDirection: 'column' }}>
+      <ArtifactViewer
+        {...args}
+        zoom={zoom}
+        onZoomChange={setZoom}
+        fitMode={fitMode}
+        onFitModeChange={setFitMode}
+        showViewportToolbar
+      />
+    </div>
+  );
+}
+
+export const WithViewportToolbar: Story = {
+  render: (args) => <WithViewportToolbarStory {...args} />,
+  args: {
+    imageSrc: BLANK_PNG,
+    pageWidth: 2400,
+    pageHeight: 3200,
+    overlayMode: 'view',
+    zoom: 1,
+    fitMode: 'none',
+    showViewportToolbar: true,
+  },
 };

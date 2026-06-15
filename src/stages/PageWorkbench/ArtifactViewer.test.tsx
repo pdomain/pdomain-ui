@@ -110,6 +110,28 @@ describe('ArtifactViewer', () => {
     expect(screen.getByTestId('image-viewport')).toBeInTheDocument();
   });
 
+  it('can render with the viewport toolbar enabled', () => {
+    render(
+      <ArtifactViewer
+        {...MIN_PROPS}
+        overlayMode="view"
+        showViewportToolbar
+        defaultZoom={1}
+        fitMode="none"
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Zoom in' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Fit page' })).toBeInTheDocument();
+  });
+
+  it('keeps rendering the image viewport when viewport props are enabled', () => {
+    render(<ArtifactViewer {...MIN_PROPS} defaultZoom={1.25} fitMode="none" />);
+
+    expect(screen.getByRole('region', { name: 'Artifact viewport' })).toBeInTheDocument();
+    expect(screen.getByTestId('image-viewport')).toBeInTheDocument();
+  });
+
   it('overlayMode view — no overlay shapes', () => {
     render(<ArtifactViewer {...MIN_PROPS} overlayMode="view" />);
     // No split handle, no word bboxes, no rotate handle

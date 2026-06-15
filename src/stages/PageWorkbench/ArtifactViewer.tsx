@@ -22,6 +22,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { PageImageCanvas } from '../../canvas/PageImageCanvas.js';
 import type { CanvasWord } from '../../canvas/types.js';
+import { ViewportToolbar, ZoomViewport, type ZoomFitMode } from '../../viewport/index.js';
 import { ArtifactPlate } from './ArtifactPlate.js';
 import { PaperRender } from './PaperRender.js';
 import { SplitHandle, SplitOverlay } from './SplitOverlay.js';
@@ -69,6 +70,12 @@ export interface ArtifactViewerProps {
   /** Rotation angle in degrees (overlayMode='rotate'). */
   rotationDeg?: number;
   onRotationChange?: (deg: number) => void;
+  zoom?: number;
+  defaultZoom?: number;
+  onZoomChange?: (zoom: number) => void;
+  fitMode?: ZoomFitMode;
+  onFitModeChange?: (mode: ZoomFitMode) => void;
+  showViewportToolbar?: boolean;
   /** CSS class applied to the outer ArtifactPlate wrapper. */
   className?: string;
   /** Slot for additional Konva layers (advanced — use sparingly). */
@@ -96,6 +103,12 @@ export function ArtifactViewer({
   onWordClick,
   rotationDeg,
   onRotationChange,
+  zoom,
+  defaultZoom,
+  onZoomChange,
+  fitMode,
+  onFitModeChange,
+  showViewportToolbar,
   className,
   extraLayersSlot,
 }: ArtifactViewerProps) {
@@ -165,26 +178,60 @@ export function ArtifactViewer({
         : {}),
   };
 
+  const usesViewport =
+    showViewportToolbar ||
+    zoom != null ||
+    defaultZoom != null ||
+    fitMode != null ||
+    onZoomChange != null ||
+    onFitModeChange != null;
+
+  const viewerBody = (
+    <PaperRender>
+      {/* Measurement wrapper — used to pass rendered CSS width to SplitHandle */}
+      <div ref={containerRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+      {/* DOM sidecar for split handle role="separator" */}
+      {overlayMode === 'split' && splitProposal !== undefined && (
+        <SplitHandle splitX={splitProposal.splitX} containerWidth={measuredWidth} />
+      )}
+      <PageImageCanvas
+        src={imageSrc}
+        page={page}
+        words={EMPTY_WORDS}
+        selectionLayerListening={selectionLayerListening}
+      >
+        {canvasSlots}
+      </PageImageCanvas>
+      {/* Extra layers slot */}
+      {extraLayersSlot}
+    </PaperRender>
+  );
+
   return (
     <ArtifactPlate {...(className !== undefined ? { className } : {})}>
-      <PaperRender>
-        {/* Measurement wrapper — used to pass rendered CSS width to SplitHandle */}
-        <div ref={containerRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
-        {/* DOM sidecar for split handle role="separator" */}
-        {overlayMode === 'split' && splitProposal !== undefined && (
-          <SplitHandle splitX={splitProposal.splitX} containerWidth={measuredWidth} />
-        )}
-        <PageImageCanvas
-          src={imageSrc}
-          page={page}
-          words={EMPTY_WORDS}
-          selectionLayerListening={selectionLayerListening}
+      {showViewportToolbar ? (
+        <ViewportToolbar
+          zoom={zoom ?? defaultZoom ?? 1}
+          onZoomChange={onZoomChange ?? (() => undefined)}
+          {...(fitMode !== undefined ? { fitMode } : {})}
+          {...(onFitModeChange !== undefined ? { onFitModeChange } : {})}
+        />
+      ) : null}
+      {usesViewport ? (
+        <ZoomViewport
+          {...(zoom !== undefined ? { zoom } : {})}
+          {...(defaultZoom !== undefined ? { defaultZoom } : {})}
+          {...(onZoomChange !== undefined ? { onZoomChange } : {})}
+          {...(fitMode !== undefined ? { fitMode } : {})}
+          {...(onFitModeChange !== undefined ? { onFitModeChange } : {})}
+          contentSize={{ width: pageWidth, height: pageHeight }}
+          ariaLabel="Artifact viewport"
         >
-          {canvasSlots}
-        </PageImageCanvas>
-        {/* Extra layers slot */}
-        {extraLayersSlot}
-      </PaperRender>
+          {viewerBody}
+        </ZoomViewport>
+      ) : (
+        viewerBody
+      )}
     </ArtifactPlate>
   );
 }
