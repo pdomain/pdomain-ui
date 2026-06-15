@@ -5619,8 +5619,175 @@ button.page-chip:hover {
   border-color: var(--accent);
   color: var(--ink-1);
 }
-.pdui-file-dropzone { border: 1px dashed var(--border-2); border-radius: var(--radius-md); padding: var(--space-4); }
-.pdui-file-dropzone[data-dragging='true'] { border-color: var(--accent); }
-.pdui-source-kind-selector { display: grid; gap: var(--space-2); grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
-.pdui-selected-source-summary { display: grid; gap: var(--space-2); }
-.pdui-directory-picker__entries { display: grid; gap: var(--space-1); max-height: 18rem; overflow: auto; }
+.pdui-file-dropzone {
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-2);
+  border-radius: var(--radius-md);
+  color: var(--ink-2);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.pdui-file-dropzone[data-dragging='true'] {
+  border-color: var(--accent);
+}
+
+.pdui-file-dropzone[data-disabled='true'] {
+  opacity: 0.6;
+}
+
+.pdui-file-dropzone__label,
+.pdui-directory-picker__path-field > label {
+  color: var(--ink-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.pdui-file-dropzone__description,
+.pdui-path-input-with-recents__hint,
+.pdui-directory-picker__current-label,
+.pdui-directory-picker__loading {
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+}
+
+.pdui-file-dropzone__input {
+  color: var(--ink-2);
+  max-width: 100%;
+}
+
+.pdui-file-dropzone__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pdui-file-dropzone__error,
+.pdui-path-input-with-recents__error,
+.pdui-directory-picker__error {
+  color: var(--mismatch);
+  font-size: var(--text-sm);
+}
+
+.pdui-source-kind-selector {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(var(--pdui-source-kind-min-width, calc(var(--space-8) * 4)), 1fr)
+  );
+}
+
+.pdui-source-kind-selector__button {
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.pdui-source-kind-selector__text,
+.pdui-selected-source-summary__body {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  text-align: start;
+}
+
+.pdui-source-kind-selector__label,
+.pdui-selected-source-summary__label {
+  color: var(--ink-1);
+  min-width: 0;
+}
+
+.pdui-source-kind-selector__description,
+.pdui-selected-source-summary__details {
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+}
+
+.pdui-selected-source-summary {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.pdui-selected-source-summary__item {
+  align-items: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+  min-width: 0;
+  padding: var(--space-3);
+}
+
+.pdui-selected-source-summary__details {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pdui-selected-source-summary__remove {
+  flex: 0 0 auto;
+}
+
+.pdui-selected-source-summary__more {
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+}
+
+.pdui-path-input-with-recents,
+.pdui-directory-picker,
+.pdui-directory-picker__body,
+.pdui-directory-picker__path-field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.pdui-path-input-with-recents__recents {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.pdui-path-input-with-recents__recent {
+  min-width: 0;
+}
+
+.pdui-directory-picker__toolbar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.pdui-directory-picker__current {
+  background: var(--bg-sunk);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+}
+
+.pdui-directory-picker__current-path {
+  color: var(--ink-1);
+  font-family: var(--mono-font);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.pdui-directory-picker__entries {
+  display: grid;
+  gap: var(--space-1);
+  max-height: var(--pdui-directory-picker-entries-max-height, calc(var(--space-8) * 7));
+  overflow: auto;
+}
+
+.pdui-directory-picker__entry {
+  justify-content: flex-start;
+  min-width: 0;
+}

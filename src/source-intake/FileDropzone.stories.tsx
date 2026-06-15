@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../primitives/Button.js';
 import { FileDropzone } from './FileDropzone.js';
 
 const meta = {
@@ -20,13 +19,6 @@ export const Default: Story = {
     accept: 'image/*,.pdf,.zip',
     multiple: true,
     onFilesAccepted: () => undefined,
-  },
-};
-
-export const WithActions: Story = {
-  args: {
-    ...Default.args,
-    actions: <Button size="sm">Browse</Button>,
   },
 };
 

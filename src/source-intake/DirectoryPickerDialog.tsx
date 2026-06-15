@@ -43,6 +43,7 @@ export function DirectoryPickerDialog({
   onUp,
 }: DirectoryPickerDialogProps) {
   const inputId = React.useId();
+  const errorId = React.useId();
   const [draftPath, setDraftPath] = React.useState(inputPath);
 
   React.useEffect(() => {
@@ -53,9 +54,21 @@ export function DirectoryPickerDialog({
     void onApply(draftPath);
   }, [draftPath, onApply]);
 
+  const navigateToPath = React.useCallback(
+    (path: string) => {
+      setDraftPath(path);
+      onInputPathChange(path);
+      onCurrentPathChange(path);
+    },
+    [onCurrentPathChange, onInputPathChange],
+  );
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="pdui-directory-picker">
+      <DialogContent
+        className="pdui-directory-picker"
+        aria-describedby={error ? errorId : undefined}
+      >
         <DialogHeader>
           <DialogTitle>Choose directory</DialogTitle>
         </DialogHeader>
@@ -90,6 +103,8 @@ export function DirectoryPickerDialog({
               id={inputId}
               type="text"
               value={draftPath}
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? errorId : undefined}
               onChange={(event) => {
                 setDraftPath(event.currentTarget.value);
                 onInputPathChange(event.currentTarget.value);
@@ -101,13 +116,13 @@ export function DirectoryPickerDialog({
                   applyDraftPath();
                   return;
                 }
-                onCurrentPathChange(draftPath);
+                navigateToPath(draftPath);
               }}
             />
           </div>
 
           {error ? (
-            <div className="pdui-directory-picker__error" role="status">
+            <div id={errorId} className="pdui-directory-picker__error" role="status">
               {error}
             </div>
           ) : null}
@@ -128,7 +143,7 @@ export function DirectoryPickerDialog({
                   type="button"
                   variant="ghost"
                   disabled={disabled}
-                  onClick={() => onCurrentPathChange(entry.path)}
+                  onClick={() => navigateToPath(entry.path)}
                 >
                   {entry.name}
                 </Button>

@@ -23,7 +23,16 @@ export function FileDropzone({
   error,
 }: FileDropzoneProps) {
   const inputId = React.useId();
+  const descriptionId = React.useId();
+  const errorId = React.useId();
   const [isDragging, setIsDragging] = React.useState(false);
+  const describedBy =
+    [
+      description !== undefined ? descriptionId : undefined,
+      error !== undefined ? errorId : undefined,
+    ]
+      .filter(Boolean)
+      .join(' ') || undefined;
 
   const acceptFiles = React.useCallback(
     (files: FileList | null) => {
@@ -58,7 +67,11 @@ export function FileDropzone({
       <label className="pdui-file-dropzone__label" htmlFor={inputId}>
         {label}
       </label>
-      {description ? <span className="pdui-file-dropzone__description">{description}</span> : null}
+      {description ? (
+        <span id={descriptionId} className="pdui-file-dropzone__description">
+          {description}
+        </span>
+      ) : null}
       <input
         id={inputId}
         className="pdui-file-dropzone__input"
@@ -67,6 +80,7 @@ export function FileDropzone({
         multiple={multiple}
         disabled={disabled}
         aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy}
         onChange={(event) => {
           acceptFiles(event.currentTarget.files);
           event.currentTarget.value = '';
@@ -74,7 +88,7 @@ export function FileDropzone({
       />
       {actions ? <span className="pdui-file-dropzone__actions">{actions}</span> : null}
       {error ? (
-        <span className="pdui-file-dropzone__error" role="status">
+        <span id={errorId} className="pdui-file-dropzone__error" role="status">
           {error}
         </span>
       ) : null}

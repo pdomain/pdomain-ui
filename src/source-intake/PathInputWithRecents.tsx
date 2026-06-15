@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { ReactNode } from 'react';
 import { Button } from '../primitives/Button.js';
 import { Input } from '../primitives/Input.js';
@@ -24,6 +25,13 @@ export function PathInputWithRecents({
   placeholder,
   ariaLabel,
 }: PathInputWithRecentsProps) {
+  const hintId = React.useId();
+  const errorId = React.useId();
+  const describedBy =
+    [hint !== undefined ? hintId : undefined, error !== undefined ? errorId : undefined]
+      .filter(Boolean)
+      .join(' ') || undefined;
+
   return (
     <div className={cn('pdui-path-input-with-recents')}>
       <Input
@@ -33,6 +41,7 @@ export function PathInputWithRecents({
         placeholder={placeholder}
         aria-label={ariaLabel}
         aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy}
         onChange={(event) => onValueChange(event.currentTarget.value)}
       />
       {recentPaths !== undefined && recentPaths.length > 0 ? (
@@ -51,9 +60,13 @@ export function PathInputWithRecents({
           ))}
         </div>
       ) : null}
-      {hint ? <div className="pdui-path-input-with-recents__hint">{hint}</div> : null}
+      {hint ? (
+        <div id={hintId} className="pdui-path-input-with-recents__hint">
+          {hint}
+        </div>
+      ) : null}
       {error ? (
-        <div className="pdui-path-input-with-recents__error" role="status">
+        <div id={errorId} className="pdui-path-input-with-recents__error" role="status">
           {error}
         </div>
       ) : null}

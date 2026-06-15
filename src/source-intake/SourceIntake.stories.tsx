@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../primitives/Button.js';
 import { DirectoryPickerDialog } from './DirectoryPickerDialog.js';
 import { FileDropzone } from './FileDropzone.js';
 import { PathInputWithRecents } from './PathInputWithRecents.js';
@@ -109,7 +108,6 @@ export const DropzoneDefault: Story = {
       description="PNG, JPG, PDF, or ZIP files."
       accept="image/*,.pdf,.zip"
       multiple
-      actions={<Button size="sm">Browse</Button>}
       onFilesAccepted={() => undefined}
     />
   ),
