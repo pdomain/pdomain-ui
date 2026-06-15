@@ -26,6 +26,10 @@ export interface SettingsRowProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 type CloneableElementProps = {
   id?: string | undefined;
   disabled?: boolean | undefined;
+  role?: string | undefined;
+  type?: string | undefined;
+  children?: React.ReactNode;
+  'aria-label'?: string | undefined;
   'aria-labelledby'?: string | undefined;
   'aria-describedby'?: string | undefined;
   'aria-invalid'?: React.AriaAttributes['aria-invalid'];
@@ -44,6 +48,52 @@ const supportsDisabledProp = (element: React.ReactElement): boolean => {
 const supportsControlProps = (element: React.ReactElement): boolean =>
   element.type !== React.Fragment;
 
+const formLikeRoles = new Set([
+  'checkbox',
+  'combobox',
+  'listbox',
+  'radio',
+  'searchbox',
+  'slider',
+  'spinbutton',
+  'switch',
+  'textbox',
+]);
+
+const isTextBearingNode = (node: React.ReactNode): boolean =>
+  React.Children.toArray(node).some((child) => {
+    if (typeof child === 'string') return child.trim() !== '';
+    if (typeof child === 'number') return true;
+    if (React.isValidElement<CloneableElementProps>(child)) {
+      return isTextBearingNode(child.props.children);
+    }
+
+    return false;
+  });
+
+const hasExplicitAccessibleName = (element: React.ReactElement<CloneableElementProps>): boolean =>
+  element.props['aria-label'] !== undefined ||
+  (element.props['aria-labelledby'] !== undefined && element.props['aria-labelledby'] !== '');
+
+const hasOwnAccessibleName = (element: React.ReactElement<CloneableElementProps>): boolean =>
+  hasExplicitAccessibleName(element) || isTextBearingNode(element.props.children);
+
+const isFormLikeControl = (element: React.ReactElement<CloneableElementProps>): boolean => {
+  if (element.props.role !== undefined && formLikeRoles.has(element.props.role)) return true;
+  if (typeof element.type !== 'string') return false;
+
+  if (element.type === 'input') {
+    const inputType = element.props.type?.toLowerCase();
+    return !['button', 'hidden', 'image', 'reset', 'submit'].includes(inputType ?? 'text');
+  }
+
+  return ['select', 'textarea'].includes(element.type);
+};
+
+const shouldApplyRowLabel = (element: React.ReactElement<CloneableElementProps>): boolean =>
+  (isFormLikeControl(element) && !hasExplicitAccessibleName(element)) ||
+  !hasOwnAccessibleName(element);
+
 const mergeIds = (...ids: Array<string | undefined>): string | undefined => {
   const merged = ids.filter((id): id is string => id !== undefined && id !== '').join(' ');
   return merged === '' ? undefined : merged;
@@ -58,8 +108,14 @@ const cloneControlElement = (
 ): React.ReactElement => {
   const nextProps: CloneableElementProps = {
     id: control.props.id ?? controlProps.id,
-    'aria-labelledby': mergeIds(control.props['aria-labelledby'], controlProps.labelledBy),
   };
+
+  if (shouldApplyRowLabel(control)) {
+    nextProps['aria-labelledby'] = mergeIds(
+      control.props['aria-labelledby'],
+      controlProps.labelledBy,
+    );
+  }
 
   const describedBy = mergeIds(control.props['aria-describedby'], controlProps.describedBy);
   if (describedBy !== undefined) {
@@ -110,6 +166,24 @@ const renderActions = (
   return actions;
 };
 
+const renderDisabledActionNode = (node: React.ReactNode): React.ReactNode =>
+  React.Children.map(node, (child) => {
+    if (!React.isValidElement<CloneableElementProps>(child)) return child;
+
+    const children =
+      child.props.children !== undefined
+        ? renderDisabledActionNode(child.props.children)
+        : child.props.children;
+
+    if (child.type === React.Fragment) {
+      return React.cloneElement(child, undefined, children);
+    }
+
+    const nextProps: CloneableElementProps = supportsDisabledProp(child) ? { disabled: true } : {};
+
+    return React.cloneElement(child, nextProps, children);
+  });
+
 export const SettingsRow = React.forwardRef<HTMLDivElement, SettingsRowProps>(function SettingsRow(
   { className, label, description, value, control, controlId, actions, disabled, error, ...props },
   ref,
@@ -128,7 +202,8 @@ export const SettingsRow = React.forwardRef<HTMLDivElement, SettingsRowProps>(fu
     invalid: hasError,
     disabled,
   });
-  const renderedActions = renderActions(actions, disabled);
+  const renderedActions =
+    disabled === true ? renderDisabledActionNode(actions) : renderActions(actions, disabled);
 
   return (
     <div

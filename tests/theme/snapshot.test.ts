@@ -75,4 +75,8 @@ describe('theme/primitives.css', () => {
   it('contains .build-package-panel class selector', () => {
     expect(primitivesCss).toMatch(/\.build-package-panel[\s{,]/);
   });
+
+  it('does not use CSS custom properties in media query conditions', () => {
+    expect(primitivesCss).not.toMatch(/@media[^{]*var\(/);
+  });
 });

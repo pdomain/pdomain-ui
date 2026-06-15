@@ -6003,7 +6003,7 @@ button.page-chip:hover {
   gap: var(--space-4);
 }
 
-@media (max-width: calc(var(--space-8) * 20)) {
+@media (max-width: 639px) {
   .pdui-settings-row {
     align-items: start;
     grid-template-areas:

@@ -15,7 +15,7 @@ export interface PreferencePathRowProps extends Omit<
   onReset: () => void;
   disabled?: boolean | undefined;
   error?: React.ReactNode;
-  inputId?: string;
+  inputId?: string | undefined;
 }
 
 export function PreferencePathRow({

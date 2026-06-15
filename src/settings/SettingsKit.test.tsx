@@ -11,6 +11,7 @@ import { SettingsValue } from './SettingsValue.js';
 import { StatusActionRow } from './StatusActionRow.js';
 import type {
   GuidancePanelTone,
+  PreferencePathRowProps,
   SettingsAsyncSectionState,
   SettingsRowControlProps,
   SettingsValueTone,
@@ -19,6 +20,14 @@ import type {
 const exportedTone: SettingsValueTone = 'info';
 const exportedState: SettingsAsyncSectionState = 'saving';
 const exportedGuidanceTone: GuidancePanelTone = 'warning';
+const optionalInputIdProps: PreferencePathRowProps = {
+  label: 'Jobs location',
+  path: '/tmp/jobs',
+  onPathChange: () => undefined,
+  onSave: () => undefined,
+  onReset: () => undefined,
+  inputId: undefined,
+};
 
 function TypeExportProbe(props: SettingsRowControlProps) {
   if (props.invalid) return null;
@@ -33,6 +42,7 @@ describe('settings kit', () => {
       'warning',
     ]);
     expect(TypeExportProbe).toBeTypeOf('function');
+    expect(optionalInputIdProps.inputId).toBeUndefined();
   });
 
   it('renders settings card, row and value', () => {
@@ -173,7 +183,7 @@ describe('settings kit', () => {
     expect(input).toBeDisabled();
   });
 
-  it('disables single cloned row controls and actions', async () => {
+  it('disables single cloned row controls and actions without renaming button controls', async () => {
     const user = userEvent.setup();
     const onControlClick = vi.fn();
     const onActionClick = vi.fn();
@@ -181,6 +191,8 @@ describe('settings kit', () => {
     render(
       <SettingsRow
         label="Cache"
+        description="Shared cache state"
+        error="Offline"
         disabled
         control={
           <button type="button" onClick={onControlClick}>
@@ -195,14 +207,48 @@ describe('settings kit', () => {
       />,
     );
 
-    const control = screen.getByRole('button', { name: 'Cache' });
+    const control = screen.getByRole('button', { name: 'Toggle cache' });
     const action = screen.getByRole('button', { name: 'Refresh' });
+    expect(control).toHaveAccessibleDescription('Shared cache state Offline');
+    expect(control).toHaveAttribute('aria-invalid', 'true');
     expect(control).toBeDisabled();
     expect(action).toBeDisabled();
     await user.click(control);
     await user.click(action);
     expect(onControlClick).not.toHaveBeenCalled();
     expect(onActionClick).not.toHaveBeenCalled();
+  });
+
+  it('disables composite row actions rendered as fragments', async () => {
+    const user = userEvent.setup();
+    const onSave = vi.fn();
+    const onReset = vi.fn();
+
+    render(
+      <SettingsRow
+        label="Cache"
+        disabled
+        actions={
+          <>
+            <button type="button" onClick={onSave}>
+              Save cache
+            </button>
+            <button type="button" onClick={onReset}>
+              Reset cache
+            </button>
+          </>
+        }
+      />,
+    );
+
+    const save = screen.getByRole('button', { name: 'Save cache' });
+    const reset = screen.getByRole('button', { name: 'Reset cache' });
+    expect(save).toBeDisabled();
+    expect(reset).toBeDisabled();
+    await user.click(save);
+    await user.click(reset);
+    expect(onSave).not.toHaveBeenCalled();
+    expect(onReset).not.toHaveBeenCalled();
   });
 
   it('renders async loading, saving and error states', () => {
