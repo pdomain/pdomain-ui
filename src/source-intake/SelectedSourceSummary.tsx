@@ -8,9 +8,12 @@ export interface SelectedSourceSummaryProps {
   maxVisible?: number;
 }
 
-function getRemoveLabel(label: SelectedSource['label']) {
-  if (typeof label === 'string' || typeof label === 'number') return `Remove ${label}`;
-  return 'Remove source';
+function getRemoveLabel(source: SelectedSource) {
+  if (source.labelText !== undefined) return `Remove ${source.labelText}`;
+  if (typeof source.label === 'string' || typeof source.label === 'number') {
+    return `Remove ${source.label}`;
+  }
+  throw new Error('SelectedSource.labelText is required when label is not text.');
 }
 
 export function SelectedSourceSummary({
@@ -41,7 +44,7 @@ export function SelectedSourceSummary({
               type="button"
               variant="ghost"
               size="sm"
-              aria-label={getRemoveLabel(source.label)}
+              aria-label={getRemoveLabel(source)}
               onClick={() => onRemove(source.id)}
             >
               Remove

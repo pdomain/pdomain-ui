@@ -6,6 +6,7 @@ import { FileDropzone } from './FileDropzone.js';
 import { PathInputWithRecents } from './PathInputWithRecents.js';
 import { SelectedSourceSummary } from './SelectedSourceSummary.js';
 import { SourceKindSelector } from './SourceKindSelector.js';
+import type { SelectedSource } from './types.js';
 
 describe('source intake kit', () => {
   it('accepts dropped files and ignores drops while disabled', async () => {
@@ -65,6 +66,25 @@ describe('source intake kit', () => {
     await user.click(screen.getByRole('button', { name: '/tmp/other' }));
     await user.click(screen.getByRole('button', { name: 'Remove scan001.png' }));
     expect(onRecentPathSelect).toHaveBeenCalledWith('/tmp/other');
+    expect(onRemove).toHaveBeenCalledWith('one');
+  });
+
+  it('names remove buttons from source text labels when labels are JSX', async () => {
+    const user = userEvent.setup();
+    const onRemove = vi.fn();
+    const sources = [
+      {
+        id: 'one',
+        kind: 'file',
+        label: <span>scan001.png</span>,
+        labelText: 'scan001.png',
+        meta: '1 MB',
+      },
+    ] satisfies readonly SelectedSource[];
+
+    render(<SelectedSourceSummary sources={sources} onRemove={onRemove} />);
+
+    await user.click(screen.getByRole('button', { name: 'Remove scan001.png' }));
     expect(onRemove).toHaveBeenCalledWith('one');
   });
 

@@ -8,12 +8,21 @@ export interface SourceKindOption {
   disabled?: boolean;
 }
 
-export interface SelectedSource {
+interface SelectedSourceBase {
   id: string;
-  label: ReactNode;
   kind: 'file' | 'folder' | 'archive' | 'path' | 'other';
   meta?: ReactNode;
 }
+
+export type SelectedSource =
+  | (SelectedSourceBase & {
+      label: string | number;
+      labelText?: string;
+    })
+  | (SelectedSourceBase & {
+      label: ReactNode;
+      labelText: string;
+    });
 
 export interface DirectoryEntry {
   name: string;
