@@ -5,6 +5,85 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function hasNamedExport(content: string, symbol: string, typeOnly: boolean): boolean {
+  const exportPattern = typeOnly ? /\bexport\s+type\s*\{([^}]*)\}/g : /\bexport\s*\{([^}]*)\}/g;
+
+  for (const match of content.matchAll(exportPattern)) {
+    const clause = match[1] ?? '';
+    const exports = clause.split(',').map((part) => part.trim());
+
+    for (const exported of exports) {
+      if (!exported) continue;
+      const aliasMatch = /^([A-Za-z_$][\w$]*)(?:\s+as\s+([A-Za-z_$][\w$]*))?$/.exec(exported);
+      const exportedName = aliasMatch?.[2] ?? aliasMatch?.[1];
+      if (exportedName === symbol) return true;
+    }
+  }
+
+  return false;
+}
+
+function hasExportedValueSymbol(content: string, symbol: string): boolean {
+  const escaped = escapeRegExp(symbol);
+  const directDeclaration = new RegExp(
+    String.raw`\b(?:export\s+)?declare\s+(?:const|let|var|function|class)\s+${escaped}\b`,
+  );
+  const directExport = new RegExp(
+    String.raw`\bexport\s+(?:const|let|var|function|class)\s+${escaped}\b`,
+  );
+
+  return (
+    hasNamedExport(content, symbol, false) ||
+    directDeclaration.test(content) ||
+    directExport.test(content)
+  );
+}
+
+function hasExportedTypeSymbol(content: string, symbol: string): boolean {
+  const escaped = escapeRegExp(symbol);
+  const directTypeDeclaration = new RegExp(
+    String.raw`\b(?:export\s+)?(?:declare\s+)?(?:type|interface)\s+${escaped}\b`,
+  );
+
+  return hasNamedExport(content, symbol, true) || directTypeDeclaration.test(content);
+}
+
+describe('declaration export matchers', () => {
+  it('does not treat related type names as value exports', () => {
+    const content = "export type { RecordListProps } from './records/RecordList.js';";
+    expect(hasExportedValueSymbol(content, 'RecordList')).toBe(false);
+  });
+
+  it('matches named value exports by exported identifier', () => {
+    const content = "export { RecordList, SearchField } from './records/RecordList.js';";
+    expect(hasExportedValueSymbol(content, 'RecordList')).toBe(true);
+  });
+
+  it('matches direct value declarations', () => {
+    const content = 'export declare function RecordList(): React.ReactElement;';
+    expect(hasExportedValueSymbol(content, 'RecordList')).toBe(true);
+  });
+
+  it('does not treat related type names as type exports', () => {
+    const content = "export type { ZoomFitModeProps } from './viewport/types.js';";
+    expect(hasExportedTypeSymbol(content, 'ZoomFitMode')).toBe(false);
+  });
+
+  it('matches named type exports by exported identifier', () => {
+    const content = "export type { ViewportSize, ZoomFitMode } from './viewport/types.js';";
+    expect(hasExportedTypeSymbol(content, 'ZoomFitMode')).toBe(true);
+  });
+
+  it('matches direct type declarations', () => {
+    const content = "declare type ZoomFitMode = 'none' | 'fit-page';";
+    expect(hasExportedTypeSymbol(content, 'ZoomFitMode')).toBe(true);
+  });
+});
+
 describe('vite.config.ts contract', () => {
   it('vite.config.ts exists', () => {
     const content = readFileSync(resolve(__dirname, '../vite.config.ts'), 'utf-8');
@@ -220,26 +299,70 @@ describe('dist/stores.d.ts — useDeviceInfo hook export (Milestone D)', () => {
 
 describe('new cross-app common UI subpaths', () => {
   const REQUIRED = {
-    records: ['RecordList', 'DataTable', 'RecordGrid', 'EmptyState', 'ListToolbar', 'SearchField'],
-    'source-intake': [
-      'FileDropzone',
-      'SourceKindSelector',
-      'PathInputWithRecents',
-      'DirectoryPickerDialog',
-    ],
-    viewport: ['ZoomViewport', 'ViewportToolbar', 'ZoomFitMode'],
-    settings: ['SettingsCard', 'SettingsRow', 'SettingSlider', 'SettingsAsyncSection'],
-    status: ['OperationStatusPanel', 'BlockingOperationOverlay', 'RetryActionPanel'],
-    workbench: ['WorkbenchLayout', 'InspectorPanel', 'DetailPanelShell'],
+    records: {
+      values: ['RecordList', 'DataTable', 'RecordGrid', 'EmptyState', 'ListToolbar', 'SearchField'],
+      types: [],
+    },
+    'source-intake': {
+      values: [
+        'FileDropzone',
+        'SourceKindSelector',
+        'PathInputWithRecents',
+        'DirectoryPickerDialog',
+      ],
+      types: [],
+    },
+    viewport: {
+      values: ['ZoomViewport', 'ViewportToolbar'],
+      types: ['ZoomFitMode'],
+    },
+    settings: {
+      values: ['SettingsCard', 'SettingsRow', 'SettingSlider', 'SettingsAsyncSection'],
+      types: [],
+    },
+    status: {
+      values: ['OperationStatusPanel', 'BlockingOperationOverlay', 'RetryActionPanel'],
+      types: [],
+    },
+    workbench: {
+      values: ['WorkbenchLayout', 'InspectorPanel', 'DetailPanelShell'],
+      types: [],
+    },
   } as const;
+  const dtsContentByEntry = new Map<string, string>();
+
+  function readDtsEntry(entry: string): string {
+    const cached = dtsContentByEntry.get(entry);
+    if (cached !== undefined) return cached;
+
+    const dtsPath = resolve(__dirname, `../dist/${entry}.d.ts`);
+    const content = readFileSync(dtsPath, 'utf-8');
+    dtsContentByEntry.set(entry, content);
+    return content;
+  }
 
   for (const [entry, symbols] of Object.entries(REQUIRED)) {
-    for (const symbol of symbols) {
-      it(`dist/${entry}.d.ts exports ${symbol}`, () => {
+    for (const symbol of symbols.values) {
+      it(`dist/${entry}.d.ts exports value ${symbol}`, () => {
         const dtsPath = resolve(__dirname, `../dist/${entry}.d.ts`);
         expect(existsSync(dtsPath), `dist/${entry}.d.ts missing - run pnpm build`).toBe(true);
-        const content = readFileSync(dtsPath, 'utf-8');
-        expect(content, `${symbol} must be exported from dist/${entry}.d.ts`).toContain(symbol);
+        const content = readDtsEntry(entry);
+        expect(
+          hasExportedValueSymbol(content, symbol),
+          `${symbol} must be exported as a value from dist/${entry}.d.ts`,
+        ).toBe(true);
+      });
+    }
+
+    for (const symbol of symbols.types) {
+      it(`dist/${entry}.d.ts exports type ${symbol}`, () => {
+        const dtsPath = resolve(__dirname, `../dist/${entry}.d.ts`);
+        expect(existsSync(dtsPath), `dist/${entry}.d.ts missing - run pnpm build`).toBe(true);
+        const content = readDtsEntry(entry);
+        expect(
+          hasExportedTypeSymbol(content, symbol),
+          `${symbol} must be exported as a type from dist/${entry}.d.ts`,
+        ).toBe(true);
       });
     }
   }
