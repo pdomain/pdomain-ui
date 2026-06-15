@@ -5796,6 +5796,9 @@ button.page-chip:hover {
   overflow: auto;
   position: relative;
 }
+.pdui-zoom-viewport__frame {
+  position: relative;
+}
 .pdui-zoom-viewport__content {
   transform-origin: top left;
 }

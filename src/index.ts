@@ -14,6 +14,7 @@
  *   ./stores      — Zustand store factories + context-bound hooks
  *   ./testids     — data-testid constants catalog
  *   ./templates         — composed molecules and page-level template components
+ *   ./viewport          — ZoomViewport + viewport toolbar controls
  *   ./stages/Source     — Source ingestion stage components (SourceBanner, …)
  *   ./theme/tokens.css      — dark/light CSS custom properties
  *   ./theme/reset.css       — opt-in global reset (skip if using Tailwind preflight)
@@ -299,6 +300,15 @@ export type {
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 export { useShortcuts, formatShortcut } from './hooks/index.js';
 export type { ShortcutBinding, UseShortcutsOptions } from './hooks/index.js';
+
+// ─── Viewport ────────────────────────────────────────────────────────────────
+export { ZoomViewport, ViewportToolbar, clampZoom, resolveFitZoom } from './viewport/index.js';
+export type {
+  ZoomViewportProps,
+  ViewportToolbarProps,
+  ViewportSize,
+  ZoomFitMode,
+} from './viewport/index.js';
 
 // ─── Templates ───────────────────────────────────────────────────────────────
 export { StageStrip, PIPELINE_STAGES } from './templates/index.js';

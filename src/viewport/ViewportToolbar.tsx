@@ -8,6 +8,7 @@ import type { ZoomFitMode } from './types.js';
 const DEFAULT_MIN_ZOOM = 0.25;
 const DEFAULT_MAX_ZOOM = 4;
 const ZOOM_STEP = 0.25;
+const DEFAULT_ARIA_LABEL = 'Viewport toolbar';
 
 export interface ViewportToolbarProps {
   zoom: number;
@@ -17,6 +18,7 @@ export interface ViewportToolbarProps {
   fitMode?: ZoomFitMode;
   onFitModeChange?(this: void, mode: ZoomFitMode): void;
   actions?: React.ReactNode;
+  ariaLabel?: string;
   className?: string;
 }
 
@@ -28,12 +30,14 @@ export function ViewportToolbar({
   fitMode = 'none',
   onFitModeChange,
   actions,
+  ariaLabel = DEFAULT_ARIA_LABEL,
   className,
 }: ViewportToolbarProps) {
   const clampedZoom = clampZoom(zoom, minZoom, maxZoom);
   const resetZoom = clampZoom(1, minZoom, maxZoom);
 
   const setZoom = (value: number) => {
+    onFitModeChange?.('none');
     onZoomChange(clampZoom(value, minZoom, maxZoom));
   };
 
@@ -42,7 +46,7 @@ export function ViewportToolbar({
   };
 
   return (
-    <div className={cn('pdui-viewport-toolbar', className)}>
+    <div role="toolbar" aria-label={ariaLabel} className={cn('pdui-viewport-toolbar', className)}>
       <Button
         type="button"
         variant="ghost"
@@ -68,7 +72,7 @@ export function ViewportToolbar({
         variant="ghost"
         size="sm"
         icon={<RefreshCw size={14} />}
-        disabled={clampedZoom === resetZoom}
+        disabled={fitMode === 'none' && clampedZoom === resetZoom}
         onClick={() => setZoom(resetZoom)}
       >
         Reset zoom
