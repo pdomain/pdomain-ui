@@ -5619,3 +5619,8 @@ button.page-chip:hover {
   border-color: var(--accent);
   color: var(--ink-1);
 }
+.pdui-file-dropzone { border: 1px dashed var(--border-2); border-radius: var(--radius-md); padding: var(--space-4); }
+.pdui-file-dropzone[data-dragging='true'] { border-color: var(--accent); }
+.pdui-source-kind-selector { display: grid; gap: var(--space-2); grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+.pdui-selected-source-summary { display: grid; gap: var(--space-2); }
+.pdui-directory-picker__entries { display: grid; gap: var(--space-1); max-height: 18rem; overflow: auto; }
