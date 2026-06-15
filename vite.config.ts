@@ -2,11 +2,60 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
+
+const flatDeclarationEntries = [
+  'canvas',
+  'worklist',
+  'shell',
+  'primitives',
+  'icons',
+  'types',
+  'stores',
+  'testids',
+  'templates',
+  'hooks',
+  'records',
+  'source-intake',
+  'viewport',
+  'settings',
+  'status',
+  'workbench',
+]
+
+function writeFlatDeclarationEntries() {
+  for (const entry of flatDeclarationEntries) {
+    const sourcePath = resolve(__dirname, 'dist', entry, 'index.d.ts')
+    if (!existsSync(sourcePath)) continue
+
+    const targetPath = resolve(__dirname, 'dist', `${entry}.d.ts`)
+    const source = readFileSync(sourcePath, 'utf-8')
+    const prefix = `./${entry}/`
+    const rewritten = source
+      .replace(/(from\s+['"])\.\/([^'"]+)(['"])/g, `$1${prefix}$2$3`)
+      .replace(/(import\s+['"])\.\/([^'"]+)(['"])/g, `$1${prefix}$2$3`)
+
+    writeFileSync(targetPath, rewritten, 'utf-8')
+  }
+}
 
 export default defineConfig({
   plugins: [
     react(),
-    dts({ tsconfigPath: './tsconfig.build.json', rollupTypes: true }),
+    dts({
+      tsconfigPath: './tsconfig.build.json',
+      entryRoot: 'src',
+      exclude: [
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.stories.ts',
+        '**/*.stories.tsx',
+        'tests/**',
+        'stories/**',
+        '.storybook/**',
+      ],
+      afterBuild: writeFlatDeclarationEntries,
+    }),
   ],
   // Force production JSX transform regardless of NODE_ENV.
   //

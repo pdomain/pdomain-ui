@@ -6137,6 +6137,17 @@ button.page-chip:hover {
   display: grid;
   gap: var(--space-3);
 }
+.pdui-blocking-operation-overlay__title--hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
 .pdui-retry-action-panel {
   border: 1px solid var(--mismatch);
   border-radius: var(--radius-md);

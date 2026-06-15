@@ -153,6 +153,32 @@ describe('dist/types.d.ts — consumer-critical exports (pdomain-ui#15)', () => 
   });
 });
 
+describe('dist/index.d.ts — root barrel status exports', () => {
+  const dtsPath = resolve(__dirname, '../dist/index.d.ts');
+
+  it('dist/index.d.ts exists (build must run first)', () => {
+    expect(existsSync(dtsPath), 'dist/index.d.ts missing — run pnpm build').toBe(true);
+  });
+
+  const REQUIRED_SYMBOLS = [
+    'OperationStatusPanel',
+    'OperationStatusPanelProps',
+    'OperationState',
+    'BlockingOperationOverlay',
+    'BlockingOperationOverlayProps',
+    'RetryActionPanel',
+    'RetryActionPanelProps',
+  ];
+
+  for (const sym of REQUIRED_SYMBOLS) {
+    it(`exports ${sym}`, () => {
+      if (!existsSync(dtsPath)) return;
+      const content = readFileSync(dtsPath, 'utf-8');
+      expect(content, `${sym} must be exported from dist/index.d.ts`).toContain(sym);
+    });
+  }
+});
+
 describe('dist/shell.d.ts — compute+update panel exports (Milestone D)', () => {
   const dtsPath = resolve(__dirname, '../dist/shell.d.ts');
 

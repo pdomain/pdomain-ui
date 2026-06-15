@@ -1,10 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
-vi.mock('react-konva', () => ({}));
-vi.mock('konva', () => ({ default: {} }));
-
-import * as root from '../index.js';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
+import { describe, expect, it } from 'vitest';
 import { BlockingOperationOverlay } from './BlockingOperationOverlay.js';
 import { OperationStatusPanel } from './OperationStatusPanel.js';
 import { RetryActionPanel } from './RetryActionPanel.js';
@@ -74,6 +71,89 @@ describe('operation status kit', () => {
     expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
   });
 
+  it('labels the blocking overlay dialog from the title when ariaLabel is absent', () => {
+    render(<BlockingOperationOverlay open title="Saving project" message="Writing changes" />);
+
+    expect(screen.getByRole('dialog', { name: 'Saving project' })).toHaveAttribute(
+      'aria-modal',
+      'true',
+    );
+  });
+
+  it('provides a default blocking overlay dialog label when title and ariaLabel are absent', () => {
+    render(<BlockingOperationOverlay open message="Saving project" />);
+
+    expect(screen.getByRole('dialog', { name: 'Operation in progress' })).toHaveAttribute(
+      'aria-modal',
+      'true',
+    );
+  });
+
+  it('restores focus after the blocking overlay closes', async () => {
+    const user = userEvent.setup();
+
+    function Harness() {
+      const [open, setOpen] = useState(false);
+
+      return (
+        <>
+          <button type="button" onClick={() => setOpen(true)}>
+            Open overlay
+          </button>
+          <BlockingOperationOverlay
+            open={open}
+            ariaLabel="Saving OCR project"
+            message="Saving project"
+            cancelAction={
+              <button type="button" onClick={() => setOpen(false)}>
+                Cancel
+              </button>
+            }
+          />
+        </>
+      );
+    }
+
+    render(<Harness />);
+    const openButton = screen.getByRole('button', { name: 'Open overlay' });
+
+    await act(async () => {
+      await user.click(openButton);
+    });
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+    });
+
+    await waitFor(() => expect(openButton).toHaveFocus());
+  });
+
+  it('keeps tab focus contained inside the blocking overlay', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button type="button">Background before</button>
+        <BlockingOperationOverlay
+          open
+          ariaLabel="Saving OCR project"
+          message="Saving project"
+          cancelAction={<button type="button">Cancel</button>}
+        />
+        <button type="button">Background after</button>
+      </>,
+    );
+
+    const dialog = screen.getByRole('dialog', { name: 'Saving OCR project' });
+
+    await waitFor(() => expect(dialog).toContainElement(document.activeElement as HTMLElement));
+
+    await user.tab();
+    expect(dialog).toContainElement(document.activeElement as HTMLElement);
+
+    await user.tab();
+    expect(dialog).toContainElement(document.activeElement as HTMLElement);
+    expect(document.activeElement).not.toBe(screen.getByText('Background after'));
+  });
+
   it('does not render a closed overlay', () => {
     render(<BlockingOperationOverlay open={false} message="Saving project" />);
     expect(screen.queryByText('Saving project')).not.toBeInTheDocument();
@@ -94,11 +174,5 @@ describe('operation status kit', () => {
   it('does not render retry panel alert semantics when error is absent', () => {
     render(<RetryActionPanel title="OCR failed" message="Try the operation again." />);
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
-  });
-
-  it('re-exports operation status components from the root barrel', () => {
-    expect(root.OperationStatusPanel).toBe(OperationStatusPanel);
-    expect(root.BlockingOperationOverlay).toBe(BlockingOperationOverlay);
-    expect(root.RetryActionPanel).toBe(RetryActionPanel);
   });
 });
