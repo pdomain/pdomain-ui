@@ -49,13 +49,7 @@ function PathInputExample() {
   );
 }
 
-function DirectoryPickerExample({
-  loading,
-  error,
-}: {
-  loading?: boolean;
-  error?: string;
-}) {
+function DirectoryPickerExample({ loading, error }: { loading?: boolean; error?: string }) {
   const [open, setOpen] = useState(true);
   const [currentPath, setCurrentPath] = useState('/books');
   const [inputPath, setInputPath] = useState('/books');

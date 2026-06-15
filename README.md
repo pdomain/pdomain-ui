@@ -4,6 +4,20 @@ Shared TS/React/Vite frontend library for the pdomain-* suite — canvas, workli
 
 For design details, constraints, and the codegen pipeline, see [`docs/specs/2026-05-16-cross-cut-design.md`](../docs/specs/2026-05-16-cross-cut-design.md) and the completed implementation plan at [`docs/archive/plans/2026-05-16-pdomain-ui-new-repo.md`](../docs/archive/plans/2026-05-16-pdomain-ui-new-repo.md).
 
+## Cross-app modules
+
+`pdomain-ui` exports presentation-only modules for repeated suite patterns:
+
+- `@pdomain/pdomain-ui/records`
+- `@pdomain/pdomain-ui/source-intake`
+- `@pdomain/pdomain-ui/viewport`
+- `@pdomain/pdomain-ui/settings`
+- `@pdomain/pdomain-ui/status`
+- `@pdomain/pdomain-ui/workbench`
+
+These modules render typed UI and call app callbacks. Apps still own data
+loading, routing, jobs, OCR policy, source validation, and stage machines.
+
 ## CSS theme layering
 
 Three separate CSS files control theming. Import them in this order:

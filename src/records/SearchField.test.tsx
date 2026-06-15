@@ -8,7 +8,14 @@ describe('SearchField', () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     const onClear = vi.fn();
-    render(<SearchField value="abc" onValueChange={onValueChange} onClear={onClear} ariaLabel="Search records" />);
+    render(
+      <SearchField
+        value="abc"
+        onValueChange={onValueChange}
+        onClear={onClear}
+        ariaLabel="Search records"
+      />,
+    );
 
     await user.type(screen.getByRole('searchbox', { name: 'Search records' }), 'd');
     await user.keyboard('{Escape}');

@@ -220,20 +220,27 @@ describe('dist/stores.d.ts — useDeviceInfo hook export (Milestone D)', () => {
 
 describe('new cross-app common UI subpaths', () => {
   const REQUIRED = {
-    records: 'PdomainUiRecordsModule',
-    'source-intake': 'PdomainUiSourceIntakeModule',
-    viewport: 'PdomainUiViewportModule',
-    settings: 'PdomainUiSettingsModule',
-    status: 'PdomainUiStatusModule',
-    workbench: 'PdomainUiWorkbenchModule',
+    records: ['RecordList', 'DataTable', 'RecordGrid', 'EmptyState', 'ListToolbar', 'SearchField'],
+    'source-intake': [
+      'FileDropzone',
+      'SourceKindSelector',
+      'PathInputWithRecents',
+      'DirectoryPickerDialog',
+    ],
+    viewport: ['ZoomViewport', 'ViewportToolbar', 'ZoomFitMode'],
+    settings: ['SettingsCard', 'SettingsRow', 'SettingSlider', 'SettingsAsyncSection'],
+    status: ['OperationStatusPanel', 'BlockingOperationOverlay', 'RetryActionPanel'],
+    workbench: ['WorkbenchLayout', 'InspectorPanel', 'DetailPanelShell'],
   } as const;
 
-  for (const [entry, symbol] of Object.entries(REQUIRED)) {
-    it(`dist/${entry}.d.ts exports ${symbol}`, () => {
-      const dtsPath = resolve(__dirname, `../dist/${entry}.d.ts`);
-      expect(existsSync(dtsPath), `dist/${entry}.d.ts missing - run pnpm build`).toBe(true);
-      const content = readFileSync(dtsPath, 'utf-8');
-      expect(content, `${symbol} must be exported from dist/${entry}.d.ts`).toContain(symbol);
-    });
+  for (const [entry, symbols] of Object.entries(REQUIRED)) {
+    for (const symbol of symbols) {
+      it(`dist/${entry}.d.ts exports ${symbol}`, () => {
+        const dtsPath = resolve(__dirname, `../dist/${entry}.d.ts`);
+        expect(existsSync(dtsPath), `dist/${entry}.d.ts missing - run pnpm build`).toBe(true);
+        const content = readFileSync(dtsPath, 'utf-8');
+        expect(content, `${symbol} must be exported from dist/${entry}.d.ts`).toContain(symbol);
+      });
+    }
   }
 });

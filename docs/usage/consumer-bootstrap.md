@@ -121,6 +121,20 @@ artifact from the shadcn-ui migration; new SPAs do not need it — primitives
 from pdomain-ui are imported by component code via the `@pdomain/pdomain-ui/primitives`
 subpath export.
 
+### Cross-app modules
+
+`pdomain-ui` exports presentation-only modules for repeated suite patterns:
+
+- `@pdomain/pdomain-ui/records`
+- `@pdomain/pdomain-ui/source-intake`
+- `@pdomain/pdomain-ui/viewport`
+- `@pdomain/pdomain-ui/settings`
+- `@pdomain/pdomain-ui/status`
+- `@pdomain/pdomain-ui/workbench`
+
+These modules render typed UI and call app callbacks. Apps still own data
+loading, routing, jobs, OCR policy, source validation, and stage machines.
+
 ---
 
 ### `src/styles/tokens.css`
