@@ -5599,6 +5599,10 @@ button.page-chip:hover {
   flex: 1 1 auto;
 }
 
+.pdui-list-toolbar[data-density='compact'] {
+  gap: var(--space-1);
+}
+
 .pdui-search-field {
   align-items: center;
   display: inline-flex;

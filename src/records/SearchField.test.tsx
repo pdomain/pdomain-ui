@@ -33,4 +33,19 @@ describe('SearchField', () => {
     await user.click(screen.getByRole('button', { name: 'Focus search Mod K' }));
     expect(onShortcutClick).toHaveBeenCalledOnce();
   });
+
+  it('focuses the input when the shortcut button is clicked without a callback', async () => {
+    const user = userEvent.setup();
+    render(
+      <ShortcutSearchField
+        value=""
+        onValueChange={() => undefined}
+        ariaLabel="Quick search"
+        shortcutLabel="Mod K"
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Focus search Mod K' }));
+    expect(screen.getByRole('searchbox', { name: 'Quick search' })).toHaveFocus();
+  });
 });
