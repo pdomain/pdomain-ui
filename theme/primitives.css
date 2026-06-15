@@ -6173,6 +6173,11 @@ button.page-chip:hover {
   background: var(--bg-surface);
   block-size: 100%;
   color: var(--ink-1);
+  grid-template-areas:
+    'header'
+    'toolbar'
+    'body'
+    'footer';
   min-block-size: 0;
   overflow: hidden;
 }
@@ -6180,6 +6185,15 @@ button.page-chip:hover {
 .pdui-workbench-layout__toolbar,
 .pdui-workbench-layout__footer {
   min-width: 0;
+}
+.pdui-workbench-layout__header {
+  grid-area: header;
+}
+.pdui-workbench-layout__toolbar {
+  grid-area: toolbar;
+}
+.pdui-workbench-layout__footer {
+  grid-area: footer;
 }
 .pdui-workbench-layout__header,
 .pdui-workbench-layout__toolbar {
@@ -6192,6 +6206,7 @@ button.page-chip:hover {
 }
 .pdui-workbench-layout__body {
   block-size: 100%;
+  grid-area: body;
   min-block-size: 0;
   overflow: hidden;
   padding: var(--space-3);

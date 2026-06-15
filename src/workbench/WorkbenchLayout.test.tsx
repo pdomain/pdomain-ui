@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { DetailPanelShell } from './DetailPanelShell.js';
@@ -6,6 +7,12 @@ import { WorkbenchLayout } from './WorkbenchLayout.js';
 
 vi.mock('react-konva', () => ({}));
 vi.mock('konva', () => ({ default: {} }));
+
+const primitivesCss = readFileSync('theme/primitives.css', 'utf-8');
+const workbenchLayoutRules = Array.from(
+  primitivesCss.matchAll(/\.pdui-workbench-layout\s*\{([^}]*)\}/g),
+  (match) => match[1] ?? '',
+).join('\n');
 
 describe('workbench layout kit', () => {
   it('renders two-pane and three-pane workbench regions', () => {
@@ -75,6 +82,54 @@ describe('workbench layout kit', () => {
 
       unmount();
     }
+  });
+
+  it('keeps the body assigned to the flexible body area when toolbar is absent', () => {
+    const { container } = render(
+      <WorkbenchLayout header={<h1>Workbench</h1>} viewer={<div>Viewer</div>} />,
+    );
+
+    expect(container.querySelector('.pdui-workbench-layout__header')).toHaveAttribute(
+      'data-grid-area',
+      'header',
+    );
+    expect(container.querySelector('.pdui-workbench-layout__toolbar')).not.toBeInTheDocument();
+    expect(container.querySelector('.pdui-workbench-layout__body')).toHaveAttribute(
+      'data-grid-area',
+      'body',
+    );
+  });
+
+  it('keeps footer in the footer area without moving the body when toolbar is absent', () => {
+    const { container } = render(
+      <WorkbenchLayout
+        header={<h1>Workbench</h1>}
+        viewer={<div>Viewer</div>}
+        footer={<button type="button">Apply</button>}
+      />,
+    );
+
+    expect(container.querySelector('.pdui-workbench-layout__toolbar')).not.toBeInTheDocument();
+    expect(container.querySelector('.pdui-workbench-layout__body')).toHaveAttribute(
+      'data-grid-area',
+      'body',
+    );
+    expect(container.querySelector('.pdui-workbench-layout__footer')).toHaveAttribute(
+      'data-grid-area',
+      'footer',
+    );
+  });
+
+  it('defines explicit vertical grid areas for optional chrome', () => {
+    expect(workbenchLayoutRules).toContain('grid-template-areas:');
+    expect(workbenchLayoutRules).toContain("'header'");
+    expect(workbenchLayoutRules).toContain("'toolbar'");
+    expect(workbenchLayoutRules).toContain("'body'");
+    expect(workbenchLayoutRules).toContain("'footer'");
+    expect(primitivesCss).toContain('grid-area: header;');
+    expect(primitivesCss).toContain('grid-area: toolbar;');
+    expect(primitivesCss).toContain('grid-area: body;');
+    expect(primitivesCss).toContain('grid-area: footer;');
   });
 
   it('ignores side width props unless the matching side slot exists', () => {

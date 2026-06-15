@@ -76,13 +76,22 @@ export function WorkbenchLayout({
       className={cn('pdui-workbench-layout', className)}
       {...(hasStyle ? { style } : {})}
     >
-      {header != null ? <div className="pdui-workbench-layout__header">{header}</div> : null}
-      {toolbar != null ? <div className="pdui-workbench-layout__toolbar">{toolbar}</div> : null}
+      {header != null ? (
+        <div className="pdui-workbench-layout__header" data-grid-area="header">
+          {header}
+        </div>
+      ) : null}
+      {toolbar != null ? (
+        <div className="pdui-workbench-layout__toolbar" data-grid-area="toolbar">
+          {toolbar}
+        </div>
+      ) : null}
       <div
         className={cn(
           'pdui-workbench-layout__body',
           `pdui-workbench-layout__body--${layoutVariant}`,
         )}
+        data-grid-area="body"
         data-layout={layoutVariant}
       >
         {hasNavigation ? (
@@ -91,7 +100,11 @@ export function WorkbenchLayout({
         <div className="pdui-workbench-layout__viewer">{viewer}</div>
         {hasInspector ? <div className="pdui-workbench-layout__inspector">{inspector}</div> : null}
       </div>
-      {footer != null ? <div className="pdui-workbench-layout__footer">{footer}</div> : null}
+      {footer != null ? (
+        <div className="pdui-workbench-layout__footer" data-grid-area="footer">
+          {footer}
+        </div>
+      ) : null}
     </div>
   );
 }
