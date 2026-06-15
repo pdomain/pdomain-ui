@@ -27,12 +27,52 @@ describe('package.json contract', () => {
       './stores',
       './testids',
       './templates',
+      './records',
+      './source-intake',
+      './viewport',
+      './settings',
+      './status',
+      './workbench',
       './theme/tokens.css',
       './theme/reset.css',
       './theme/primitives.css',
     ];
     for (const subpath of required) {
       expect(exports, `exports["${subpath}"] must exist`).toHaveProperty(subpath);
+    }
+  });
+
+  it('exports new common UI subpaths with matching import and types targets', () => {
+    const exports = pkg['exports'] as Record<string, unknown>;
+    const required = {
+      './records': {
+        import: './dist/records.js',
+        types: './dist/records.d.ts',
+      },
+      './source-intake': {
+        import: './dist/source-intake.js',
+        types: './dist/source-intake.d.ts',
+      },
+      './viewport': {
+        import: './dist/viewport.js',
+        types: './dist/viewport.d.ts',
+      },
+      './settings': {
+        import: './dist/settings.js',
+        types: './dist/settings.d.ts',
+      },
+      './status': {
+        import: './dist/status.js',
+        types: './dist/status.d.ts',
+      },
+      './workbench': {
+        import: './dist/workbench.js',
+        types: './dist/workbench.d.ts',
+      },
+    } as const;
+
+    for (const [subpath, targets] of Object.entries(required)) {
+      expect(exports[subpath], `exports["${subpath}"] targets must match`).toEqual(targets);
     }
   });
 
