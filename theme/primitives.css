@@ -5587,3 +5587,31 @@ button.page-chip:hover {
 .pdui-record-grid__item[aria-disabled='true'] {
   opacity: 0.6;
 }
+
+.pdui-list-toolbar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pdui-list-toolbar__spacer {
+  flex: 1 1 auto;
+}
+
+.pdui-search-field {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.pdui-count-filter-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.pdui-count-filter-group__button[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--ink-1);
+}
