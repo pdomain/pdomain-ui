@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
-import { resolve } from 'path'
+import { posix, resolve } from 'path'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 
 const flatDeclarationEntries = [
@@ -23,6 +23,30 @@ const flatDeclarationEntries = [
   'workbench',
 ]
 
+function rewriteFlatDeclarationSpecifier(entry: string, specifier: string): string {
+  const resolvedFromEntryIndex = posix.normalize(posix.join(entry, specifier))
+
+  return resolvedFromEntryIndex.startsWith('.')
+    ? resolvedFromEntryIndex
+    : `./${resolvedFromEntryIndex}`
+}
+
+function rewriteFlatDeclarationSpecifiers(entry: string, source: string): string {
+  return source
+    .replace(/(from\s+['"])(\.{1,2}\/[^'"]+)(['"])/g, (_, prefix, specifier, suffix) => {
+      return `${prefix}${rewriteFlatDeclarationSpecifier(entry, specifier)}${suffix}`
+    })
+    .replace(/(import\s+['"])(\.{1,2}\/[^'"]+)(['"])/g, (_, prefix, specifier, suffix) => {
+      return `${prefix}${rewriteFlatDeclarationSpecifier(entry, specifier)}${suffix}`
+    })
+    .replace(
+      /(import\s*\(\s*['"])(\.{1,2}\/[^'"]+)(['"]\s*\))/g,
+      (_, prefix, specifier, suffix) => {
+        return `${prefix}${rewriteFlatDeclarationSpecifier(entry, specifier)}${suffix}`
+      },
+    )
+}
+
 function writeFlatDeclarationEntries() {
   for (const entry of flatDeclarationEntries) {
     const sourcePath = resolve(__dirname, 'dist', entry, 'index.d.ts')
@@ -30,10 +54,7 @@ function writeFlatDeclarationEntries() {
 
     const targetPath = resolve(__dirname, 'dist', `${entry}.d.ts`)
     const source = readFileSync(sourcePath, 'utf-8')
-    const prefix = `./${entry}/`
-    const rewritten = source
-      .replace(/(from\s+['"])\.\/([^'"]+)(['"])/g, `$1${prefix}$2$3`)
-      .replace(/(import\s+['"])\.\/([^'"]+)(['"])/g, `$1${prefix}$2$3`)
+    const rewritten = rewriteFlatDeclarationSpecifiers(entry, source)
 
     writeFileSync(targetPath, rewritten, 'utf-8')
   }

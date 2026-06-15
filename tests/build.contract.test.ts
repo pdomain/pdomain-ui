@@ -173,6 +173,24 @@ describe('dist/ output completeness', () => {
     }
   });
 
+  it('top-level declaration files do not reference parent directories', () => {
+    if (!existsSync(DIST)) return; // skip if not built yet; covered by prior test
+
+    const topLevelDeclarations = readdirSync(DIST).filter((file) => file.endsWith('.d.ts'));
+    const parentDirectorySpecifiers: string[] = [];
+    const relativeParentSpecifierPattern =
+      /\b(?:from\s+|import\s*)['"](\.\.\/[^'"]+)['"]|import\s*\(\s*['"](\.\.\/[^'"]+)['"]\s*\)/g;
+
+    for (const file of topLevelDeclarations) {
+      const content = readFileSync(resolve(DIST, file), 'utf-8');
+      for (const match of content.matchAll(relativeParentSpecifierPattern)) {
+        parentDirectorySpecifiers.push(`${file}: ${match[1] ?? match[2]}`);
+      }
+    }
+
+    expect(parentDirectorySpecifiers).toEqual([]);
+  });
+
   it('theme/ directory contains tokens.css, reset.css and primitives.css', () => {
     const THEME = resolve(__dirname, '../theme');
     expect(existsSync(resolve(THEME, 'tokens.css')), 'theme/tokens.css missing').toBe(true);
@@ -232,29 +250,148 @@ describe('dist/types.d.ts — consumer-critical exports (pdomain-ui#15)', () => 
   });
 });
 
-describe('dist/index.d.ts — root barrel status exports', () => {
+describe('dist/index.d.ts — root barrel cross-app common UI exports', () => {
   const dtsPath = resolve(__dirname, '../dist/index.d.ts');
 
   it('dist/index.d.ts exists (build must run first)', () => {
     expect(existsSync(dtsPath), 'dist/index.d.ts missing — run pnpm build').toBe(true);
   });
 
-  const REQUIRED_SYMBOLS = [
-    'OperationStatusPanel',
-    'OperationStatusPanelProps',
-    'OperationState',
-    'BlockingOperationOverlay',
-    'BlockingOperationOverlayProps',
-    'RetryActionPanel',
-    'RetryActionPanelProps',
-  ];
+  const REQUIRED_MODULE_SYMBOLS = {
+    records: {
+      values: [
+        'EmptyState',
+        'RecordList',
+        'DataTable',
+        'RecordGrid',
+        'ListToolbar',
+        'SearchField',
+        'ShortcutSearchField',
+        'CountFilterGroup',
+        'SortSelect',
+      ],
+      types: [
+        'DataTableColumn',
+        'DataTableProps',
+        'DataTableSortState',
+        'EmptyStateProps',
+        'RecordDensity',
+        'RecordGridProps',
+        'RecordListProps',
+        'RecordSelectionState',
+        'RecordTone',
+        'ListToolbarProps',
+        'SearchFieldProps',
+        'ShortcutSearchFieldProps',
+        'CountFilter',
+        'CountFilterGroupProps',
+        'SortOption',
+        'SortSelectProps',
+        'PdomainUiRecordsModule',
+      ],
+    },
+    'source-intake': {
+      values: [
+        'FileDropzone',
+        'SourceKindSelector',
+        'PathInputWithRecents',
+        'SelectedSourceSummary',
+        'DirectoryPickerDialog',
+      ],
+      types: [
+        'FileDropzoneProps',
+        'SourceKindSelectorProps',
+        'PathInputWithRecentsProps',
+        'SelectedSourceSummaryProps',
+        'DirectoryPickerDialogProps',
+        'DirectoryEntry',
+        'SelectedSource',
+        'SourceKindOption',
+        'PdomainUiSourceIntakeModule',
+      ],
+    },
+    viewport: {
+      values: ['ZoomViewport', 'ViewportToolbar', 'clampZoom', 'resolveFitZoom'],
+      types: [
+        'ZoomViewportProps',
+        'ViewportToolbarProps',
+        'ViewportSize',
+        'ZoomFitMode',
+        'PdomainUiViewportModule',
+      ],
+    },
+    settings: {
+      values: [
+        'SettingsCard',
+        'SettingsRow',
+        'SettingsValue',
+        'SettingSlider',
+        'SettingsAsyncSection',
+        'PreferencePathRow',
+        'StatusActionRow',
+        'GuidancePanel',
+      ],
+      types: [
+        'SettingsCardProps',
+        'SettingsRowControl',
+        'SettingsRowControlProps',
+        'SettingsRowControlRender',
+        'SettingsRowProps',
+        'SettingsValueProps',
+        'SettingsValueTone',
+        'SettingSliderProps',
+        'SettingsAsyncSectionProps',
+        'SettingsAsyncSectionState',
+        'PreferencePathRowProps',
+        'StatusActionRowProps',
+        'GuidancePanelProps',
+        'GuidancePanelTone',
+        'PdomainUiSettingsModule',
+      ],
+    },
+    status: {
+      values: ['OperationStatusPanel', 'BlockingOperationOverlay', 'RetryActionPanel'],
+      types: [
+        'OperationState',
+        'OperationStatusPanelProps',
+        'BlockingOperationOverlayProps',
+        'RetryActionPanelProps',
+        'PdomainUiStatusModule',
+      ],
+    },
+    workbench: {
+      values: ['WorkbenchLayout', 'InspectorPanel', 'DetailPanelShell'],
+      types: [
+        'WorkbenchLayoutProps',
+        'InspectorPanelProps',
+        'DetailPanelShellProps',
+        'PdomainUiWorkbenchModule',
+      ],
+    },
+  } as const;
 
-  for (const sym of REQUIRED_SYMBOLS) {
-    it(`exports ${sym}`, () => {
-      if (!existsSync(dtsPath)) return;
-      const content = readFileSync(dtsPath, 'utf-8');
-      expect(content, `${sym} must be exported from dist/index.d.ts`).toContain(sym);
-    });
+  for (const [moduleName, symbols] of Object.entries(REQUIRED_MODULE_SYMBOLS)) {
+    for (const sym of symbols.values) {
+      it(`exports ${moduleName} value ${sym}`, () => {
+        if (!existsSync(dtsPath)) return;
+        const content = readFileSync(dtsPath, 'utf-8');
+        expect(
+          hasExportedValueSymbol(content, sym),
+          `${sym} must be exported as a value from dist/index.d.ts`,
+        ).toBe(true);
+      });
+    }
+
+    for (const sym of symbols.types) {
+      it(`exports ${moduleName} type ${sym}`, () => {
+        if (!existsSync(dtsPath)) return;
+        const content = readFileSync(dtsPath, 'utf-8');
+        expect(
+          hasExportedTypeSymbol(content, sym),
+          `${sym} must be exported as a type from dist/index.d.ts`,
+        ).toBe(true);
+      });
+    }
   }
 });
 

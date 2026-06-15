@@ -163,6 +163,87 @@ export type {
   UpdateCheckState,
 } from './stores/index.js';
 
+// ─── Records ────────────────────────────────────────────────────────────────
+export {
+  EmptyState,
+  RecordList,
+  DataTable,
+  RecordGrid,
+  ListToolbar,
+  SearchField,
+  ShortcutSearchField,
+  CountFilterGroup,
+  SortSelect,
+} from './records/index.js';
+export type {
+  DataTableColumn,
+  DataTableProps,
+  DataTableSortState,
+  EmptyStateProps,
+  RecordDensity,
+  RecordGridProps,
+  RecordListProps,
+  RecordSelectionState,
+  RecordTone,
+  ListToolbarProps,
+  SearchFieldProps,
+  ShortcutSearchFieldProps,
+  CountFilter,
+  CountFilterGroupProps,
+  SortOption,
+  SortSelectProps,
+  PdomainUiRecordsModule,
+} from './records/index.js';
+
+// ─── Source Intake ──────────────────────────────────────────────────────────
+export {
+  FileDropzone,
+  SourceKindSelector,
+  PathInputWithRecents,
+  SelectedSourceSummary,
+  DirectoryPickerDialog,
+} from './source-intake/index.js';
+export type {
+  FileDropzoneProps,
+  SourceKindSelectorProps,
+  PathInputWithRecentsProps,
+  SelectedSourceSummaryProps,
+  DirectoryPickerDialogProps,
+  DirectoryEntry,
+  SelectedSource,
+  SourceKindOption,
+  PdomainUiSourceIntakeModule,
+} from './source-intake/index.js';
+
+// ─── Settings ───────────────────────────────────────────────────────────────
+export {
+  SettingsCard,
+  SettingsRow,
+  SettingsValue,
+  SettingSlider,
+  SettingsAsyncSection,
+  PreferencePathRow,
+  StatusActionRow,
+  GuidancePanel,
+} from './settings/index.js';
+export type {
+  SettingsCardProps,
+  SettingsRowControl,
+  SettingsRowControlProps,
+  SettingsRowControlRender,
+  SettingsRowProps,
+  SettingsValueProps,
+  SettingsValueTone,
+  SettingSliderProps,
+  SettingsAsyncSectionProps,
+  SettingsAsyncSectionState,
+  PreferencePathRowProps,
+  StatusActionRowProps,
+  GuidancePanelProps,
+  GuidancePanelTone,
+  PdomainUiSettingsModule,
+} from './settings/index.js';
+
 // ─── Status ──────────────────────────────────────────────────────────────────
 export {
   OperationStatusPanel,
@@ -174,6 +255,7 @@ export type {
   OperationStatusPanelProps,
   BlockingOperationOverlayProps,
   RetryActionPanelProps,
+  PdomainUiStatusModule,
 } from './status/index.js';
 
 // ─── Workbench ───────────────────────────────────────────────────────────────
@@ -330,6 +412,7 @@ export type {
   ViewportToolbarProps,
   ViewportSize,
   ZoomFitMode,
+  PdomainUiViewportModule,
 } from './viewport/index.js';
 
 // ─── Templates ───────────────────────────────────────────────────────────────
