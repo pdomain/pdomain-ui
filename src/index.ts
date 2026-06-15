@@ -13,8 +13,13 @@
  *   ./types       — generated TS types + *Like reductions
  *   ./stores      — Zustand store factories + context-bound hooks
  *   ./testids     — data-testid constants catalog
- *   ./templates         — composed molecules and page-level template components
- *   ./viewport          — ZoomViewport + viewport toolbar controls
+ *   ./templates   — composed molecules and page-level template components
+ *   ./records     — record lists, grids, tables, and list toolbar controls
+ *   ./source-intake — source selection and directory picker controls
+ *   ./viewport    — ZoomViewport + viewport toolbar controls
+ *   ./settings    — settings cards, rows, sliders, and async sections
+ *   ./status      — operation status panels, overlays, and retry surfaces
+ *   ./workbench   — shared workbench layout shells
  *   ./stages/Source     — Source ingestion stage components (SourceBanner, …)
  *   ./theme/tokens.css      — dark/light CSS custom properties
  *   ./theme/reset.css       — opt-in global reset (skip if using Tailwind preflight)
