@@ -6022,3 +6022,121 @@ button.page-chip:hover {
     justify-content: start;
   }
 }
+
+.pdui-operation-status-panel {
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+.pdui-operation-status-panel__summary {
+  align-items: start;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.pdui-operation-status-panel__marker {
+  background: var(--ink-3);
+  border-radius: var(--radius-pill);
+  height: var(--space-3);
+  margin-top: var(--space-2);
+  width: var(--space-3);
+}
+.pdui-operation-status-panel[data-state='queued'] .pdui-operation-status-panel__marker,
+.pdui-operation-status-panel[data-state='running'] .pdui-operation-status-panel__marker {
+  background: var(--ocr);
+}
+.pdui-operation-status-panel[data-state='success'] .pdui-operation-status-panel__marker {
+  background: var(--exact);
+}
+.pdui-operation-status-panel[data-state='warning'] .pdui-operation-status-panel__marker {
+  background: var(--fuzzy);
+}
+.pdui-operation-status-panel[data-state='error'] .pdui-operation-status-panel__marker {
+  background: var(--mismatch);
+}
+.pdui-operation-status-panel__body {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.pdui-operation-status-panel__title,
+.pdui-blocking-operation-overlay__title,
+.pdui-retry-action-panel__title {
+  color: var(--ink-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.pdui-operation-status-panel__message,
+.pdui-operation-status-panel__details,
+.pdui-blocking-operation-overlay__message,
+.pdui-blocking-operation-overlay__hint,
+.pdui-retry-action-panel__message {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+.pdui-operation-status-panel__details,
+.pdui-blocking-operation-overlay__hint {
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+.pdui-operation-status-panel__progress-track,
+.pdui-blocking-operation-overlay__progress-track {
+  background: var(--bg-sunk);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.pdui-operation-status-panel__progress-fill,
+.pdui-blocking-operation-overlay__progress-fill {
+  background: var(--ocr);
+  height: var(--space-1);
+}
+.pdui-operation-status-panel[data-state='success'] .pdui-operation-status-panel__progress-fill {
+  background: var(--exact);
+}
+.pdui-operation-status-panel[data-state='warning'] .pdui-operation-status-panel__progress-fill {
+  background: var(--fuzzy);
+}
+.pdui-operation-status-panel[data-state='error'] .pdui-operation-status-panel__progress-fill {
+  background: var(--mismatch);
+}
+.pdui-operation-status-panel__actions,
+.pdui-blocking-operation-overlay__actions,
+.pdui-retry-action-panel__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.pdui-operation-status-panel__actions {
+  justify-content: end;
+}
+.pdui-blocking-operation-overlay {
+  align-items: center;
+  background: var(--overlay-scrim);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 50;
+}
+.pdui-blocking-operation-overlay__panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+.pdui-retry-action-panel {
+  border: 1px solid var(--mismatch);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+.pdui-retry-action-panel__error {
+  color: var(--mismatch);
+  font-size: var(--text-sm);
+}
