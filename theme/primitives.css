@@ -5791,3 +5791,16 @@ button.page-chip:hover {
   justify-content: flex-start;
   min-width: 0;
 }
+
+.pdui-zoom-viewport {
+  overflow: auto;
+  position: relative;
+}
+.pdui-zoom-viewport__content {
+  transform-origin: top left;
+}
+.pdui-viewport-toolbar {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-1);
+}
