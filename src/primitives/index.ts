@@ -263,3 +263,11 @@ export type { SlideOverPanelProps } from './SlideOverPanel.js';
 
 export { ShortcutsCheatsheetBody } from './ShortcutsCheatsheetBody.js';
 export type { ShortcutsCheatsheetBodyProps } from './ShortcutsCheatsheetBody.js';
+
+export { SettingsCard, SettingsRow, SettingsValue, SettingSlider } from '../settings/index.js';
+export type {
+  SettingsCardProps,
+  SettingsRowProps,
+  SettingsValueProps,
+  SettingSliderProps,
+} from '../settings/index.js';

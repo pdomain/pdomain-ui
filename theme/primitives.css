@@ -5820,3 +5820,170 @@ button.page-chip:hover {
   display: inline-flex;
   gap: var(--space-1);
 }
+
+.pdui-settings-card {
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  padding: var(--space-4);
+}
+.pdui-settings-row {
+  align-items: center;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding: var(--space-3) 0;
+}
+.pdui-settings-row + .pdui-settings-row {
+  border-top: 1px solid var(--border-1);
+}
+.pdui-settings-value[data-mono='true'] {
+  font-family: var(--mono-font);
+}
+.pdui-settings-async-section {
+  display: grid;
+  gap: var(--space-3);
+}
+.pdui-guidance-panel {
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.pdui-settings-card__header,
+.pdui-settings-async-section__header,
+.pdui-guidance-panel__header {
+  align-items: start;
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+}
+.pdui-settings-card__heading,
+.pdui-settings-async-section__heading {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.pdui-settings-card__title-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.pdui-settings-card__title,
+.pdui-settings-async-section__title,
+.pdui-guidance-panel__title {
+  color: var(--ink-1);
+  font-size: var(--text-lg);
+  margin: 0;
+}
+.pdui-settings-card__description,
+.pdui-settings-async-section__description {
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+.pdui-settings-card__actions,
+.pdui-settings-async-section__actions,
+.pdui-guidance-panel__actions,
+.pdui-settings-row__actions,
+.pdui-preference-path-row__actions {
+  align-items: center;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: end;
+}
+.pdui-settings-card__body {
+  display: grid;
+  margin-top: var(--space-3);
+}
+.pdui-settings-row__content {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.pdui-settings-row__label {
+  color: var(--ink-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.pdui-settings-row__description,
+.pdui-status-action-row__details {
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+.pdui-settings-row__error,
+.pdui-settings-async-section__error {
+  color: var(--mismatch);
+  font-size: var(--text-xs);
+}
+.pdui-settings-row__value,
+.pdui-settings-row__control {
+  min-width: 0;
+}
+.pdui-settings-value {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+.pdui-settings-value[data-tone='info'] {
+  color: var(--ocr);
+}
+.pdui-settings-value[data-tone='success'] {
+  color: var(--exact);
+}
+.pdui-settings-value[data-tone='warning'] {
+  color: var(--fuzzy);
+}
+.pdui-settings-value[data-tone='danger'],
+.pdui-settings-value[data-tone='error'] {
+  color: var(--mismatch);
+}
+.pdui-setting-slider {
+  align-items: center;
+  display: inline-grid;
+  gap: var(--space-2);
+  grid-template-columns: minmax(var(--space-8), 1fr) auto;
+}
+.pdui-setting-slider__input {
+  min-width: var(--space-8);
+}
+.pdui-setting-slider__value {
+  color: var(--ink-2);
+  font-family: var(--mono-font);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+.pdui-settings-async-section__status {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+.pdui-settings-async-section__body,
+.pdui-guidance-panel__body {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+}
+.pdui-guidance-panel {
+  display: grid;
+  gap: var(--space-2);
+}
+.pdui-guidance-panel[data-tone='info'] {
+  border-color: color-mix(in srgb, var(--ocr) 40%, var(--border-1));
+}
+.pdui-guidance-panel[data-tone='success'] {
+  border-color: color-mix(in srgb, var(--exact) 40%, var(--border-1));
+}
+.pdui-guidance-panel[data-tone='warning'] {
+  border-color: color-mix(in srgb, var(--fuzzy) 40%, var(--border-1));
+}
+.pdui-guidance-panel[data-tone='danger'] {
+  border-color: color-mix(in srgb, var(--mismatch) 40%, var(--border-1));
+}
+.pdui-settings-row[data-disabled='true'] .pdui-settings-row__label,
+.pdui-settings-row[data-disabled='true'] .pdui-settings-row__description {
+  color: var(--ink-4);
+}
+.pdui-settings-kit-story {
+  display: grid;
+  gap: var(--space-4);
+}
