@@ -163,6 +163,19 @@ export type {
   UpdateCheckState,
 } from './stores/index.js';
 
+// ─── Status ──────────────────────────────────────────────────────────────────
+export {
+  OperationStatusPanel,
+  BlockingOperationOverlay,
+  RetryActionPanel,
+} from './status/index.js';
+export type {
+  OperationState,
+  OperationStatusPanelProps,
+  BlockingOperationOverlayProps,
+  RetryActionPanelProps,
+} from './status/index.js';
+
 // ─── Primitives ───────────────────────────────────────────────────────────────
 export {
   Button,

@@ -1,5 +1,6 @@
-import type * as React from 'react';
+import * as React from 'react';
 import { cn } from '../primitives/cn.js';
+import { OperationProgress } from './progress.js';
 
 export interface BlockingOperationOverlayProps {
   open: boolean;
@@ -12,14 +13,6 @@ export interface BlockingOperationOverlayProps {
   className?: string;
 }
 
-function clampProgress(progress: number): number {
-  if (!Number.isFinite(progress)) {
-    return 0;
-  }
-
-  return Math.max(0, Math.min(100, progress));
-}
-
 export function BlockingOperationOverlay({
   open,
   title,
@@ -30,47 +23,67 @@ export function BlockingOperationOverlay({
   ariaLabel,
   className,
 }: BlockingOperationOverlayProps): React.ReactElement | null {
+  const panelRef = React.useRef<HTMLElement>(null);
+  const titleId = React.useId();
+
+  React.useEffect(() => {
+    if (!open || typeof document === 'undefined') {
+      return undefined;
+    }
+
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    panelRef.current?.focus({ preventScroll: true });
+
+    return () => {
+      if (previouslyFocused?.isConnected === true) {
+        previouslyFocused.focus({ preventScroll: true });
+      }
+    };
+  }, [open]);
+
   if (!open) {
     return null;
   }
 
-  const clampedProgress = progress === undefined ? undefined : clampProgress(progress);
+  const titleElementId = ariaLabel === undefined && title ? titleId : undefined;
 
   return (
     <div className={cn('pdui-blocking-operation-overlay', className)}>
       <section
+        ref={panelRef}
         className="pdui-blocking-operation-overlay__panel"
-        role="status"
-        aria-live="polite"
-        aria-busy="true"
+        role="dialog"
+        aria-modal="true"
         aria-label={ariaLabel}
+        aria-labelledby={titleElementId}
+        tabIndex={-1}
       >
-        {title ? <div className="pdui-blocking-operation-overlay__title">{title}</div> : null}
-        {message ? <div className="pdui-blocking-operation-overlay__message">{message}</div> : null}
-
-        {clampedProgress !== undefined ? (
-          <div
-            className="pdui-blocking-operation-overlay__progress"
-            role="progressbar"
-            aria-valuenow={clampedProgress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="Operation progress"
-          >
-            <div className="pdui-blocking-operation-overlay__progress-track">
-              <div
-                className="pdui-blocking-operation-overlay__progress-fill"
-                style={{ width: `${clampedProgress.toString()}%` }}
-              />
+        <div
+          className="pdui-blocking-operation-overlay__status"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          {title ? (
+            <div className="pdui-blocking-operation-overlay__title" id={titleElementId}>
+              {title}
             </div>
-          </div>
-        ) : null}
+          ) : null}
+          {message ? (
+            <div className="pdui-blocking-operation-overlay__message">{message}</div>
+          ) : null}
 
-        {bestEffortCancel ? (
-          <div className="pdui-blocking-operation-overlay__hint">
-            Cancellation is best effort; the operation may finish before it stops.
-          </div>
-        ) : null}
+          {progress !== undefined ? (
+            <OperationProgress baseClassName="pdui-blocking-operation-overlay" value={progress} />
+          ) : null}
+
+          {bestEffortCancel ? (
+            <div className="pdui-blocking-operation-overlay__hint">
+              Cancellation is best effort; the operation may finish before it stops.
+            </div>
+          ) : null}
+        </div>
 
         {cancelAction ? (
           <div className="pdui-blocking-operation-overlay__actions">{cancelAction}</div>

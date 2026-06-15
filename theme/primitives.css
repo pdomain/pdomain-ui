@@ -6127,7 +6127,15 @@ button.page-chip:hover {
   border-radius: var(--radius-md);
   display: grid;
   gap: var(--space-3);
+  max-height: calc(100vh - (var(--space-8) * 2));
+  max-width: calc(var(--space-8) * 18);
+  overflow: auto;
   padding: var(--space-5);
+  width: calc(100% - (var(--space-8) * 2));
+}
+.pdui-blocking-operation-overlay__status {
+  display: grid;
+  gap: var(--space-3);
 }
 .pdui-retry-action-panel {
   border: 1px solid var(--mismatch);

@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import { cn } from '../primitives/cn.js';
+import { OperationProgress } from './progress.js';
 
 export type OperationState = 'idle' | 'queued' | 'running' | 'success' | 'warning' | 'error';
 
@@ -14,14 +15,6 @@ export interface OperationStatusPanelProps {
   className?: string;
 }
 
-function clampProgress(progress: number): number {
-  if (!Number.isFinite(progress)) {
-    return 0;
-  }
-
-  return Math.max(0, Math.min(100, progress));
-}
-
 export function OperationStatusPanel({
   title,
   message,
@@ -32,7 +25,6 @@ export function OperationStatusPanel({
   secondaryAction,
   className,
 }: OperationStatusPanelProps): React.ReactElement {
-  const clampedProgress = progress === undefined ? undefined : clampProgress(progress);
   const role = state === 'error' ? 'alert' : 'status';
 
   return (
@@ -50,22 +42,8 @@ export function OperationStatusPanel({
         </div>
       </div>
 
-      {clampedProgress !== undefined ? (
-        <div
-          className="pdui-operation-status-panel__progress"
-          role="progressbar"
-          aria-valuenow={clampedProgress}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label="Operation progress"
-        >
-          <div className="pdui-operation-status-panel__progress-track">
-            <div
-              className="pdui-operation-status-panel__progress-fill"
-              style={{ width: `${clampedProgress.toString()}%` }}
-            />
-          </div>
-        </div>
+      {progress !== undefined ? (
+        <OperationProgress baseClassName="pdui-operation-status-panel" value={progress} />
       ) : null}
 
       {details ? <div className="pdui-operation-status-panel__details">{details}</div> : null}
