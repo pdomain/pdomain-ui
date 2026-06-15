@@ -3617,7 +3617,6 @@ button.page-chip:hover {
   box-shadow: var(--shadow-dock);
 }
 
-
 /* ─── dialog--sheet-right modifier — added 2026-05-28 audit remediation ─ */
 /* Upload/ModalC right-side sheet variant */
 .dialog--sheet-right {
@@ -5795,6 +5794,20 @@ button.page-chip:hover {
 .pdui-zoom-viewport {
   overflow: auto;
   position: relative;
+}
+.pdui-artifact-viewer__viewport {
+  flex: 1 1 0%;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+.pdui-artifact-viewer__viewport-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
 }
 .pdui-zoom-viewport__frame {
   position: relative;

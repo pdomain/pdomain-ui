@@ -14,6 +14,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 vi.mock('react-konva', () => ({
@@ -125,6 +126,33 @@ describe('ArtifactViewer', () => {
     expect(screen.getByRole('button', { name: 'Fit page' })).toBeInTheDocument();
   });
 
+  it('updates uncontrolled viewport zoom from the toolbar', async () => {
+    const user = userEvent.setup();
+    render(<ArtifactViewer {...MIN_PROPS} showViewportToolbar defaultZoom={1} />);
+
+    const viewport = screen.getByRole('region', { name: 'Artifact viewport' });
+    expect(viewport).toHaveAttribute('data-zoom', '1');
+
+    await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+
+    expect(viewport).toHaveAttribute('data-zoom', '1.25');
+
+    await user.click(screen.getByRole('button', { name: 'Fit page' }));
+
+    expect(screen.getByRole('button', { name: 'Fit page' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+
+  it('uses the ArtifactViewer viewport layout class when viewport props are enabled', () => {
+    render(<ArtifactViewer {...MIN_PROPS} defaultZoom={1} />);
+
+    expect(screen.getByRole('region', { name: 'Artifact viewport' })).toHaveClass(
+      'pdui-artifact-viewer__viewport',
+    );
+  });
+
   it('keeps rendering the image viewport when viewport props are enabled', () => {
     render(<ArtifactViewer {...MIN_PROPS} defaultZoom={1.25} fitMode="none" />);
 
@@ -141,6 +169,21 @@ describe('ArtifactViewer', () => {
 
   it('overlayMode split — shows separator sidecar', () => {
     render(<ArtifactViewer {...MIN_PROPS} overlayMode="split" splitProposal={{ splitX: 0.5 }} />);
+    expect(screen.getByRole('separator')).toBeInTheDocument();
+    expect(screen.getByTestId('artifact-split-handle')).toBeInTheDocument();
+  });
+
+  it('overlayMode split still shows separator when viewport is enabled', () => {
+    render(
+      <ArtifactViewer
+        {...MIN_PROPS}
+        overlayMode="split"
+        splitProposal={{ splitX: 0.5 }}
+        showViewportToolbar
+        defaultZoom={1}
+      />,
+    );
+
     expect(screen.getByRole('separator')).toBeInTheDocument();
     expect(screen.getByTestId('artifact-split-handle')).toBeInTheDocument();
   });

@@ -113,6 +113,10 @@ export function ArtifactViewer({
   extraLayersSlot,
 }: ArtifactViewerProps) {
   const page = { width: pageWidth, height: pageHeight };
+  const [internalZoom, setInternalZoom] = useState(() => defaultZoom ?? zoom ?? 1);
+  const [internalFitMode, setInternalFitMode] = useState<ZoomFitMode>(() => fitMode ?? 'none');
+  const effectiveZoom = zoom ?? internalZoom;
+  const effectiveFitMode = fitMode ?? internalFitMode;
 
   // Measure the rendered CSS width for the SplitHandle sidecar.
   // The stage is scaled by CSS so natural pageWidth differs from rendered width.
@@ -186,6 +190,20 @@ export function ArtifactViewer({
     onZoomChange != null ||
     onFitModeChange != null;
 
+  const handleZoomChange = (nextZoom: number) => {
+    if (zoom === undefined) {
+      setInternalZoom(nextZoom);
+    }
+    onZoomChange?.(nextZoom);
+  };
+
+  const handleFitModeChange = (nextFitMode: ZoomFitMode) => {
+    if (fitMode === undefined) {
+      setInternalFitMode(nextFitMode);
+    }
+    onFitModeChange?.(nextFitMode);
+  };
+
   const viewerBody = (
     <PaperRender>
       {/* Measurement wrapper — used to pass rendered CSS width to SplitHandle */}
@@ -211,23 +229,23 @@ export function ArtifactViewer({
     <ArtifactPlate {...(className !== undefined ? { className } : {})}>
       {showViewportToolbar ? (
         <ViewportToolbar
-          zoom={zoom ?? defaultZoom ?? 1}
-          onZoomChange={onZoomChange ?? (() => undefined)}
-          {...(fitMode !== undefined ? { fitMode } : {})}
-          {...(onFitModeChange !== undefined ? { onFitModeChange } : {})}
+          zoom={effectiveZoom}
+          onZoomChange={handleZoomChange}
+          fitMode={effectiveFitMode}
+          onFitModeChange={handleFitModeChange}
         />
       ) : null}
       {usesViewport ? (
         <ZoomViewport
-          {...(zoom !== undefined ? { zoom } : {})}
-          {...(defaultZoom !== undefined ? { defaultZoom } : {})}
-          {...(onZoomChange !== undefined ? { onZoomChange } : {})}
-          {...(fitMode !== undefined ? { fitMode } : {})}
-          {...(onFitModeChange !== undefined ? { onFitModeChange } : {})}
+          zoom={effectiveZoom}
+          onZoomChange={handleZoomChange}
+          fitMode={effectiveFitMode}
+          onFitModeChange={handleFitModeChange}
           contentSize={{ width: pageWidth, height: pageHeight }}
           ariaLabel="Artifact viewport"
+          className="pdui-artifact-viewer__viewport"
         >
-          {viewerBody}
+          <div className="pdui-artifact-viewer__viewport-content">{viewerBody}</div>
         </ZoomViewport>
       ) : (
         viewerBody
