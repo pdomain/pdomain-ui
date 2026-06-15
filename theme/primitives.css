@@ -5423,3 +5423,78 @@ button.page-chip:hover {
   justify-content: center;
   flex-shrink: 0;
 }
+
+.pdui-empty-state {
+  align-items: center;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  color: var(--ink-2);
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.pdui-empty-state[data-tone='danger'] {
+  border-color: var(--mismatch);
+  color: var(--mismatch);
+}
+
+.pdui-empty-state__title {
+  color: var(--ink-1);
+  font-weight: 600;
+}
+
+.pdui-empty-state__description {
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+  margin-top: var(--space-1);
+}
+
+.pdui-record-list {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.pdui-record-list__item {
+  align-items: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  min-height: 44px;
+  padding: var(--space-3);
+}
+
+.pdui-record-list[data-density='compact'] .pdui-record-list__item {
+  min-height: 36px;
+  padding: var(--space-2);
+}
+
+.pdui-record-list__item[tabindex='0'] {
+  cursor: pointer;
+}
+
+.pdui-record-list__item[aria-selected='true'] {
+  border-color: var(--accent);
+}
+
+.pdui-record-list__item[aria-disabled='true'] {
+  opacity: 0.6;
+}
+
+.pdui-record-list__primary {
+  color: var(--ink-1);
+  font-weight: 600;
+  min-width: 0;
+}
+
+.pdui-record-list__secondary,
+.pdui-record-list__meta {
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+  min-width: 0;
+}
