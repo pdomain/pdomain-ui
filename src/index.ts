@@ -176,6 +176,15 @@ export type {
   RetryActionPanelProps,
 } from './status/index.js';
 
+// ─── Workbench ───────────────────────────────────────────────────────────────
+export { WorkbenchLayout, InspectorPanel, DetailPanelShell } from './workbench/index.js';
+export type {
+  WorkbenchLayoutProps,
+  InspectorPanelProps,
+  DetailPanelShellProps,
+  PdomainUiWorkbenchModule,
+} from './workbench/index.js';
+
 // ─── Primitives ───────────────────────────────────────────────────────────────
 export {
   Button,

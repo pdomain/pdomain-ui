@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { DetailPanelShell } from './DetailPanelShell.js';
 import { InspectorPanel } from './InspectorPanel.js';
 import { WorkbenchLayout } from './WorkbenchLayout.js';
+
+vi.mock('react-konva', () => ({}));
+vi.mock('konva', () => ({ default: {} }));
 
 describe('workbench layout kit', () => {
   it('renders two-pane and three-pane workbench regions', () => {
@@ -27,8 +30,81 @@ describe('workbench layout kit', () => {
   });
 
   it('renders without optional side areas', () => {
-    render(<WorkbenchLayout viewer={<div>Viewer only</div>} />);
+    const { container } = render(<WorkbenchLayout viewer={<div>Viewer only</div>} />);
+
     expect(screen.getByText('Viewer only')).toBeInTheDocument();
+    expect(container.querySelector('.pdui-workbench-layout__navigation')).not.toBeInTheDocument();
+    expect(container.querySelector('.pdui-workbench-layout__inspector')).not.toBeInTheDocument();
+  });
+
+  it('marks slot-aware body layout variants', () => {
+    const cases = [
+      {
+        name: 'viewer-only',
+        props: {},
+        modifier: 'pdui-workbench-layout__body--viewer-only',
+      },
+      {
+        name: 'navigation-viewer',
+        props: { navigation: <nav aria-label="Pages">Pages</nav> },
+        modifier: 'pdui-workbench-layout__body--navigation-viewer',
+      },
+      {
+        name: 'viewer-inspector',
+        props: { inspector: <aside>Inspector</aside> },
+        modifier: 'pdui-workbench-layout__body--viewer-inspector',
+      },
+      {
+        name: 'navigation-viewer-inspector',
+        props: {
+          navigation: <nav aria-label="Pages">Pages</nav>,
+          inspector: <aside>Inspector</aside>,
+        },
+        modifier: 'pdui-workbench-layout__body--navigation-viewer-inspector',
+      },
+    ] as const;
+
+    for (const testCase of cases) {
+      const { container, unmount } = render(
+        <WorkbenchLayout viewer={<div>Viewer</div>} {...testCase.props} />,
+      );
+      const body = container.querySelector('.pdui-workbench-layout__body');
+
+      expect(body).toHaveAttribute('data-layout', testCase.name);
+      expect(body).toHaveClass(testCase.modifier);
+
+      unmount();
+    }
+  });
+
+  it('ignores side width props unless the matching side slot exists', () => {
+    const { container } = render(
+      <WorkbenchLayout viewer={<div>Viewer only</div>} navWidth={240} inspectorWidth="30rem" />,
+    );
+
+    const root = screen.getByRole('region', { name: 'Workbench layout' });
+
+    expect(root.style.getPropertyValue('--pdui-workbench-nav-w')).toBe('');
+    expect(root.style.getPropertyValue('--pdui-workbench-inspector-w')).toBe('');
+    expect(container.querySelector('.pdui-workbench-layout__navigation')).not.toBeInTheDocument();
+    expect(container.querySelector('.pdui-workbench-layout__inspector')).not.toBeInTheDocument();
+  });
+
+  it('sets side width CSS variables when side slots exist', () => {
+    render(
+      <WorkbenchLayout
+        navigation={<nav aria-label="Pages">Pages</nav>}
+        viewer={<div>Viewer</div>}
+        inspector={<aside>Inspector</aside>}
+        navWidth={240}
+        inspectorWidth="30rem"
+      />,
+    );
+
+    const root = screen.getByRole('region', { name: 'Workbench layout' });
+
+    expect(root.style.getPropertyValue('--pdui-workbench-nav-w')).toBe('240px');
+    expect(root.style.getPropertyValue('--pdui-workbench-inspector-w')).toBe('30rem');
   });
 
   it('renders inspector and detail panel actions', () => {
@@ -54,7 +130,17 @@ describe('workbench layout kit', () => {
     expect(screen.getByText('Details')).toBeInTheDocument();
     expect(screen.getByText('Selected page')).toBeInTheDocument();
     expect(screen.getByText('300 dpi')).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Inspector actions' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Detail actions' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Open' })).toBeInTheDocument();
+  });
+
+  it('re-exports workbench components from the root barrel', async () => {
+    const root = (await import('../index.js')) as Record<string, unknown>;
+
+    expect(root['WorkbenchLayout']).toBe(WorkbenchLayout);
+    expect(root['InspectorPanel']).toBe(InspectorPanel);
+    expect(root['DetailPanelShell']).toBe(DetailPanelShell);
   });
 });

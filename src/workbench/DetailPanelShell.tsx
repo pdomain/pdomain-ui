@@ -34,7 +34,15 @@ export function DetailPanelShell({
             <div className="pdui-detail-panel-shell__description">{description}</div>
           ) : null}
         </div>
-        {actions != null ? <div className="pdui-detail-panel-shell__actions">{actions}</div> : null}
+        {actions != null ? (
+          <div
+            className="pdui-detail-panel-shell__actions"
+            role="group"
+            aria-label="Detail actions"
+          >
+            {actions}
+          </div>
+        ) : null}
       </header>
       <div className="pdui-detail-panel-shell__body">{children}</div>
       {footer != null ? (

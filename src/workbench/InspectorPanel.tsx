@@ -34,7 +34,15 @@ export function InspectorPanel({
             <div className="pdui-inspector-panel__description">{description}</div>
           ) : null}
         </div>
-        {actions != null ? <div className="pdui-inspector-panel__actions">{actions}</div> : null}
+        {actions != null ? (
+          <div
+            className="pdui-inspector-panel__actions"
+            role="group"
+            aria-label="Inspector actions"
+          >
+            {actions}
+          </div>
+        ) : null}
       </header>
       <div className="pdui-inspector-panel__body">{children}</div>
       {footer != null ? <footer className="pdui-inspector-panel__footer">{footer}</footer> : null}

@@ -6171,7 +6171,10 @@ button.page-chip:hover {
 
 .pdui-workbench-layout {
   background: var(--bg-surface);
+  block-size: 100%;
   color: var(--ink-1);
+  min-block-size: 0;
+  overflow: hidden;
 }
 .pdui-workbench-layout__header,
 .pdui-workbench-layout__toolbar,
@@ -6188,19 +6191,30 @@ button.page-chip:hover {
   padding: var(--space-3) var(--space-4);
 }
 .pdui-workbench-layout__body {
+  block-size: 100%;
+  min-block-size: 0;
+  overflow: hidden;
   padding: var(--space-3);
 }
+.pdui-workbench-layout__body.pdui-workbench-layout__body--viewer-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+.pdui-workbench-layout__body.pdui-workbench-layout__body--navigation-viewer {
+  grid-template-columns: var(--pdui-workbench-nav-w, 16rem) minmax(0, 1fr);
+}
+.pdui-workbench-layout__body.pdui-workbench-layout__body--viewer-inspector {
+  grid-template-columns: minmax(0, 1fr) var(--pdui-workbench-inspector-w, 22rem);
+}
+.pdui-workbench-layout__body.pdui-workbench-layout__body--navigation-viewer-inspector {
+  grid-template-columns: var(--pdui-workbench-nav-w, 16rem) minmax(0, 1fr)
+    var(--pdui-workbench-inspector-w, 22rem);
+}
 .pdui-workbench-layout__navigation {
-  grid-column: 1;
   min-height: 0;
   min-width: 0;
   overflow: auto;
 }
-.pdui-workbench-layout__viewer {
-  grid-column: 2;
-}
 .pdui-workbench-layout__inspector {
-  grid-column: 3;
   min-height: 0;
   min-width: 0;
   overflow: auto;
@@ -6208,8 +6222,11 @@ button.page-chip:hover {
 .pdui-inspector-panel,
 .pdui-detail-panel-shell {
   background: var(--bg-surface);
+  block-size: 100%;
   color: var(--ink-1);
+  min-block-size: 0;
   min-width: 0;
+  overflow: hidden;
 }
 .pdui-inspector-panel__header,
 .pdui-detail-panel-shell__header {
@@ -6267,6 +6284,12 @@ button.page-chip:hover {
 }
 
 @media (max-width: 720px) {
+  .pdui-workbench-layout__body.pdui-workbench-layout__body--viewer-only,
+  .pdui-workbench-layout__body.pdui-workbench-layout__body--navigation-viewer,
+  .pdui-workbench-layout__body.pdui-workbench-layout__body--viewer-inspector,
+  .pdui-workbench-layout__body.pdui-workbench-layout__body--navigation-viewer-inspector {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .pdui-workbench-layout__navigation,
   .pdui-workbench-layout__viewer,
   .pdui-workbench-layout__inspector {

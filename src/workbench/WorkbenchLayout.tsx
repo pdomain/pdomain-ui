@@ -21,11 +21,24 @@ export interface WorkbenchLayoutProps {
   className?: string;
 }
 
+type WorkbenchLayoutVariant =
+  | 'viewer-only'
+  | 'navigation-viewer'
+  | 'viewer-inspector'
+  | 'navigation-viewer-inspector';
+
 const DEFAULT_NAV_WIDTH = '16rem';
 const DEFAULT_INSPECTOR_WIDTH = '22rem';
 
 function toWorkbenchWidthValue(width: WorkbenchWidth): string {
   return typeof width === 'number' ? `${width}px` : String(width);
+}
+
+function getLayoutVariant(hasNavigation: boolean, hasInspector: boolean): WorkbenchLayoutVariant {
+  if (hasNavigation && hasInspector) return 'navigation-viewer-inspector';
+  if (hasNavigation) return 'navigation-viewer';
+  if (hasInspector) return 'viewer-inspector';
+  return 'viewer-only';
 }
 
 export function WorkbenchLayout({
@@ -41,11 +54,14 @@ export function WorkbenchLayout({
   className,
 }: WorkbenchLayoutProps): React.ReactElement {
   const style: WorkbenchLayoutStyle = {};
+  const hasNavigation = navigation != null;
+  const hasInspector = inspector != null;
+  const layoutVariant = getLayoutVariant(hasNavigation, hasInspector);
 
-  if (navigation != null || navWidth !== undefined) {
+  if (hasNavigation) {
     style['--pdui-workbench-nav-w'] = toWorkbenchWidthValue(navWidth ?? DEFAULT_NAV_WIDTH);
   }
-  if (inspector != null || inspectorWidth !== undefined) {
+  if (hasInspector) {
     style['--pdui-workbench-inspector-w'] = toWorkbenchWidthValue(
       inspectorWidth ?? DEFAULT_INSPECTOR_WIDTH,
     );
@@ -62,14 +78,18 @@ export function WorkbenchLayout({
     >
       {header != null ? <div className="pdui-workbench-layout__header">{header}</div> : null}
       {toolbar != null ? <div className="pdui-workbench-layout__toolbar">{toolbar}</div> : null}
-      <div className="pdui-workbench-layout__body">
-        {navigation != null ? (
+      <div
+        className={cn(
+          'pdui-workbench-layout__body',
+          `pdui-workbench-layout__body--${layoutVariant}`,
+        )}
+        data-layout={layoutVariant}
+      >
+        {hasNavigation ? (
           <div className="pdui-workbench-layout__navigation">{navigation}</div>
         ) : null}
         <div className="pdui-workbench-layout__viewer">{viewer}</div>
-        {inspector != null ? (
-          <div className="pdui-workbench-layout__inspector">{inspector}</div>
-        ) : null}
+        {hasInspector ? <div className="pdui-workbench-layout__inspector">{inspector}</div> : null}
       </div>
       {footer != null ? <div className="pdui-workbench-layout__footer">{footer}</div> : null}
     </div>
