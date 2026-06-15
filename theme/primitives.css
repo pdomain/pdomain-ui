@@ -5831,8 +5831,10 @@ button.page-chip:hover {
   align-items: center;
   display: grid;
   gap: var(--space-3);
-  grid-template-areas: 'content value control actions';
-  grid-template-columns: minmax(0, 1fr) auto minmax(var(--space-8), auto) auto;
+  grid-template-areas:
+    'content value actions'
+    'content control actions';
+  grid-template-columns: minmax(0, 1fr) auto auto;
   padding: var(--space-3) 0;
 }
 .pdui-settings-row + .pdui-settings-row {
