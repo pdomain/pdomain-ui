@@ -30,26 +30,26 @@ export function PreferencePathRow({
   inputId,
   ...props
 }: PreferencePathRowProps): React.ReactElement {
-  const generatedInputId = React.useId();
-  const resolvedInputId = inputId ?? generatedInputId;
-
   return (
     <SettingsRow
       label={label}
       description={description}
       disabled={disabled}
       error={error}
-      control={
+      controlId={inputId}
+      control={({ id, labelledBy, describedBy, invalid, disabled: rowDisabled }) => (
         <Input
-          id={resolvedInputId}
+          id={id}
           value={path}
-          aria-label={label}
-          disabled={disabled}
+          aria-labelledby={labelledBy}
+          aria-describedby={describedBy}
+          aria-invalid={invalid ? true : undefined}
+          disabled={rowDisabled}
           onChange={(event) => {
             onPathChange(event.currentTarget.value);
           }}
         />
-      }
+      )}
       actions={
         <div className="pdui-preference-path-row__actions">
           <Button

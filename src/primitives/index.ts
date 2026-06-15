@@ -266,8 +266,12 @@ export type { ShortcutsCheatsheetBodyProps } from './ShortcutsCheatsheetBody.js'
 
 export { SettingsCard, SettingsRow, SettingsValue, SettingSlider } from '../settings/index.js';
 export type {
+  SettingsRowControl,
+  SettingsRowControlProps,
+  SettingsRowControlRender,
   SettingsCardProps,
   SettingsRowProps,
   SettingsValueProps,
+  SettingsValueTone,
   SettingSliderProps,
 } from '../settings/index.js';

@@ -5831,7 +5831,8 @@ button.page-chip:hover {
   align-items: center;
   display: grid;
   gap: var(--space-3);
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: 'content value control actions';
+  grid-template-columns: minmax(0, 1fr) auto minmax(var(--space-8), auto) auto;
   padding: var(--space-3) 0;
 }
 .pdui-settings-row + .pdui-settings-row {
@@ -5901,6 +5902,7 @@ button.page-chip:hover {
 .pdui-settings-row__content {
   display: grid;
   gap: var(--space-1);
+  grid-area: content;
   min-width: 0;
 }
 .pdui-settings-row__label {
@@ -5920,7 +5922,18 @@ button.page-chip:hover {
 }
 .pdui-settings-row__value,
 .pdui-settings-row__control {
+  justify-self: end;
   min-width: 0;
+}
+.pdui-settings-row__value {
+  grid-area: value;
+}
+.pdui-settings-row__control {
+  grid-area: control;
+}
+.pdui-settings-row__actions {
+  grid-area: actions;
+  justify-self: end;
 }
 .pdui-settings-value {
   color: var(--ink-2);
@@ -5986,4 +5999,24 @@ button.page-chip:hover {
 .pdui-settings-kit-story {
   display: grid;
   gap: var(--space-4);
+}
+
+@media (max-width: calc(var(--space-8) * 20)) {
+  .pdui-settings-row {
+    align-items: start;
+    grid-template-areas:
+      'content'
+      'value'
+      'control'
+      'actions';
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pdui-settings-row__value,
+  .pdui-settings-row__control,
+  .pdui-settings-row__actions {
+    justify-self: start;
+  }
+  .pdui-settings-row__actions {
+    justify-content: start;
+  }
 }

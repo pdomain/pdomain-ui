@@ -31,6 +31,7 @@ export const SettingSlider = React.forwardRef<HTMLInputElement, SettingSliderPro
       step = 1,
       unit,
       ariaLabel,
+      'aria-valuetext': ariaValueText,
       onKeyDown,
       disabled,
       ...props
@@ -80,6 +81,7 @@ export const SettingSlider = React.forwardRef<HTMLInputElement, SettingSliderPro
           step={step}
           value={clampedValue}
           aria-label={ariaLabel}
+          aria-valuetext={ariaValueText ?? displayValue}
           disabled={disabled}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
