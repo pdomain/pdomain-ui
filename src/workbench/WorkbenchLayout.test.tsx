@@ -18,9 +18,12 @@ describe('workbench layout kit', () => {
     );
 
     expect(screen.getByRole('region', { name: 'Workbench layout' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Workbench' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Run' })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: 'Pages' })).toBeInTheDocument();
     expect(screen.getByText('Viewer')).toBeInTheDocument();
     expect(screen.getByText('Inspector')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeInTheDocument();
   });
 
   it('renders without optional side areas', () => {
@@ -31,7 +34,11 @@ describe('workbench layout kit', () => {
   it('renders inspector and detail panel actions', () => {
     render(
       <>
-        <InspectorPanel title="Details" actions={<button type="button">Save</button>}>
+        <InspectorPanel
+          title="Details"
+          meta="Selected page"
+          actions={<button type="button">Save</button>}
+        >
           Body
         </InspectorPanel>
         <DetailPanelShell
@@ -45,6 +52,7 @@ describe('workbench layout kit', () => {
     );
 
     expect(screen.getByText('Details')).toBeInTheDocument();
+    expect(screen.getByText('Selected page')).toBeInTheDocument();
     expect(screen.getByText('300 dpi')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Open' })).toBeInTheDocument();
