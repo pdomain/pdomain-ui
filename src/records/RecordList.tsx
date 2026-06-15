@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions -- The actions slot wrapper only stops event propagation so nested controls do not activate the row. */
 import type { KeyboardEvent, ReactNode } from 'react';
 import { cn } from '../primitives/cn.js';
 import { EmptyState } from './EmptyState.js';
@@ -74,8 +73,11 @@ export function RecordList<T>({
   }
 
   const selectable = selection !== undefined;
-  const listRole = selectable ? 'listbox' : 'list';
-  const itemRole = selectable ? 'option' : 'listitem';
+  const hasActions = renderActions !== undefined;
+  const gridMode = selectable && hasActions;
+  const listRole = gridMode ? 'grid' : selectable ? 'listbox' : 'list';
+  const itemRole = gridMode ? 'row' : selectable ? 'option' : 'listitem';
+  const cellRole = gridMode ? 'gridcell' : undefined;
 
   return (
     <div className={rootClassName} data-density={density} role={listRole} aria-label={ariaLabel}>
@@ -92,7 +94,7 @@ export function RecordList<T>({
             className="pdui-record-list__item"
             role={itemRole}
             aria-label={getAccessibleLabel(primary)}
-            aria-selected={selectable ? selected : undefined}
+            aria-selected={selectable && selected ? true : undefined}
             aria-disabled={disabled || undefined}
             tabIndex={activatable ? 0 : undefined}
             onClick={() => {
@@ -105,7 +107,7 @@ export function RecordList<T>({
               onActivate?.(item);
             }}
           >
-            <div className="pdui-record-list__content">
+            <div className="pdui-record-list__content" role={cellRole}>
               <div className="pdui-record-list__primary">{primary}</div>
               {renderSecondary ? (
                 <div className="pdui-record-list__secondary">{renderSecondary(item)}</div>
@@ -113,16 +115,19 @@ export function RecordList<T>({
               {renderMeta ? <div className="pdui-record-list__meta">{renderMeta(item)}</div> : null}
             </div>
             {renderStatus ? (
-              <div className="pdui-record-list__status">{renderStatus(item)}</div>
+              <div className="pdui-record-list__status" role={cellRole}>
+                {renderStatus(item)}
+              </div>
             ) : null}
             {renderActions ? (
               <div
                 className="pdui-record-list__actions"
+                role={cellRole}
                 onClick={(event) => {
                   event.stopPropagation();
                 }}
                 onKeyDown={(event) => {
-                  event.stopPropagation();
+                  if (isActivationKey(event)) event.stopPropagation();
                 }}
               >
                 {renderActions(item)}

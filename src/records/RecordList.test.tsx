@@ -138,6 +138,72 @@ describe('RecordList', () => {
     expect(screen.getByRole('option', { name: /Alpha/ })).toHaveAttribute('aria-disabled', 'true');
   });
 
+  it('uses grid semantics when selectable rows include actions', async () => {
+    const user = userEvent.setup();
+    const onActivate = vi.fn<(row: ProjectRow) => void>();
+    const onAction = vi.fn<() => void>();
+    render(
+      <RecordList
+        ariaLabel="Selectable projects"
+        items={rows}
+        getKey={(row) => row.id}
+        renderPrimary={(row) => row.name}
+        renderMeta={(row) => row.meta}
+        renderStatus={(row) => row.status}
+        renderActions={() => (
+          <button type="button" onClick={onAction}>
+            Row action
+          </button>
+        )}
+        selection={{
+          selectedKeys: new Set(['b']),
+        }}
+        onActivate={onActivate}
+      />,
+    );
+
+    expect(screen.getByRole('grid', { name: 'Selectable projects' })).toBeInTheDocument();
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(screen.getByRole('row', { name: /Beta/ })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('row', { name: /Alpha/ })).not.toHaveAttribute('aria-selected');
+    expect(screen.getAllByRole('gridcell')).toHaveLength(6);
+
+    await user.click(screen.getAllByRole('button', { name: 'Row action' })[0]!);
+
+    expect(onAction).toHaveBeenCalledOnce();
+    expect(onActivate).not.toHaveBeenCalled();
+  });
+
+  it('guards action Enter and Space without blocking unrelated keydown propagation', async () => {
+    const user = userEvent.setup();
+    const onActivate = vi.fn<(row: ProjectRow) => void>();
+    const onDocumentKeyDown = vi.fn<(event: KeyboardEvent) => void>();
+    document.addEventListener('keydown', onDocumentKeyDown);
+
+    try {
+      render(
+        <RecordList
+          items={rows}
+          getKey={(row) => row.id}
+          renderPrimary={(row) => row.name}
+          renderActions={() => <button type="button">Row action</button>}
+          onActivate={onActivate}
+        />,
+      );
+
+      const action = screen.getAllByRole('button', { name: 'Row action' })[0]!;
+      action.focus();
+      await user.keyboard('{Enter}');
+      await user.keyboard(' ');
+      await user.keyboard('{Escape}');
+
+      expect(onActivate).not.toHaveBeenCalled();
+      expect(onDocumentKeyDown).toHaveBeenCalledTimes(1);
+    } finally {
+      document.removeEventListener('keydown', onDocumentKeyDown);
+    }
+  });
+
   it('renders loading, error and empty states', () => {
     const { rerender } = render(
       <RecordList
