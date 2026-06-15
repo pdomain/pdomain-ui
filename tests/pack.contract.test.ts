@@ -52,11 +52,17 @@ const REQUIRED_DIST_ENTRIES = [
   'icons',
   'index',
   'primitives',
+  'records',
+  'settings',
   'shell',
+  'source-intake',
+  'status',
   'stores',
   'templates',
   'testids',
   'types',
+  'viewport',
+  'workbench',
   'worklist',
 ] as const;
 

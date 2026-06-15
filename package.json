@@ -112,6 +112,30 @@
     "./hooks": {
       "import": "./dist/hooks.js",
       "types": "./dist/hooks.d.ts"
+    },
+    "./records": {
+      "import": "./dist/records.js",
+      "types": "./dist/records.d.ts"
+    },
+    "./source-intake": {
+      "import": "./dist/source-intake.js",
+      "types": "./dist/source-intake.d.ts"
+    },
+    "./viewport": {
+      "import": "./dist/viewport.js",
+      "types": "./dist/viewport.d.ts"
+    },
+    "./settings": {
+      "import": "./dist/settings.js",
+      "types": "./dist/settings.d.ts"
+    },
+    "./status": {
+      "import": "./dist/status.js",
+      "types": "./dist/status.d.ts"
+    },
+    "./workbench": {
+      "import": "./dist/workbench.js",
+      "types": "./dist/workbench.d.ts"
     }
   },
   "peerDependencies": {

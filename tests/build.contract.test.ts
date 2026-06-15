@@ -25,6 +25,12 @@ describe('vite.config.ts contract', () => {
       'testids',
       'templates',
       'hooks',
+      'records',
+      'source-intake',
+      'viewport',
+      'settings',
+      'status',
+      'workbench',
     ];
     for (const entry of entries) {
       expect(content, `entry '${entry}' must be declared in vite.config.ts`).toContain(entry);
@@ -56,6 +62,12 @@ describe('dist/ output completeness', () => {
     'testids',
     'templates',
     'hooks',
+    'records',
+    'source-intake',
+    'viewport',
+    'settings',
+    'status',
+    'workbench',
   ] as const;
 
   it('dist/ directory exists after build', () => {
@@ -75,7 +87,7 @@ describe('dist/ output completeness', () => {
   it('dist/ contains no unexpected top-level entry points', () => {
     if (!existsSync(DIST)) return; // skip if not built yet; covered by prior test
     const files = readdirSync(DIST);
-    const jsEntries = files.filter((f) => /^[a-z]+\.js$/.test(f));
+    const jsEntries = files.filter((f) => /^[a-z-]+\.js$/.test(f));
     const expectedJs = REQUIRED_ENTRIES.map((e) => `${e}.js`);
     for (const js of jsEntries) {
       expect(expectedJs, `Unexpected entry point: dist/${js}`).toContain(js);
@@ -178,4 +190,24 @@ describe('dist/stores.d.ts — useDeviceInfo hook export (Milestone D)', () => {
       'useDeviceInfo',
     );
   });
+});
+
+describe('new cross-app common UI subpaths', () => {
+  const REQUIRED = {
+    records: 'PdomainUiRecordsModule',
+    'source-intake': 'PdomainUiSourceIntakeModule',
+    viewport: 'PdomainUiViewportModule',
+    settings: 'PdomainUiSettingsModule',
+    status: 'PdomainUiStatusModule',
+    workbench: 'PdomainUiWorkbenchModule',
+  } as const;
+
+  for (const [entry, symbol] of Object.entries(REQUIRED)) {
+    it(`dist/${entry}.d.ts exports ${symbol}`, () => {
+      const dtsPath = resolve(__dirname, `../dist/${entry}.d.ts`);
+      expect(existsSync(dtsPath), `dist/${entry}.d.ts missing - run pnpm build`).toBe(true);
+      const content = readFileSync(dtsPath, 'utf-8');
+      expect(content, `${symbol} must be exported from dist/${entry}.d.ts`).toContain(symbol);
+    });
+  }
 });
