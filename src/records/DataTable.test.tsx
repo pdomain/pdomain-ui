@@ -105,4 +105,74 @@ describe('DataTable', () => {
     await user.click(screen.getByRole('button', { name: 'Sort by Name' }));
     expect(onSortChange).toHaveBeenCalledWith({ key: 'name', direction: 'desc' });
   });
+
+  it('renders loading, error and empty states with the root className', () => {
+    const { rerender } = render(
+      <PageDataTable
+        className="custom-data-table"
+        items={[]}
+        getKey={(row) => row.id}
+        columns={[{ id: 'name', header: 'Name', cell: (row) => row.name }]}
+        loading
+      />,
+    );
+
+    expect(screen.getByRole('status')).toHaveClass('pdui-data-table', 'custom-data-table');
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+
+    rerender(
+      <PageDataTable
+        className="custom-data-table"
+        items={[]}
+        getKey={(row) => row.id}
+        columns={[{ id: 'name', header: 'Name', cell: (row) => row.name }]}
+        error="Could not load pages"
+      />,
+    );
+
+    expect(screen.getByRole('alert')).toHaveClass('pdui-data-table', 'custom-data-table');
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+
+    rerender(
+      <PageDataTable
+        className="custom-data-table"
+        items={[]}
+        getKey={(row) => row.id}
+        columns={[{ id: 'name', header: 'Name', cell: (row) => row.name }]}
+        empty={<span>No pages</span>}
+      />,
+    );
+
+    expect(screen.getByText('No pages').closest('.pdui-data-table')).toHaveClass(
+      'custom-data-table',
+    );
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  });
+
+  it('marks selected and disabled rows without activating disabled rows', async () => {
+    const user = userEvent.setup();
+    const onActivate = vi.fn();
+    render(
+      <PageDataTable
+        items={rows}
+        getKey={(row) => row.id}
+        columns={[{ id: 'name', header: 'Name', cell: (row) => row.name }]}
+        selection={{
+          selectedKeys: new Set(['2']),
+          isItemDisabled: (row) => row.id === '1',
+        }}
+        onActivate={onActivate}
+      />,
+    );
+
+    const disabledRow = screen.getByRole('row', { name: /Page 1/ });
+    const selectedRow = screen.getByRole('row', { name: /Page 2/ });
+
+    expect(selectedRow).toHaveAttribute('aria-selected', 'true');
+    expect(disabledRow).toHaveAttribute('aria-disabled', 'true');
+
+    await user.click(disabledRow);
+
+    expect(onActivate).not.toHaveBeenCalled();
+  });
 });

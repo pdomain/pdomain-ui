@@ -106,4 +106,31 @@ describe('RecordGrid', () => {
     expect(onOpen).toHaveBeenCalled();
     expect(onActivate).not.toHaveBeenCalled();
   });
+
+  it('marks selected and disabled cards without activating disabled cards', async () => {
+    const user = userEvent.setup();
+    const onActivate = vi.fn();
+    render(
+      <ProjectRecordGrid
+        items={rows}
+        getKey={(row) => row.id}
+        renderCard={(row) => row.title}
+        selection={{
+          selectedKeys: new Set(['b']),
+          isItemDisabled: (row) => row.id === 'a',
+        }}
+        onActivate={onActivate}
+      />,
+    );
+
+    const disabledCard = screen.getByRole('row', { name: /Alpha/ });
+    const selectedCard = screen.getByRole('row', { name: /Beta/ });
+
+    expect(selectedCard).toHaveAttribute('aria-selected', 'true');
+    expect(disabledCard).toHaveAttribute('aria-disabled', 'true');
+
+    await user.click(disabledCard);
+
+    expect(onActivate).not.toHaveBeenCalled();
+  });
 });

@@ -5541,6 +5541,10 @@ button.page-chip:hover {
   background: var(--accent-subtle);
 }
 
+.pdui-data-table tr[aria-disabled='true'] {
+  opacity: 0.6;
+}
+
 @media (max-width: 639px) {
   .pdui-data-table [data-hide-below='sm'] {
     display: none;
@@ -5572,4 +5576,14 @@ button.page-chip:hover {
 
 .pdui-record-grid__item[tabindex='0'] {
   cursor: pointer;
+}
+
+.pdui-record-grid__item[aria-selected='true'] {
+  background: var(--accent-subtle);
+  border-radius: var(--radius-md);
+  outline: 1px solid var(--accent);
+}
+
+.pdui-record-grid__item[aria-disabled='true'] {
+  opacity: 0.6;
 }

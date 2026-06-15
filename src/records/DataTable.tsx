@@ -69,12 +69,30 @@ export function DataTable<T>({
   ariaLabel,
   className,
 }: DataTableProps<T>) {
-  if (loading) return <div role="status">Loading records</div>;
-  if (error) return <div role="alert">{error}</div>;
-  if (items.length === 0) return <>{empty ?? <EmptyState title="No records" />}</>;
+  const rootClassName = cn('pdui-data-table', className);
+
+  if (loading) {
+    return (
+      <div className={rootClassName} role="status">
+        Loading records
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={rootClassName} role="alert">
+        {error}
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return <div className={rootClassName}>{empty ?? <EmptyState title="No records" />}</div>;
+  }
 
   return (
-    <table className={cn('pdui-data-table', className)} aria-label={ariaLabel}>
+    <table className={rootClassName} aria-label={ariaLabel}>
       <thead>
         <tr>
           {columns.map((column) => {
