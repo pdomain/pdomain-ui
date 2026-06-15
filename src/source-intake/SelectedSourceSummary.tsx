@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Button } from '../primitives/Button.js';
 import { cn } from '../primitives/cn.js';
 import type { SelectedSource } from './types.js';
@@ -8,12 +9,19 @@ export interface SelectedSourceSummaryProps {
   maxVisible?: number;
 }
 
-function getRemoveLabel(source: SelectedSource) {
-  if (source.labelText !== undefined) return `Remove ${source.labelText}`;
-  if (typeof source.label === 'string' || typeof source.label === 'number') {
-    return `Remove ${source.label}`;
+function getTextFromNode(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (node === null || node === undefined || typeof node === 'boolean') return '';
+  if (Array.isArray(node)) return node.map(getTextFromNode).join('');
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+    return getTextFromNode(node.props.children);
   }
-  throw new Error('SelectedSource.labelText is required when label is not text.');
+  return '';
+}
+
+function getRemoveLabel(source: SelectedSource) {
+  const labelText = getTextFromNode(source.label).trim();
+  return labelText === '' ? 'Remove source' : `Remove ${labelText}`;
 }
 
 export function SelectedSourceSummary({

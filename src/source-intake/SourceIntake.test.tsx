@@ -77,7 +77,6 @@ describe('source intake kit', () => {
         id: 'one',
         kind: 'file',
         label: <span>scan001.png</span>,
-        labelText: 'scan001.png',
         meta: '1 MB',
       },
     ] satisfies readonly SelectedSource[];
