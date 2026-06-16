@@ -29,8 +29,9 @@ const AccordionItem = React.forwardRef<
 ));
 AccordionItem.displayName = AccordionPrimitive.Item.displayName;
 
-export interface AccordionTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> {
+export interface AccordionTriggerProps extends React.ComponentPropsWithoutRef<
+  typeof AccordionPrimitive.Trigger
+> {
   /** Leading slot, rendered before `children` (e.g. a status icon). */
   startContent?: React.ReactNode;
   /** Trailing slot, rendered after `children` and before the chevron (e.g. a KeyCap). */
