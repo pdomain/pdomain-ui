@@ -3541,6 +3541,23 @@ button.page-chip:hover {
   border-radius: var(--radius-sm);
 }
 
+/* Composable trigger slots (additive — default children+chevron layout unchanged) */
+.acc-trigger-start {
+  display: inline-flex;
+  align-items: center;
+}
+.acc-trigger-end {
+  margin-left: auto; /* pushes the trailing group (+ chevron) to the right */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.acc-hint {
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+  font-weight: 400;
+}
+
 @keyframes acc-content-open {
   from {
     height: 0;
