@@ -2,13 +2,14 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion.js';
-import type { AccordionTone } from './Accordion.js';
+import type { AccordionTone, AccordionTriggerProps } from './Accordion.js';
 
-function renderTrigger(triggerProps: Record<string, unknown> = {}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderTrigger(triggerProps: Partial<AccordionTriggerProps> & Record<string, any> = {}) {
   return render(
     <Accordion type="single" collapsible defaultValue="a">
       <AccordionItem value="a">
-        <AccordionTrigger {...(triggerProps as never)}>Label</AccordionTrigger>
+        <AccordionTrigger {...(triggerProps as AccordionTriggerProps)}>Label</AccordionTrigger>
         <AccordionContent>Body</AccordionContent>
       </AccordionItem>
     </Accordion>,
