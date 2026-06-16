@@ -4,6 +4,70 @@ import userEvent from '@testing-library/user-event';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion.js';
 import type { AccordionTone } from './Accordion.js';
 
+function renderTrigger(triggerProps: Record<string, unknown> = {}) {
+  return render(
+    <Accordion type="single" collapsible defaultValue="a">
+      <AccordionItem value="a">
+        <AccordionTrigger {...(triggerProps as never)}>Label</AccordionTrigger>
+        <AccordionContent>Body</AccordionContent>
+      </AccordionItem>
+    </Accordion>,
+  );
+}
+
+describe('AccordionTrigger slots + chevron', () => {
+  it('default path renders the built-in chevron and no slot wrappers', () => {
+    const { container } = renderTrigger();
+    const trigger = container.querySelector('.acc-trigger')!;
+    expect(trigger).not.toBeNull();
+    const chev = trigger.querySelector('.chev');
+    expect(chev).not.toBeNull();
+    expect(chev).toHaveTextContent('›'); // ›
+    expect(trigger.querySelector('.acc-trigger-start')).toBeNull();
+    expect(trigger.querySelector('.acc-trigger-end')).toBeNull();
+    expect(trigger.textContent?.startsWith('Label')).toBe(true);
+  });
+
+  it('renders endContent after children and before the chevron', () => {
+    const { container } = renderTrigger({ endContent: <span data-testid="kc">KC</span> });
+    const trigger = container.querySelector('.acc-trigger')!;
+    const end = trigger.querySelector('.acc-trigger-end')!;
+    expect(end).toHaveTextContent('KC');
+    const els = Array.from(trigger.children);
+    const endIdx = els.findIndex((e) => e.classList.contains('acc-trigger-end'));
+    const chevIdx = els.findIndex((e) => e.classList.contains('chev'));
+    expect(endIdx).toBeGreaterThanOrEqual(0);
+    expect(chevIdx).toBeGreaterThan(endIdx);
+    expect(trigger.textContent?.startsWith('Label')).toBe(true);
+  });
+
+  it('renders startContent before children', () => {
+    const { container } = renderTrigger({ startContent: <span data-testid="st">S</span> });
+    const trigger = container.querySelector('.acc-trigger')!;
+    const start = trigger.querySelector('.acc-trigger-start')!;
+    expect(start).toHaveTextContent('S');
+    expect(trigger.firstElementChild).toBe(start);
+  });
+
+  it('chevron={false} renders no chevron at all', () => {
+    const { container } = renderTrigger({ chevron: false });
+    const trigger = container.querySelector('.acc-trigger')!;
+    expect(trigger.querySelector('.chev')).toBeNull();
+    expect(trigger.textContent).toContain('Label');
+  });
+
+  it('a custom chevron node replaces the default and emits no .chev', () => {
+    const { container } = renderTrigger({ chevron: <svg data-testid="myc" /> });
+    expect(screen.getByTestId('myc')).toBeInTheDocument();
+    expect(container.querySelector('.chev')).toBeNull();
+  });
+
+  it('passes through data-testid and other props to the underlying trigger', () => {
+    renderTrigger({ 'data-testid': 'trg' });
+    expect(screen.getByTestId('trg')).toHaveClass('acc-trigger');
+  });
+});
+
 const accordionTones = ['default', 'accent', 'danger'] satisfies AccordionTone[];
 
 describe('Accordion', () => {

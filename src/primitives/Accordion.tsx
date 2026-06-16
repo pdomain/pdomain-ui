@@ -29,16 +29,37 @@ const AccordionItem = React.forwardRef<
 ));
 AccordionItem.displayName = AccordionPrimitive.Item.displayName;
 
+export interface AccordionTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> {
+  /** Leading slot, rendered before `children` (e.g. a status icon). */
+  startContent?: React.ReactNode;
+  /** Trailing slot, rendered after `children` and before the chevron (e.g. a KeyCap). */
+  endContent?: React.ReactNode;
+  /**
+   * Chevron control:
+   *   undefined -> built-in `<span className="chev">›</span>` (default)
+   *   ReactNode -> rendered as-is in the chevron slot, no `.chev` class
+   *   false     -> no chevron
+   */
+  chevron?: React.ReactNode | false;
+}
+
 const AccordionTrigger = React.forwardRef<
-  React.ComponentRef<typeof AccordionPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ElementRef<typeof AccordionPrimitive.Trigger>,
+  AccordionTriggerProps
+>(({ className, children, startContent, endContent, chevron, ...props }, ref) => (
   <AccordionPrimitive.Header className="acc-head">
     <AccordionPrimitive.Trigger ref={ref} className={cn('acc-trigger', className)} {...props}>
+      {startContent != null && <span className="acc-trigger-start">{startContent}</span>}
       {children}
-      <span className="chev" aria-hidden>
-        &#8250;
-      </span>
+      {endContent != null && <span className="acc-trigger-end">{endContent}</span>}
+      {chevron === undefined ? (
+        <span className="chev" aria-hidden>
+          &#8250;
+        </span>
+      ) : (
+        chevron
+      )}
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

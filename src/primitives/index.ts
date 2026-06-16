@@ -129,7 +129,7 @@ export type { TabsAppearance } from './Tabs.js';
 export { ToggleGroup, ToggleGroupItem } from './ToggleGroup.js';
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion.js';
-export type { AccordionTone } from './Accordion.js';
+export type { AccordionTone, AccordionTriggerProps } from './Accordion.js';
 
 // Form helpers
 export { Field } from './Field.js';
