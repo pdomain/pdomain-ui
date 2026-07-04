@@ -9,3 +9,4 @@
 
 [tools]
 node = "24"     # Active LTS — matches workspace sibling repos
+pnpm = "11"     # Frontend package manager; pnpm-lock.yaml is canonical
