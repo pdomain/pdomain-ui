@@ -1,6 +1,6 @@
 name: ci
 
-# Runs on every pull request targeting main.
+# Runs on every pull request targeting master.
 # This is the primary quality gate for @pdomain/pdomain-ui.
 #
 # Jobs:

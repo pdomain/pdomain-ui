@@ -157,7 +157,7 @@ release-major:
 
 # scripts/do-release.sh handles repo-state guards, runs the ci pre-flight,
 # bumps package.json via `pnpm version --no-git-tag-version`, creates an
-# annotated tag, and pushes main + tag to origin.
+# annotated tag, and pushes master + tag to origin.
 # Pass FORCE=1 to skip repo-state guards (pre-flight still runs).
 # Pass SKIP_PUSH=1 to create the tag locally without pushing (dry-run).
 _do-release:

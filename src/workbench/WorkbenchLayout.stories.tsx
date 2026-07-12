@@ -56,7 +56,7 @@ function StoryFrame({
 }: {
   children: React.ReactNode;
   width?: number;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <div
       style={{

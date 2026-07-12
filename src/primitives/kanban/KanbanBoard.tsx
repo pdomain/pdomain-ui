@@ -66,8 +66,7 @@ function KanbanBoardInner<TColumn extends KanbanColumnDef, TItem extends KanbanI
 
       const overId = String(over.id);
       const toColumnId = (columnIds.has(overId) ? overId : itemIndex.get(overId)?.columnId) as
-        | TColumn['id']
-        | undefined;
+        TColumn['id'] | undefined;
       if (toColumnId === undefined) return;
 
       const fromColumnId = dragged.columnId as TColumn['id'];

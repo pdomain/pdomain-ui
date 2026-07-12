@@ -31,8 +31,8 @@ function Readout() {
 describe('SuiteSiblingsProvider (#165)', () => {
   it('starts with loading=true', () => {
     const fetchInstalled = vi.fn((): Promise<InstalledApp[]> => new Promise(() => undefined));
-    const postLaunch = vi.fn(
-      (): Promise<LaunchResult> => Promise.resolve({ kind: 'opened' as const, url: '' }),
+    const postLaunch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({ kind: 'opened' as const, url: '' }),
     );
     render(
       <SuiteSiblingsProvider value={{ fetchInstalled, postLaunch }}>
@@ -44,8 +44,8 @@ describe('SuiteSiblingsProvider (#165)', () => {
 
   it('populates siblings after fetchInstalled resolves', async () => {
     const fetchInstalled = vi.fn(() => Promise.resolve([makeSibling('a'), makeSibling('b')]));
-    const postLaunch = vi.fn(
-      (): Promise<LaunchResult> => Promise.resolve({ kind: 'opened' as const, url: '' }),
+    const postLaunch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({ kind: 'opened' as const, url: '' }),
     );
     render(
       <SuiteSiblingsProvider value={{ fetchInstalled, postLaunch }}>
@@ -59,8 +59,8 @@ describe('SuiteSiblingsProvider (#165)', () => {
 
   it('handles fetchInstalled failure gracefully (loading=false, siblings=[])', async () => {
     const fetchInstalled = vi.fn(() => Promise.reject(new Error('fail')));
-    const postLaunch = vi.fn(
-      (): Promise<LaunchResult> => Promise.resolve({ kind: 'opened' as const, url: '' }),
+    const postLaunch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({ kind: 'opened' as const, url: '' }),
     );
     render(
       <SuiteSiblingsProvider value={{ fetchInstalled, postLaunch }}>
@@ -73,12 +73,11 @@ describe('SuiteSiblingsProvider (#165)', () => {
   });
 
   it('launch() calls postLaunch with the sibling id', async () => {
-    const postLaunch = vi.fn(
-      (): Promise<LaunchResult> =>
-        Promise.resolve({
-          kind: 'opened' as const,
-          url: 'http://localhost:3001',
-        }),
+    const postLaunch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({
+        kind: 'opened' as const,
+        url: 'http://localhost:3001',
+      }),
     );
     const fetchInstalled = vi.fn(() => Promise.resolve([makeSibling('a')]));
 

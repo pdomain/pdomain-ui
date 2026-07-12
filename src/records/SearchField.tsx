@@ -34,7 +34,7 @@ function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   }
 
   if (ref !== undefined && ref !== null) {
-    (ref as React.MutableRefObject<T | null>).current = value;
+    ref.current = value;
   }
 }
 

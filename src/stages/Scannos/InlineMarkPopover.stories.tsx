@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react';
 import { InlineMarkPopover } from './InlineMarkPopover.js';
 import type { InlineMarkToken } from './InlineMarkPopover.js';

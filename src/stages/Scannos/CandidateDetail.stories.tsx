@@ -7,7 +7,7 @@
  *   3. NoConfidence     — candidate without a confidence score
  */
 
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react';
 import { CandidateDetail } from './CandidateDetail.js';
 

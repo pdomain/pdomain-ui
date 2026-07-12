@@ -48,14 +48,7 @@ import {
 
 /** The 8 project-settings group identifiers. */
 export type ProjectSettingsGroup =
-  | 'general'
-  | 'bib'
-  | 'pgdp'
-  | 'format'
-  | 'defaults'
-  | 'members'
-  | 'storage'
-  | 'danger';
+  'general' | 'bib' | 'pgdp' | 'format' | 'defaults' | 'members' | 'storage' | 'danger';
 
 // ---------------------------------------------------------------------------
 // Default right-pane placeholder (no children supplied)

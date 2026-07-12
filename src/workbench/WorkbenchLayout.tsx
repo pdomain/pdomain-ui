@@ -22,10 +22,7 @@ export interface WorkbenchLayoutProps {
 }
 
 type WorkbenchLayoutVariant =
-  | 'viewer-only'
-  | 'navigation-viewer'
-  | 'viewer-inspector'
-  | 'navigation-viewer-inspector';
+  'viewer-only' | 'navigation-viewer' | 'viewer-inspector' | 'navigation-viewer-inspector';
 
 const DEFAULT_NAV_WIDTH = '16rem';
 const DEFAULT_INSPECTOR_WIDTH = '22rem';

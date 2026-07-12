@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 import { PageThumb } from './PageThumb.js';
 
 const meta: Meta<typeof PageThumb> = {

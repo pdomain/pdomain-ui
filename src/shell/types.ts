@@ -97,8 +97,7 @@ export interface NavItem {
 // ─── LaunchResult ─────────────────────────────────────────────────────────────
 
 export type LaunchResult =
-  | { kind: 'opened'; url: string }
-  | { kind: 'requires-host-config'; siblingId: string };
+  { kind: 'opened'; url: string } | { kind: 'requires-host-config'; siblingId: string };
 
 // ─── SettingsPanelDescriptor ──────────────────────────────────────────────────
 

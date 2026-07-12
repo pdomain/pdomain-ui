@@ -30,21 +30,19 @@ function wrapWithContext(launch: (id: string) => Promise<LaunchResult>, children
 
 describe('LauncherTile (#159)', () => {
   it('renders sibling displayName', () => {
-    const launch = vi.fn(
-      (): Promise<LaunchResult> =>
-        Promise.resolve({ kind: 'opened' as const, url: 'http://localhost:3001' }),
+    const launch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({ kind: 'opened' as const, url: 'http://localhost:3001' }),
     );
     render(wrapWithContext(launch, <LauncherTile sibling={sibling()} />));
     expect(screen.getByText('Sibling App')).toBeTruthy();
   });
 
   it('calls launch(id) when clicked', async () => {
-    const launch = vi.fn(
-      (): Promise<LaunchResult> =>
-        Promise.resolve({
-          kind: 'opened',
-          url: 'http://localhost:3001',
-        }),
+    const launch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({
+        kind: 'opened',
+        url: 'http://localhost:3001',
+      }),
     );
     render(wrapWithContext(launch, <LauncherTile sibling={sibling()} />));
     await act(() => {
@@ -56,12 +54,11 @@ describe('LauncherTile (#159)', () => {
 
   it('calls window.open with url on "opened" result', async () => {
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
-    const launch = vi.fn(
-      (): Promise<LaunchResult> =>
-        Promise.resolve({
-          kind: 'opened',
-          url: 'http://localhost:3001',
-        }),
+    const launch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({
+        kind: 'opened',
+        url: 'http://localhost:3001',
+      }),
     );
     render(wrapWithContext(launch, <LauncherTile sibling={sibling()} />));
     await act(() => {
@@ -73,12 +70,11 @@ describe('LauncherTile (#159)', () => {
   });
 
   it('shows requires-host-config label on that result', async () => {
-    const launch = vi.fn(
-      (): Promise<LaunchResult> =>
-        Promise.resolve({
-          kind: 'requires-host-config',
-          siblingId: 'sibling-app',
-        }),
+    const launch = vi.fn((): Promise<LaunchResult> =>
+      Promise.resolve({
+        kind: 'requires-host-config',
+        siblingId: 'sibling-app',
+      }),
     );
     render(wrapWithContext(launch, <LauncherTile sibling={sibling()} />));
     await act(() => {

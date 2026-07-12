@@ -122,8 +122,7 @@ export interface ProjectsLandingTemplateEmptyProps extends ProjectsLandingShared
 }
 
 export type ProjectsLandingTemplateProps =
-  | ProjectsLandingTemplatePopulatedProps
-  | ProjectsLandingTemplateEmptyProps;
+  ProjectsLandingTemplatePopulatedProps | ProjectsLandingTemplateEmptyProps;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
