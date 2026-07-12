@@ -130,15 +130,15 @@ git tag -a "$VERSION" -m "Release $VERSION"
 if [ "$SKIP_PUSH" = "1" ]; then
     echo "INFO: SKIP_PUSH=1 -- tag created locally but not pushed."
     echo "   To push and release later:"
-    echo "     git push origin main --follow-tags"
+    echo "     git push origin master --follow-tags"
     exit 0
 fi
 
 # ---------------------------------------------------------------------------
 # Push
 # ---------------------------------------------------------------------------
-echo "Pushing main + tag to origin..."
-git push origin main --follow-tags
+echo "Pushing master + tag to origin..."
+git push origin master --follow-tags
 
 echo ""
 echo "Released $VERSION."
