@@ -38,25 +38,25 @@ if [ "$FORCE" != "1" ]; then
     fi
 
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    if [ "$CURRENT_BRANCH" != "main" ]; then
-        echo "ERROR: Not on main (current branch: $CURRENT_BRANCH)." >&2
-        echo "   Switch to main before tagging. (Set FORCE=1 to override.)" >&2
+    if [ "$CURRENT_BRANCH" != "master" ]; then
+        echo "ERROR: Not on master (current branch: $CURRENT_BRANCH)." >&2
+        echo "   Switch to master before tagging. (Set FORCE=1 to override.)" >&2
         exit 1
     fi
 
-    git fetch origin main --quiet
-    LOCAL=$(git rev-parse main)
-    REMOTE=$(git rev-parse origin/main)
-    BASE=$(git merge-base main origin/main)
+    git fetch origin master --quiet
+    LOCAL=$(git rev-parse master)
+    REMOTE=$(git rev-parse origin/master)
+    BASE=$(git merge-base master origin/master)
     if [ "$LOCAL" != "$REMOTE" ]; then
         if [ "$LOCAL" = "$BASE" ]; then
-            echo "ERROR: Local main is behind origin/main. Pull first." >&2
+            echo "ERROR: Local master is behind origin/master. Pull first." >&2
             echo "   (Set FORCE=1 to override.)" >&2
             exit 1
         elif [ "$REMOTE" = "$BASE" ]; then
-            echo "INFO: Local main is ahead of origin/main (will be pushed)."
+            echo "INFO: Local master is ahead of origin/master (will be pushed)."
         else
-            echo "ERROR: main and origin/main have diverged." >&2
+            echo "ERROR: master and origin/master have diverged." >&2
             exit 1
         fi
     fi
