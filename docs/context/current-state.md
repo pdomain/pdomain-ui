@@ -29,6 +29,7 @@ have no remaining role as current truth.
 Current shared-library structure is also captured in
 [design-system composition](../architecture/design-system-composition.md),
 [theme and component quality](../architecture/theme-and-component-quality.md),
+[the generated type contract](../architecture/codegen-contract.md),
 [the shell utility dock](../architecture/shell-utility-dock.md),
 [the stage component library](../architecture/stage-component-library.md),
 [cross-app common UI modules](../architecture/cross-app-common-ui-modules.md),
