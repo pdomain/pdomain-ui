@@ -1,3 +1,13 @@
+---
+kind: spec
+status: implemented
+owner: CT
+created: 2026-05-21
+last_verified: 2026-07-13
+promotes_to: docs/architecture/job-status-pip.md
+disposition: promote-then-retire
+---
+
 # JobStatusPip — component-API spec
 
 **Date:** 2026-05-21
@@ -153,3 +163,17 @@ the current contract (`13-driver-contract.md`). The built-in
   `label="Queued"`. pdomain-ui does not own display-string localization.
 - **D-J3** `pip--running` animation is defined in `primitives.css` (not
   inline JS). This keeps animation under the design-system's control.
+
+## Adversarial Review
+
+- **Stage:** Post-implementation retirement review.
+- **Sources:** Repository implementation and tests, commits
+  `dee027951f591ae10f1df7ecc21f4c34d6bf94dc` and
+  `780c950b81e9f065dc40aabd5c2b8f8f5d69a6de`, git history, and the 2026-07-13
+  docgraph migration analyzer.
+- **Accepted findings:** Implementation is proven. Durable current behavior
+  belongs in `docs/architecture/job-status-pip.md` before this spec retires.
+- **Residual risks:** The implementation spreads caller props after the default
+  test id, so a caller can override it despite this spec describing it as
+  non-configurable. The architecture document records the implementation as
+  current truth; any stronger test-id contract needs a code change and test.

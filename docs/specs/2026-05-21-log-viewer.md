@@ -110,8 +110,8 @@ interface LogViewerProps {
 
 ## 4. Virtualization
 
-Uses `@tanstack/react-virtual` (added alongside KanbanBoard — see
-`2026-05-21-kanban-board.md` §11).
+Uses `@tanstack/react-virtual` (added alongside KanbanBoard; see
+[Kanban board](../architecture/kanban-board.md)).
 
 ```ts
 // internal

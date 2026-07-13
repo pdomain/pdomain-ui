@@ -1,3 +1,13 @@
+---
+kind: spec
+status: implemented
+owner: CT
+created: 2026-05-21
+last_verified: 2026-07-13
+promotes_to: docs/architecture/kanban-board.md
+disposition: promote-then-retire
+---
+
 # KanbanBoard / KanbanColumn / PageChip — component-API spec
 
 **Date:** 2026-05-21
@@ -356,3 +366,16 @@ Both packages can coexist.
   `renderChip` by checking its staging store.
 - **D-K6** No built-in "Apply / Discard" affordance in pdomain-ui — that's SPA-level
   UX. The board is stateless with respect to commits.
+
+## Adversarial Review
+
+- **Stage:** Post-implementation retirement review.
+- **Sources:** Repository implementation and tests, commit
+  `84dcb62dceeb1cabe819d766990b062b7ea9f179`, git history, and the 2026-07-13
+  docgraph migration analyzer.
+- **Accepted findings:** Implementation is proven. Durable current behavior
+  belongs in `docs/architecture/kanban-board.md` before this spec retires. The
+  LogViewer prose reference must point to that architecture document.
+- **Residual risks:** The unit suite mocks the virtualizer and does not exercise
+  pointer or keyboard drag gestures end to end. Consumer verification remains
+  important for large columns, multi-select dragging, and announcements.
