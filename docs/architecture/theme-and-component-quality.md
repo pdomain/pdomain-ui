@@ -43,8 +43,7 @@ an unused `beforeImageUrl`, now tracked by later compare-viewer work.
 
 ## Evidence
 
-- Docs: `docs/specs/2026-05-28-component-audit-remediation-design.md`,
-  `docs/plans/2026-05-28-component-audit-remediation-plan.md`
+- Former sources: the May 28 component-audit remediation spec and plan
 - Code: `theme/tokens.css`, `theme/primitives.css`, `src/canvas/resolveToken.ts`,
   `src/stages/Crop/CropCard.tsx`, `src/templates/PipelineTemplate.tsx`
 - History: the May 28 foundation and audit-lane commits

@@ -37,8 +37,7 @@ requires consumer-level keyboard review.
 
 ## Evidence
 
-- Docs: `docs/specs/2026-06-16-accordion-trigger-slots-design.md`,
-  `docs/plans/2026-06-16-accordion-trigger-slots.md`
+- Former sources: the June 16 Accordion trigger-slot spec and plan
 - Code/tests: `src/primitives/Accordion.tsx`,
   `src/primitives/Accordion.test.tsx`, `theme/primitives.css`
 - History: commits `7c3c755`, `4909693`, and `b28b3d3`

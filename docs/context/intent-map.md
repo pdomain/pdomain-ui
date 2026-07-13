@@ -21,14 +21,15 @@ Kind: context
 - Decide whether to implement the Field help slot described in the active spec.
 - Keep the writing-style process and lint-deviation governance active.
 - Fix CropCard's empty flag-overlay guard; the current React-element check is
-  always true. Source: `docs/specs/2026-05-28-component-audit-remediation-design.md`.
+  always true. Source: the former May 28 audit, promoted to
+  [theme and component quality](../architecture/theme-and-component-quality.md).
 - Replace CoverPlaceholder's remaining inline RGBA foreground and shadow values
   with theme tokens. Source: the component-audit remediation design.
 - Verify UtilityDock behavior in `pdomain-ocr-simple-gui`,
   `pdomain-prep-for-pgdp`, and `pdomain-ocr-labeler-spa`, especially canvas
   interaction, pinned reflow, and resize behavior. Current evidence covers the
-  pdomain-ui implementation and unit tests only. Source:
-  `docs/specs/2026-06-02-right-side-utility-panels-design.md`.
+  pdomain-ui implementation and unit tests only. Source: the former utility
+  design, promoted to [shell utility dock](../architecture/shell-utility-dock.md).
 
 ## Deferred work
 
@@ -36,8 +37,8 @@ Kind: context
   current consumer need.
 - Run a separate required-section conformance migration for advisory findings.
 - Revisit a richer ColorField picker or URL-addressable settings panels only
-  after a consumer demonstrates the need. Source:
-  `docs/specs/2026-05-22-shared-settings-modal-design.md` § Open questions.
+  after a consumer demonstrates the need. Source: the former shared-settings
+  spec; current truth is [shell utility dock](../architecture/shell-utility-dock.md).
 - Remove AppShell's deprecated `drawer` and `rightPanel` compatibility surface
   only after downstream consumers migrate. Current code retains both for
   compatibility. Source: the right-side utility-panel design § Constraints.
@@ -48,12 +49,13 @@ Kind: context
 - Migrate consumers to the records, source-intake, viewport, settings, status,
   and workbench subpaths after app-specific integration plans validate each
   boundary. Current evidence proves package exports and library tests, not
-  adoption. Source:
-  `docs/specs/2026-06-15-cross-app-common-ui-modules-design.md` § Migration Notes.
+  adoption. Source: the former common-module spec's migration notes; current
+  truth is [cross-app common UI](../architecture/cross-app-common-ui-modules.md).
 - Migrate the labeler accordion wrapper to `AccordionTrigger` slots and validate
   interactive trailing-content keyboard behavior in the consumer. Current
-  repository tests prove the shared slots but not labeler adoption. Source:
-  `docs/specs/2026-06-16-accordion-trigger-slots-design.md` § Consumer follow-up.
+  repository tests prove the shared slots but not labeler adoption. Source: the
+  former Accordion spec's consumer follow-up; current truth is
+  [Accordion trigger slots](../architecture/accordion-trigger-slots.md).
 - Split `theme/primitives.css` only if continued growth makes the single file
   unwieldy; preserve one runtime entry and the existing sync gate. Current
   practice still uses one authoritative primitive stylesheet. Source: the
@@ -66,8 +68,8 @@ Kind: context
 - Do not let injected settings panels own shell header actions; `headerActions`
   stays app-level. Source: the superseded shared-settings-modal design.
 - Do not centralize stage-local stores in `src/stores/`; keep that surface for
-  suite-wide state. Source:
-  `docs/specs/2026-05-24-design-handoff-stages-phase-2.md` OQ-P2-2.
+  suite-wide state. Source: the former Phase 2 catalog OQ-P2-2; current truth is
+  [stage component architecture](../architecture/stage-component-library.md).
 - Do not add brand/info token aliases without a new token RFC. Source: the
   component-audit remediation design § Out of scope / open questions.
 
@@ -109,12 +111,17 @@ None.
   `docs/plans/2026-06-14-pgdp-common-component-backlog.md`,
   `docs/process/lint-deviations.md`, `docs/process/writing-style.md`, and
   `docs/research/2026-06-14-pgdp-design-handoff-gap-analysis.md`.
-- **needs-owner-review:** `docs/specs/2026-05-21-log-viewer.md` and the stale
-  `docs/research/2026-05-22-deep-code-security-review.md`.
-- **superseded:** `docs/specs/2026-05-22-shared-settings-modal-design.md`;
-  the right-side utility-panel design replaces its presentation model.
-- **can-retire:** the implemented design-handoff design and research,
-  component-audit design and plan, utility-panel design and plan,
-  cross-app-module design and plan, and accordion-slot design and plan. Their
-  metadata now declares the evidence-backed lifecycle state; formal promotion
-  and retirement of those live-path documents is separate work.
+- **needs-owner-review:** `docs/specs/2026-05-21-log-viewer.md`; the former May
+  22 security review was stale and has been closed into the decisions context.
+- **retired (completed 2026-07-13):** the former design-handoff research, plan,
+  and specs; component-audit spec and plan; shared-settings-modal spec;
+  utility-panel spec and plan; cross-app-module spec and plan; and
+  Accordion-slot spec and plan. Current truth is in
+  [design-system composition](../architecture/design-system-composition.md),
+  [theme and component quality](../architecture/theme-and-component-quality.md),
+  [shell utility dock](../architecture/shell-utility-dock.md),
+  [stage component library](../architecture/stage-component-library.md),
+  [cross-app common UI modules](../architecture/cross-app-common-ui-modules.md),
+  and [Accordion trigger slots](../architecture/accordion-trigger-slots.md).
+  Every deleted path and retained residual is recorded in the grouped
+  [decisions tombstones](decisions.md).

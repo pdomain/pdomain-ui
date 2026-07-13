@@ -43,9 +43,8 @@ The reviewed port-plan also reshaped the provisional issue decomposition.
 
 ## Evidence
 
-- Docs: `docs/specs/2026-05-24-pd-ui-design-handoff-design.md`,
-  `docs/plans/2026-05-24-pd-ui-design-handoff.md`,
-  `docs/research/2026-05-24-design-handoff-port-plan.md`
+- Former sources: the May 24 design-handoff spec, implementation plan, and
+  reviewed port-plan research
 - Code/tests: `src/templates/PipelineTemplate.tsx`,
   `src/templates/PipelineTemplate.test.tsx`, `src/icons/`
 - History: commits `8e60ec8`, `c4a8e04`, and the May 24 template/molecule batches

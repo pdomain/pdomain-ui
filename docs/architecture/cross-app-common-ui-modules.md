@@ -42,8 +42,7 @@ slot-aware pinned grid areas.
 
 ## Evidence
 
-- Docs: `docs/specs/2026-06-15-cross-app-common-ui-modules-design.md`,
-  `docs/plans/2026-06-15-cross-app-common-ui-modules.md`
+- Former sources: the June 15 cross-app common-module spec and plan
 - Code/tests: `src/records/`, `src/source-intake/`, `src/viewport/`,
   `src/settings/`, `src/status/`, `src/workbench/`, `tests/build.contract.test.ts`
 - History: commit `ed0f56f` and June 15 review-fix commits

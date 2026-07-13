@@ -42,9 +42,8 @@ remain inert.
 
 ## Evidence
 
-- Docs: `docs/specs/2026-05-22-shared-settings-modal-design.md`,
-  `docs/specs/2026-06-02-right-side-utility-panels-design.md`,
-  `docs/plans/2026-06-02-right-side-utility-panels.md`
+- Former sources: the May 22 shared-settings-modal spec and the June 2
+  right-side utility-panel spec and plan
 - Code/tests: `src/shell/AppShell.tsx`, `src/shell/UtilityDock.tsx`,
   `src/shell/SettingsPanel.tsx`, `src/shell/SettingsModalShim.test.tsx`,
   `src/shell/AppShell.utilityDock.test.tsx`

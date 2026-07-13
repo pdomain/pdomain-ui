@@ -7,7 +7,7 @@ owner: ConcaveTrillion
 created: 2026-05-25
 last_verified: 2026-07-13
 related:
-  - docs/specs/2026-05-24-design-handoff-stages-phase-2.md §6.5
+  - docs/architecture/stage-component-library.md
 ---
 
 # Slot-based stage primitives

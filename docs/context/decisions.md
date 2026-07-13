@@ -94,3 +94,92 @@ Kind: context
   `docs/architecture/theme-and-component-quality.md`.
 - **Remaining work:** Fix the recorded CropCard/CoverPlaceholder residuals and
   decide whether mounted canvases must repaint on live theme changes.
+
+### 2026-07-13 — Retired: stale security research
+
+- **Old paths:** `docs/research/2026-05-22-deep-code-security-review.md`.
+- **Outcome:** Deleted as stale point-in-time research.
+- **Superseded by:** `docs/context/decisions.md` and current code/tests.
+- **Evidence:** The migration review found that each historical finding needs
+  fresh verification before action.
+- **Rationale kept:** Current security decisions belong in this append-only
+  ledger rather than an unverified scan report.
+- **Remaining work:** Re-run focused security review when current risk or owner
+  demand justifies it.
+
+### 2026-07-13 — Retired: design-handoff research, plan, and spec
+
+- **Old paths:** `docs/research/2026-05-24-design-handoff-port-plan.md`,
+  `docs/plans/2026-05-24-pd-ui-design-handoff.md`, and
+  `docs/specs/2026-05-24-pd-ui-design-handoff-design.md`.
+- **Outcome:** Implemented and deleted after promotion.
+- **Superseded by:** `docs/architecture/design-system-composition.md`.
+- **Evidence:** PipelineTemplate, template tests, icon exports, the reviewed
+  port decisions, and May 24 implementation history.
+- **Rationale kept:** The replacement records recon-first porting, icon/token
+  policy, and the actual focused-slot composition model.
+- **Remaining work:** Consumer migrations remain consumer-repository work.
+
+### 2026-07-13 — Retired: Phase 2 stage-component catalog
+
+- **Old paths:** `docs/specs/2026-05-24-design-handoff-stages-phase-2.md`.
+- **Outcome:** Implemented catalog deleted after promotion.
+- **Superseded by:** `docs/architecture/stage-component-library.md`.
+- **Evidence:** Stage exports/tests and May 24-25 M1-M12 implementation history.
+- **Rationale kept:** The replacement records stage ownership, promotion rules,
+  ArtifactViewer, and known partial contracts.
+- **Remaining work:** Intent-map tracks LabelerCanvas mutation, labeler adoption,
+  and SourcePageWorkbench comparison adjudication.
+
+### 2026-07-13 — Retired: component-audit remediation spec and plan
+
+- **Old paths:** `docs/specs/2026-05-28-component-audit-remediation-design.md`
+  and `docs/plans/2026-05-28-component-audit-remediation-plan.md`.
+- **Outcome:** Broadly implemented audit artifacts deleted after promotion.
+- **Superseded by:** `docs/architecture/theme-and-component-quality.md`.
+- **Evidence:** May 28 workstream history, runtime theme files, canvas token
+  resolution, code/tests, and the conformance red-team.
+- **Rationale kept:** The replacement records token, CSS, canvas,
+  accessibility, and verification policy.
+- **Remaining work:** Intent-map retains CropCard, CoverPlaceholder, live canvas
+  theming, and conditional stylesheet-split work.
+
+### 2026-07-13 — Retired: settings-modal and utility-dock specs and plan
+
+- **Old paths:** `docs/specs/2026-05-22-shared-settings-modal-design.md`,
+  `docs/specs/2026-06-02-right-side-utility-panels-design.md`, and
+  `docs/plans/2026-06-02-right-side-utility-panels.md`.
+- **Outcome:** The modal spec was superseded; the utility spec and plan were
+  implemented. All three were deleted after promotion.
+- **Superseded by:** `docs/architecture/shell-utility-dock.md`.
+- **Evidence:** AppShell, UtilityDock, SettingsPanel, compatibility tests, and
+  June 2 implementation history.
+- **Rationale kept:** The replacement records shell ownership, non-modal dock
+  behavior, persistence, panel injection, and compatibility boundaries.
+- **Remaining work:** Intent-map tracks three-consumer verification and eventual
+  removal of deprecated shell surfaces and props.
+
+### 2026-07-13 — Retired: cross-app common-module spec and plan
+
+- **Old paths:** `docs/specs/2026-06-15-cross-app-common-ui-modules-design.md`
+  and `docs/plans/2026-06-15-cross-app-common-ui-modules.md`.
+- **Outcome:** Implemented and deleted after promotion.
+- **Superseded by:** `docs/architecture/cross-app-common-ui-modules.md`.
+- **Evidence:** Six package subpaths, component tests/stories, package contract
+  tests, and June 15 implementation history.
+- **Rationale kept:** The replacement records the presentation-only boundary,
+  export policy, and implementation refinements.
+- **Remaining work:** Consumer adoption is deferred in intent-map.
+
+### 2026-07-13 — Retired: Accordion trigger-slot spec and plan
+
+- **Old paths:** `docs/specs/2026-06-16-accordion-trigger-slots-design.md` and
+  `docs/plans/2026-06-16-accordion-trigger-slots.md`.
+- **Outcome:** Implemented and deleted after promotion.
+- **Superseded by:** `docs/architecture/accordion-trigger-slots.md`.
+- **Evidence:** Accordion implementation, focused tests, CSS, and commits
+  `7c3c755`, `4909693`, and `b28b3d3`.
+- **Rationale kept:** The replacement records additive slot order, chevron
+  behavior, and event ownership.
+- **Remaining work:** Intent-map retains labeler adoption and consumer keyboard
+  validation.

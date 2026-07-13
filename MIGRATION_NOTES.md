@@ -1,11 +1,19 @@
+---
+kind: architecture
+status: built
+owner: CT
+created: 2026-05-24
+last_verified: 2026-07-13
+---
+
 # pdomain-ui Design-Handoff Migration Notes
 
 **Applies to:** `@pdomain/pdomain-ui` consumers — `pdomain-ocr-labeler-spa`,
 `pdomain-prep-for-pgdp`, and future `pdomain-ocr-trainer-spa`.
 
-**Authoritative references:**
-- Port-plan + CT decisions: `docs/research/2026-05-24-design-handoff-port-plan.md`
-- Design-handoff plan: `docs/plans/2026-05-24-pdomain-ui-design-handoff.md` (workspace root)
+**Authoritative reference:**
+[Design-system composition](docs/architecture/design-system-composition.md),
+which promotes the former design-handoff research, plan, and spec.
 - All shipped work landed on commits `2042bd9..main` (design-handoff milestone #333)
 
 ---
@@ -14,7 +22,7 @@
 
 The design-handoff milestone (`spec: pdomain-ui-design-handoff (#333)`) extended
 existing primitives, added an `<Icon name>` dispatcher shim, ported four
-shell molecules (`AppHeader`, `JobsPill`, `JobsDrawer`, `JobRow`), ported five
+shell molecules (`AppHeader`, `JobsPill`, `JobsDrawer`, `JobRow`), ported seven
 new template molecules (`StageStrip`, `TabsBand`, `ProjectsDrawer`,
 `ProjectsLandingTemplate`, `PipelineTemplate`, `ProjectSettingsTemplate`,
 `SettingsNav`), ported cross-stage batch-1 molecules, and deprecated two
@@ -526,8 +534,8 @@ import { Separator } from '@pdomain/pdomain-ui/primitives';
 
 ## 11b. Phase 2 — Shipped
 
-Tracks per-stage components landed under Phase 2 (spec:
-`docs/specs/2026-05-24-design-handoff-stages-phase-2.md`).
+Tracks per-stage components landed under Phase 2. Current behavior is in
+[stage component architecture](docs/architecture/stage-component-library.md).
 
 ### M1: ArtifactViewer + overlays (2026-05-24 · 9f81be7)
 
@@ -692,5 +700,5 @@ The following design-bundle identifiers were intentionally **not** ported:
 ---
 
 *Generated from port-plan CT review decisions (all 12 OQs resolved 2026-05-24).
-See `docs/research/2026-05-24-design-handoff-port-plan.md` § "CT review decisions"
+See [design-system composition](docs/architecture/design-system-composition.md)
 for authoritative OQ rationale.*

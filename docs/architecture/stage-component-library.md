@@ -30,7 +30,8 @@ Stage-specific wrappers remain valid when their data or behavior differs.
 SourcePageWorkbench currently renders the after image and discards its retained
 `beforeImageUrl`; full comparison is later work. LabelerCanvas renders blocks
 and selection handles but does not call `onBlocksChange` or implement drag
-mutation. The Phase 2 catalog remains labeled draft despite shipped batches.
+mutation. The former Phase 2 catalog was still labeled draft despite shipped
+batches; it is now retired after promotion to this architecture record.
 
 ## Durable decisions
 
@@ -41,7 +42,7 @@ mutation. The Phase 2 catalog remains labeled draft despite shipped batches.
 
 ## Evidence
 
-- Docs: `docs/specs/2026-05-24-design-handoff-stages-phase-2.md`
+- Former source: the May 24 Phase 2 stage-component catalog
 - Code/tests: `src/stages/`, `src/stages/PageWorkbench/ArtifactViewer.tsx`,
   `src/stages/PageWorkbench/LabelerCanvas.tsx`,
   `src/stages/Source/SourcePageWorkbench.tsx`
