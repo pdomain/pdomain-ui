@@ -1,12 +1,27 @@
 ---
+kind: usage
 status: draft
-last-verified: 2026-05-27
+owner: CT
+created: 2026-05-27
+last_verified: 2026-07-13
 references:
   - "pdomain-prep-for-pgdp@d5f1ce09e4059b319a6973a838493ffb6c7f8f56"
   - "pdomain-ocr-labeler-spa@85dc98971d14e56240d69ae4a833d5d70f2ca027"
 ---
 
 # Consumer bootstrap pattern
+
+## Agent Index
+
+- **Kind:** usage
+- **Status:** draft
+- **Read when:** bootstrapping or migrating a consumer SPA.
+- **Search terms:** consumer bootstrap, CSS imports, AppShell, UtilityDock jobs, providers.
+
+The library contracts below match pdomain-ui 0.11.x and React 18 or 19.
+Router, query, toaster, font, and consumer-adapter conventions still need fresh
+verification in each current consumer repository before this draft becomes
+canonical across the suite.
 
 ## When to read this doc
 
@@ -90,6 +105,7 @@ for new SPAs.
 /* src/index.css */
 
 @import "./styles/tokens.css";
+@import "@pdomain/pdomain-ui/theme/primitives.css";
 
 @tailwind base;
 @tailwind components;
@@ -115,11 +131,10 @@ The `@import "./styles/tokens.css"` line must come before the `@tailwind`
 directives so Tailwind's JIT scanner can see the `--bg-page` / `--ink-1`
 vars when resolving `bg-bg-page` / `text-ink-1` utility classes.
 
-labeler-spa variant: labeler-spa also imports `./styles/primitives.css` on
-line 12 alongside `./styles/tokens.css`. That extra import is a transitional
-artifact from the shadcn-ui migration; new SPAs do not need it — primitives
-from pdomain-ui are imported by component code via the `@pdomain/pdomain-ui/primitives`
-subpath export.
+Import `@pdomain/pdomain-ui/theme/primitives.css` in every app that renders
+pdomain-ui components. JavaScript component imports do not load the stylesheet.
+Import `@pdomain/pdomain-ui/theme/reset.css` only when the app has no Tailwind
+preflight or other reset. Tokens and primitive CSS are always required.
 
 ### Cross-app modules
 
@@ -185,22 +200,21 @@ The canonical provider stack, from outermost to innermost:
       <AppShell>             ← from @pdomain/pdomain-ui/shell
 ```
 
-Minimal `AppShell` wiring:
+Minimal `AppShell` wiring uses its built-in header. Pass a custom `header` only
+as an escape hatch when the application needs a different header composition.
 
 ```tsx
 import {
   AppShell,
-  AppHeader,
   SuiteSiblingsProvider,
   type UIPrefsConfig,
   type InstalledApp,
   type LaunchResult,
-  type ActiveJob,
 } from "@pdomain/pdomain-ui/shell";
 
 const UI_PREFS_CONFIG: UIPrefsConfig = {
   load: async () => {
-    // Try /api/suite/prefs (pdomain-ops) first, fall back to localStorage.
+    // Try /api/suite/prefs (pdomain-ops) first, then use hard-coded defaults.
     try {
       const res = await fetch("/api/suite/prefs");
       if (res.ok) {
@@ -262,7 +276,7 @@ export default function App() {
 
   return (
     <SuiteSiblingsProvider value={{ fetchInstalled, postLaunch }}>
-      <div data-testid="app-shell" className="h-screen w-full">
+      <div className="h-screen w-full">
         <AppShell
           appId="your-app-id"
           appDisplayName="Your App Name"
@@ -270,14 +284,7 @@ export default function App() {
           launcherSlot="header"
           deployMode="local"
           uiPrefsConfig={UI_PREFS_CONFIG}
-          header={
-            <AppHeader
-              appName="Your App"
-              searchPlaceholder="Search…"
-              activeJobs={activeJobs}
-              onSearchClick={() => { /* open search modal */ }}
-            />
-          }
+          jobs={{ activeJobs }}
           main={
             <div className="flex flex-col h-full overflow-hidden">
               <div className="flex-1 overflow-auto">
@@ -295,33 +302,35 @@ export default function App() {
 }
 ```
 
+This preferences example falls back to hard-coded defaults, not localStorage.
+Local persistence is a consumer-specific adapter choice, and the suite-wide
+fallback policy remains an unverified owner decision.
+
 Source: `pdomain-prep-for-pgdp/frontend/src/App.tsx:287-379`.
 
-Required `AppShell` props:
+Core `AppShell` props:
 
 | Prop | Type | Notes |
 |---|---|---|
 | `appId` | `string` | Stable kebab-case ID used for prefs storage and suite registry |
 | `appDisplayName` | `string` | Human-readable name shown in launcher |
 | `appIconUrl` | `string` | URL of a 32 × 32 icon served by the app's static mount |
-| `deployMode` | `"local" \| "hosted"` | Phase 1 apps always use `"local"` |
+| `deployMode` | `"local" \| "hosted"` | Optional; defaults to `"local"` |
 | `uiPrefsConfig` | `UIPrefsConfig` | Load + persist callbacks (see above) |
-| `header` | `ReactNode` | Typically `<AppHeader>` with `activeJobs` |
 | `main` | `ReactNode` | Route table; use `flex flex-col h-full` on the root div |
 
-The `data-testid="app-shell"` wrapper div is a contract for Playwright selectors.
-pdomain-ui's `AppShell` does not inject this testid itself; the consuming SPA
-always wraps it.
+AppShell injects `data-testid="app-shell"` on its root. A wrapper may still own
+page sizing, but it is not required to provide that test id.
 
 ---
 
 ## Required npm packages
 
 ```jsonc
-// package.json — minimum versions (as of 2026-05-27)
+// package.json — supported baseline for these APIs
 {
   "dependencies": {
-    "@pdomain/pdomain-ui": "^0.2.2",
+    "@pdomain/pdomain-ui": "^0.11.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@tanstack/react-query": "^5.59.0",
@@ -345,24 +354,26 @@ include `./src/**/*.{ts,tsx}` in `content` so JIT picks up `bg-bg-page`,
 
 ---
 
-## `activeJobs` query
+## Jobs and the utility dock
 
-`AppHeader` accepts an `activeJobs: ActiveJob[]` prop that drives the built-in
-`JobsPill` indicator. Wire it by polling your app's jobs API:
+Build app-owned job data from the application's API. Pass it to AppShell's
+`jobs` object so UtilityDock can render the jobs surface. Job data alone does
+not add a jobs trigger to the built-in header; supply a trigger through
+`headerActions` or another component rendered inside AppShell.
 
 ```tsx
 import { useQuery } from "@tanstack/react-query";
-import type { ActiveJob } from "@pdomain/pdomain-ui/shell";
+import { useUtilityDock, type Job } from "@pdomain/pdomain-ui/shell";
 
 interface RawJob {
   id: string;
   project_id: string;
   type: string;
-  status: string;
-  progress: { current: number; total: number; message: string };
+  status: Job["status"];
+  progress?: { current: number; total: number; message: string };
 }
 
-function useActiveJobs(): ActiveJob[] {
+function useActiveJobs(): Job[] {
   const result = useQuery({
     queryKey: ["active-jobs"],
     queryFn: async () => {
@@ -374,23 +385,57 @@ function useActiveJobs(): ActiveJob[] {
     throwOnError: false,
   });
   const jobs = result.data ?? [];
-  return jobs.map((j) => ({
-    id: j.id,
-    title: j.type,
-    phase: j.status,
-    pct:
-      j.progress.total > 0
-        ? Math.round((j.progress.current / j.progress.total) * 100)
-        : 0,
-    project: j.project_id,
-  }));
+  return jobs.map((j): Job => {
+    const pct = j.progress?.total
+      ? Math.round((j.progress.current / j.progress.total) * 100)
+      : 0;
+    return {
+      id: j.id,
+      project: j.project_id,
+      phase: j.type,
+      pct,
+      status: j.status,
+      cancelable: j.status === "queued" || j.status === "running" || j.status === "paused",
+    };
+  });
+}
+
+function JobsDockTrigger() {
+  const dock = useUtilityDock();
+  return (
+    <button
+      type="button"
+      aria-expanded={dock.active === "jobs"}
+      onClick={() => dock.toggle("jobs")}
+    >
+      Jobs
+    </button>
+  );
 }
 ```
 
 Source: `pdomain-prep-for-pgdp/frontend/src/App.tsx:229-267`.
 
-If the app has no background-job concept, pass `activeJobs={[]}` — the pill
-is hidden when the array is empty.
+```tsx
+<AppShell
+  {...shellProps}
+  headerActions={<JobsDockTrigger />}
+  jobs={{
+    activeJobs,
+    onJobOpen,
+    onJobPauseResume,
+    onJobCancel,
+    onJobDelete,
+    onViewAll,
+  }}
+/>
+```
+
+The built-in header has launcher and settings controls but no automatic jobs
+trigger. The example adds one through `headerActions`. A custom AppHeader may
+instead render JobsPill and wire `onJobsClick` to
+`useUtilityDock().toggle('jobs')`. Apps without background jobs may omit
+`jobs` and the trigger.
 
 `useLongJob` store (from `@pdomain/pdomain-ui/stores`) tracks a single
 foreground long-running job with UI state (progress bar, cancel button). Use
@@ -453,6 +498,8 @@ Use this when wiring a new SPA or auditing an existing one.
 ### CSS
 
 - [ ] `src/styles/tokens.css` exists and starts with `@import "@pdomain/pdomain-ui/theme/tokens.css"`
+- [ ] `@pdomain/pdomain-ui/theme/primitives.css` is imported
+- [ ] `@pdomain/pdomain-ui/theme/reset.css` is imported only without Tailwind preflight or another reset
 - [ ] `index.css` imports `./styles/tokens.css` before `@tailwind` directives
 - [ ] `index.css` sets `height: 100%` on `html`, `body`, and `#root`
 - [ ] `body` rule uses `var(--bg-page)` / `var(--ink-1)` (or Tailwind `bg-bg-page text-ink-1`)
@@ -470,20 +517,22 @@ Use this when wiring a new SPA or auditing an existing one.
 ### `AppShell`
 
 - [ ] `appId` is a stable kebab-case identifier matching the pdomain-ops registry entry
-- [ ] `deployMode="local"` for Phase 1 / local-only SPAs
-- [ ] `uiPrefsConfig` has both `load` (tries `/api/suite/prefs`, falls back to localStorage) and `persistCommon` (tries `/api/suite/prefs/common`) callbacks
-- [ ] `header` slot receives `<AppHeader activeJobs={...} ...>`
+- [ ] `deployMode` is omitted for the `"local"` default or set explicitly when hosted
+- [ ] `uiPrefsConfig` has both `load` (tries `/api/suite/prefs`, then hard-coded defaults) and `persistCommon` callbacks
+- [ ] Any localStorage persistence is an explicit consumer adapter choice; suite-wide policy remains unverified and needs owner agreement
+- [ ] Built-in AppShell header is used unless a custom header is intentionally required
 - [ ] `main` slot root div has `className="flex flex-col h-full overflow-hidden"`
-- [ ] Outer `<div data-testid="app-shell" className="h-screen w-full">` wraps `<AppShell>`
+- [ ] AppShell's built-in `data-testid="app-shell"` is used for shell targeting
 
 ### Imports
 
 - [ ] No direct `lucide-react` imports in SPA code — use `@pdomain/pdomain-ui/icons`
-- [ ] `AppShell`, `AppHeader`, `SuiteSiblingsProvider`, `UIPrefsConfig` imported from `@pdomain/pdomain-ui/shell`
+- [ ] `AppShell`, `SuiteSiblingsProvider`, and `UIPrefsConfig` imported from `@pdomain/pdomain-ui/shell`
 - [ ] Button / Badge / Input / Toggle imported from `@pdomain/pdomain-ui/primitives`, not re-implemented locally
 
 ### Jobs
 
 - [ ] `useActiveJobs()` hook polls `/api/jobs?status=running&status=queued` at 5 s interval
-- [ ] `activeJobs` wired to `<AppHeader activeJobs={...}>`
+- [ ] Job data and callbacks wired through `AppShell jobs={{...}}`
+- [ ] A jobs trigger rendered inside AppShell calls `useUtilityDock().toggle('jobs')`
 - [ ] `useLongJob` from `@pdomain/pdomain-ui/stores` used for foreground waits, not the header pill

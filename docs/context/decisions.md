@@ -183,3 +183,26 @@ Kind: context
   behavior, and event ownership.
 - **Remaining work:** Intent-map retains labeler adoption and consumer keyboard
   validation.
+
+### 2026-07-13 — Retired: consumer-canary gap plan
+
+- **Old path:** `docs/plans/2026-05-21-consumer-canary-gaps.md`.
+- **Outcome:** Mixed plan closed after promoting shipped extension points.
+- **Superseded by:** `docs/architecture/canvas-and-shell-extension-points.md`
+  and `docs/architecture/shell-utility-dock.md`.
+- **Evidence:** Canvas and AppShell code/tests plus commits `610abe6` and
+  `951f483`.
+- **Remaining work:** Intent-map keeps the `system` theme and local-persistence
+  choice under owner review.
+
+### 2026-07-13 — Retired: design-handoff migration notes
+
+- **Old path:** `MIGRATION_NOTES.md`.
+- **Outcome:** Stale migration ledger deleted after its current decisions and
+  shipped behavior moved to architecture.
+- **Superseded by:** `docs/architecture/design-system-composition.md` and
+  `docs/architecture/stage-component-library.md`.
+- **Evidence:** Current templates, icons, stage exports, tests, and the May
+  24-25 implementation history.
+- **Remaining work:** Consumer adoption and unresolved contracts remain in
+  `docs/context/intent-map.md`.

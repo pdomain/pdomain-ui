@@ -1,4 +1,19 @@
+---
+kind: process
+status: active
+owner: CT
+created: 2026-05-21
+last_verified: 2026-07-13
+---
+
 # pdomain-ui conventions
+
+## Agent Index
+
+- **Kind:** process
+- **Status:** active
+- **Read when:** changing code, docs, lint suppressions, or document lifecycle state.
+- **Search terms:** conventions, comments, lint deviations, spec lifecycle, uv.
 
 <!-- workspace-conventions:start -->
 
@@ -89,19 +104,15 @@ fast (<200 ms warm) and always selects the project venv.
 
 - One-off REPL commands typed in CT's interactive shell — out of scope for this rule.
 
-## Rule: Design spec files live in `docs/specs/` until the milestone ships
+## Rule: Design specs stay active while milestone work remains open
 
 **The rule.** A design spec file produced by `/spec-from-issue` lives at
 `docs/specs/<date>-<topic>-design.md` while the milestone's chore issues are open.
-When the milestone's last chore closes and the implementation lands, move the file to
-`docs/architecture/` in a housekeeping commit:
-
-```bash
-git mv docs/specs/<date>-<topic>-design.md docs/architecture/
-git commit -m "docs: promote <topic> spec to architecture/ (milestone shipped)"
-```
-
-Update any `Spec: docs/specs/...` pointers in still-open issues after the move.
+When implementation lands, follow [DOCGRAPH.md](DOCGRAPH.md) and the
+doc-retirer workflow. Verify implementation evidence and adversarial review;
+promote present-tense behavior to architecture; extract residual intent;
+repair inbound links; record a tombstone; and delete the old spec by default.
+Archive is a last resort when durable rationale cannot be captured elsewhere.
 
 **Why.** `docs/specs/` is the active working area — implementing agents follow `Spec:`
 pointers to find their instructions. `docs/architecture/` is the permanent design record
@@ -110,7 +121,8 @@ unclear which specs are still authoritative for ongoing work.
 
 **Common high-confidence violations** (bot auto-fix candidates)
 
-- A spec file remaining in `docs/specs/` after its milestone's last chore issue closes.
+- An implemented spec remaining current after promotion, link repair, and
+  retirement prerequisites are complete.
 
 **Common judgment-call violations** (bot flags, CT decides)
 
@@ -126,7 +138,7 @@ guarded by `try`/`except`). When a suppression *is* warranted —
 `[tool.ruff.lint]` `ignore` / `per-file-ignores` entry — it must (1) carry a
 short inline rationale at the point of deviation explaining *why* the
 suppression is safe, and (2) be catalogued in the repo's
-`docs/conventions/lint-deviations.md`, which records the rule, the tool, the
+`docs/process/lint-deviations.md`, which records the rule, the tool, the
 file locations, and the justification. Use basedpyright's native
 `# pyright: ignore[reportRuleName]` form — mypy-style `# type: ignore[code]`
 codes are not honored by basedpyright.
@@ -150,7 +162,7 @@ this is how it gets justified.
 **Common judgment-call violations** (bot flags, CT decides)
 
 - A suppression whose inline rationale exists but is missing from
-  `docs/conventions/lint-deviations.md` — CT decides whether to catalogue it or
+  `docs/process/lint-deviations.md` — CT decides whether to catalogue it or
   remove the suppression.
 - A long-standing suppression whose stated rationale no longer holds after a
   refactor — CT decides whether to drop the suppression.

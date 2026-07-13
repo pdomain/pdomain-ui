@@ -4,6 +4,7 @@ status: draft
 owner: CT
 created: 2026-05-21
 last_verified: 2026-07-13
+disposition: needs-owner-decision
 ---
 
 # LogViewer — component-API spec
@@ -280,3 +281,11 @@ renders only the last `bufferCap` items.
 - **D-L5** No `onLineClick` / `onLineSelect` in Phase 1. Log lines are
   display-only. If a consumer needs to copy individual lines it targets
   within the `data-testid` container.
+
+## Adversarial Review
+
+**Review status:** Pending owner decision. Repository search and history find
+no LogViewer implementation, export, story, test, or current consumer-demand
+evidence. The proposed virtualization, streaming, auto-scroll, wrapping, ANSI,
+and accessibility contracts therefore remain unvalidated draft intent and must
+not be treated as current behavior.

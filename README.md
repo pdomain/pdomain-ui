@@ -12,6 +12,17 @@ Shared TS/React/Vite frontend library for the pdomain-* suite — canvas, workli
 
 For current design records, constraints, and documentation workflow, see [the docs index](docs/README.md).
 
+## Repository guidance
+
+- [Agent entrypoint](AGENTS.md)
+- [Claude and workspace guidance](CLAUDE.md)
+- [Codex context](CODEX.md)
+- [Repository conventions](CONVENTIONS.md)
+- [Docgraph governance](DOCGRAPH.md)
+- [Documentation index](docs/README.md)
+- [Changelog](CHANGELOG.md) — release notes are incomplete after 0.9.0
+- [Consumer bootstrap draft](docs/usage/consumer-bootstrap.md)
+
 ## Cross-app modules
 
 `pdomain-ui` exports presentation-only modules for repeated suite patterns:
