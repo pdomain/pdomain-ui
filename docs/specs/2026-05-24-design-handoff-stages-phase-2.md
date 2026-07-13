@@ -1,8 +1,13 @@
 ---
 title: "pdomain-ui design handoff — Phase 2: per-stage components (43 components + ArtifactViewer)"
 date: 2026-05-24
-status: draft
-owner: ConcaveTrillion
+kind: spec
+status: implemented
+owner: CT
+created: 2026-05-24
+last_verified: 2026-07-13
+promotes_to: docs/architecture/stage-component-library.md
+disposition: promote-then-retire
 related:
   - pdomain-ui/MIGRATION_NOTES.md
   - pdomain-ui/docs/specs/2026-05-24-pdomain-ui-design-handoff-design.md
@@ -852,3 +857,15 @@ Cross-repo recommendation
 *Cross-reference: MIGRATION_NOTES.md §12 (Phase 3 deferral list) for the
 complete list of design-bundle identifiers consciously omitted from Phase 1
 and now addressed in this Phase 2 spec.*
+
+## Adversarial Review
+
+**Stage / sources:** Post-implementation review against stage exports and
+tests, May 24-25 history, and the migration red-team. **Accepted findings /
+residual risk:** the catalog's major M1-M12 component batches shipped, but the
+document's draft label and uniform target contracts do not match current
+practice. SourcePageWorkbench retains an unused `beforeImageUrl`, LabelerCanvas
+is rendering-only despite `onBlocksChange`, and ArtifactViewer later adopted
+ZoomViewport. Promote present behavior to
+`docs/architecture/stage-component-library.md`; mutation behavior and consumer
+migration require owner decisions.

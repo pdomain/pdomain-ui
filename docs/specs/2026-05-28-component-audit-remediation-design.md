@@ -4,6 +4,8 @@ status: implemented
 owner: CT
 created: 2026-05-28
 last_verified: 2026-07-13
+promotes_to: docs/architecture/theme-and-component-quality.md
+disposition: promote-then-retire
 ---
 
 # pdomain-ui Component Audit — Remediation Design
@@ -392,3 +394,15 @@ One `pdomain-ui` agent (worktree-isolated) per workstream, dispatched after WS0
 merges. WS1/WS2/WS3 touch `theme/*.css` so should be serialized or carefully
 coordinated to avoid sync-gate churn; WS4–WS7 are largely file-local and
 parallel-safe.
+
+## Adversarial Review
+
+**Stage / sources:** Post-implementation review against the audit plan,
+workstream-labeled code/tests, May 28 history, and current source. **Accepted
+findings / residual risk:** most remediation shipped, but the claimed all-findings
+scope materially overstates conformance. CropCard still uses an always-true
+empty-overlay guard, PipelineTemplate retains inline RGBA values, and
+SourcePageWorkbench retains an unused `beforeImageUrl`. Promote durable token,
+canvas, accessibility, and test policy to
+`docs/architecture/theme-and-component-quality.md`; keep surviving defects and
+the live-canvas theme question as explicit residual intent.

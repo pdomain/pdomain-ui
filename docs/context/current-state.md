@@ -26,6 +26,14 @@ Docgraph governance is active. Shipped behavior now lives in the
 [kanban architecture](../architecture/kanban-board.md). The old archive specs
 have no remaining role as current truth.
 
+Current shared-library structure is also captured in
+[design-system composition](../architecture/design-system-composition.md),
+[theme and component quality](../architecture/theme-and-component-quality.md),
+[the shell utility dock](../architecture/shell-utility-dock.md),
+[the stage component library](../architecture/stage-component-library.md),
+[cross-app common UI modules](../architecture/cross-app-common-ui-modules.md),
+and [Accordion trigger slots](../architecture/accordion-trigger-slots.md).
+
 ## In-flight work
 
 - The PGDP common-component backlog remains active because several named
@@ -43,3 +51,9 @@ have no remaining role as current truth.
   code before acting on it.
 - Missing-section and orphan findings remain advisory during conformance
   migration and are tracked by `docgraph check`.
+- CropCard's empty-overlay guard and CoverPlaceholder's inline RGBA values are
+  known audit residuals.
+- LabelerCanvas exposes mutation-shaped API without mutation behavior, and
+  live-theme repaint behavior for mounted Konva canvases needs an owner decision.
+- Consumer-level migration to ArtifactViewer and the utility dock is not proven
+  by this repository alone.

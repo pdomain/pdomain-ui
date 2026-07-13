@@ -4,6 +4,8 @@ status: implemented
 owner: CT
 created: 2026-05-24
 last_verified: 2026-07-13
+promotes_to: docs/architecture/design-system-composition.md
+disposition: promote-then-retire
 ---
 
 # pdomain-ui design-handoff port — recon + atoms + templates
@@ -370,3 +372,15 @@ Counts will shift after port-plan review.
 - **Consumer migrations** — separate per-consumer specs in their own
   repos (`pdomain-prep-for-pgdp`, `pdomain-ocr-simple-gui`,
   `pdomain-ocr-labeler-spa`).
+
+## Adversarial Review
+
+**Stage / sources:** Post-implementation review against the CT-reviewed
+port-plan, PipelineTemplate code/tests, and May 24 implementation history.
+**Accepted findings / residual risk:** recon, atoms, icons, templates, and
+cross-stage molecules shipped, but the proposed all-slot PipelineTemplate did
+not. The current template owns project/stage configuration, ProjectInfoBand,
+StageStrip, and default tabs, with `tabsSlot` and `children` as its primary
+extension points. Promote that current composition model to
+`docs/architecture/design-system-composition.md`; discard the provisional issue
+list and obsolete API example.

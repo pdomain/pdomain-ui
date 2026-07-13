@@ -4,6 +4,8 @@ status: superseded
 owner: CT
 created: 2026-05-22
 last_verified: 2026-07-13
+promotes_to: docs/architecture/shell-utility-dock.md
+disposition: supersede-then-retire
 ---
 
 # Shared app-settings modal and AppShell header-actions slot
@@ -215,3 +217,14 @@ their `persistCommon` implementation to accept the wider object.
 - `pdomain-ocr-labeler-spa/frontend/src/components/OCRConfigModal.tsx` — the app panel
   the labeler will inject.
 - `docs/specs/2026-05-16-cross-cut-design.md` §6 — AppShell contract origin.
+
+## Adversarial Review
+
+**Stage / sources:** Post-implementation supersession review against AppShell,
+UtilityDock, SettingsPanel, settings tests, repository history, and the
+right-side utility-panel design. **Accepted findings / residual risk:** the
+centered-modal presentation is materially obsolete; SettingsSlot now toggles
+UtilityDock and `useSettingsModal` is compatibility-only. Preserve Appearance,
+`settingsPanels`, `headerActions`, and preference persistence in
+`docs/architecture/shell-utility-dock.md`; richer color input and settings
+deep-linking remain deferred pending concrete demand.
