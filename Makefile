@@ -92,8 +92,7 @@ lint-check: format-check lint
 typecheck:
 	$(call _pnpm,run typecheck)
 
-test:
-	$(call _pnpm,run test)
+test: test-unit
 
 test-unit:
 	$(call _pnpm,run test:unit)

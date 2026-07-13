@@ -15,7 +15,7 @@ describe('ToggleGroup', () => {
 
   it('renders with .seg class', () => {
     renderGroup();
-    const group = screen.getByRole('group');
+    const group = screen.getByRole('radiogroup');
     expect(group.classList.contains('seg')).toBe(true);
   });
 

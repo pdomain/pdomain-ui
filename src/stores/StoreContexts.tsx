@@ -25,6 +25,7 @@
  */
 import * as React from 'react';
 import { useStore } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
 import type { SelectionStore } from './createSelectionStore.js';
 import type { ViewportStore } from './createViewportStore.js';
 import type { WorklistStore } from './createWorklistStore.js';
@@ -139,7 +140,10 @@ export function useStatusColor(status: 'exact' | 'fuzzy' | 'mismatch' | 'ocr' | 
 export function useAccentColor() {
   const store = React.useContext(UIPrefsStoreContext);
   if (!store) throw new Error('useAccentColor() must be used inside <UIPrefsStoreProvider>');
-  return useStore(store, (s) => s.getAccentColor());
+  return useStore(
+    store,
+    useShallow((s) => s.getAccentColor()),
+  );
 }
 
 export function useDockPinned() {

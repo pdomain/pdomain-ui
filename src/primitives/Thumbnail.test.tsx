@@ -5,9 +5,10 @@ import { Thumbnail } from './Thumbnail.js';
 
 describe('Thumbnail', () => {
   it('renders imageUrl as img src', () => {
-    render(<Thumbnail imageUrl="https://example.com/page1.jpg" />);
-    const img = screen.getByRole('img');
-    expect(img.getAttribute('src')).toBe('https://example.com/page1.jpg');
+    const { container } = render(<Thumbnail imageUrl="https://example.com/page1.jpg" />);
+    const img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('src')).toBe('https://example.com/page1.jpg');
   });
 
   it('applies imageAlt to img', () => {
@@ -16,9 +17,10 @@ describe('Thumbnail', () => {
   });
 
   it('falls back to empty alt when imageAlt not provided', () => {
-    render(<Thumbnail imageUrl="/img.jpg" />);
-    const img = screen.getByRole('img');
-    expect(img.getAttribute('alt')).toBe('');
+    const { container } = render(<Thumbnail imageUrl="/img.jpg" />);
+    const img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('alt')).toBe('');
   });
 
   it('renders pageNumber when provided', () => {
@@ -171,7 +173,7 @@ describe('Thumbnail', () => {
   it('does not wrap image in button when onClick absent', () => {
     const { container } = render(<Thumbnail imageUrl="/img.jpg" />);
     expect(container.querySelector('.thumbnail__image-button')).toBeNull();
-    expect(screen.getByRole('img')).toBeTruthy();
+    expect(container.querySelector('img')).not.toBeNull();
   });
 
   it('renders statusSlot inside thumbnail__status span', () => {

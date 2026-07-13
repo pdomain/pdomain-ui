@@ -39,7 +39,10 @@ export function CountFilterGroup({
         >
           <span className="pdui-count-filter-group__label">{filter.label}</span>
           {filter.count !== undefined ? (
-            <span className="pdui-count-filter-group__count">{filter.count}</span>
+            <>
+              {' '}
+              <span className="pdui-count-filter-group__count">{filter.count}</span>
+            </>
           ) : null}
         </Button>
       ))}

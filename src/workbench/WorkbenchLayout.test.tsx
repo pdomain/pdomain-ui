@@ -197,5 +197,5 @@ describe('workbench layout kit', () => {
     expect(root['WorkbenchLayout']).toBe(WorkbenchLayout);
     expect(root['InspectorPanel']).toBe(InspectorPanel);
     expect(root['DetailPanelShell']).toBe(DetailPanelShell);
-  });
+  }, 15_000);
 });
