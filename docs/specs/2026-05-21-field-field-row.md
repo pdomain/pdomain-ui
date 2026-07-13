@@ -249,3 +249,11 @@ All colors from design-system tokens. No hex literals.
 - **D-F4** `FieldRow` is a layout-only container with no semantic role. It
   does not wrap fields in a `<fieldset>` — that is an app-level decision when
   grouping fields is semantically meaningful.
+
+## Adversarial Review
+
+**Stage / sources:** Active partial-implementation review against `Field.tsx`,
+FieldContext, focused tests, and implementation history. **Accepted findings /
+residual risk:** label, error, row, and accessibility behavior are proven, but
+the help slot remains unimplemented; keep this spec active and require owner
+review before either adding that API or moving the residual intent elsewhere.

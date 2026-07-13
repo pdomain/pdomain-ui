@@ -160,3 +160,12 @@ Updated tests/stories:
 
 - Resize handle + non-modal overlay must not interfere with main-content pointer interactions (canvas drag, etc.) — verify in consumers, especially the labeler/canvas surfaces.
 - Pinned column reflow must coexist with apps that already set `--shell-right-w` via the deprecated `rightPanel` prop; document precedence (utility dock wins while open+pinned).
+
+## Adversarial Review
+
+**Stage / sources:** Post-implementation review against AppShell, UtilityDock,
+SettingsPanel, JobsPill, focused tests, and June 2 history. **Accepted findings /
+residual risk:** the single non-modal dock, persistence, triggers, settings
+compatibility, and panel data paths conform; `onJobDelete` is a later additive
+extension, deprecated JobsPill props are inert, and cross-repository consumer
+migration still needs separate evidence.

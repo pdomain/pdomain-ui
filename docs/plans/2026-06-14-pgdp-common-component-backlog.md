@@ -17,6 +17,35 @@ newer PGDP design handoff, without duplicating components already shipped.
 
 **Source gap analysis:** `docs/research/2026-06-14-pgdp-design-handoff-gap-analysis.md`
 
+## Goal
+
+Complete the reusable pdomain-ui component gaps that remain in the newer PGDP
+design handoff without duplicating components that have already shipped.
+
+## Architecture
+
+Build typed, presentation-only primitives and module components for repeated
+settings, review, gate, artifact, and workbench patterns. Keep full stage tools
+and orchestration app-local unless a component serves at least two stage
+families or more than one consumer app.
+
+The settings components `SettingsCard`, `SettingsRow`, `SettingsValue`, and
+`SettingSlider` already ship from `src/settings/`. `WorkbenchLayout` already
+ships from `src/workbench/`; treat both areas as completed baseline work when
+narrowing this backlog.
+
+## Tech Stack
+
+Typed React component APIs, Storybook stories, Vitest coverage, token-only
+styles in `theme/primitives.css`, and package and Vite exports for public
+modules.
+
+## Global Constraints
+
+Treat shipped stage and common-module work as the baseline rather than
+re-porting it. Keep state machines, backend registry, SSE, event logs, routes,
+domain algorithms, and stage-specific machine behavior outside pdomain-ui.
+
 ## Principles
 
 - Treat current `pdomain-ui` work as baseline. Do not re-port Source,

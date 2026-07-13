@@ -38,7 +38,11 @@ None.
 
 ## Needs owner decision
 
-- Confirm whether the unimplemented LogViewer remains wanted.
+- Confirm whether continued consumer demand justifies implementing the draft
+  LogViewer contract.
+- Decide whether to close the consumer-canary prefs direction: the proposed
+  `system` theme and local persistence adapter never shipped, and the utility
+  dock superseded the shared centered-modal direction.
 - Decide whether the remaining PGDP backlog should stay one plan or split into
   smaller active specs.
 

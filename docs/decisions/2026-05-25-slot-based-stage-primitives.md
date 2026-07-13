@@ -1,8 +1,11 @@
 ---
 title: "Slot-based stage primitives — Banner, StageToolbar, Thumbnail"
 date: 2026-05-25
+kind: decision
 status: accepted
 owner: ConcaveTrillion
+created: 2026-05-25
+last_verified: 2026-07-13
 related:
   - docs/specs/2026-05-24-design-handoff-stages-phase-2.md §6.5
 ---
@@ -65,3 +68,16 @@ Crop: running/review/done; Validation: pass/warn/error). Encoding all of
 them in one prop type bloats the primitive and re-introduces stage
 vocabulary. Slot-based pushes the state machine to the consumer where it
 belongs; the primitive just owns layout + tone.
+
+## Consequences
+
+Stage folders keep their state machines and stage-specific data while Banner,
+StageToolbar, and Thumbnail own reusable chrome. Crop composes the shared
+primitives; shipped Source and Grayscale components remain as-is, and
+specialized DiskCostBanner and QualityBanner still use their own shells.
+
+## Supersedes / Superseded-by
+
+This decision supersedes the proposal to implement separate per-stage chrome
+when slot composition can serve the same role. No superseding decision is
+recorded.

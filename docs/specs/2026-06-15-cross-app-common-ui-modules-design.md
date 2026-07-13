@@ -941,3 +941,12 @@ Expected later migrations:
   contracts.
 - No app-specific state machine, backend call, OCR policy, or annotation
   mutation moves into `pdomain-ui`.
+
+## Adversarial Review
+
+**Stage / sources:** Post-implementation review against all six package
+subpaths, contract tests, component tests/stories, and June 15 history.
+**Accepted findings / residual risk:** the seven presentation families conform
+to the consumer-owned-data boundary; review-driven accessibility and
+slot-layout corrections are accepted implementation refinements, while real
+cross-app adoption may still expose domain leakage or missing slots.

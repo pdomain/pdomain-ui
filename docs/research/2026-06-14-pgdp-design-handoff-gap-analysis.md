@@ -38,6 +38,45 @@ PGDP-specific orchestration or one-off stage screens. The handoff is explicit
 about this boundary: promote generic atoms/chrome to `pdomain-ui`; stage tools
 stay app-local (`PROMPT.md:79-82`).
 
+## Goal
+
+Compare pdomain-ui with the newer PGDP design package and identify remaining
+work that belongs in the shared component library.
+
+## Method
+
+Compare authoritative PGDP layouts and statecharts with current package
+exports, shared components, templates, workbench code, and stage barrels.
+Separate reusable presentation and typed contracts from app-owned orchestration
+and stage-specific behavior.
+
+## Evidence
+
+The original analysis cites PGDP final layouts, statecharts, and pdomain-ui
+exports. Current code additionally shows that the settings kit and
+WorkbenchLayout have shipped, while the review-foundation and pack-tail
+components named in the companion backlog remain absent.
+
+## Conclusions
+
+The shared-versus-app-owned boundary remains valid. The gap list now needs
+narrowing: settings components and WorkbenchLayout are implemented, while
+lifecycle, review composition, gates, confirmation, artifact-tree components,
+and export-policy decisions remain open.
+
+## Next steps
+
+Update the companion backlog to mark the settings kit and WorkbenchLayout
+complete, reconcile their shipped paths, and sequence the remaining
+review-foundation, gate, artifact-tree, and public-export decisions.
+
+## What this does NOT establish
+
+This analysis does not require pdomain-ui to implement complete PGDP stage
+screens or own PGDP state machines, backend behavior, or domain algorithms.
+Existing components and stage slices do not by themselves prove full visual or
+behavioral conformance with the newer PGDP designs.
+
 ## Source Evidence
 
 The PGDP handoff says `final/` is authoritative for look and layout, while

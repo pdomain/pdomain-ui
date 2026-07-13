@@ -177,3 +177,11 @@ Tracked as a labeler change, not part of this pdomain-ui slice:
 None blocking. If a future consumer needs the chevron's open/closed rotation
 applied to a *custom* node automatically, we can add an opt-in
 `chevronRotates` flag then — out of scope now.
+
+## Adversarial Review
+
+**Stage / sources:** Post-implementation review against `Accordion.tsx`,
+focused tests, CSS, and June 16 history. **Accepted findings / residual risk:**
+the additive slots and chevron control conform and preserve the default path;
+consumer migration away from raw Radix is not proven here, and interactive
+trailing content still needs consumer-level keyboard review.
