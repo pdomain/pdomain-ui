@@ -1,3 +1,11 @@
+---
+kind: spec
+status: implemented
+owner: CT
+created: 2026-05-24
+last_verified: 2026-07-13
+---
+
 # pdomain-ui design-handoff port — recon + atoms + templates
 
 **Status:** draft (brainstorming output, awaiting CT review)

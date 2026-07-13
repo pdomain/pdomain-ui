@@ -1,3 +1,11 @@
+---
+kind: research
+status: active
+owner: CT
+created: 2026-06-14
+last_verified: 2026-07-13
+---
+
 # PGDP Design Handoff Gap Analysis
 
 **Date:** 2026-06-14

@@ -1,3 +1,11 @@
+---
+kind: plan
+status: implemented
+owner: CT
+created: 2026-05-28
+last_verified: 2026-07-13
+---
+
 # pdomain-ui Component Audit — Remediation Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use

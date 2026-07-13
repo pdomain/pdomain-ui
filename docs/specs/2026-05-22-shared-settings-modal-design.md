@@ -1,3 +1,11 @@
+---
+kind: spec
+status: superseded
+owner: CT
+created: 2026-05-22
+last_verified: 2026-07-13
+---
+
 # Shared app-settings modal and AppShell header-actions slot
 
 > **Status**: Draft

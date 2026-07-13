@@ -1,3 +1,11 @@
+---
+kind: research
+status: implemented
+owner: CT
+created: 2026-05-24
+last_verified: 2026-07-13
+---
+
 # Design-handoff port-plan
 
 **Status:** ready for CT review

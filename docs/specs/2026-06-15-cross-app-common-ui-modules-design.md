@@ -1,3 +1,11 @@
+---
+kind: spec
+status: implemented
+owner: CT
+created: 2026-06-15
+last_verified: 2026-07-13
+---
+
 # Cross-App Common UI Modules
 
 - **Status:** Approved design - pending implementation plan

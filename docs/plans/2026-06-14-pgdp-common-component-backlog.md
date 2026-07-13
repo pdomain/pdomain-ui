@@ -1,3 +1,11 @@
+---
+kind: plan
+status: active
+owner: CT
+created: 2026-06-14
+last_verified: 2026-07-13
+---
+
 # PGDP Common Component Backlog
 
 > **For agentic workers:** use `superpowers:subagent-driven-development` for

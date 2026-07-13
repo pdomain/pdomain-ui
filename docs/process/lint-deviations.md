@@ -1,3 +1,11 @@
+---
+kind: process
+status: active
+owner: CT
+created: 2026-05-22
+last_verified: 2026-07-13
+---
+
 # Lint-rule Deviations — pdomain-ui
 
 Standing suppressions and per-file rule overrides in this repo.

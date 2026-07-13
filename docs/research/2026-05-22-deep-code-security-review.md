@@ -1,3 +1,11 @@
+---
+kind: research
+status: stale
+owner: CT
+created: 2026-05-22
+last_verified: 2026-07-13
+---
+
 # pdomain-ui deep code review and security scan
 
 Date: 2026-05-22

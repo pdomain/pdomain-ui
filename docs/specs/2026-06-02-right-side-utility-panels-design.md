@@ -1,3 +1,11 @@
+---
+kind: spec
+status: implemented
+owner: CT
+created: 2026-06-02
+last_verified: 2026-07-13
+---
+
 # Right-side utility panels (Settings / Keybinds / Jobs)
 
 - **Status:** Approved design — pending implementation plan

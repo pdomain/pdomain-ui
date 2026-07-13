@@ -1,3 +1,11 @@
+---
+kind: spec
+status: draft
+owner: CT
+created: 2026-05-21
+last_verified: 2026-07-13
+---
+
 # LogViewer — component-API spec
 
 **Date:** 2026-05-21

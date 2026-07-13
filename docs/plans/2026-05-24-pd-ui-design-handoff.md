@@ -1,9 +1,13 @@
 ---
 status: active
+owner: CT
+created: 2026-05-24
+last_verified: 2026-07-13
+kind: plan
 synced: 2026-05-24
 milestone: 16
 repo: ConcaveTrillion/ocr-container-meta
-spec: docs/specs/2026-05-24-pdomain-ui-design-handoff-design.md
+spec: docs/specs/2026-05-24-pd-ui-design-handoff-design.md
 ---
 
 # pdomain-ui design-handoff port — Implementation Plan
@@ -16,7 +20,7 @@ spec: docs/specs/2026-05-24-pdomain-ui-design-handoff-design.md
 
 **Tech Stack:** React 18, TypeScript (strict + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`), Vite library build, Vitest + jsdom, Storybook (collocated `.stories.tsx`), pnpm, lucide-react.
 
-**Spec:** [`docs/specs/2026-05-24-pdomain-ui-design-handoff-design.md`](../specs/2026-05-24-pdomain-ui-design-handoff-design.md)
+**Spec:** [`docs/specs/2026-05-24-pd-ui-design-handoff-design.md`](../specs/2026-05-24-pd-ui-design-handoff-design.md)
 
 **Design bundle:** `docs/templates/design_handoff_pdomain_ui/`
 

@@ -1,3 +1,11 @@
+---
+kind: spec
+status: implemented
+owner: CT
+created: 2026-06-16
+last_verified: 2026-07-13
+---
+
 # Composable `AccordionTrigger` — slots + chevron control
 
 > **Status**: Draft

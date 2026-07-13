@@ -1,10 +1,17 @@
+---
+Status: active
+Owner: CT
+Created: 2026-05-16
+Last verified: 2026-07-13
+Kind: process
+---
+
 # CLAUDE — pdomain-ui
 
 TypeScript / React / Vite shared component library for the pdomain-* suite. Publishes
 `@pdomain/pdomain-ui` to the self-hosted `pdomain-index-npm` registry.
 
-Spec: [`../docs/specs/2026-05-16-cross-cut-design.md`](../docs/specs/2026-05-16-cross-cut-design.md)
-Plan: [`../docs/plans/2026-05-16-pdomain-ui-new-repo.md`](../docs/plans/2026-05-16-pdomain-ui-new-repo.md)
+Docs: [`docs/README.md`](docs/README.md)
 
 ## Commands
 
