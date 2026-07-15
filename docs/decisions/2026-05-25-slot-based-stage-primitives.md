@@ -16,9 +16,9 @@ related:
 
 Phase 2 §6.2 names per-stage component classes after the stage: `SourceBanner`,
 `CropBanner`, `FileToolbar`, `CropToolbar`, `ThumbCard` (Source), `GrayThumb`,
-`CropCard`. By M4 it became clear several of these are the same chrome with
-different content slotted in. By M5 (Crop) the duplication would have
-multiplied: 7 stages × 5 patterns ≈ 35 near-duplicate per-stage components.
+`CropCard`. By M4, several of these were clearly the same chrome with different
+content slotted in. By M5 (Crop), this duplication would have multiplied:
+7 stages × 5 patterns ≈ 35 near-duplicate per-stage components.
 
 ## Decision
 
@@ -33,10 +33,10 @@ chrome. Stage folders provide stage-specific data/labels via the slots.
 
 `BulkActionBar` already exists as a primitive (Phase 1) with `variant`,
 `count`, `flagSummary`, `actions`, `onClear` props — Source's `BulkBar` and
-Crop's `CropBulkBar` should compose it. (M3 Source's `BulkBar` was shipped
-without composing `BulkActionBar`; file as follow-on tech-debt.)
+Crop's `CropBulkBar` should compose it. M3 Source's `BulkBar` shipped without
+composing `BulkActionBar`. File this as follow-on tech debt.
 
-`StepSettings` is intentionally NOT promoted — each stage's settings panel
+`StepSettings` is intentionally NOT promoted because each stage's settings panel
 (`SourceStepSettings`, `CropStepSettings`, etc.) differs too much in form
 shape to share chrome usefully.
 
@@ -52,7 +52,7 @@ shape to share chrome usefully.
 ## Going forward
 
 - M5 Crop and later stages compose these primitives. Stage folders may still
-  have stage-specific components but they should be thin facades (or
+  have stage-specific components, but they should be thin facades (or
   data-shaping wrappers) over the primitive chrome.
 - M3 Source / M4 Grayscale components remain as-is for now (shipped). File
   follow-on tickets to migrate them onto the new primitives.
@@ -65,16 +65,16 @@ shape to share chrome usefully.
 Initial sketch had `<Banner state="idle"|"generating"|"selection">` — but
 each stage has a different state vocabulary (Source: idle/gen/select;
 Crop: running/review/done; Validation: pass/warn/error). Encoding all of
-them in one prop type bloats the primitive and re-introduces stage
-vocabulary. Slot-based pushes the state machine to the consumer where it
-belongs; the primitive just owns layout + tone.
+them in one prop type bloats the primitive and re-introduces stage vocabulary.
+The slot-based approach pushes the state machine to the consumer, where it
+belongs. The primitive owns only layout and tone.
 
 ## Consequences
 
 Stage folders keep their state machines and stage-specific data while Banner,
 StageToolbar, and Thumbnail own reusable chrome. Crop composes the shared
-primitives; shipped Source and Grayscale components remain as-is, and
-specialized DiskCostBanner and QualityBanner still use their own shells.
+primitives. Shipped Source and Grayscale components remain as-is. Specialized
+DiskCostBanner and QualityBanner still use their own shells.
 
 ## Supersedes / Superseded-by
 
