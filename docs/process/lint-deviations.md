@@ -8,10 +8,9 @@ last_verified: 2026-07-13
 
 # Lint-rule Deviations — pdomain-ui
 
-Standing suppressions and per-file rule overrides in this repo.
-Each entry records: the rule, the tool, the file(s) affected, and
-the justification. Update this file whenever a new suppression is added
-or removed.
+This file lists every standing suppression and per-file rule override in this
+repo. Each entry records the rule, tool, affected file or files, and
+justification. Update the list whenever a suppression is added or removed.
 
 Reference implementation: `pdomain-book-tools/docs/conventions/lint-deviations.md`.
 
@@ -27,14 +26,16 @@ Reference implementation: `pdomain-book-tools/docs/conventions/lint-deviations.m
 **Suppression form:** `// eslint-disable-next-line @typescript-eslint/no-empty-object-type`
 
 **Justification.** These primitive components declare a `Props` interface that
-extends a native HTML attributes type (e.g. `React.HTMLAttributes<HTMLDivElement>`)
-with no additional members. The empty-body interface is intentional: it gives
-consumers a named export (`CardProps`, `FieldRowProps`, `TextareaProps`) they
-can extend in their own code without importing the raw HTML attributes type.
-The rule fires because the interface body is empty. Using `type Alias =
-React.HTMLAttributes<…>` would also work, but the `interface` form is
-consistent with every other component in this repo that adds props over time
-(new members can be appended without changing the kind).
+extends a native HTML attributes type, such as
+`React.HTMLAttributes<HTMLDivElement>`, with no additional members. The
+empty-body interface is intentional. It gives consumers a named export
+(`CardProps`, `FieldRowProps`, `TextareaProps`) that they can extend without
+importing the raw HTML attributes type. The rule fires because the interface
+body is empty.
+
+Using `type Alias = React.HTMLAttributes<…>` would also work. However, the
+`interface` form matches every other component in this repo that adds props
+over time. New members can be appended without changing the kind.
 
 ---
 
@@ -50,25 +51,25 @@ consistent with every other component in this repo that adds props over time
 **Justifications per file:**
 
 - **`AppShell.tsx` line 88** — `createUIPrefsStore(uiPrefsConfig)` is wrapped
-  in `useMemo` with an empty dependency array intentionally: the store is
-  created once per `AppShell` mount and must never be recreated on subsequent
+  in `useMemo` with an intentionally empty dependency array. The store is
+  created once per `AppShell` mount and must never be recreated during later
   renders. Adding `uiPrefsConfig` to deps would destroy and recreate the store
-  on every config-object identity change, losing in-flight preferences state.
-  The pattern follows the Zustand "stable store per mount" convention
-  (spec §4 key API conventions #3).
+  whenever the config object's identity changes. This would lose in-flight
+  preferences state. The pattern follows the Zustand "stable store per mount"
+  convention (spec §4 key API conventions #3).
 
 - **`SuiteSiblingsProvider.tsx` line 48** — The `useEffect` fetches the
   installed-apps list once on mount. `fetchInstalled` is a prop (callback
-  reference) that callers are expected to stabilise with `useCallback`; adding
-  it to deps would re-fetch on every render in callers that don't memoize the
-  prop. The single-fetch-on-mount behaviour is the documented contract.
+  reference) that callers are expected to stabilise with `useCallback`.
+  Adding it to deps would re-fetch on every render when callers do not memoize
+  the prop. The documented contract is one fetch on mount.
 
 - **`useStageCall.ts` line 85** — The `run` callback is stabilised on
   `[stageId, pageId]` only. The internal `submit` callback passed at
-  construction is captured by the closure on first call; this is intentional
-  because `submit` is expected to be a stable reference (factory pattern).
-  Adding `submit` would require every caller to memoize it, which conflicts
-  with the public API contract.
+  construction is intentionally captured by the closure on the first call.
+  `submit` is expected to be a stable reference under the factory pattern.
+  Adding `submit` would require every caller to memoize it. That requirement
+  would conflict with the public API contract.
 
 ---
 
@@ -83,18 +84,18 @@ consistent with every other component in this repo that adds props over time
 **Justifications per file:**
 
 - **`useWorklistSort.ts` line 32** — The sort comparator receives items typed
-  via a generic `TItem` that may or may not be a `WordListItem`. The
-  `sortKey` branches narrow which fields are accessed, but TypeScript cannot
-  narrow a generic through a comparator signature. The `any` cast is scoped to
-  the sort comparator only; all access after the cast uses named typed fields
-  with explicit local annotations (`const ca: number | null | undefined`).
+  through a generic `TItem` that may or may not be a `WordListItem`. The
+  `sortKey` branches narrow the accessed fields, but TypeScript cannot narrow a
+  generic through a comparator signature. The `any` cast applies only to the
+  sort comparator. All access after the cast uses named typed fields with
+  explicit local annotations (`const ca: number | null | undefined`).
 
 - **`Icons.stories.tsx` line 50** — `AnyIconComponent` is a story-file
   utility type used to build an icon catalogue grid. All icon components in
-  `src/icons/` are `React.ComponentType<React.SVGProps<SVGSVGElement>>` but
-  the catalogue helper needs to accept both `lucide-react` re-exports (which
-  are `ForwardRefExoticComponent`) and bespoke SVG components. Using `any`
-  here avoids a lengthy union type in a story file that is never part of the
+  `src/icons/` are `React.ComponentType<React.SVGProps<SVGSVGElement>>`.
+  However, the catalogue helper must accept both `lucide-react` re-exports,
+  which are `ForwardRefExoticComponent`, and bespoke SVG components. Using
+  `any` avoids a lengthy union type in a story file that is never part of the
   published package.
 
 ---
@@ -108,13 +109,13 @@ consistent with every other component in this repo that adds props over time
 
 **Justification.** The `PageImageCanvas` wrapper div carries `role="img"` and
 `tabIndex={0}`. The a11y rule fires because `role="img"` is not in the list
-of interactive roles. However, the element **is** keyboard-interactive: it
-receives focus to dispatch hotkeys (select/drag/zoom mode switching) that
-the canvas responds to. This is the established pattern from
-`pdomain-ocr-labeler-spa` and reflects real keyboard accessibility — without
-`tabIndex` the canvas cannot receive keyboard focus at all. The `role="img"`
-is kept because the element's primary semantic is "a visual canvas of page
-image content"; the keyboard interaction is secondary.
+of interactive roles. However, the element **is** keyboard-interactive. It
+receives focus to dispatch the hotkeys for select, drag, and zoom mode
+switching that the canvas responds to. This established pattern comes from
+`pdomain-ocr-labeler-spa` and provides real keyboard accessibility. Without
+`tabIndex`, the canvas cannot receive keyboard focus at all. The `role="img"`
+remains because the element's primary semantic is "a visual canvas of page
+image content." The keyboard interaction is secondary.
 
 ---
 
@@ -127,9 +128,9 @@ image content"; the keyboard interaction is secondary.
 
 **Justification.** The test simulates a 503-like error object `{ status: 503,
 retryAfter: 1000 }` to exercise the `useStageCall` warming-state logic. The
-production code checks `error.status` on caught promise rejections (not
-`error instanceof Error`). Wrapping the rejection in `new Error()` would
-require stripping the `status` field, defeating the test's purpose. This
+production code checks `error.status` on caught promise rejections instead of
+`error instanceof Error`. Wrapping the rejection in `new Error()` would require
+stripping the `status` field, which would defeat the test's purpose. This
 suppression is test-only and does not affect production code.
 
 ---
@@ -143,6 +144,6 @@ scoped to `['src/icons/lucide.ts']`.
 
 **Justification.** The workspace rule bans direct `lucide-react` imports
 everywhere except the single boundary file `src/icons/lucide.ts`, which
-re-exports only the curated icon subset. Turning the rule off for this one
-file is the intentional exemption that makes the boundary-file pattern
-possible. All other files in `src/` and `tests/` remain subject to the ban.
+re-exports only the curated icon subset. The intentional exemption for this
+one file makes the boundary-file pattern possible. All other files in `src/`
+and `tests/` remain subject to the ban.
