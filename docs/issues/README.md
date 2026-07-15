@@ -70,9 +70,9 @@ Lead with the **smallest decisive evidence**, separate **observation** from
 ## Open issues
 
 - [ComputeTargetPanel shows a raw device id and never tests `local`](./2026-07-15-computetargetpanel-active-device-label.md)
-  — migrated from `ocr-container-meta` #394.
+  — migrated from `ocr-container-meta` #394 (source issue deleted 2026-07-15).
 - [useShortcuts cannot match key sequences like `g p`](./2026-07-15-useshortcuts-chord-sequences.md)
-  — deferred; migrated from `ocr-container-meta` #401.
+  — deferred; migrated from `ocr-container-meta` #401 (source issue deleted 2026-07-15).
 
 ## Resolved issues
 
