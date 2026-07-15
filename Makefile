@@ -4,6 +4,7 @@
 # AI=1 captures verbose output to .ci-ai.log; stdout shows pass/fail.
 
 .PHONY: setup install lint lint-check typecheck test test-unit test-package build codegen codegen-check theme-check storybook storybook-build ci e2e e2e-ci help \
+        py-lint py-format py-format-check py-typecheck py-static-check \
         format format-check pre-commit-check static-check \
         upgrade-deps update-pdomain-deps \
         release-patch release-minor release-major _do-release \
@@ -50,7 +51,14 @@ help:
 	@echo "  format               apply Prettier to src/ and tests/"
 	@echo "  format-check         check Prettier formatting without writing"
 	@echo "  pre-commit-check     lint + typecheck + format-check (no pre-commit config)"
-	@echo "  static-check         lint-check + typecheck"
+	@echo "  static-check         lint-check + typecheck + py-static-check"
+	@echo ""
+	@echo "  py-lint              ruff check scripts/ (via uv run)"
+	@echo "  py-format            ruff format scripts/ (via uv run)"
+	@echo "  py-format-check      ruff format --check scripts/ (via uv run)"
+	@echo "  py-typecheck         basedpyright strict on scripts/ (via uv run)"
+	@echo "  py-static-check      py-format-check + py-lint + py-typecheck"
+	@echo ""
 	@echo "  upgrade-deps         pnpm update --latest"
 	@echo "  update-pdomain-deps  Bump pdomain-* codegen inputs to registry latest; runs codegen; leaves diff staged"
 	@echo "  codegen              fetch wheels + emit JSON + generate TS"
@@ -59,7 +67,7 @@ help:
 	@echo "  storybook-build      build Storybook static site"
 	@echo "  e2e                  build Storybook static site + run Playwright e2e tests"
 	@echo "  e2e-ci               run Playwright e2e tests (assumes storybook-static exists)"
-	@echo "  ci                   install + lint + format-check + typecheck + test + build + codegen-check"
+	@echo "  ci                   install + static-check (JS + Python) + test + build + codegen-check"
 	@echo ""
 	@echo "  release-patch        bump patch, ci, commit, tag, push"
 	@echo "  release-minor        bump minor, ci, commit, tag, push"
@@ -131,9 +139,28 @@ format-check:
 	$(call _pnpm,run format:check)
 
 # No .pre-commit-config.yaml in this repo — alias for lint + typecheck + format-check.
-pre-commit-check: lint typecheck format-check
+# ── Python helper scripts (scripts/) ──────────────────────────────────────────
+# basedpyright strict + ruff, run through uv (per CONVENTIONS.md "use uv run").
+# `uv run` syncs the dev dependency-group before executing, so no separate
+# install step is needed. Config lives in pyproject.toml ([tool.basedpyright],
+# [tool.ruff]); the strict baseline is the writing-python plugin's.
+py-lint:
+	uv run ruff check scripts
 
-static-check: lint-check typecheck
+py-format:
+	uv run ruff format scripts
+
+py-format-check:
+	uv run ruff format --check scripts
+
+py-typecheck:
+	uv run basedpyright
+
+py-static-check: py-format-check py-lint py-typecheck
+
+pre-commit-check: lint typecheck format-check py-static-check
+
+static-check: lint-check typecheck py-static-check
 
 upgrade-deps:
 	$(call _pnpm,update --latest)

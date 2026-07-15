@@ -1,0 +1,47 @@
+# Python tooling for pdomain-ui's repo-maintenance scripts (scripts/).
+# This is a JavaScript/TypeScript library; the Python here is a small helper
+# surface, type-checked under basedpyright strict. Not a published package.
+#
+# The [tool.ruff] and [tool.basedpyright] blocks adopt the writing-python plugin's
+# canonical strict baseline (strict-config.toml). Project deltas: the S (security)
+# family is opted in because scripts/update_github_actions.py rewrites GitHub
+# Action SHAs, and `include` scopes checks to scripts/.
+
+[project]
+name = "pdomain-ui-scripts"
+version = "0.0.0"
+description = "Repo-maintenance scripts for pdomain-ui; not a published package."
+requires-python = ">=3.12"
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.31.0",
+    "ruff>=0.14.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F", "I", "B", "UP", "SIM", "C4", "PERF", "RET", "PT", "RUF",
+    "FA", "PTH", "TC", "PIE", "PLE", "S",
+]
+ignore = [
+    "E501",    # line length off (house convention)
+    "COM812",  # trailing comma — conflicts with the formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["PT011", "S101"]   # raises-without-match and assert are fine in tests
+"**/__init__.py" = ["F401"]           # re-exports
+
+[tool.basedpyright]
+typeCheckingMode = "strict"
+reportUnnecessaryTypeIgnoreComment = true
+reportImplicitOverride = true
+pythonVersion = "3.12"
+include = ["scripts"]

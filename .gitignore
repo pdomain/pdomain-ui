@@ -53,3 +53,7 @@ Thumbs.db
 # Python bytecode cache (left by codegen scripts)
 __pycache__/
 *.pyc
+
+# Python tooling env for scripts/ (basedpyright strict); uv.lock is committed
+.venv/
+.ruff_cache/
