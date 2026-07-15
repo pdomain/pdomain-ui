@@ -19,19 +19,21 @@ last_verified: 2026-07-13
 
 Six public subpaths provide seven presentation families: records also contains
 list-toolbar controls, alongside source intake, viewport, settings, operation
-status, and workbench layout. Each family owns typed props, slots,
-accessibility, tests, stories, and package contracts. Records, source-intake,
-settings, and status components own loading, error, or empty presentation where
-their APIs define those states; viewport and workbench remain layout and
-interaction surfaces. Consumers own loading, mutation, policies, and state
-machines.
+status, and workbench layout.
+
+Each family owns typed props, slots, accessibility, tests, stories, and package
+contracts. Records, source-intake, settings, and status components own loading,
+error, or empty presentation where their APIs define those states. Viewport and
+workbench remain layout and interaction surfaces.
+
+Consumers own loading, mutation, policies, and state machines.
 
 ## Concrete deviations
 
-Implementation review refined rather than redirected the design: selectable
-record actions use grid semantics, source removal requires text labels, source
-intake restored its selected-source label API, and WorkbenchLayout uses
-slot-aware pinned grid areas.
+Implementation review refined rather than redirected the design. Selectable
+record actions use grid semantics. Source removal requires text labels. Source
+intake restored its selected-source label API. WorkbenchLayout uses slot-aware
+pinned grid areas.
 
 ## Durable decisions
 
