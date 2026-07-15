@@ -17,9 +17,11 @@ last_verified: 2026-07-13
 
 Current behavior belongs in `architecture/`. Active intent belongs in `specs/`,
 `plans/`, and `research/`. `context/` summarizes current state, unresolved
-intent, and durable decisions. Retirement promotes current truth, preserves
-residual intent, repairs links, records a tombstone, and deletes the old doc by
-default. Archive is a last resort.
+intent, and durable decisions.
+
+Retirement promotes current truth and preserves residual intent. It also
+repairs links, records a tombstone, and deletes the old doc by default. Use the
+archive only as a last resort.
 
 ## Current architecture
 
