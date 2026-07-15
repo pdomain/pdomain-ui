@@ -18,30 +18,31 @@ references:
 - **Read when:** bootstrapping or migrating a consumer SPA.
 - **Search terms:** consumer bootstrap, CSS imports, AppShell, UtilityDock jobs, providers.
 
-The library contracts below match pdomain-ui 0.11.x and React 18 or 19.
-Router, query, toaster, font, and consumer-adapter conventions still need fresh
-verification in each current consumer repository before this draft becomes
-canonical across the suite.
+These bootstrap contracts match pdomain-ui 0.11.x and React 18 or 19. Before
+this draft becomes canonical across the suite, verify the router, query,
+toaster, font, and consumer-adapter conventions in each current consumer
+repository.
 
-## When to read this doc
+## Use this pattern for new or migrated SPAs
 
-Read this when standing up a new SPA that will consume `@pdomain/pdomain-ui`,
-or when porting an existing SPA to the canonical pattern. The three files that
-must agree for a correctly bootstrapped SPA are `main.tsx`, `index.css`, and
-`App.tsx` — each has load-order constraints that break silently if violated.
-This doc describes the agreed pattern from the two mature consumers:
-`pdomain-prep-for-pgdp` and `pdomain-ocr-labeler-spa`.
+Use this pattern to create an SPA that consumes `@pdomain/pdomain-ui` or to
+move an existing SPA to the canonical pattern. A correct bootstrap requires
+`main.tsx`, `index.css`, and `App.tsx` to agree. Each file has load-order
+constraints that fail silently when violated.
+
+The pattern comes from the two mature consumers: `pdomain-prep-for-pgdp` and
+`pdomain-ocr-labeler-spa`.
 
 ---
 
-## The bootstrap pattern
+## Configure the three bootstrap files
 
 ### `main.tsx`
 
-Fontsource imports come first, before React and before `./index.css`. The
-weight subsets to import are: Inter 400/500/600/700 and JetBrains Mono 400/500.
-(labeler-spa omits Inter 600; prep-for-pgdp includes it — include it for new
-SPAs to avoid FOUT on medium-weight headings.)
+Put Fontsource imports before React and `./index.css`. Import Inter weights
+400/500/600/700 and JetBrains Mono weights 400/500. labeler-spa omits Inter
+600, while prep-for-pgdp includes it. Include it in new SPAs to avoid a flash
+of unstyled text (FOUT) on medium-weight headings.
 
 ```tsx
 // main.tsx — canonical bootstrap order
@@ -83,7 +84,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
 Source: `pdomain-prep-for-pgdp/frontend/src/main.tsx:1-33`.
 
-Key points:
+The provider order matters:
 
 - `<Toaster>` is mounted here, outside `<App>`, so it survives route
   transitions. `<App>` must not also mount a `<Toaster>`.
@@ -92,10 +93,10 @@ Key points:
 - `staleTime: 30_000` and `refetchOnWindowFocus: false` are the workspace
   standard QueryClient defaults.
 
-labeler-spa variant: labeler-spa moves `<BrowserRouter>` into `App()` and
-mounts `<Toaster>` inside that component with a theme-aware wrapper
-(`ThemedToaster`). The prep-for-pgdp layout above is simpler and preferred
-for new SPAs.
+In the labeler-spa variant, `<BrowserRouter>` moves into `App()`. That component
+also mounts `<Toaster>` through a theme-aware wrapper called
+`ThemedToaster`. The prep-for-pgdp layout above is simpler and preferred for
+new SPAs.
 
 ---
 
@@ -127,12 +128,14 @@ body,
 
 Source: `pdomain-prep-for-pgdp/frontend/src/index.css:1-18`.
 
-The `@import "./styles/tokens.css"` line must come before the `@tailwind`
-directives so Tailwind's JIT scanner can see the `--bg-page` / `--ink-1`
-vars when resolving `bg-bg-page` / `text-ink-1` utility classes.
+Place `@import "./styles/tokens.css"` before the `@tailwind` directives. This
+order lets Tailwind's just-in-time (JIT) scanner see the `--bg-page` and
+`--ink-1` variables when it resolves the `bg-bg-page` and `text-ink-1` utility
+classes.
 
-Import `@pdomain/pdomain-ui/theme/primitives.css` in every app that renders
-pdomain-ui components. JavaScript component imports do not load the stylesheet.
+Every app that renders pdomain-ui components must import
+`@pdomain/pdomain-ui/theme/primitives.css`. JavaScript component imports do
+not load the stylesheet.
 Import `@pdomain/pdomain-ui/theme/reset.css` only when the app has no Tailwind
 preflight or other reset. Tokens and primitive CSS are always required.
 
@@ -147,15 +150,15 @@ preflight or other reset. Tokens and primitive CSS are always required.
 - `@pdomain/pdomain-ui/status`
 - `@pdomain/pdomain-ui/workbench`
 
-These modules render typed UI and call app callbacks. Apps still own data
+These modules render typed UI and call app callbacks. The app still owns data
 loading, routing, jobs, OCR policy, source validation, and stage machines.
 
 ---
 
 ### `src/styles/tokens.css`
 
-Each consumer SPA owns a thin `src/styles/tokens.css` that re-imports the
-pdomain-ui token sheet and appends domain-specific extensions:
+Each consumer SPA owns a small `src/styles/tokens.css`. It re-imports the
+pdomain-ui token sheet and adds domain-specific extensions:
 
 ```css
 /* src/styles/tokens.css */
@@ -183,15 +186,15 @@ pdomain-ui token sheet and appends domain-specific extensions:
 Source: `pdomain-prep-for-pgdp/frontend/src/styles/tokens.css:14` and
 `pdomain-ocr-labeler-spa/frontend/src/styles/tokens.css:14`.
 
-Do not re-declare any token that pdomain-ui already defines. The `--border`
-shorthand does not exist in the pdomain-ui token set; use `--border-1`,
-`--border-2`, or `--border-3` (see anti-patterns below).
+Do not re-declare a token that pdomain-ui already defines. The pdomain-ui token
+set does not include the `--border` shorthand. Use `--border-1`, `--border-2`,
+or `--border-3` instead, as described below.
 
 ---
 
 ### `App.tsx` — provider order and `AppShell` props
 
-The canonical provider stack, from outermost to innermost:
+Use this provider stack from outermost to innermost:
 
 ```
 <QueryClientProvider>        ← from main.tsx or App.tsx
@@ -201,7 +204,7 @@ The canonical provider stack, from outermost to innermost:
 ```
 
 Minimal `AppShell` wiring uses its built-in header. Pass a custom `header` only
-as an escape hatch when the application needs a different header composition.
+when the application needs a different header composition.
 
 ```tsx
 import {
@@ -302,9 +305,9 @@ export default function App() {
 }
 ```
 
-This preferences example falls back to hard-coded defaults, not localStorage.
-Local persistence is a consumer-specific adapter choice, and the suite-wide
-fallback policy remains an unverified owner decision.
+This preferences example uses hard-coded defaults as its fallback, not
+localStorage. Local persistence is a consumer-specific adapter choice. The
+suite-wide fallback policy remains an unverified owner decision.
 
 Source: `pdomain-prep-for-pgdp/frontend/src/App.tsx:287-379`.
 
@@ -319,12 +322,12 @@ Core `AppShell` props:
 | `uiPrefsConfig` | `UIPrefsConfig` | Load + persist callbacks (see above) |
 | `main` | `ReactNode` | Route table; use `flex flex-col h-full` on the root div |
 
-AppShell injects `data-testid="app-shell"` on its root. A wrapper may still own
-page sizing, but it is not required to provide that test id.
+AppShell adds `data-testid="app-shell"` to its root. A wrapper may still own
+page sizing, but it does not need to provide that test ID.
 
 ---
 
-## Required npm packages
+## Install the required npm packages
 
 ```jsonc
 // package.json — supported baseline for these APIs
@@ -347,19 +350,20 @@ page sizing, but it is not required to provide that test id.
 
 Source: `pdomain-prep-for-pgdp/frontend/package.json`.
 
-Tailwind, PostCSS, and autoprefixer are only required if you are using Tailwind
-utility classes. All two current consumers do. The `tailwind.config.ts` must
-include `./src/**/*.{ts,tsx}` in `content` so JIT picks up `bg-bg-page`,
-`text-ink-1`, etc.
+Tailwind, PostCSS, and autoprefixer are required only when you use Tailwind
+utility classes. Both current consumers use them. Include
+`./src/**/*.{ts,tsx}` in the `tailwind.config.ts` `content` field. This lets
+JIT detect `bg-bg-page`, `text-ink-1`, and similar classes.
 
 ---
 
 ## Jobs and the utility dock
 
 Build app-owned job data from the application's API. Pass it to AppShell's
-`jobs` object so UtilityDock can render the jobs surface. Job data alone does
-not add a jobs trigger to the built-in header; supply a trigger through
-`headerActions` or another component rendered inside AppShell.
+`jobs` object so UtilityDock can render the jobs surface.
+
+Job data alone does not add a jobs trigger to the built-in header. Add a
+trigger through `headerActions` or another component rendered inside AppShell.
 
 ```tsx
 import { useQuery } from "@tanstack/react-query";
@@ -431,56 +435,58 @@ Source: `pdomain-prep-for-pgdp/frontend/src/App.tsx:229-267`.
 />
 ```
 
-The built-in header has launcher and settings controls but no automatic jobs
-trigger. The example adds one through `headerActions`. A custom AppHeader may
-instead render JobsPill and wire `onJobsClick` to
+The built-in header has launcher and settings controls, but it has no automatic
+jobs trigger. The example adds one through `headerActions`. A custom AppHeader
+may instead render JobsPill. It can connect `onJobsClick` to
 `useUtilityDock().toggle('jobs')`. Apps without background jobs may omit
 `jobs` and the trigger.
 
-`useLongJob` store (from `@pdomain/pdomain-ui/stores`) tracks a single
-foreground long-running job with UI state (progress bar, cancel button). Use
-it for page-level operations where the user is waiting; use `useActiveJobs`
-for the header pill which reflects background work.
+The `useLongJob` store from `@pdomain/pdomain-ui/stores` tracks one long-running
+foreground job and its UI state, including a progress bar and cancel button.
+Use it for page-level operations while the user waits. Use `useActiveJobs` for
+the header pill that reflects background work.
 
 ---
 
-## What NOT to do
+## Avoid patterns that bypass shared UI contracts
 
 **Vendor fonts in `public/fonts/`.**
 Inter and JetBrains Mono must come from `@fontsource/inter` and
 `@fontsource/jetbrains-mono`. Vendored font files bypass the weight-subset
-discipline and drift from the pdomain-ui token `--ui-font` / `--mono-font`
-stacks. The fontsource packages are already in the lock file of every pdomain-* SPA.
+rules and drift from the pdomain-ui token stacks `--ui-font` and `--mono-font`.
+The fontsource packages are already in every pdomain-* SPA lock file.
 
 **Hand-roll buttons, tables, or chrome that exist as primitives.**
 `@pdomain/pdomain-ui/primitives` exports `Button`, `Badge`, `Input`, `Toggle`,
 `Separator`, `Tabs`, and others. `@pdomain/pdomain-ui/shell` exports `AppShell`,
 `AppHeader`, `JobsPill`. Check those surfaces before writing local copies.
-The `jobs-table__*` CSS class family (job state colours + row styles) is
-also shipped in pdomain-ui.
+pdomain-ui also ships the `jobs-table__*` CSS class family for job-state colors
+and row styles.
 
 **Reference non-canonical CSS tokens.**
-The canonical border token is `--border-1` / `--border-2` / `--border-3`. The
-shorthand `--pd-border` and bare `--border` do not exist in the pdomain-ui
-token set and will resolve to `initial` at runtime, rendering invisible borders.
+The canonical border tokens are `--border-1`, `--border-2`, and `--border-3`.
+The pdomain-ui token set does not include the `--pd-border` shorthand or bare
+`--border`. At runtime, they resolve to `initial` and render invisible borders.
 See `pdomain-ui/src/theme/tokens.css` for the full canonical token list.
 
 **Use inline `<a href="file://...">` for local path display.**
-Local file paths in UIs should use a Copy button + `navigator.clipboard.writeText()`
-pattern. An `href="file://..."` renders as a dead link in every browser except
-Firefox with a user-set pref, and triggers a security warning on Chromium.
+Display local file paths in UIs with a Copy button and
+`navigator.clipboard.writeText()`. An `href="file://..."` is a dead link in
+every browser except Firefox with a user-set preference. It also triggers a
+security warning on Chromium.
 
 **Mount inline toast `<div>` elements.**
-All transient notifications must go through sonner (`import { toast } from
-"sonner"`). The `<Toaster>` is mounted once in `main.tsx`; never add a second
-one. Do not render error/success state as local `<div>` banners that appear
-and disappear — use `toast.error()` / `toast.success()` instead.
+Send all transient notifications through sonner with `import { toast } from
+"sonner"`. Mount `<Toaster>` once in `main.tsx`; never add a second one. Do not
+show temporary error or success state in local `<div>` banners. Use
+`toast.error()` or `toast.success()` instead.
 
 **Import directly from `lucide-react` outside `src/icons/`.**
 pdomain-ui re-exports a curated icon set from `@pdomain/pdomain-ui/icons`.
-Direct `lucide-react` imports in consumer SPAs bypass the icon abstraction and
-make it impossible to swap the icon library. ESLint in pdomain-ui itself
-enforces this; consumer SPAs should add the same `no-restricted-imports` rule.
+Direct `lucide-react` imports in consumer SPAs bypass the icon abstraction.
+They make it impossible to swap the icon library. ESLint enforces this in
+pdomain-ui itself. Consumer SPAs should add the same `no-restricted-imports`
+rule.
 
 ---
 
