@@ -18,20 +18,22 @@ last_verified: 2026-07-13
 ## Current behavior
 
 `theme/tokens.css` and `theme/primitives.css` are runtime truth. The sync script
-copies those files to the design-system documentation mirror. The palette uses
-semantic color tokens plus structural spacing, radius, typography, transition,
-and shadow scales. Konva receives resolved color values rather than CSS `var()`
-expressions.
+copies those files to the design-system documentation mirror.
+
+The palette uses semantic color tokens plus structural spacing, radius,
+typography, transition, and shadow scales. Konva receives resolved color values
+rather than CSS `var()` expressions.
 
 Component quality includes keyboard behavior, semantic roles, stable labels,
 explicit live-region choices, typed public APIs, and focused behavior tests.
 
 ## Concrete deviations
 
-The 2026-05-28 audit claimed all findings in scope, but CropCard still installs
-an empty flag overlay through an always-true React-element check. PipelineTemplate
-also retains inline RGBA values in CoverPlaceholder. SourcePageWorkbench keeps
-an unused `beforeImageUrl`, now tracked by later compare-viewer work.
+The 2026-05-28 audit claimed all findings in scope. However, CropCard still
+installs an empty flag overlay through an always-true React-element check.
+PipelineTemplate also retains inline RGBA values in CoverPlaceholder.
+SourcePageWorkbench keeps an unused `beforeImageUrl`, now tracked by later
+compare-viewer work.
 
 ## Durable decisions
 
