@@ -15,11 +15,11 @@ last_verified: 2026-07-13
 - **Read when:** integrating custom canvas overlays, image-node behavior, or AppShell footer content.
 - **Search terms:** onImageNodeReady, selectionLayerListening, AppShell footer, consumer canary.
 
-## Current behavior
+## Canvas and shell hooks remain opt-in
 
-`PageImageCanvas` calls `onImageNodeReady` with the mounted Konva image node and
-with `null` when no node is ready. Consumers use this escape hatch for behavior
-that needs the underlying image node.
+`PageImageCanvas` calls `onImageNodeReady` with the mounted Konva image node. It
+calls the same callback with `null` when no node is ready. Consumers use this
+escape hatch for behavior that needs the underlying image node.
 
 The selection layer does not receive pointer events by default.
 `selectionLayerListening` opts into them. ArtifactViewer enables listening for
@@ -29,21 +29,21 @@ word mode; LabelerCanvas explicitly leaves it off.
 footer row. When absent, it renders neither the footer element nor a reserved
 grid row.
 
-## Concrete deviations
+## The settings direction did not ship as proposed
 
 The former consumer-canary plan grouped these shipped extension points with a
 settings direction that did not ship as proposed. The `system` theme and local
-persistence adapter remain owner decisions, while the centered settings modal
-was superseded by the shell utility dock.
+persistence adapter remain owner decisions. The shell utility dock superseded
+the centered settings modal.
 
-## Durable decisions
+## Extension points stay typed and conditional
 
 - Keep low-level canvas access opt-in and typed.
 - Keep selection-layer pointer interception off unless a mode needs it.
 - Do not reserve shell layout space for an absent optional footer.
 - Separate proven extension points from unresolved consumer preferences.
 
-## Evidence
+## Code, tests, and commits verify the contracts
 
 - Code: `src/canvas/PageImageCanvas.tsx`, `src/canvas/types.ts`,
   `src/shell/AppShell.tsx`, `src/shell/types.ts`
