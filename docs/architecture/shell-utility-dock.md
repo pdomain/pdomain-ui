@@ -18,19 +18,21 @@ last_verified: 2026-07-13
 ## Current behavior
 
 AppShell owns one right-side utility dock for settings, keybinds, and jobs. It
-opens as a non-modal overlay or a persisted, resizable pinned column. One
-surface is active at a time. Settings always includes Appearance and accepts
-typed app panels through `settingsPanels`; `headerActions` remains app-level.
+opens as either a non-modal overlay or a persisted, resizable pinned column.
+Only one surface is active at a time.
+
+Settings always includes Appearance and accepts typed app panels through
+`settingsPanels`. `headerActions` remains app-level.
 
 `useSettingsModal` is a compatibility shim that opens the settings dock.
-SettingsModal remains temporarily exported but is not the shell's current
-presentation path.
+SettingsModal remains temporarily exported, but the shell does not currently
+use it as its presentation path.
 
 ## Concrete deviations
 
 The original settings design specified a centered modal and direct
 `useSettingsModal` control. UtilityDock and SettingsPanel supersede that
-presentation. Jobs later added `onJobDelete`; deprecated JobsPill popover props
+presentation. Jobs later added `onJobDelete`. Deprecated JobsPill popover props
 remain inert.
 
 ## Durable decisions
