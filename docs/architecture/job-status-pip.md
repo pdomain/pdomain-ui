@@ -17,20 +17,20 @@ last_verified: 2026-07-13
 
 ## Current design
 
-`JobStatusPip` renders one generated `JobState` value with a colored dot and a
-label. The canonical states are `queued`, `running`, `succeeded`, `failed`, and
-`cancelled`. Code uses `succeeded`; a consumer can pass a friendlier `label`,
+`JobStatusPip` renders a generated `JobState` value as a colored dot and label.
+The canonical states are `queued`, `running`, `succeeded`, `failed`, and
+`cancelled`. Code uses `succeeded`. A consumer can pass a friendlier `label`,
 such as `Done`, without changing the backend state.
 
 The state colors are `--ink-3`, `--ocr`, `--exact`, `--mismatch`, and `--fuzzy`
 in the same order. The running state also uses the shared `pip--running`
-animation. The decorative dot is hidden from assistive technology because the
+animation. Assistive technology cannot access the decorative dot because the
 text label conveys the state.
 
-The component remains separate from `StatusPip`. Job lifecycle and match
+The component remains separate from `StatusPip` because job lifecycle and match
 quality use unrelated state types. The default test id is
-`job-status-pip-{state}`, and standard HTML attributes, styles, classes, and a
-ref pass through to the root element.
+`job-status-pip-{state}`. Standard HTML attributes, styles, classes, and a ref
+pass through to the root element.
 
 ## Durable decisions
 
@@ -48,4 +48,3 @@ ref pass through to the root element.
 - Commits: `dee027951f591ae10f1df7ecc21f4c34d6bf94dc` (component),
   `780c950b81e9f065dc40aabd5c2b8f8f5d69a6de` (generated `JobState` integration)
 - Verified: 2026-07-13 by repository code, tests, history, and docgraph migration analysis
-
