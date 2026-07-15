@@ -62,7 +62,8 @@ archive only as a last resort.
 
 ## Process
 
-- [Writing style](process/writing-style.md)
+- New durable prose uses `writing-docs:write-readably`; existing prose uses
+  `writing-docs:edit-for-readability`.
 - [Lint deviations](process/lint-deviations.md)
 
 ## Usage

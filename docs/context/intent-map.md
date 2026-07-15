@@ -19,7 +19,7 @@ Kind: context
 
 - Complete or deliberately narrow the remaining PGDP common-component backlog.
 - Decide whether to implement the Field help slot described in the active spec.
-- Keep the writing-style process and lint-deviation governance active.
+- Keep `writing-docs` plugin routing and lint-deviation governance active.
 - Fix CropCard's empty flag-overlay guard; the current React-element check is
   always true. Source: the former May 28 audit, promoted to
   [theme and component quality](../architecture/theme-and-component-quality.md).
@@ -109,7 +109,7 @@ None.
   found no inbound references before deletion.
 - **still-active:** `docs/specs/2026-05-21-field-field-row.md`,
   `docs/plans/2026-06-14-pgdp-common-component-backlog.md`,
-  `docs/process/lint-deviations.md`, `docs/process/writing-style.md`, and
+  `docs/process/lint-deviations.md` and
   `docs/research/2026-06-14-pgdp-design-handoff-gap-analysis.md`.
 - **needs-owner-review:** `docs/specs/2026-05-21-log-viewer.md`; the former May
   22 security review was stale and has been closed into the decisions context.

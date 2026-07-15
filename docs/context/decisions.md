@@ -206,3 +206,13 @@ Kind: context
   24-25 implementation history.
 - **Remaining work:** Consumer adoption and unresolved contracts remain in
   `docs/context/intent-map.md`.
+### 2026-07-15 — Retired: Writing Style
+
+- **Old path:** `docs/process/writing-style.md`
+- **Outcome:** superseded
+- **Superseded by:** the `writing-docs:write-readably` and
+  `writing-docs:edit-for-readability` plugin skills
+- **Removal commit:** (fill after commit)
+- **Rationale kept:** `AGENTS.md` and `CONVENTIONS.md` route new and existing
+  reader-facing prose to the plugin-owned standard and workflow.
+- **Remaining work:** none

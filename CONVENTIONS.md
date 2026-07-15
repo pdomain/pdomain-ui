@@ -17,13 +17,14 @@ last_verified: 2026-07-13
 
 <!-- workspace-conventions:start -->
 
-## Rule: Write docs clearly
+## Rule: Route reader-facing prose through writing-docs
 
-**The rule.** Follow [Writing Style](docs/process/writing-style.md) for docs,
-reports, issue text, PR text, and user-facing copy.
+**The rule.** Use `writing-docs:write-readably` for new durable reader-facing
+prose. Use `writing-docs:edit-for-readability` for existing prose.
 
-**Why.** Detailed style guidance belongs in a process doc. CONVENTIONS.md
-should stay short.
+**Why.** The plugin owns the shared readability standard and its review
+workflow. Repository guidance should route to that authority instead of
+maintaining a local copy.
 
 ## Rule: No comments explaining what code does
 
