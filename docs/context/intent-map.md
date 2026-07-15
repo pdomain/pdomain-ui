@@ -27,8 +27,8 @@ Kind: context
   with theme tokens. Source: the component-audit remediation design.
 - Verify UtilityDock behavior in `pdomain-ocr-simple-gui`,
   `pdomain-prep-for-pgdp`, and `pdomain-ocr-labeler-spa`, especially canvas
-  interaction, pinned reflow, and resize behavior. Current evidence covers the
-  pdomain-ui implementation and unit tests only. Source: the former utility
+  interaction, pinned reflow, and resize behavior. Current evidence covers only
+  the pdomain-ui implementation and unit tests. Source: the former utility
   design, promoted to [shell utility dock](../architecture/shell-utility-dock.md).
 
 ## Deferred work
@@ -103,9 +103,9 @@ None.
 ## Legacy-unverified sweep
 
 - **can-retire (completed 2026-07-13):** the former JobStatusPip and kanban
-  archive specs; implementation and tests are proven, durable behavior is in
+  archive specs. Implementation and tests are proven. Durable behavior is in
   [JobStatusPip architecture](../architecture/job-status-pip.md) and
-  [kanban architecture](../architecture/kanban-board.md), and link-impact checks
+  [kanban architecture](../architecture/kanban-board.md). Link-impact checks
   found no inbound references before deletion.
 - **still-active:** `docs/specs/2026-05-21-field-field-row.md`,
   `docs/plans/2026-06-14-pgdp-common-component-backlog.md`,
