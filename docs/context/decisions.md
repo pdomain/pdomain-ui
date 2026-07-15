@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-07-13
+Last verified: 2026-07-15
 Kind: context
 ---
 
@@ -217,3 +217,23 @@ Kind: context
 - **Rationale kept:** `AGENTS.md` and `CONVENTIONS.md` route new and existing
   reader-facing prose to the plugin-owned standard and workflow.
 - **Remaining work:** none
+- **Note (2026-07-15):** a `repo-setup` run re-created this file (commit
+  `ba34259`); it was removed again the same day to honor this retirement. The
+  file stays deleted.
+
+### 2026-07-15 — Retired: pdomain/pdomain-ui GitHub issue tracker
+
+- **Old path:** `pdomain/pdomain-ui` GitHub issues (53 closed, `#1`–`#56`).
+- **Outcome:** implemented — every issue was already closed and shipped; the
+  tracker was migrated into the repo and then emptied.
+- **Superseded by:** [docs/issues/2026-07-15-github-tracker-closeout.md](../issues/2026-07-15-github-tracker-closeout.md)
+  for the number/title/outcome ledger, and `docs/architecture/*` for the durable
+  behavior those issues produced.
+- **Removal commit:** the 2026-07-15 tracker-closeout migration commit; find it
+  with `git log -- docs/issues/2026-07-15-github-tracker-closeout.md`. The 53
+  GitHub issues were permanently deleted the same day.
+- **Rationale kept:** durable design lives in code, tests, and architecture
+  docs; the closeout ledger keeps old issue numbers citable after deletion.
+- **Remaining work:** open follow-ups, if any, remain in
+  `docs/context/intent-map.md`; the `ocr-container-meta` cross-cut tracker is out
+  of scope and untouched.
