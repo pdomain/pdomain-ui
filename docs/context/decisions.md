@@ -242,3 +242,26 @@ Kind: context
 - **Remaining work:** open follow-ups, if any, remain in
   `docs/context/intent-map.md`; the `ocr-container-meta` cross-cut tracker is out
   of scope and untouched.
+
+### 2026-07-15 — Dispositioned: pdomain-ui items in the ocr-container-meta tracker
+
+- **Old path:** `ConcaveTrillion/ocr-container-meta` issues #12, #333, #394, #401
+  (the four pdomain-ui-specific open items).
+- **Outcome:**
+  - **#12** (founding library spec) — implemented; the pdomain-ui repo and its
+    `docs/architecture/*` are the realization. Closed on the meta tracker.
+  - **#333** (design-handoff port spec) — implemented; its local spec and plan
+    were already retired to
+    [design-system composition](../architecture/design-system-composition.md)
+    and [stage component library](../architecture/stage-component-library.md).
+    Closed on the meta tracker.
+  - **#394** (ComputeTargetPanel label + test) — active; migrated to
+    [docs/issues/2026-07-15-computetargetpanel-active-device-label.md](../issues/2026-07-15-computetargetpanel-active-device-label.md)
+    and now tracked in-repo. Closed on the meta tracker with a pointer.
+  - **#401** (useShortcuts chord support) — active but deferred; migrated to
+    [docs/issues/2026-07-15-useshortcuts-chord-sequences.md](../issues/2026-07-15-useshortcuts-chord-sequences.md)
+    and now tracked in-repo. Closed on the meta tracker with a pointer.
+- **Rationale kept:** each item now lives where the work happens — implemented
+  specs in architecture, open work in `docs/issues/`. The meta issues were closed
+  (not deleted) with pointer comments, since that tracker is shared across repos.
+- **Remaining work:** #394 and #401 remain open in `docs/issues/`.
