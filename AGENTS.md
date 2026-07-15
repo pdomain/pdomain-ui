@@ -31,7 +31,8 @@ This is the drafting default, not a separate step. It does not apply inside code
 
 Read these repository rules before working:
 
-- [CLAUDE.md](CLAUDE.md) defines commands, constraints, and development workflow.
+- `AGENTS.md` is the canonical agent context. `CLAUDE.md` is a compatibility
+  symlink to this file.
 - [CONVENTIONS.md](CONVENTIONS.md) defines repository-wide coding and documentation conventions.
 - [DOCGRAPH.md](DOCGRAPH.md) defines documentation retrieval, lifecycle, context, and write safety.
 

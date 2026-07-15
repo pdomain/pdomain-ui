@@ -206,6 +206,7 @@ Kind: context
   24-25 implementation history.
 - **Remaining work:** Consumer adoption and unresolved contracts remain in
   `docs/context/intent-map.md`.
+
 ### 2026-07-15 — Retired: Writing Style
 
 - **Old path:** `docs/process/writing-style.md`

@@ -19,8 +19,8 @@ For current design records, constraints, and documentation workflow, see [the do
 
 ## Repository guidance
 
-- [Agent entrypoint](AGENTS.md)
-- [Claude and workspace guidance](CLAUDE.md)
+- [Agent entrypoint](AGENTS.md) — canonical guidance, commands, and repository rules.
+- `CLAUDE.md` — compatibility symlink to `AGENTS.md`.
 - [Codex context](CODEX.md)
 - [Repository conventions](CONVENTIONS.md)
 - [Docgraph governance](DOCGRAPH.md)
