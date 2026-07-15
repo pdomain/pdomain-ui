@@ -1,8 +1,9 @@
 # `@pdomain/pdomain-ui/worklist`
 
-Virtualized, keyboard-navigable list panels for the pdomain-\* review workflow.
+This package provides virtualized, keyboard-navigable list panels for the
+pdomain-\* review workflow.
 
-## Components
+## Three list components share one API
 
 | Component   | Item type       | Default `aria-label` |
 |-------------|-----------------|----------------------|
@@ -10,8 +11,8 @@ Virtualized, keyboard-navigable list panels for the pdomain-\* review workflow.
 | `<LineList>` | `BlockListItem` | `"Line list"` |
 | `<PageList>` | `PageListItem`  | `"Page list"` |
 
-All three components share the same render-prop row API and keyboard
-navigation behaviour (`ArrowDown` / `ArrowUp` / `Enter`).
+All three components share the same render-prop row API. They also share
+keyboard navigation with `ArrowDown`, `ArrowUp`, and `Enter`.
 
 ## Render-prop slot
 
@@ -35,9 +36,9 @@ import type { WordRowProps, WordListItem } from '@pdomain/pdomain-ui/worklist'
 
 ## Migration guide — `LineCard` adapter (Phase 2)
 
-In Phase 2 `pdomain-ocr-labeler-spa` will replace its internal `LineCard.tsx`
-with a `renderRow` fill for `<WordList>` (or `<LineList>`). The expected
-prop shape is:
+In Phase 2, `pdomain-ocr-labeler-spa` will replace its internal `LineCard.tsx`
+with a `renderRow` implementation for `<WordList>` or `<LineList>`. The
+expected prop shape is:
 
 ```ts
 // Props that `renderRow` will receive
@@ -89,22 +90,23 @@ function makeLineCardRow(callbacks: LineCardCallbacks) {
 
 ### `MatchStatus` mapping
 
-`LineCard`'s `MatchStatus` in labeler-spa includes `unmatched_ocr` and
-`unmatched_gt` variants. The pdomain-ui `MatchStatus` type is a strict four-value
-union (`exact | fuzzy | mismatch | none`). When migrating:
+In labeler-spa, `LineCard`'s `MatchStatus` includes the `unmatched_ocr` and
+`unmatched_gt` variants. The pdomain-ui `MatchStatus` type is a strict
+four-value union: `exact | fuzzy | mismatch | none`. Use these mappings during
+migration:
 
 - `'unmatched_ocr'` → map to `'mismatch'`
 - `'unmatched_gt'` → map to `'mismatch'` (or `'none'` depending on app policy)
 - `'unvalidated'` → map to `'none'`
 
-The mapping lives in the consuming app's `getMatchStatus` callback, not in
-pdomain-ui (pdomain-ui has no labeler-specific concepts).
+The consuming app's `getMatchStatus` callback owns the mapping. It does not
+belong in pdomain-ui because pdomain-ui has no labeler-specific concepts.
 
 ## Filter / sort hooks
 
-`useWorklistFilter` and `useWorklistSort` (see `hooks/`) provide memoized
-filter predicates and sort comparators for use with `items` arrays before
-passing them to list components.
+`useWorklistFilter` and `useWorklistSort` provide memoized filter predicates
+and sort comparators. Use them with `items` arrays before passing those arrays
+to list components. Their implementations are in `hooks/`.
 
 ```ts
 import { useWorklistFilter } from '@pdomain/pdomain-ui/worklist'
