@@ -19,11 +19,13 @@ disposition: needs-owner-decision
 
 ## 1. Purpose
 
-A virtualized, streaming-text viewer that renders a growing list of log lines
-efficiently. pdomain-ui owns the virtualization (`@tanstack/react-virtual`), the
-auto-scroll toggle, and the line-wrap toggle. The consumer feeds it an array
-of log lines and wires it to whatever data source it has (e.g. the
-`useLongJob` hook's SSE events). The viewer is data-source-agnostic.
+`LogViewer` efficiently renders a growing list of log lines as virtualized,
+streaming text. pdomain-ui owns the virtualization
+(`@tanstack/react-virtual`), auto-scroll toggle, and line-wrap toggle.
+
+The consumer provides an array of log lines and connects it to any data source,
+such as the `useLongJob` hook's SSE events. The viewer does not depend on a
+specific data source.
 
 ---
 
@@ -125,8 +127,8 @@ const rowVirtualizer = useVirtualizer({
 ```
 
 Visible lines are a slice of the last `bufferCap` items from `props.lines`.
-No deep equality check — the viewer rerenders whenever `lines.length`
-changes (the typical pattern for append-only streams).
+The viewer does not run a deep equality check. It rerenders whenever
+`lines.length` changes, which is the typical pattern for append-only streams.
 
 ---
 
@@ -149,8 +151,8 @@ auto-scroll toggle button
   → toggles current state; scrolls to bottom when turning ON
 ```
 
-The auto-scroll state is managed internally with `useReducer`; the consumer
-receives it via `onAutoScrollChange` only when it changes.
+The viewer manages auto-scroll state internally with `useReducer`. The consumer
+receives it through `onAutoScrollChange` only when it changes.
 
 ---
 
@@ -166,16 +168,16 @@ Built-in toolbar rendered above the scroll area:
 - "Wrap" button: active state when ON; aria-pressed.
 - Line count: plain text, updated as lines grow.
 
-The toolbar is not separately exported or replaceable in Phase 1. If a
-consumer needs a custom toolbar it hides the built-in via CSS and renders
-its own outside the component.
+Phase 1 does not export the toolbar separately or make it replaceable. A
+consumer that needs a custom toolbar hides the built-in toolbar with CSS. It
+then renders its own toolbar outside the component.
 
 ---
 
 ## 7. ANSI stripping
 
-When `stripAnsi` is true (default), the viewer strips ANSI CSI sequences
-before rendering each line. A lightweight regex is sufficient:
+When `stripAnsi` is true, its default, the viewer strips ANSI CSI sequences
+before rendering each line. A lightweight regular expression is sufficient:
 
 ```ts
 // internal utility
@@ -185,8 +187,8 @@ function stripAnsiCodes(s: string): string {
 }
 ```
 
-Phase 1 renders lines as plain text. Colored ANSI rendering (converting
-SGR codes to `<span style="color:...">`) is a deferred enhancement and not
+Phase 1 renders lines as plain text. Colored ANSI rendering would convert SGR
+codes to `<span style="color:...">`. This enhancement is deferred and is not
 blocked by this spec.
 
 ---
@@ -203,8 +205,9 @@ blocked by this spec.
 | `.log-viewer__line` | each rendered line |
 | `.log-viewer--wrap` | modifier on root when wrap is ON |
 
-Monospace font via `var(--font-mono)` design-system token. Background from
-`var(--bg-surface-2)` to visually distinguish the log from surrounding UI.
+The viewer uses the `var(--font-mono)` design-system token for its monospace
+font. Its background uses `var(--bg-surface-2)` to distinguish the log from
+the surrounding UI.
 
 ---
 
@@ -212,10 +215,10 @@ Monospace font via `var(--font-mono)` design-system token. Background from
 
 - The scroll container has `role="log"` and `aria-label="Training output"`.
   Consumers may override `aria-label` via standard HTML attribute pass-through.
-- `role="log"` implies `aria-live="polite"` per ARIA spec — screen readers
-  announce new appended content without interrupting. Because content may
-  append very rapidly, the viewer adds `aria-atomic="false"` so only new
-  delta lines are announced rather than the full buffer.
+- Per the ARIA spec, `role="log"` implies `aria-live="polite"`. Screen readers
+  announce newly appended content without interrupting. Content may append
+  very rapidly, so the viewer adds `aria-atomic="false"`. This setting announces
+  only new delta lines rather than the full buffer.
 - The toolbar buttons have explicit `aria-label`s: "Toggle auto-scroll",
   "Toggle line wrap".
 
@@ -227,8 +230,8 @@ Monospace font via `var(--font-mono)` design-system token. Background from
 |---|---|
 | `training-log-panel` | `LogViewer` root (passed via prop by trainer-spa) |
 
-No built-in testids on internal elements in Phase 1. If the Playwright
-driver needs to assert on line content, it reads within the `training-log-panel`
+Phase 1 has no built-in test IDs on internal elements. If the Playwright driver
+needs to assert on line content, it reads within the `training-log-panel`
 container.
 
 ---
@@ -259,33 +262,35 @@ export function RunDetailPage({ runId }: { runId: string }) {
 }
 ```
 
-The `useLongJob` hook owns SSE/polling; `LogViewer` only receives the
-accumulated `lines` array. The consumer is responsible for buffer management
-above `bufferCap` — if the array grows larger than `bufferCap`, the viewer
-renders only the last `bufferCap` items.
+The `useLongJob` hook owns SSE or polling. `LogViewer` receives only the
+accumulated `lines` array.
+
+The consumer manages the buffer above `bufferCap`. If the array grows larger
+than `bufferCap`, the viewer renders only the last `bufferCap` items.
 
 ---
 
 ## 12. Decisions
 
-- **D-L1** `LogViewer` is in `/primitives` subpath. Same reasoning as kanban
-  (D-K1): too small for its own subpath.
-- **D-L2** The component is data-source-agnostic — it takes `string[]` not
-  an event stream. This decouples it from SSE, WebSocket, or polling
-  implementations and makes it testable without `useLongJob`.
+- **D-L1** `LogViewer` is in the `/primitives` subpath. The reasoning matches
+  kanban (D-K1): it is too small for its own subpath.
+- **D-L2** The component does not depend on a specific data source. It takes
+  `string[]`, not an event stream. This separates it from SSE, WebSocket, and
+  polling implementations. It also makes the component testable without
+  `useLongJob`.
 - **D-L3** `bufferCap` is a render cap, not a data cap. The consumer owns
   the data buffer; the viewer only limits what it renders.
 - **D-L4** ANSI color rendering is deferred. Plain ANSI stripping is
-  sufficient for Phase 1; adding SGR-to-span conversion later is a
+  sufficient for Phase 1. Adding SGR-to-span conversion later is a
   non-breaking addition.
-- **D-L5** No `onLineClick` / `onLineSelect` in Phase 1. Log lines are
-  display-only. If a consumer needs to copy individual lines it targets
-  within the `data-testid` container.
+- **D-L5** Phase 1 has no `onLineClick` or `onLineSelect`. Log lines are
+  display-only. To copy individual lines, a consumer targets them within the
+  `data-testid` container.
 
 ## Adversarial Review
 
-**Review status:** Pending owner decision. Repository search and history find
-no LogViewer implementation, export, story, test, or current consumer-demand
-evidence. The proposed virtualization, streaming, auto-scroll, wrapping, ANSI,
-and accessibility contracts therefore remain unvalidated draft intent and must
-not be treated as current behavior.
+**Review status:** Pending owner decision. Repository search and history show no
+LogViewer implementation, export, story, test, or current consumer-demand
+evidence. Therefore, the proposed virtualization, streaming, auto-scroll,
+wrapping, ANSI, and accessibility contracts remain unvalidated draft intent.
+They must not be treated as current behavior.
