@@ -8,7 +8,12 @@ Kind: usage
 
 # @pdomain/pdomain-ui
 
-Shared TS/React/Vite frontend library for the pdomain-* suite — canvas, worklist, shell, primitives, icons, generated types, and store factories. Every pdomain-* end-user SPA (labeler-spa, pgdp-prep, trainer-spa) imports components and hooks from this package rather than reimplementing them. The library is published to the self-hosted `pdomain-index-npm` registry at `@pdomain/pdomain-ui`.
+`@pdomain/pdomain-ui` is the shared TS/React/Vite frontend library for the
+pdomain-* suite. It provides canvas, worklist, shell, primitives, icons,
+generated types, and store factories. Every pdomain-* end-user SPA
+(labeler-spa, pgdp-prep, trainer-spa) imports components and hooks from this
+package instead of reimplementing them. The library is published to the
+self-hosted `pdomain-index-npm` registry at `@pdomain/pdomain-ui`.
 
 For current design records, constraints, and documentation workflow, see [the docs index](docs/README.md).
 
