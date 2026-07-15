@@ -17,21 +17,21 @@ last_verified: 2026-07-13
 
 ## Current behavior
 
-Design handoffs enter the library through a reviewed inventory of identifiers,
-tokens, icons, and reuse candidates. Shared components use typed data props and
-focused composition slots. Consumers keep deployment logic and stage
-orchestration.
+The library accepts design handoffs after reviewing their identifiers, tokens,
+icons, and reuse candidates. Shared components use typed data props and focused
+composition slots. Consumers retain deployment logic and stage orchestration.
 
 `PipelineTemplate` owns ProjectInfoBand, StageStrip, project and stage data, and
-default tab maps. Its primary extension points are `tabsSlot`, `children`, and
-focused controls rather than a slot for every visual region.
+default tab maps. Its main extension points are `tabsSlot`, `children`, and
+focused controls. It does not provide a slot for every visual region.
 
 ## Concrete deviations
 
 The original design proposed `header`, `stageStrip`, `tabs`, `body`, and
-`bulkBar` slots and said templates should avoid pipeline configuration. The
-shipped template instead owns several pipeline regions and typed configuration.
-The reviewed port-plan also reshaped the provisional issue decomposition.
+`bulkBar` slots. It also said templates should avoid pipeline configuration.
+The shipped template instead owns several pipeline regions and typed
+configuration. The reviewed port-plan also reshaped the provisional issue
+decomposition.
 
 ## Durable decisions
 
