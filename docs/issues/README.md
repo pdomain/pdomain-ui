@@ -73,6 +73,7 @@ Lead with the **smallest decisive evidence**, separate **observation** from
 
 ## Resolved issues
 
-- [GitHub issue tracker closeout — 53 resolved issues](./2026-07-15-github-tracker-closeout.md)
-  — the migrated record of the closed `pdomain/pdomain-ui` GitHub issues,
-  deleted from GitHub on 2026-07-15.
+- _None tracked here yet._ The 53 closed `pdomain/pdomain-ui` GitHub issues were
+  migrated and deleted on 2026-07-15; that closeout is recorded in the tombstone
+  in [decisions.md](../context/decisions.md), and the durable release/CI behavior
+  lives in [release-and-ci-pipeline.md](../architecture/release-and-ci-pipeline.md).

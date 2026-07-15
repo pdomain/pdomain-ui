@@ -31,6 +31,7 @@ archive only as a last resort.
 - [Design-system composition](architecture/design-system-composition.md)
 - [JobStatusPip](architecture/job-status-pip.md)
 - [Kanban board](architecture/kanban-board.md)
+- [Release and CI pipeline](architecture/release-and-ci-pipeline.md)
 - [Shell utility dock](architecture/shell-utility-dock.md)
 - [Stage component library](architecture/stage-component-library.md)
 - [Theme and component quality](architecture/theme-and-component-quality.md)
@@ -65,6 +66,7 @@ archive only as a last resort.
 - New durable prose uses `writing-docs:write-readably`; existing prose uses
   `writing-docs:edit-for-readability`.
 - [Lint deviations](process/lint-deviations.md)
+- [Issue reports](issues/README.md) — the `docs/issues/` convention and template
 
 ## Usage
 

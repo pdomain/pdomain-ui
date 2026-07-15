@@ -224,16 +224,21 @@ Kind: context
 ### 2026-07-15 — Retired: pdomain/pdomain-ui GitHub issue tracker
 
 - **Old path:** `pdomain/pdomain-ui` GitHub issues (53 closed, `#1`–`#56`).
-- **Outcome:** implemented — every issue was already closed and shipped; the
-  tracker was migrated into the repo and then emptied.
-- **Superseded by:** [docs/issues/2026-07-15-github-tracker-closeout.md](../issues/2026-07-15-github-tracker-closeout.md)
-  for the number/title/outcome ledger, and `docs/architecture/*` for the durable
-  behavior those issues produced.
-- **Removal commit:** the 2026-07-15 tracker-closeout migration commit; find it
-  with `git log -- docs/issues/2026-07-15-github-tracker-closeout.md`. The 53
-  GitHub issues were permanently deleted the same day.
+- **Outcome:** implemented — every issue was already closed and shipped. The
+  tracker was migrated into the repo, its durable content folded into
+  architecture, and the 53 issues permanently deleted from GitHub on 2026-07-15.
+- **Superseded by:** `docs/architecture/*` for the durable behavior those issues
+  produced, including the new
+  [release and CI pipeline](../architecture/release-and-ci-pipeline.md) record
+  that promotes the May 2026 release/CI audit fixes. The interim migration ledger
+  (`docs/issues/2026-07-15-github-tracker-closeout.md`, with the full
+  number/title/outcome table) was then deleted; recover it from git with
+  `git log -- docs/issues/2026-07-15-github-tracker-closeout.md`.
+- **Removal commit:** the 2026-07-15 tracker-closeout commits (migration then
+  ledger retirement); find them with the `git log` above.
 - **Rationale kept:** durable design lives in code, tests, and architecture
-  docs; the closeout ledger keeps old issue numbers citable after deletion.
+  docs. Git preserves both the deleted ledger and the migration, so the live
+  docs tree stays lean without losing the record.
 - **Remaining work:** open follow-ups, if any, remain in
   `docs/context/intent-map.md`; the `ocr-container-meta` cross-cut tracker is out
   of scope and untouched.
