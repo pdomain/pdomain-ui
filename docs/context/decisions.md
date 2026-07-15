@@ -22,7 +22,7 @@ Kind: context
 - **Decision:** Delete `docs/archive/specs/2026-05-21-job-status-pip.md` after
   promoting current behavior to `docs/architecture/job-status-pip.md`.
 - **Rationale:** Architecture, code, and tests now preserve the durable API and
-  terminology; keeping a second retired copy would create competing truth.
+  terminology. Keeping a second retired copy would create competing truth.
 - **Evidence:** `src/primitives/JobStatusPip.tsx`,
   `src/primitives/JobStatusPip.test.tsx`, commits `dee0279` and `780c950`, and
   the docgraph neighbor check with no inbound references.
@@ -42,7 +42,7 @@ Kind: context
   `src/primitives/kanban/KanbanBoard.test.tsx`, commit `84dcb62`, and the
   docgraph neighbor check with no inbound references.
 - **Remaining work:** Consumer-level pointer, keyboard, large-column, and
-  announcement verification remains valuable because unit tests mock the
+  announcement verification remains valuable because the unit tests mock the
   virtualizer.
 
 ### 2026-07-13 — Keep application behavior outside shared UI modules
@@ -72,9 +72,9 @@ Kind: context
 ### 2026-07-13 — Put suite utilities in one shell-owned dock
 
 - **Decision:** Settings, keybinds, and jobs share one non-modal UtilityDock
-  owned by AppShell. Injected settings panels remain typed; header actions stay
-  application-level; the settings-modal API is compatibility-only.
-- **Rationale:** One mutually exclusive dock preserves main interaction and
+  owned by AppShell. Injected settings panels remain typed. Header actions stay
+  application-level. The settings-modal API is compatibility-only.
+- **Rationale:** One mutually exclusive dock preserves the main interaction. It
   supports overlay or persisted pinned presentation without reviving template
   right-panel slots.
 - **Evidence:** `src/shell/AppShell.tsx`, UtilityDock and SettingsPanel tests,
@@ -85,8 +85,8 @@ Kind: context
 ### 2026-07-13 — Keep theme truth in runtime CSS
 
 - **Decision:** Runtime token and primitive CSS files are authoritative. Keep a
-  small semantic color palette, add reusable structural scales, and resolve
-  token colors before painting Konva canvases.
+  small semantic color palette and add reusable structural scales. Resolve token
+  colors before painting Konva canvases.
 - **Rationale:** This prevents phantom tokens, stale documentation mirrors, and
   CSS-variable strings reaching non-DOM renderers.
 - **Evidence:** `theme/tokens.css`, `theme/primitives.css`,
@@ -149,7 +149,7 @@ Kind: context
 - **Old paths:** `docs/specs/2026-05-22-shared-settings-modal-design.md`,
   `docs/specs/2026-06-02-right-side-utility-panels-design.md`, and
   `docs/plans/2026-06-02-right-side-utility-panels.md`.
-- **Outcome:** The modal spec was superseded; the utility spec and plan were
+- **Outcome:** The modal spec was superseded. The utility spec and plan were
   implemented. All three were deleted after promotion.
 - **Superseded by:** `docs/architecture/shell-utility-dock.md`.
 - **Evidence:** AppShell, UtilityDock, SettingsPanel, compatibility tests, and
