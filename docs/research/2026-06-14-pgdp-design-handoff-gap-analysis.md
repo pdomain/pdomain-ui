@@ -14,29 +14,29 @@ last_verified: 2026-07-13
 **Output:** Gaps only where the shared component library still needs work. This
 is not a blank-slate port plan; substantial `pdomain-ui` work already exists.
 
-## Summary
+## Shared foundations exist, but reusable stage patterns remain
 
-`pdomain-ui` already covers the original shared design-system foundation: tokens,
-primitives, shell chrome, pipeline/project templates, canvas, worklists, and
-several stage slices. The newer PGDP handoff is broader. It now contains 24
-wired pipeline stages, a Projects surface, the pipeline shell, and 28 statechart
-YAMLs. The remaining gaps are concentrated in two places:
+`pdomain-ui` already covers the original shared design-system foundation. This
+foundation includes tokens, primitives, shell chrome, pipeline/project templates,
+canvas, worklists, and several stage slices. The newer PGDP handoff is broader:
+it contains 24 wired pipeline stages, a Projects surface, the pipeline shell,
+and 28 statechart YAMLs. The remaining gaps are concentrated in two places:
 
 1. New PGDP app-local stage surfaces that were previously out of scope because
    they had no final designs: threshold, deskew, denoise, dewarp, post-crops,
    canvas-map, OCR, text-zones, text-review, illustrations, regex, proof-pack,
    build-package, zip, submit-check, and archive.
-2. Common abstractions repeated across those app-local stages but not yet first-class
-   `pdomain-ui` exports: settings rows/cards/sliders, settings inheritance
-   banners, gate/confirm panels, file/tree views, generic review-page grids, and
-   reusable stage lifecycle chrome.
+2. Common abstractions that repeat across those app-local stages but are not yet
+   first-class `pdomain-ui` exports: settings rows/cards/sliders, settings
+   inheritance banners, gate/confirm panels, file/tree views, generic review-page
+   grids, and reusable stage lifecycle chrome.
 
 Behavioral state machines, backend registry changes, event-log semantics, XState
 implementations, and full PGDP stage tools remain app-owned. `pdomain-ui` should
-expose presentational building blocks and typed component contracts, not
-PGDP-specific orchestration or one-off stage screens. The handoff is explicit
-about this boundary: promote generic atoms/chrome to `pdomain-ui`; stage tools
-stay app-local (`PROMPT.md:79-82`).
+expose presentational building blocks and typed component contracts. It should
+not expose PGDP-specific orchestration or one-off stage screens. The handoff
+defines this boundary: promote generic atoms/chrome to `pdomain-ui`, while stage
+tools stay app-local (`PROMPT.md:79-82`).
 
 ## Goal
 
@@ -45,30 +45,33 @@ work that belongs in the shared component library.
 
 ## Method
 
-Compare authoritative PGDP layouts and statecharts with current package
-exports, shared components, templates, workbench code, and stage barrels.
-Separate reusable presentation and typed contracts from app-owned orchestration
+Compare authoritative PGDP layouts and statecharts with the current package
+exports, shared components, templates, workbench code, and stage barrels. Then
+separate reusable presentation and typed contracts from app-owned orchestration
 and stage-specific behavior.
 
 ## Evidence
 
-The original analysis cites PGDP final layouts, statecharts, and pdomain-ui
-exports. Current code additionally shows that the settings kit and
-WorkbenchLayout have shipped, while the review-foundation and pack-tail
-components named in the companion backlog remain absent.
+The original analysis cites PGDP final layouts, statecharts, and `pdomain-ui`
+exports. Current code also shows that the settings kit and WorkbenchLayout have
+shipped. The review-foundation and pack-tail components named in the companion
+backlog remain absent.
 
 ## Conclusions
 
-The shared-versus-app-owned boundary remains valid. The gap list now needs
-narrowing: settings components and WorkbenchLayout are implemented, while
-lifecycle, review composition, gates, confirmation, artifact-tree components,
-and export-policy decisions remain open.
+The shared-versus-app-owned boundary remains valid, but the gap list now needs
+narrowing. Settings components and WorkbenchLayout are implemented. Lifecycle,
+review composition, gates, confirmation, artifact-tree components, and
+export-policy decisions remain open.
 
 ## Next steps
 
-Update the companion backlog to mark the settings kit and WorkbenchLayout
-complete, reconcile their shipped paths, and sequence the remaining
-review-foundation, gate, artifact-tree, and public-export decisions.
+Update the companion backlog in three steps:
+
+1. Mark the settings kit and WorkbenchLayout complete.
+2. Reconcile their shipped paths.
+3. Sequence the remaining review-foundation, gate, artifact-tree, and
+   public-export decisions.
 
 ## What this does NOT establish
 
@@ -77,11 +80,11 @@ screens or own PGDP state machines, backend behavior, or domain algorithms.
 Existing components and stage slices do not by themselves prove full visual or
 behavioral conformance with the newer PGDP designs.
 
-## Source Evidence
+## PGDP and package sources define the comparison
 
-The PGDP handoff says `final/` is authoritative for look and layout, while
-`statecharts/` is authoritative for behavior. It describes 24 pipeline stages,
-Projects, pipeline shell, and app-shell template:
+The PGDP handoff says `final/` is authoritative for look and layout.
+`statecharts/` is authoritative for behavior. The handoff describes 24 pipeline
+stages, Projects, the pipeline shell, and the app-shell template:
 
 PGDP source paths below are relative to
 `/workspaces/ocr-container/pdomain-prep-for-pgdp/docs/plans/design_handoff_pgdp_app/`.
@@ -104,7 +107,7 @@ The current `pdomain-ui` package already exports broad shared surfaces:
 - `src/worklist/index.ts:1-66` for review lists.
 - `src/stages/*/index.ts` for existing stage slices.
 
-## Already Covered
+## Existing components cover the shared foundation
 
 | Area                                       | Evidence                                                                                                                                                                                                                                                                                                                                         | Notes                                                                                                                                                                                                                     |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -116,14 +119,14 @@ The current `pdomain-ui` package already exports broad shared surfaces:
 | Canvas/workbench foundation                | `src/canvas/index.ts:15-70`; `src/stages/PageWorkbench/index.ts:15-63`                                                                                                                                                                                                                                                                           | Page image canvas, overlay layers, selection/viewport hooks, `ArtifactViewer`, split/illustration/word/rotate overlays, stage controls, OCR text panel, page attributes panel, labeler canvas.                            |
 | Existing stage-component slices            | `src/stages/Source/index.ts:9-44`; `src/stages/Grayscale/index.ts:11-41`; `src/stages/Crop/index.ts:9-50`; `src/stages/HyphenJoin/index.ts:6-39`; `src/stages/Validation/index.ts:6-19`; `src/stages/Scannos/index.ts:6-31`; `src/stages/PageReorder/index.ts:6-19`; `src/stages/Upload/index.ts:11-16`; `src/stages/QualityFlags/index.ts:6-11` | These are shipped building blocks, not proof that the full newer PGDP final screen is covered. Treat them as baseline evidence and review partial coverage below.                                                         |
 
-## Partial Coverage
+## Existing stage slices cover only part of the newer designs
 
-Some current stage slices map to an older handoff or wireframe subset. They
-should not be counted as missing, but they also should not be treated as full
-coverage of the newer PGDP final designs. The table focuses on areas where this
-pass found a concrete new shared-library decision; Grayscale, Crop, HyphenJoin,
-Upload, and QualityFlags continue to count as baseline shipped slices, with any
-additional reuse needs rolling into the review/settings/workbench gaps below.
+Some current stage slices map to an older handoff or wireframe subset. They are
+not missing, but they do not fully cover the newer PGDP final designs. The table
+focuses on areas where this pass found a concrete new shared-library decision.
+Grayscale, Crop, HyphenJoin, Upload, and QualityFlags remain baseline shipped
+slices. Any additional reuse needs roll into the review, settings, and workbench
+gaps below.
 
 | Area                  | Current `pdomain-ui` coverage                                                                                                                          | New PGDP handoff surface                                                                                                                                                                      | Shared-library gap                                                                                                    | App-owned remainder                                                            |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
@@ -132,16 +135,16 @@ additional reuse needs rolling into the review/settings/workbench gaps below.
 | Scannocheck / scannos | `CandidateDetail`, `ScannoToken`, `NavGroup`, `InlineMarkPopover`, `RuleDetail` (`src/stages/Scannos/index.ts:5-31`)                                   | PGDP Scannocheck has banner, pages, overview, settings, suspects, list builder, cards, thumbs, status/type chips (`COMPONENT_INDEX.md:288-289`)                                               | Settings kit, review page grid, typed list-builder shell if reused by word/hyphen libraries                           | Wordcheck rule semantics, global library promotion, OCR token source behavior  |
 | Validation            | `SummaryHeader`, `PanelToolbar`, `CheckRow`, `DownloadFooter` (`src/stages/Validation/index.ts:6-19`)                                                  | PGDP validation also uses repeated `Body`, `Card`, `Gate`, `Seg`, `SetRow`, `Stat`, `Toggle2`, `Tree`, `VALMain`, and `VALSettings` (`COMPONENT_INDEX.md:370`)                                | Generic gate/confirm panel, settings kit, artifact/tree view                                                          | Validation rule catalog, blockers, PGDP acceptance checks                      |
 
-## Remaining Gaps
+## Remaining gaps center on reusable stage infrastructure
 
-### 1. App-Local Stage Surfaces With Shared-Library Implications
+### 1. App-local stages need reusable shared infrastructure
 
 `pdomain-ui` currently exposes stage subpaths for PageWorkbench, Source,
 Grayscale, Crop, HyphenJoin, Validation, QualityFlags, Scannos, PageReorder,
 and Upload (`package.json:69-108`). The PGDP handoff includes additional final
-stage directories. These should be implemented primarily in
-`pdomain-prep-for-pgdp`; the `pdomain-ui` work is the reusable substrate those
-app-local stages can consume:
+stage directories. These stages should be implemented mainly in
+`pdomain-prep-for-pgdp`. The `pdomain-ui` work is the reusable substrate that
+these app-local stages can consume:
 
 | PGDP app-local stage surface | PGDP evidence                                                                     | Reusable `pdomain-ui` implication                                                                               |
 | ---------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -163,7 +166,7 @@ app-local stages can consume:
 | Submit check                 | `COMPONENT_INDEX.md:303-313`; `final/submit_check/submit-check.jsx`               | Gate/confirm panel and settings kit. Credential/live-submit behavior stays app-local.                           |
 | Archive                      | `COMPONENT_INDEX.md:48-49`; `final/archive/archive.jsx`                           | Artifact tree, retention list, gate panel. Cold-storage route behavior stays app-local.                         |
 
-### 2. Repeated Helpers Not Yet Generalized
+### 2. Repeated helpers need typed shared exports
 
 The PGDP component index repeats several helpers across 3-8 final files:
 `Body`, `Card`, `Gate`, `Seg`, `SetRow`, `Stat`, `Toggle2`, `Tree`,
@@ -182,10 +185,10 @@ The PGDP component index repeats several helpers across 3-8 final files:
 | Filter toolbar with counts + density     | `FilterToolbar`, `ThumbSizeToggle`, `StageToolbar`                   | Needs a review-page toolbar composition that encodes filters, counts, density, selected count, and actions consistently. |
 | Exclusive inline editor                  | Crop has `BboxEditor`; PageWorkbench has `StageControlsPanel`        | Image-stage review needs a generic inline editor shell with apply scope and confirm behavior.                            |
 
-### 3. Shared Behavior Components
+### 3. Common statechart projections need shared components
 
-The statecharts identify reusable behavior patterns. The machines themselves
-belong in the app, but their visual projections need common components:
+The statecharts identify reusable behavior patterns. The machines belong in the
+app, but their visual projections need common components:
 
 - `stageRunner` lifecycle projects into StageStrip dots and PipelineMini
   (`statecharts/README.md:80-107`, `:233-235`).
@@ -204,20 +207,20 @@ data. It should not own the `XState` actors, SSE reconciliation, backend stage
 registry, or event-log semantics described in `PROMPT.md:63-83` and
 `PROMPT.md:123-157`.
 
-### 4. Packaging / Export Gaps
+### 4. Package exports need explicit stage policies
 
-The `Projects` stage components exist under `src/stages/Projects/`, but there is
-no package subpath for `./stages/Projects` in `package.json:69-108`. If those
-components are intended for downstream apps, expose the subpath or keep them
-explicitly internal to templates.
+The `Projects` stage components exist under `src/stages/Projects/`. However,
+`package.json:69-108` has no package subpath for `./stages/Projects`. If these
+components are intended for downstream apps, expose the subpath. Otherwise,
+keep them explicitly internal to templates.
 
 Several existing stage folders are exported in their own barrels. PageWorkbench,
 Source, Grayscale, and Crop are also re-exported from the root barrel
-(`src/index.ts:337-516`), while other stage exports appear to be subpath-only.
-Consumers can use subpaths, but root-export policy should be documented for
-stage components.
+(`src/index.ts:337-516`). Other stage exports appear to be subpath-only.
+Consumers can use subpaths, but the root-export policy for stage components
+should be documented.
 
-## App-Owned Or Stage-Specific
+## App-owned behavior should remain outside the library
 
 Do not promote these to `pdomain-ui` unless a second consumer needs them:
 
@@ -229,7 +232,7 @@ Do not promote these to `pdomain-ui` unless a second consumer needs them:
   validation rule definitions, regex engine semantics, and package manifest
   construction.
 
-## Recommended Next Step
+## Sequence the reusable work through the companion backlog
 
 Use the companion backlog doc,
 `docs/plans/2026-06-14-pgdp-common-component-backlog.md`, to sequence reusable
