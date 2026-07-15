@@ -26,12 +26,12 @@ design handoff without duplicating components that have already shipped.
 
 Build typed, presentation-only primitives and module components for repeated
 settings, review, gate, artifact, and workbench patterns. Keep full stage tools
-and orchestration app-local unless a component serves at least two stage
-families or more than one consumer app.
+and orchestration app-local. Move a component into the library only when it
+serves at least two stage families or more than one consumer app.
 
 The settings components `SettingsCard`, `SettingsRow`, `SettingsValue`, and
 `SettingSlider` already ship from `src/settings/`. `WorkbenchLayout` already
-ships from `src/workbench/`; treat both areas as completed baseline work when
+ships from `src/workbench/`. Treat both areas as completed baseline work when
 narrowing this backlog.
 
 ## Tech Stack
@@ -42,7 +42,7 @@ modules.
 
 ## Global Constraints
 
-Treat shipped stage and common-module work as the baseline rather than
+Treat shipped stage and common-module work as the baseline instead of
 re-porting it. Keep state machines, backend registry, SSE, event logs, routes,
 domain algorithms, and stage-specific machine behavior outside pdomain-ui.
 
@@ -57,8 +57,8 @@ domain algorithms, and stage-specific machine behavior outside pdomain-ui.
 - Keep PGDP state machines, backend registry, SSE, event-log, and route behavior
   app-owned. The library renders typed state; it does not own orchestration.
 - Keep full PGDP stage tools app-local unless there is a second consumer or a
-  repeated visual pattern worth extracting. `pdomain-ui` should supply the shared
-  pieces those stages compose.
+  repeated visual pattern worth extracting. `pdomain-ui` should supply the
+  shared pieces that those stages compose.
 - Every new component needs a typed API, Storybook stories, Vitest coverage, and
   token-only styling in `theme/primitives.css`.
 
@@ -67,8 +67,8 @@ domain algorithms, and stage-specific machine behavior outside pdomain-ui.
 ### 1. Decide whether `src/stages/Projects` is public
 
 **Evidence:** `src/stages/Projects/index.ts` exports `PipelineMini`,
-`ProjectsEmpty`, and `ProjectsAttributesPanel`, but `package.json:69-108` has no
-`./stages/Projects` subpath.
+`ProjectsEmpty`, and `ProjectsAttributesPanel`. However,
+`package.json:69-108` has no `./stages/Projects` subpath.
 
 **Work:**
 
@@ -78,8 +78,8 @@ domain algorithms, and stage-specific machine behavior outside pdomain-ui.
 
 ### 2. Document root-barrel policy for stage exports
 
-**Evidence:** stage subpaths exist for many stages, while the root barrel
-directly re-exports PageWorkbench, Source, Grayscale, and Crop in
+**Evidence:** Many stages have subpaths. The root barrel also directly
+re-exports PageWorkbench, Source, Grayscale, and Crop in
 `src/index.ts:337-516`.
 
 **Work:**
@@ -93,9 +93,9 @@ directly re-exports PageWorkbench, Source, Grayscale, and Crop in
 ### 3. Add `SettingsCard`, `SettingsRow`, and `SettingsValue`
 
 **Why:** PGDP repeats `SetRow`, `SettingRow`, and settings cards across stage
-settings screens (`COMPONENT_INDEX.md:21-31`). `pdomain-ui` has `FieldRow`, but
-no standardized dense settings row/card system for stage defaults, presets, and
-inheritance state.
+settings screens (`COMPONENT_INDEX.md:21-31`). `pdomain-ui` has `FieldRow` but
+lacks a standard dense settings row and card system for stage defaults,
+presets, and inheritance state.
 
 **Target:** `src/primitives/SettingsCard.tsx`,
 `src/primitives/SettingsRow.tsx`, `theme/primitives.css`.
@@ -116,8 +116,8 @@ inheritance state.
 
 **Acceptance:**
 
-- Typed numeric range with min/max/step, unit suffix, value label, disabled state,
-  and accessible range semantics.
+- Typed numeric range with min/max/step, unit suffix, value label, disabled
+  state, and accessible range semantics.
 - Can be used inside `SettingsRow`.
 - Tests cover keyboard changes, clamping, decimal steps, and aria value text.
 
@@ -179,8 +179,9 @@ progress, counts, stale warnings, and confirm affordances
 ### 8. Add `ReviewFilterToolbar`
 
 **Why:** Image review stages repeat filter chips, flag counts, density S/M/L,
-selected counts, and toolbar actions. Current `FilterToolbar`, `ThumbSizeToggle`,
-and `StageToolbar` are useful pieces but not the whole review toolbar.
+selected counts, and toolbar actions. The current `FilterToolbar`,
+`ThumbSizeToggle`, and `StageToolbar` provide useful pieces but not the whole
+review toolbar.
 
 **Target:** `src/templates/ReviewFilterToolbar.tsx` or
 `src/primitives/ReviewFilterToolbar.tsx`.
@@ -203,8 +204,8 @@ exist, but stage pages still need a typed review composition.
 **Acceptance:**
 
 - Composes `ThumbGrid`, `Thumbnail`, `FlagChip`, and status indicators.
-- Supports density S/M/L, selection, loading skeletons, failed/running/reviewed
-  states, and custom thumbnail overlay slots.
+- Supports density S/M/L, selection, loading skeletons,
+  failed/running/reviewed states, and custom thumbnail overlay slots.
 - Stage-specific visual overlays remain slots, not hard-coded.
 
 ### 10. Add `InlineReviewEditorShell`
@@ -297,9 +298,9 @@ viewer, notes, stat grid, and action footer (`final/pipeline/page-workbench.jsx`
 
 ## P2 - PGDP App-Local Stage Consumption Map
 
-Build these in `pdomain-prep-for-pgdp` after the common components above so the
-app-local stage implementations stay thin. This is a consumption map, not a
-`pdomain-ui` package-subpath backlog.
+Build these in `pdomain-prep-for-pgdp` after the common components above. This
+order keeps the app-local stage implementations thin. The table is a
+consumption map, not a `pdomain-ui` package-subpath backlog.
 
 | Family       | PGDP app-local stages                                                                       | Shared `pdomain-ui` base to consume                                                                      |
 | ------------ | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
