@@ -18,9 +18,9 @@ last_verified: 2026-07-13
 
 ## 1. Purpose
 
-A labelled form-row primitive that gives all pdomain-* app config screens a
-consistent layout: a label, a control slot, an optional expandable help
-slot, and an error slot. Works with the existing pdomain-ui `Input`, `Textarea`,
+`Field` gives all pdomain-* app config screens a consistent labelled form-row
+layout. It provides a label, a control slot, an optional expandable help slot,
+and an error slot. It works with the existing pdomain-ui `Input`, `Textarea`,
 `Select`, and `Accordion` primitives.
 
 ---
@@ -102,8 +102,8 @@ FastAPI validation errors follow the structure:
 }
 ```
 
-The trainer-spa maps this at the form level; `Field` only receives the
-final `error` string. The recommended consumer pattern:
+The trainer-spa maps this error at the form level. `Field` receives only the
+final `error` string. Consumers should use this pattern:
 
 ```ts
 // In the form component (trainer-spa, not pdomain-ui)
@@ -123,8 +123,8 @@ function errorForPath(details: ErrorDetail[], path: string[]): string | undefine
 </Field>
 ```
 
-`Field` does not import or depend on any error-envelope type — it receives
-plain strings. The loc-to-string mapping is always app-side.
+`Field` does not import or depend on any error-envelope type. It receives plain
+strings, and the app always maps the location to a string.
 
 ---
 
@@ -157,9 +157,9 @@ parameter (learning rate, batch size, vocab, etc.).
 └──────────────────────────────────┘
 ```
 
-Until the help slot is implemented, trainer-spa config cards can render a
-standalone `<Accordion>` below the `<Field>` as a workaround. The API is
-designed so adding `help` later does not break existing usages.
+Until the help slot is implemented, trainer-spa config cards can use a
+standalone `<Accordion>` below the `<Field>`. The API allows `help` to be added
+later without breaking existing usages.
 
 ---
 
@@ -176,9 +176,9 @@ interface FieldRowProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 ```
 
-`FieldRow` is a pure layout container; it has no semantic meaning beyond
-grouping. Use it when two short fields belong on the same horizontal line
-(e.g. "Min epochs" + "Max epochs").
+`FieldRow` is a pure layout container with no semantic meaning beyond grouping.
+Use it when two short fields belong on the same horizontal line, such as "Min
+epochs" and "Max epochs."
 
 ---
 
@@ -197,12 +197,12 @@ All colors from design-system tokens. No hex literals.
 
 ## 8. Accessibility
 
-- `<label htmlFor>` association is explicit — the consumer passes matching
+- `<label htmlFor>` association is explicit. The consumer passes matching
   `htmlFor` / `id` pairs. `Field` does not auto-generate IDs.
 - Error slot has `role="alert"` for screen-reader announcement when the error
   text changes.
-- Help disclosure uses a native `<details>`/`<summary>` element (via
-  `Accordion`) — inherently keyboard-accessible, no JS required for open/close.
+- Help disclosure uses a native `<details>`/`<summary>` element through
+  `Accordion`. It is keyboard-accessible and needs no JS to open or close.
 
 ---
 
@@ -244,16 +244,17 @@ All colors from design-system tokens. No hex literals.
   (paragraphs, code snippets, links). The summary button text is kept to a
   short string (`helpLabel`).
 - **D-F3** `Field` does not auto-assign IDs. The consumer controls IDs to
-  integrate with form libraries (react-hook-form, manual state). Generating
-  random IDs would break SSR hydration and Playwright selectors.
+  integrate with form libraries, including react-hook-form and manual state.
+  Generating random IDs would break SSR hydration and Playwright selectors.
 - **D-F4** `FieldRow` is a layout-only container with no semantic role. It
-  does not wrap fields in a `<fieldset>` — that is an app-level decision when
+  does not wrap fields in a `<fieldset>`. That is an app-level decision when
   grouping fields is semantically meaningful.
 
 ## Adversarial Review
 
-**Stage / sources:** Active partial-implementation review against `Field.tsx`,
-FieldContext, focused tests, and implementation history. **Accepted findings /
-residual risk:** label, error, row, and accessibility behavior are proven, but
-the help slot remains unimplemented; keep this spec active and require owner
-review before either adding that API or moving the residual intent elsewhere.
+**Stage / sources:** This active partial-implementation review covers
+`Field.tsx`, FieldContext, focused tests, and implementation history.
+**Accepted findings / residual risk:** The label, error, row, and accessibility
+behavior are proven, but the help slot remains unimplemented. Keep this spec
+active. Require owner review before adding that API or moving the residual
+intent elsewhere.
