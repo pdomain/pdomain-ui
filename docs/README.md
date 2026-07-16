@@ -48,6 +48,7 @@ archive only as a last resort.
 
 - [Field / FieldRow](specs/2026-05-21-field-field-row.md) — active and partially implemented
 - [LogViewer](specs/2026-05-21-log-viewer.md) — draft; continued demand needs owner confirmation
+- [dep-refresh auto-land](specs/2026-07-16-dep-refresh-auto-land-design.md) — draft; makes the weekly dep-refresh auto-merge when green and stop leaving stray branches
 
 ### Plans
 
