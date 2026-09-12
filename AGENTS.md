@@ -56,7 +56,8 @@ Docs: [`docs/README.md`](docs/README.md)
 | `make build` | Vite library build → `dist/` |
 | `make format` | apply Prettier to `src/` + `tests/` |
 | `make format-check` | check Prettier formatting without writing |
-| `make pre-commit-check` | lint + typecheck + format-check (no pre-commit config) |
+| `make pre-commit-check` | lint + typecheck + format-check + Python static checks |
+| `make install-hooks` | (re)install the pre-commit and commit-msg git hooks |
 | `make upgrade-deps` | `pnpm update --latest` |
 | `make frontend-build` | alias for `build` |
 | `make frontend-install` | alias for `install` |
@@ -75,6 +76,11 @@ Docs: [`docs/README.md`](docs/README.md)
 | `make ci AI=1` | install + lint + typecheck + test + build |
 
 `AI=1` captures verbose output to `.ci-ai.log`; stdout shows pass/fail summary.
+
+`pre-commit-check` runs the frontend and Python gates directly rather than
+invoking pre-commit. The hooks in `.pre-commit-config.yaml` cover the Python
+side and the shared file checks; the frontend gates are Make targets, so the
+direct form is the wider check of the two.
 
 ## Hard constraints
 
