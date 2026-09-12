@@ -53,6 +53,7 @@ Do not execute this plan until a consumer names its sequence and action, accepts
 ### Task 1: Pin parsing and timing behavior
 
 **Files:**
+
 - Modify: `src/hooks/useShortcuts.test.ts`
 - Test: `src/hooks/useShortcuts.test.ts`
 
@@ -160,6 +161,7 @@ git commit -m "test(hooks): specify shortcut sequences"
 ### Task 2: Parse and match ordered steps
 
 **Files:**
+
 - Modify: `src/hooks/useShortcuts.ts`
 - Test: `src/hooks/useShortcuts.test.ts`
 

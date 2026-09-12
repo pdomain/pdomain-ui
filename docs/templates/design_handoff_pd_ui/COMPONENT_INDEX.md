@@ -7,6 +7,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 ## Components by file
 
 ### `design-system/template.jsx`  ·  7
+
 - `AppHeader`
 - `AppTemplate`
 - `Breadcrumb`
@@ -16,6 +17,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `JobsPill`
 
 ### `design-system/ui-base.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -30,13 +32,16 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `final/canvas-nav.jsx`  ·  2
+
 - `CANVAS_LINKS`
 - `CanvasNav`
 
 ### `final/crop/app.jsx`  ·  1
+
 - `App`
 
 ### `final/crop/crop.jsx`  ·  13
+
 - `BboxEditor`
 - `CROP_DENSITY`
 - `CropBanner`
@@ -52,9 +57,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `StatusDot`
 
 ### `final/grayscale/app.jsx`  ·  1
+
 - `App`
 
 ### `final/grayscale/grayscale.jsx`  ·  21
+
 - `AdvancedParams`
 - `AdvancedParamsStacked`
 - `AutoDetectBanner`
@@ -78,9 +85,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `StageControlsLeft`
 
 ### `final/hyphen_join/app.jsx`  ·  1
+
 - `App`
 
 ### `final/hyphen_join/hyphen.jsx`  ·  27
+
 - `HJAfterView`
 - `HJBeforeView`
 - `HJDecisionCard`
@@ -110,6 +119,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ThresholdSlider`
 
 ### `final/hyphen_join/variations.jsx`  ·  48
+
 - `AUTO_JOINED_WORDS`
 - `AutoJoinedList`
 - `AutoJoinedRow`
@@ -160,9 +170,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ViewToggle`
 
 ### `final/pipeline/app.jsx`  ·  1
+
 - `App`
 
 ### `final/pipeline/pipeline-template.jsx`  ·  11
+
 - `PipelineEmptySlot`
 - `PipelineTemplate`
 - `ProjectInfoBand`
@@ -176,6 +188,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TabsBand`
 
 ### `final/pipeline/project-settings.jsx`  ·  12
+
 - `FieldRow`
 - `ProjectSettings_Bibliographic`
 - `ProjectSettings_Danger`
@@ -190,9 +203,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `Toggle`
 
 ### `final/projects/app.jsx`  ·  1
+
 - `App`
 
 ### `final/projects/post-import.jsx`  ·  5
+
 - `AnchorProject`
 - `IMPORT_JOBS`
 - `PostImport_Drawer`
@@ -200,6 +215,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `PostImport_Redirect`
 
 ### `final/projects/projects.jsx`  ·  8
+
 - `AttributesPanel`
 - `CoverPlaceholder`
 - `PROJECTS`
@@ -210,9 +226,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `STATUS`
 
 ### `final/source/app.jsx`  ·  1
+
 - `App`
 
 ### `final/source/source.jsx`  ·  26
+
 - `BulkBar`
 - `FakeThumb`
 - `FileToolbar`
@@ -241,12 +259,15 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ThumbCard`
 
 ### `final/template/app.jsx`  ·  1
+
 - `App`
 
 ### `wf-pw/app.jsx`  ·  1
+
 - `App`
 
 ### `wf-pw/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -261,6 +282,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf-pw/wf-pw-variations.jsx`  ·  59
+
 - `ATTR_TYPES`
 - `ArtifactPlate`
 - `ArtifactViewer`
@@ -322,6 +344,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ZoneRow`
 
 ### `wf-pw/wf03-variations.jsx`  ·  34
+
 - `BulkActionBar`
 - `ConfigureHeader`
 - `ConfigureTabs`
@@ -358,9 +381,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ViewToggle`
 
 ### `wf01/app.jsx`  ·  1
+
 - `App`
 
 ### `wf01/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -375,6 +400,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf01/variations.jsx`  ·  37
+
 - `CornerIcon`
 - `DropletIdle`
 - `EXT_SOURCES`
@@ -414,9 +440,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ZipPickerBody`
 
 ### `wf02/app.jsx`  ·  1
+
 - `App`
 
 ### `wf02/pipeline-shell.jsx`  ·  7
+
 - `BuildPackagePanel`
 - `DiskCostBanner`
 - `ProjectConfigureFrame`
@@ -426,6 +454,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `Tab`
 
 ### `wf02/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -440,6 +469,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf02/validation-panel.jsx`  ·  7
+
 - `CheckIcon`
 - `CheckRow`
 - `DownloadFooter`
@@ -449,12 +479,15 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ValidationPanel`
 
 ### `wf02/variations.jsx`  ·  1
+
 - `VariationFrame`
 
 ### `wf03/app.jsx`  ·  1
+
 - `App`
 
 ### `wf03/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -469,6 +502,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf03/wf03-variations.jsx`  ·  34
+
 - `BulkActionBar`
 - `ConfigureHeader`
 - `ConfigureTabs`
@@ -505,9 +539,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ViewToggle`
 
 ### `wf05/app.jsx`  ·  1
+
 - `App`
 
 ### `wf05/library-variations.jsx`  ·  36
+
 - `ALWAYS_JOIN_PROV`
 - `CheckRow`
 - `DialogShell`
@@ -546,6 +582,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `Tk`
 
 ### `wf05/pipeline-shell.jsx`  ·  7
+
 - `BuildPackagePanel`
 - `DiskCostBanner`
 - `ProjectConfigureFrame`
@@ -555,6 +592,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `Tab`
 
 ### `wf05/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -569,6 +607,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf05/variations.jsx`  ·  47
+
 - `AUTO_JOINED_WORDS`
 - `AutoJoinedList`
 - `AutoJoinedRow`
@@ -618,9 +657,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ViewToggle`
 
 ### `wf05b/app.jsx`  ·  1
+
 - `App`
 
 ### `wf05b/pipeline-shell.jsx`  ·  7
+
 - `BuildPackagePanel`
 - `DiskCostBanner`
 - `ProjectConfigureFrame`
@@ -630,6 +671,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `Tab`
 
 ### `wf05b/scanno-capture.jsx`  ·  10
+
 - `C1_PAGE_TITLE`
 - `C1_PARAGRAPHS`
 - `C1_SELECTED`
@@ -642,6 +684,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ScannoToken`
 
 ### `wf05b/scanno-configure.jsx`  ·  8
+
 - `C3_MATCH_TONE`
 - `C3_RULES`
 - `NavGroup`
@@ -652,10 +695,12 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ToggleBadge`
 
 ### `wf05b/scanno-pipeline.jsx`  ·  2
+
 - `P0_PAGES`
 - `ScannoPipeline`
 
 ### `wf05b/scanno-promote.jsx`  ·  7
+
 - `C2_CANDIDATES`
 - `C2_SRC_LABEL`
 - `C2_SRC_TONE`
@@ -665,6 +710,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ScannoPromote`
 
 ### `wf05b/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -679,9 +725,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf09/app.jsx`  ·  1
+
 - `App`
 
 ### `wf09/pages-tab.jsx`  ·  16
+
 - `CheckIconSquare`
 - `DragGhost`
 - `DropIndicator`
@@ -700,6 +748,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `UndoStrip`
 
 ### `wf09/pipeline-shell.jsx`  ·  7
+
 - `BuildPackagePanel`
 - `DiskCostBanner`
 - `ProjectConfigureFrame`
@@ -709,6 +758,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `Tab`
 
 ### `wf09/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -723,6 +773,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf09/variations.jsx`  ·  9
+
 - `PagesActionsMenu`
 - `PagesDragMulti`
 - `PagesDragSingle`
@@ -734,9 +785,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ROW_WINDOW`
 
 ### `wf10/app.jsx`  ·  1
+
 - `App`
 
 ### `wf10/crops-grid.jsx`  ·  11
+
 - `BulkActionBar`
 - `CROP_FLAGS`
 - `CROP_ROWS`
@@ -750,6 +803,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `GridToolbar`
 
 ### `wf10/pipeline-shell.jsx`  ·  7
+
 - `BuildPackagePanel`
 - `DiskCostBanner`
 - `ProjectConfigureFrame`
@@ -759,6 +813,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `Tab`
 
 ### `wf10/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -773,6 +828,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf10/variations.jsx`  ·  10
+
 - `CropBboxEditor`
 - `GridBboxEditor`
 - `GridFiltered`
@@ -785,9 +841,11 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `GridSelectedRange`
 
 ### `wf11/app.jsx`  ·  1
+
 - `App`
 
 ### `wf11/ui.jsx`  ·  12
+
 - `AppFrame`
 - `Badge`
 - `Button`
@@ -802,6 +860,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `TopNav`
 
 ### `wf11/wf-pw-variations.jsx`  ·  59
+
 - `ATTR_TYPES`
 - `ArtifactPlate`
 - `ArtifactViewer`
@@ -863,6 +922,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ZoneRow`
 
 ### `wf11/wf03-variations.jsx`  ·  34
+
 - `BulkActionBar`
 - `ConfigureHeader`
 - `ConfigureTabs`
@@ -899,6 +959,7 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `ViewToggle`
 
 ### `wf11/wf11-variations.jsx`  ·  29
+
 - `AdvancedAccordion`
 - `AutoBanner`
 - `AutoBannerF`
@@ -928,7 +989,6 @@ Auto-extracted from every `.jsx` file in the project. Each identifier is a top-l
 - `WF11_D`
 - `WF11_E`
 - `WF11_F`
-
 
 ## Cross-file frequency — likely shared primitives
 

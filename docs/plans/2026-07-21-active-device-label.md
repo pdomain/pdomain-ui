@@ -48,6 +48,7 @@ TypeScript, React, Vitest, Testing Library, pnpm, and Make.
 ### Task 1: Pin the display contract
 
 **Files:**
+
 - Modify: `src/shell/ComputeTargetPanel.test.tsx`
 - Test: `src/shell/ComputeTargetPanel.test.tsx`
 
@@ -92,6 +93,7 @@ git commit -m "test(shell): pin active device labels"
 ### Task 2: Resolve the friendly label
 
 **Files:**
+
 - Modify: `src/shell/ComputeTargetPanel.tsx`
 - Test: `src/shell/ComputeTargetPanel.test.tsx`
 

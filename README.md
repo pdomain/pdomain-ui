@@ -9,7 +9,7 @@ Kind: usage
 # @pdomain/pdomain-ui
 
 `@pdomain/pdomain-ui` is the shared TS/React/Vite frontend library for the
-pdomain-* suite. It provides canvas, worklist, shell, primitives, icons,
+pdomain-*suite. It provides canvas, worklist, shell, primitives, icons,
 generated types, and store factories. Every pdomain-* end-user SPA
 (labeler-spa, pgdp-prep, trainer-spa) imports components and hooks from this
 package instead of reimplementing them. The library is published to the

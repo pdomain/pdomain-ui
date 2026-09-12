@@ -80,7 +80,7 @@ Lead with the **smallest decisive evidence**, separate **observation** from
 
 ## Where resolved work is recorded
 
-- _None tracked here yet._ The 53 closed `pdomain/pdomain-ui` GitHub issues were
+- *None tracked here yet.* The 53 closed `pdomain/pdomain-ui` GitHub issues were
   migrated and deleted on 2026-07-15; that closeout is recorded in the tombstone
   in [decisions.md](../context/decisions.md), and the durable release/CI behavior
   lives in [release-and-ci-pipeline.md](../architecture/release-and-ci-pipeline.md).

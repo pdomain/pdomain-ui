@@ -13,6 +13,7 @@
     - Lead with the smallest decisive evidence; separate observation from hypothesis.
 -->
 ---
+
 Status: active            # active while Open; retired when Resolved/Won't fix/Duplicate
 Owner: <owner>
 Created: <YYYY-MM-DD>
@@ -56,13 +57,16 @@ contradiction up front if there is one.>
 <Lead with the smallest decisive test. Show commands AND output. Number steps.>
 
 ### 1. <Decisive observation>
+
 ```
 <command / query>
 <output>
 ```
+
 <What it proves.>
 
 ### 2. <Supporting observation>
+
 ...
 
 ## Root-cause hypotheses (ranked)

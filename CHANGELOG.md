@@ -102,33 +102,38 @@ M0 through M9, plus M10 (publish scaffolding).
 
 ### Added
 
-**M0 — Repo scaffold**
+#### M0 — Repo scaffold
+
 - TypeScript 5 strict (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
 - Vite 5 library mode with 9 ESM entry points
 - Vitest 1 + jsdom test environment
 - ESLint flat config with react-hooks, jsx-a11y, no-CVA, no-hex-literals rules
 - Makefile with `install`, `lint`, `typecheck`, `test`, `build`, `ci` targets
 
-**M1 — Design-system theme**
+#### M1 — Design-system theme
+
 - `theme/tokens.css` — CSS custom property tokens (dark default, light override)
 - `theme/primitives.css` — structural layout primitives
 - `./theme/tokens.css` and `./theme/primitives.css` subpath exports
 - `scripts/sync-design-system.mjs` — bidirectional sync with workspace `docs/design-system/`
 - `make theme-check` CI gate (fails on drift)
 
-**M2 — Primitive components**
+#### M2 — Primitive components
+
 - `src/primitives/` — `cn()` helper, pure HTML primitives (Button, Input, Label, Badge,
   Checkbox, TextArea, Select, Separator, Slot), Radix UI wrappers (Dialog, AlertDialog,
   Popover, Tooltip, DropdownMenu, Tabs, ToggleGroup)
 - `@pdomain/pdomain-ui/primitives` subpath export
 - No CVA — variants are CSS class modifiers
 
-**M3 — Icons**
+#### M3 — Icons
+
 - `src/icons/` — curated lucide-react re-exports (25 icons) + 11 bespoke OCR-domain SVG icons
 - `@pdomain/pdomain-ui/icons` subpath export
 - ESLint rule blocks direct `lucide-react` imports outside `src/icons/`
 
-**M4 — Codegen pipeline**
+#### M4 — Codegen pipeline
+
 - `scripts/codegen-fetch.mjs` — fetches pinned `pdomain-book-tools` + `pdomain-ocr-ops` wheels
 - `scripts/codegen-emit.mjs` — invokes `schemas.emit`, writes JSON Schema to `.codegen/`
 - `scripts/codegen-tsgen.mjs` — wraps JSON Schema in OpenAPI stub, generates TS via
@@ -137,13 +142,15 @@ M0 through M9, plus M10 (publish scaffolding).
 - `make codegen-check` CI gate
 - `@pdomain/pdomain-ui/types` subpath with `*Like` type reductions
 
-**M5 — PageImageCanvas**
+#### M5 — PageImageCanvas
+
 - `src/canvas/PageImageCanvas.tsx` — slot-based Konva stage for OCR page display
 - `PageBBox` bounding box type + `bboxToRect()` utility
 - `useCanvasSelection` hook — multi-select, keyboard modifiers
 - `@pdomain/pdomain-ui/canvas` subpath export
 
-**M6 — WordList**
+#### M6 — WordList
+
 - `src/worklist/WordList.tsx` — react-virtuoso virtualized word list
 - `VirtualizedList` generic virtualization shell
 - `LineCard`, `LineList`, `PageList` adapter components
@@ -151,7 +158,8 @@ M0 through M9, plus M10 (publish scaffolding).
 - `ConfidenceBar` + `MatchStatusChip` status row primitives
 - `@pdomain/pdomain-ui/worklist` subpath export
 
-**M7+M8 — AppShell + Zustand store factories**
+#### M7+M8 — AppShell + Zustand store factories
+
 - `src/shell/AppShell.tsx` — CSS grid shell with `deployMode` prop and UIPrefs context
 - `LauncherSlot`, `LeftPanelSlot`, `RightPanelSlot`, `StatusBarSlot` render-prop slots
 - `createUIPrefsStore()`, `createSuiteStore()`, `createJobStore()` factory functions
@@ -159,12 +167,14 @@ M0 through M9, plus M10 (publish scaffolding).
 - `useSuiteSiblings()`, `useLongJob()` hooks
 - `@pdomain/pdomain-ui/shell` and `@pdomain/pdomain-ui/stores` subpath exports
 
-**M9 — Storybook**
+#### M9 — Storybook
+
 - Storybook 8 with React + Vite builder
 - Stories for all public components (AppShell, canvas, worklist, primitives, icons)
 - `tests/storybook/` story-presence CI gate — fails if a component lacks a story
 
-**M10 — Publish scaffolding**
+#### M10 — Publish scaffolding
+
 - Version set to `0.1.0-alpha`
 - `publishConfig.registry` pointing to self-hosted `pdomain-index-npm`
 - `tests/build.contract.test.ts` — asserts all 9 dist entry JS + `.d.ts` files exist

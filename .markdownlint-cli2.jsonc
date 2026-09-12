@@ -1,0 +1,16 @@
+{
+  // Rule configuration lives in .markdownlint.json, which predates this file.
+  // Only cli2-specific options belong here.
+  //
+  // docs/issues/TEMPLATE.md is a fill-in template: its <placeholder> tokens read
+  // as inline HTML and its heading style is deliberately atx. Real issue reports
+  // under docs/issues/ are still linted.
+  //
+  // AGENTS.md and .python-conventions.md are written by shared-devtools and
+  // overwritten on reinstall, so edits to satisfy the linter do not survive.
+  "ignores": [
+    "docs/issues/TEMPLATE.md",
+    "AGENTS.md",
+    ".python-conventions.md"
+  ]
+}

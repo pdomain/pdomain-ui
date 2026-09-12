@@ -38,15 +38,19 @@ Decision: **flag-for-review primary, auto-replace opt-in per rule.** See "Resolv
 ## Pushbacks on the original framing
 
 ### "False positives are catastrophic"
+
 Overstated for PGDP's pipeline. Every page is proofed by ≥2 humans. A bad auto-replace ships to a proofer (annoying), not to a reader (catastrophic). Threat model is "wasted proofer effort," not "silent corruption." Trust gating can be lighter than the framing implied.
 
 ### "Find/replace pairs" as the unit
+
 This is what the legacy `/settings` textarea assumed. It encodes a strong (probably wrong) opinion that scannos auto-mutate. The PGDP community has been working around this with word-level patterns and proofer-facing highlighting for years. The "pair" might not be the right primitive — a "suspicious pattern with context" might be.
 
 ### "Volume = thousands"
+
 The active per-book set is small (<50 typical). The corpus of *known* scannos in shared lists is in the low hundreds. "Thousands" was hand-wavy. Don't design for a scale that doesn't exist.
 
 ### Three intake sources presented as peers
+
 Manual / promoted-from-book / OCR-confidence are not symmetric. Promoted-from-book is the evidence-backed primary. OCR-confidence is a *candidate pool* feeding the same promotion queue, not a parallel intake. Manual is an escape hatch. Designing them as three equal routes invites a Frankenstein UI.
 
 ---

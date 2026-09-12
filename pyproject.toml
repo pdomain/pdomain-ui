@@ -19,7 +19,10 @@ package = false
 [dependency-groups]
 dev = [
     "basedpyright>=1.31.0",
-    "ruff>=0.14.0",
+    "pre-commit>=4.6,<5",
+    # Keep this floor at the ruff-pre-commit `rev:` in .pre-commit-config.yaml.
+    # Below it, `uv run ruff check` and the hook disagree on a clean tree.
+    "ruff>=0.16.7",
 ]
 
 [tool.ruff]

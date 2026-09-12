@@ -1060,7 +1060,7 @@ const CroppedPlate = ({ stage }) => (
         background: '#fbf9f4', border: '1px solid var(--border-2)',
         boxShadow: '0 4px 16px rgba(15,23,42,.08)',
       }}>
-        <div style={{ position: 'absolute', inset: '5% 6% 6%', 
+        <div style={{ position: 'absolute', inset: '5% 6% 6%',
           backgroundImage: 'repeating-linear-gradient(0deg, transparent 0 7px, #3a2c1c 7px 9px, transparent 9px 14px)' }} />
         <div style={{ position: 'absolute', left: '50%', bottom: '3%', transform: 'translateX(-50%)',
           fontFamily: 'var(--mono-font)', fontSize: 12, color: '#3a2c1c', opacity: 0.8 }}>12</div>

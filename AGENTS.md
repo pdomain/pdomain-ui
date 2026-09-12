@@ -38,7 +38,6 @@ Read these repository rules before working:
 
 These files are authoritative for their respective scopes.
 
-
 # Repository workflow — pdomain-ui
 
 TypeScript / React / Vite shared component library for the pdomain-* suite. Publishes
@@ -96,6 +95,7 @@ Docs: [`docs/README.md`](docs/README.md)
 ## Codegen
 
 When bumping `pdomain-book-tools` or `pdomain-ops` in `codegen.versions.json`:
+
 1. Run `pnpm codegen` (fetches wheels → emits JSON Schema → generates TS types).
 2. Commit both `codegen.versions.json` and the regenerated `src/types/generated/` in the same PR.
 
@@ -128,7 +128,6 @@ When shipping a plan task:
 - After completing: `gh issue close <N> --repo ConcaveTrillion/ocr-container-meta`
 - List open tasks:
   `gh issue list --repo ConcaveTrillion/ocr-container-meta --milestone "spec: <name> (#N)" --state open`
-
 
 ## docs/ folder
 

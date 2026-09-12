@@ -11,6 +11,7 @@ I have a shared React + Vite + TypeScript component library called **`pdomain-ui
 **Your job:** read every page and wireframe in the design bundle, extract every component, and surface them in `pdomain-ui` as **properly typed, idiomatic React+TS components** following pdomain-ui's existing patterns. The downstream goal is for the pdomain-prep-for-pgdp app to be implementable almost entirely by importing from `pdomain-ui`.
 
 This is **not** a one-shot port. It's an iterative cataloguing exercise that ends with:
+
 1. A new section in pdomain-ui (`src/pd-prep/` or similar — match the library's convention) housing the new components.
 2. A migration of any *generic* primitives discovered in the designs (Button variants, Badge tones, KeyCap, Divider, etc.) into pdomain-ui's existing atoms layer where they don't already exist.
 3. Storybook / demo entries for each new component, mirroring how pdomain-ui currently documents components.
@@ -38,6 +39,7 @@ In the design bundle (`design_handoff_pdomain_ui/` — sibling to this prompt):
 ### Pass 2 · Reconcile atoms with existing pdomain-ui
 
 For each design-system primitive in `design-system/ui-base.jsx`:
+
 - **Already in pdomain-ui** → check that prop names, variants, and tones line up. If they don't, decide which side to migrate (prefer pdomain-ui's existing API unless the design's is meaningfully better). Note divergences in `MIGRATION_NOTES.md`.
 - **Not in pdomain-ui** → port it as a typed component into pdomain-ui's atoms layer. Match pdomain-ui's file structure, naming, and Storybook conventions.
 
@@ -65,6 +67,7 @@ Promote in this order — each layer depends only on the previous:
 ### Pass 4 · TypeScript-ify
 
 For every ported component:
+
 - Define a `Props` interface. Don't use `any`. Don't widen with `Record<string, unknown>` — be explicit about every prop the design exercises.
 - For "state" props that drive whole-page variants (e.g. `SourceFiles` has `state: 'generating' | 'selection'`), use string-literal unions and discriminated unions where appropriate.
 - For density / tone / variant props, mirror the CSS-token system: `tone: 'clean' | 'dirty' | 'review' | 'fuzzy' | 'exact' | 'gt' | 'mismatch'` etc. — pull the canonical list from `tokens.css`.
@@ -73,6 +76,7 @@ For every ported component:
 ### Pass 5 · Strip the prototype scaffolding
 
 The design files use:
+
 - `<script type="text/babel">` with Babel-standalone — drop this.
 - `Object.assign(window, { … })` to share components across script tags — replace with normal ESM exports.
 - A `DesignCanvas` / `DCSection` / `DCArtboard` wrapper for the visual exploration grid — **do not port this.** It's purely for showing many states side-by-side in the prototype. Each `DCArtboard` corresponds to one (component, props) pair; lift that pair into a Storybook story instead.
@@ -81,6 +85,7 @@ The design files use:
 ### Pass 6 · Write MIGRATION_NOTES.md
 
 End with a markdown file in pdomain-ui's root describing:
+
 - Every new pdomain-ui export (atom / molecule / template / stage component) and which design file it came from.
 - Tokens added or aliased.
 - Conscious omissions ("did not port `FakeThumb` — pure placeholder for design canvas, replace with real thumbnail logic in the consuming app").
@@ -91,6 +96,7 @@ End with a markdown file in pdomain-ui's root describing:
 **Port** if it shows up in 2+ files, or appears in `final/` (not just wireframes), or implements a generic UX pattern (segmented control, banner, dialog, sticky bulk bar). The COMPONENT_INDEX frequency table is your starting heuristic.
 
 **Co-locate, don't port** if it's:
+
 - A page-specific layout helper (`SourceWBSubhead`, `SrcWBField`, `SrcWBInput`, `SrcWBSelect` — these are *only* useful inside the Source Page Workbench; they should live next to `SourcePageWorkbench` not in pdomain-ui's root).
 - A placeholder visual (`FakeThumb`, `SkeletonThumb`, `InsertedThumb`) — these mimic real page scans for the prototype only. In production they'll be replaced with actual image components.
 - A one-shot data wrapper (`InPagesTab` etc. — `wf09/app.jsx` defines this as a local closure).

@@ -19,6 +19,7 @@ Reference implementation: `pdomain-book-tools/docs/conventions/lint-deviations.m
 ## 1. `@typescript-eslint/no-empty-object-type` — ESLint
 
 **Files:**
+
 - `src/primitives/Card.tsx` (line 4)
 - `src/primitives/FieldRow.tsx` (line 4)
 - `src/primitives/Textarea.tsx` (line 4)
@@ -42,6 +43,7 @@ over time. New members can be appended without changing the kind.
 ## 2. `react-hooks/exhaustive-deps` — ESLint
 
 **Files:**
+
 - `src/shell/AppShell.tsx` (line 88)
 - `src/shell/SuiteSiblingsProvider.tsx` (line 48)
 - `src/stores/useStageCall.ts` (line 85)
@@ -76,6 +78,7 @@ over time. New members can be appended without changing the kind.
 ## 3. `@typescript-eslint/no-explicit-any` — ESLint
 
 **Files:**
+
 - `src/worklist/hooks/useWorklistSort.ts` (line 32)
 - `src/icons/Icons.stories.tsx` (line 50)
 
@@ -103,6 +106,7 @@ over time. New members can be appended without changing the kind.
 ## 4. `jsx-a11y/no-noninteractive-tabindex` — ESLint
 
 **Files:**
+
 - `src/canvas/PageImageCanvas.tsx` (line 207, block disable)
 
 **Suppression form:** `/* eslint-disable jsx-a11y/no-noninteractive-tabindex */`
@@ -122,6 +126,7 @@ image content." The keyboard interaction is secondary.
 ## 5. `@typescript-eslint/prefer-promise-reject-errors` — ESLint
 
 **Files:**
+
 - `src/stores/useStageCall.test.ts` (line 42)
 
 **Suppression form:** `// eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors`

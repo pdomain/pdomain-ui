@@ -47,9 +47,11 @@ These are **design references**, not production code. They use plain JSX (untype
 From `final/index.html` (as of this export):
 
 **Wired in `final/`:**
+
 - 01 Source · 02 Grayscale · 03 Crop · 15 Hyphen join · Projects landing · Pipeline template
 
 **Placeholder (prompt-ready, port from the listed wireframe):**
+
 - 11 Page order (new — auto-detect out-of-order scans) — `wf09/variations.jsx :: ReorderScansStage`
 - 13 Text review (incl. scannos sidecar) — `wf05b/`
 - 19 Validation — `wf02/validation-panel.jsx`
