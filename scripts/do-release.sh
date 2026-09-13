@@ -157,8 +157,19 @@ git push origin master --follow-tags
 # 2026-09-13. The tarball matters beyond the release page: the self-hosted npm
 # registry is generated from release assets, so a release without one
 # publishes nothing installable.
-echo "Packing the tarball..."
+echo "Building the library before packing..."
+# pnpm pack ships whatever is on disk. The old release workflow built first;
+# without this the tarball carries only package.json, README, LICENSE and the
+# theme CSS, and every subpath export resolves to nothing in consumers.
 rm -rf dist
+pnpm_run run build
+
+if [ ! -f dist/index.js ]; then
+    echo "ERROR: build produced no dist/index.js; refusing to pack an empty tarball." >&2
+    exit 1
+fi
+
+echo "Packing the tarball..."
 if [ -x /usr/local/bin/mise ]; then
     /usr/local/bin/mise exec -- pnpm pack --pack-destination dist/
 else
