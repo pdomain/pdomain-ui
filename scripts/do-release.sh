@@ -18,6 +18,16 @@
 
 set -eu
 
+# pnpm reaches this script through mise in the devcontainer, exactly as the
+# Makefile invokes it. A bare `pnpm` is not on PATH here.
+pnpm_run() {
+    if [ -x /usr/local/bin/mise ]; then
+        /usr/local/bin/mise exec -- pnpm "$@"
+    else
+        pnpm "$@"
+    fi
+}
+
 BUMP=${BUMP:-minor}
 FORCE=${FORCE:-0}
 SKIP_PUSH=${SKIP_PUSH:-0}
@@ -113,7 +123,7 @@ fi
 # ---------------------------------------------------------------------------
 echo ""
 echo "Bumping package.json to $VERSION_NO_V..."
-pnpm version --no-git-tag-version "$VERSION_NO_V"
+pnpm_run version --no-git-tag-version "$VERSION_NO_V"
 
 # Commit the version bump
 git add package.json pnpm-lock.yaml 2>/dev/null || git add package.json
