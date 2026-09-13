@@ -11,6 +11,23 @@ export type paths = Record<string, never>;
 export type webhooks = Record<string, never>;
 export type components = {
   schemas: {
+    /**
+     * ArtifactReference
+     * @description Path-safe content-addressed artifact metadata with no filesystem I/O.
+     */
+    ArtifactReference: {
+      /** Artifact Id */
+      artifact_id: string;
+      /**
+       * Media Type
+       * @default null
+       */
+      media_type: string | null;
+      /** Relative Path */
+      relative_path: string;
+      /** Sha256 */
+      sha256: string;
+    };
     Block: {
       /** Additional Block Attributes */
       additional_block_attributes?: {
@@ -132,6 +149,8 @@ export type components = {
              * @constant
              */
             type?: 'Word';
+            /** Typography Annotations */
+            typography_annotations?: unknown | null;
             /** Word Components */
             word_components?: string[];
             /** Word Labels */
@@ -215,6 +234,183 @@ export type components = {
       word_components?: string[];
     };
     /**
+     * CoordinateTransform
+     * @description Named affine transform between portable coordinate spaces.
+     */
+    CoordinateTransform: {
+      /** Affine */
+      affine: [number, number, number, number, number, number];
+      /** Crop Recipe */
+      crop_recipe: string;
+      /** Crop Recipe Version */
+      crop_recipe_version: string;
+      /** Padding Px */
+      padding_px: number;
+      /** Preprocessing Sha256 */
+      preprocessing_sha256: string;
+      /** Resampling */
+      resampling: string;
+      /** Source Artifact Sha256 */
+      source_artifact_sha256: string;
+      /** Source Coordinate Space Id */
+      source_coordinate_space_id: string;
+      /**
+       * Source Height
+       * @default null
+       */
+      source_height: number | null;
+      source_orientation: components['schemas']['SourceOrientation'];
+      /** Source Space */
+      source_space: string;
+      /**
+       * Source Width
+       * @default null
+       */
+      source_width: number | null;
+      /** @default null */
+      stage: components['schemas']['CoordinateTransformStage'] | null;
+      /** Target Artifact Sha256 */
+      target_artifact_sha256: string;
+      /** Target Coordinate Space Id */
+      target_coordinate_space_id: string;
+      /**
+       * Target Height
+       * @default null
+       */
+      target_height: number | null;
+      /** Target Space */
+      target_space: string;
+      /**
+       * Target Width
+       * @default null
+       */
+      target_width: number | null;
+      /** Transform Id */
+      transform_id: string;
+      /** Transform Version */
+      transform_version: string;
+    };
+    /**
+     * CoordinateTransformStage
+     * @description A required stage in the portable source-image geometry chain.
+     * @enum {string}
+     */
+    CoordinateTransformStage: 'orientation' | 'crop';
+    /**
+     * CorrectionBundle
+     * @description Content-addressed reviewed corrections and optional returned geometry.
+     */
+    CorrectionBundle: {
+      /**
+       * Bundle Id
+       * @default null
+       */
+      bundle_id: string | null;
+      /** Configuration Hash */
+      configuration_hash: string;
+      /**
+       * Coordinate Transforms
+       * @default []
+       */
+      coordinate_transforms: components['schemas']['CoordinateTransform'][];
+      /** Corrections */
+      corrections: components['schemas']['TypographyCorrection'][];
+      /**
+       * Geometry
+       * @default null
+       */
+      geometry: components['schemas']['WordGeometry'][] | null;
+      /** Labeling Bundle Id */
+      labeling_bundle_id: string;
+      /**
+       * Model Runs
+       * @default []
+       */
+      model_runs: components['schemas']['ModelRun'][];
+      /** @default null */
+      page_geometry: components['schemas']['PageGeometry'] | null;
+      /**
+       * Replacement Artifacts
+       * @default []
+       */
+      replacement_artifacts: components['schemas']['ReplacementArtifact'][];
+      /** Schema Version */
+      schema_version: string;
+    };
+    /**
+     * Evidence
+     * @description A precise half-open byte range supporting a label decision.
+     */
+    Evidence: {
+      /** Artifact Id */
+      artifact_id: string;
+      /** Artifact Sha256 */
+      artifact_sha256: string;
+      /** Byte End */
+      byte_end: number;
+      /** Byte Start */
+      byte_start: number;
+      /** Evidence Id */
+      evidence_id: string;
+      /**
+       * Note
+       * @default null
+       */
+      note: string | null;
+    };
+    /**
+     * LabelingBundle
+     * @description Complete portable review input for a page, optionally with geometry.
+     */
+    LabelingBundle: {
+      /** Artifacts */
+      artifacts: components['schemas']['ArtifactReference'][];
+      /**
+       * Bundle Id
+       * @default null
+       */
+      bundle_id: string | null;
+      /** Configuration Hash */
+      configuration_hash: string;
+      /**
+       * Coordinate Transforms
+       * @default []
+       */
+      coordinate_transforms: components['schemas']['CoordinateTransform'][];
+      /**
+       * Evidence
+       * @default []
+       */
+      evidence: components['schemas']['Evidence'][];
+      /**
+       * Geometry
+       * @default null
+       */
+      geometry: components['schemas']['WordGeometry'][] | null;
+      /** Image Sha256 */
+      image_sha256: string;
+      /**
+       * Model Runs
+       * @default []
+       */
+      model_runs: components['schemas']['ModelRun'][];
+      /** @default null */
+      page_geometry: components['schemas']['PageGeometry'] | null;
+      /** Page Head Sha256 */
+      page_head_sha256: string;
+      /** Page Id */
+      page_id: string;
+      /** Page Sha256 */
+      page_sha256: string;
+      /** Schema Version */
+      schema_version: string;
+      taxonomy: components['schemas']['TypographyTaxonomy'];
+      /** Text Sha256 */
+      text_sha256: string;
+      /** Words */
+      words: components['schemas']['WordTypography'][];
+    };
+    /**
      * LayoutRegion
      * @description One typed rectangle from a layout detector.
      *
@@ -244,6 +440,51 @@ export type components = {
       raw_label: string;
       type: components['schemas']['RegionType'];
     };
+    /**
+     * ModelRun
+     * @description Reproducibility metadata for a model-generated proposal.
+     */
+    ModelRun: {
+      /**
+       * Config Sha256
+       * @default null
+       */
+      config_sha256: string | null;
+      /**
+       * Input Artifact Sha256
+       * @default null
+       */
+      input_artifact_sha256: string | null;
+      /**
+       * Model Artifact Sha256
+       * @default null
+       */
+      model_artifact_sha256: string | null;
+      /** Model Name */
+      model_name: string;
+      /** Model Version */
+      model_version: string;
+      /**
+       * Output Artifact Sha256
+       * @default null
+       */
+      output_artifact_sha256: string | null;
+      /**
+       * Preprocessing Sha256
+       * @default null
+       */
+      preprocessing_sha256: string | null;
+      /** @default null */
+      purpose: components['schemas']['ModelRunPurpose'] | null;
+      /** Run Id */
+      run_id: string;
+    };
+    /**
+     * ModelRunPurpose
+     * @description The page-analysis role performed by a recorded model run.
+     * @enum {string}
+     */
+    ModelRunPurpose: 'ocr' | 'page_region';
     /**
      * OCRModelProvenance
      * @description Provenance metadata for a single OCR model (name, version, weights).
@@ -309,36 +550,29 @@ export type components = {
           y: number;
         };
       } | null;
+      /** Gt Orphans */
+      gt_orphans?: {
+        [key: string]: unknown;
+      } | null;
       /** Height */
       height: number;
-      /** Image Path */
-      image_path?: string | null;
+      /** Image Blob Hash */
+      image_blob_hash?: string | null;
       /** Items */
       items?: components['schemas']['Block'][];
       /** Name */
       name?: string | null;
-      /** Ocr Failed */
-      ocr_failed?: boolean;
-      ocr_provenance?: components['schemas']['OCRProvenance'] | null;
+      /** Page Id */
+      page_id?: string | null;
       /** Page Index */
       page_index: number;
-      /** Provenance Live Ocr */
-      provenance_live_ocr?: {
-        [key: string]: unknown;
-      } | null;
-      /** Provenance Saved */
-      provenance_saved?: {
-        [key: string]: unknown;
-      } | null;
-      /** Provenance Saved Ocr */
-      provenance_saved_ocr?: {
-        [key: string]: unknown;
-      } | null;
+      /** Page Kind */
+      page_kind?: string | null;
+      /** Page Labels */
+      page_labels?: string[] | null;
       review?: components['schemas']['ReviewMetadata'] | null;
-      /** Rotation Applied */
-      rotation_applied?: number | null;
-      /** Source */
-      source?: string;
+      /** Thumbnail Blob Hash */
+      thumbnail_blob_hash?: string | null;
       /**
        * Type
        * @constant
@@ -346,6 +580,45 @@ export type components = {
       type?: 'Page';
       /** Width */
       width: number;
+    };
+    /**
+     * PageGeometry
+     * @description Reviewed page geometry and the model runs that generated it.
+     */
+    PageGeometry: {
+      /** Coordinate Space */
+      coordinate_space: string;
+      /** Coordinate Space Id */
+      coordinate_space_id: string;
+      /** Image Artifact Sha256 */
+      image_artifact_sha256: string;
+      /** Image Height */
+      image_height: number;
+      /** Image Width */
+      image_width: number;
+      /** Ocr Artifact Sha256 */
+      ocr_artifact_sha256: string;
+      /** Ocr Model Run Id */
+      ocr_model_run_id: string;
+      /** Page Head Sha256 */
+      page_head_sha256: string;
+      /** Page Id */
+      page_id: string;
+      /** Page Region Artifact Sha256 */
+      page_region_artifact_sha256: string;
+      /** Page Region Model Run Id */
+      page_region_model_run_id: string;
+      /** Page Sha256 */
+      page_sha256: string;
+      /** Source Image Artifact Sha256 */
+      source_image_artifact_sha256: string;
+      /** Source Image Height */
+      source_image_height: number;
+      /** Source Image Width */
+      source_image_width: number;
+      source_orientation: components['schemas']['SourceOrientation'];
+      /** Transform Ids */
+      transform_ids: string[];
     };
     /**
      * PageLayout
@@ -387,6 +660,22 @@ export type components = {
       y: number;
     };
     /**
+     * ReplacementArtifact
+     * @description Path-safe declared output artifact created by an approved correction.
+     */
+    ReplacementArtifact: {
+      /** Artifact Id */
+      artifact_id: string;
+      /** Byte Size */
+      byte_size: number;
+      /** Media Type */
+      media_type: string;
+      /** Relative Path */
+      relative_path: string;
+      /** Sha256 */
+      sha256: string;
+    };
+    /**
      * ReviewMetadata
      * @description Human-review state on a Word, Block (line), or Page.
      *
@@ -395,6 +684,11 @@ export type components = {
      *         reviewer_note:        Optional free-text note left by the reviewer.
      *         flagged_for_attention: Flagged for follow-up review by a different
      *                                reviewer or for an automated pass.
+     *         source:               Which source produced the answer this guards.
+     *                               ``None`` means nothing has been recorded, which is
+     *                               distinct from a recorded machine or human origin.
+     *         state:                How much is known. Defaults to ``UNKNOWN`` so an
+     *                               untouched record does not claim to be positive.
      */
     ReviewMetadata: {
       /**
@@ -407,11 +701,143 @@ export type components = {
        * @default null
        */
       reviewer_note: string | null;
+      /** @default null */
+      source: components['schemas']['LabelSource'] | null;
+      /** @default unknown */
+      state: components['schemas']['KnowledgeState'];
       /**
        * Validated
        * @default false
        */
       validated: boolean;
+    };
+    /**
+     * SourceOrientation
+     * @description Orientation of the source image before a geometry transform.
+     * @enum {string}
+     */
+    SourceOrientation:
+      'upright' | 'rotate_90_clockwise' | 'rotate_180' | 'rotate_90_counterclockwise';
+    /**
+     * TypographyCorrection
+     * @description One immutable revision of a stable word's typography review.
+     */
+    TypographyCorrection: {
+      /** Base Image Sha256 */
+      base_image_sha256: string;
+      /** Base Page Sha256 */
+      base_page_sha256: string;
+      /** Base Text Sha256 */
+      base_text_sha256: string;
+      /** Base Word Revision */
+      base_word_revision: number;
+      /** Correction Id */
+      correction_id: string;
+      decision: components['schemas']['CorrectionDecision'];
+      /** Grapheme Map Version */
+      grapheme_map_version: string;
+      /** Labeler Id */
+      labeler_id: string;
+      /** @default null */
+      metadata: components['schemas']['TypographyReviewMetadata'] | null;
+      /** Page Head Sha256 */
+      page_head_sha256: string;
+      replacement: components['schemas']['WordTypography'] | null;
+      /** Replacement Image Sha256 */
+      replacement_image_sha256: string | null;
+      /** Replacement Page Head Sha256 */
+      replacement_page_head_sha256: string | null;
+      /** Replacement Page Sha256 */
+      replacement_page_sha256: string | null;
+      /** Replacement Text Sha256 */
+      replacement_text_sha256: string | null;
+      /** Replacement Word Revision */
+      replacement_word_revision: number | null;
+      /** Revision */
+      revision: number;
+      /** Supersedes Id */
+      supersedes_id: string | null;
+      /** Taxonomy Hash */
+      taxonomy_hash: string;
+      /** Taxonomy Version */
+      taxonomy_version: string;
+      /** Word Id */
+      word_id: string;
+    };
+    /**
+     * TypographyReviewMetadata
+     * @description Optional actor and time metadata for a review operation.
+     */
+    TypographyReviewMetadata: {
+      /** @default null */
+      decision: components['schemas']['ReviewDecision'] | null;
+      /**
+       * Note
+       * @default null
+       */
+      note: string | null;
+      /**
+       * Reviewed At
+       * @default null
+       */
+      reviewed_at: string | null;
+      /**
+       * Reviewer Id
+       * @default null
+       */
+      reviewer_id: string | null;
+    };
+    /**
+     * TypographySpan
+     * @description A positive taxonomy label over a nonempty half-open grapheme range.
+     */
+    TypographySpan: {
+      /** Alignment Evidence Id */
+      alignment_evidence_id: string;
+      confidence_tier: components['schemas']['ConfidenceTier'];
+      /** End */
+      end: number;
+      /** Label */
+      label: string;
+      label_source: components['schemas']['LabelSource'];
+      /**
+       * Prediction Id
+       * @default null
+       */
+      prediction_id: string | null;
+      /** Span Id */
+      span_id: string;
+      /** Start */
+      start: number;
+    };
+    /**
+     * TypographyTaxonomy
+     * @description Versioned ordered taxonomy and its exact canonical-content hash.
+     */
+    TypographyTaxonomy: {
+      /** Labels */
+      labels: components['schemas']['TypographyTaxonomyLabel'][];
+      /**
+       * Taxonomy Hash
+       * @default
+       */
+      taxonomy_hash: string;
+      /** Version */
+      version: string;
+    };
+    /**
+     * TypographyTaxonomyLabel
+     * @description One ordered label in the review taxonomy.
+     */
+    TypographyTaxonomyLabel: {
+      /** Display Name */
+      display_name: string;
+      /** Required For Completion */
+      required_for_completion: boolean;
+      /** Trainable */
+      trainable: boolean;
+      /** Value */
+      value: string;
     };
     Word: {
       /** Baseline */
@@ -488,11 +914,152 @@ export type components = {
        * @constant
        */
       type?: 'Word';
+      /** Typography Annotations */
+      typography_annotations?: unknown | null;
       /** Word Components */
       word_components?: string[];
       /** Word Labels */
       word_labels?: string[];
     };
+    /**
+     * WordGeometry
+     * @description Optional axis-aligned word geometry in the bundle's declared space.
+     */
+    WordGeometry: {
+      /**
+       * Coordinate Space
+       * @default image_pixels
+       */
+      coordinate_space: string;
+      /** Coordinate Space Id */
+      coordinate_space_id: string;
+      /** Image Artifact Sha256 */
+      image_artifact_sha256: string;
+      /** Page Head Sha256 */
+      page_head_sha256: string;
+      /** Page Sha256 */
+      page_sha256: string;
+      source_orientation: components['schemas']['SourceOrientation'];
+      /** Transform Id */
+      transform_id: string;
+      /** Word Id */
+      word_id: string;
+      /** Word Revision */
+      word_revision: number;
+      /** X0 */
+      x0: number;
+      /** X1 */
+      x1: number;
+      /** Y0 */
+      y0: number;
+      /** Y1 */
+      y1: number;
+    };
+    /**
+     * WordTypography
+     * @description Typography labels for one stable OCR word.
+     *
+     *     A positive span requires a matching positive entry in ``label_states``.
+     *     A negative state is reviewed regular text; ``unknown`` is intentionally
+     *     incomplete and is never equivalent to regular text.
+     */
+    WordTypography: {
+      /** Grapheme Map Version */
+      grapheme_map_version: string;
+      /** Image Artifact Sha256 */
+      image_artifact_sha256: string;
+      /** Label States */
+      label_states: {
+        [key: string]: components['schemas']['LabelState'];
+      };
+      /** @default null */
+      metadata: components['schemas']['TypographyReviewMetadata'] | null;
+      /** Page Content Sha256 */
+      page_content_sha256: string;
+      /** @default unreviewed */
+      review_state: components['schemas']['ReviewState'];
+      /** Source Evidence Ids */
+      source_evidence_ids: string[];
+      /**
+       * Spans
+       * @default []
+       */
+      spans: components['schemas']['TypographySpan'][];
+      /** Taxonomy Hash */
+      taxonomy_hash: string;
+      /** Taxonomy Version */
+      taxonomy_version: string;
+      /** Text */
+      text: string;
+      /** Text Sha256 */
+      text_sha256: string;
+      /**
+       * Warnings
+       * @default []
+       */
+      warnings: string[];
+      /**
+       * Whole Word Labels
+       * @default null
+       */
+      whole_word_labels: string[] | null;
+      /** Word Id */
+      word_id: string;
+      /**
+       * Word Revision
+       * @default 0
+       */
+      word_revision: number;
+    };
+    /**
+     * KnowledgeState
+     * @description How much is known about one label assignment.
+     * @enum {string}
+     */
+    KnowledgeState: 'positive' | 'verified_negative' | 'unknown' | 'conflict';
+    /**
+     * LabelSource
+     * @description Evidence sources that can assign a canonical label.
+     * @enum {string}
+     */
+    LabelSource: 'f2' | 'gutenberg_html' | 'se_computed_css' | 'human' | 'synthetic' | 'model';
+    /**
+     * ConfidenceTier
+     * @description Reviewed confidence tiers for label evidence.
+     * @enum {string}
+     */
+    ConfidenceTier: 'gold' | 'silver' | 'bronze' | 'quarantine';
+    /**
+     * CorrectionDecision
+     * @description Decision that determines whether a correction carries a replacement.
+     * @enum {string}
+     */
+    CorrectionDecision:
+      | 'approved_edit'
+      | 'reviewed_regular'
+      | 'reject_source'
+      | 'reject_alignment'
+      | 'unusable_image'
+      | 'defer'
+      | 'accept';
+    /**
+     * LabelState
+     * @description Review knowledge for one taxonomy label on a word.
+     * @enum {string}
+     */
+    LabelState: 'unknown' | 'positive' | 'negative';
+    /**
+     * ReviewDecision
+     * @description Decision recorded when a reviewer resolves a proposed label.
+     * @enum {string}
+     */
+    ReviewDecision: 'approved' | 'rejected' | 'needs_changes';
+    /**
+     * ReviewState
+     * @description Lifecycle state for a word review.
+     * @enum {string}
+     */
+    ReviewState: 'unreviewed' | 'reviewed' | 'reviewed_regular' | 'quarantined' | 'deferred';
     /**
      * RegionType
      * @description Region categories the reorg / illustration extractor consume.
@@ -516,7 +1083,8 @@ export type components = {
       | 'footnote'
       | 'formula'
       | 'abandoned'
-      | 'sidenote';
+      | 'sidenote'
+      | 'page_number';
   };
   responses: never;
   parameters: never;
@@ -524,17 +1092,42 @@ export type components = {
   headers: never;
   pathItems: never;
 };
+export type ArtifactReference = components['schemas']['ArtifactReference'];
 export type Block = components['schemas']['Block'];
 export type BoundingBox = components['schemas']['BoundingBox'];
 export type Character = components['schemas']['Character'];
+export type CoordinateTransform = components['schemas']['CoordinateTransform'];
+export type CoordinateTransformStage = components['schemas']['CoordinateTransformStage'];
+export type CorrectionBundle = components['schemas']['CorrectionBundle'];
+export type Evidence = components['schemas']['Evidence'];
+export type LabelingBundle = components['schemas']['LabelingBundle'];
 export type LayoutRegion = components['schemas']['LayoutRegion'];
+export type ModelRun = components['schemas']['ModelRun'];
+export type ModelRunPurpose = components['schemas']['ModelRunPurpose'];
 export type OcrModelProvenance = components['schemas']['OCRModelProvenance'];
 export type OcrProvenance = components['schemas']['OCRProvenance'];
 export type Page = components['schemas']['Page'];
+export type PageGeometry = components['schemas']['PageGeometry'];
 export type PageLayout = components['schemas']['PageLayout'];
 export type Point = components['schemas']['Point'];
+export type ReplacementArtifact = components['schemas']['ReplacementArtifact'];
 export type ReviewMetadata = components['schemas']['ReviewMetadata'];
+export type SourceOrientation = components['schemas']['SourceOrientation'];
+export type TypographyCorrection = components['schemas']['TypographyCorrection'];
+export type TypographyReviewMetadata = components['schemas']['TypographyReviewMetadata'];
+export type TypographySpan = components['schemas']['TypographySpan'];
+export type TypographyTaxonomy = components['schemas']['TypographyTaxonomy'];
+export type TypographyTaxonomyLabel = components['schemas']['TypographyTaxonomyLabel'];
 export type Word = components['schemas']['Word'];
+export type WordGeometry = components['schemas']['WordGeometry'];
+export type WordTypography = components['schemas']['WordTypography'];
+export type KnowledgeState = components['schemas']['KnowledgeState'];
+export type LabelSource = components['schemas']['LabelSource'];
+export type ConfidenceTier = components['schemas']['ConfidenceTier'];
+export type CorrectionDecision = components['schemas']['CorrectionDecision'];
+export type LabelState = components['schemas']['LabelState'];
+export type ReviewDecision = components['schemas']['ReviewDecision'];
+export type ReviewState = components['schemas']['ReviewState'];
 export type RegionType = components['schemas']['RegionType'];
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;

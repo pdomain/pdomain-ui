@@ -129,6 +129,16 @@ export type components = {
        * @default 1
        */
       font_scale: number;
+      /**
+       * Compute Device Default
+       * @default null
+       */
+      compute_device_default: string | null;
+      /**
+       * Update Policy
+       * @default null
+       */
+      update_policy: ('notify' | 'auto' | 'manual') | null;
       /** @default null */
       layer_colors: components['schemas']['LayerColors'];
     };
@@ -191,11 +201,8 @@ export type components = {
       stage_id: string;
       /** Page Id */
       page_id: string;
-      /**
-       * Device
-       * @enum {string}
-       */
-      device: 'local' | 'mps' | 'cpu' | 'modal' | 'shared_container';
+      /** Device */
+      device: string;
       /** Duration Ms */
       duration_ms: number;
       /**
@@ -291,6 +298,121 @@ export type components = {
        */
       priority: 'interactive' | 'batch';
     };
+    /**
+     * DeviceInfo
+     * @description Response model for GET/PUT /api/suite/device.
+     */
+    DeviceInfo: {
+      /** Mode */
+      mode: string;
+      /**
+       * Available
+       * @default []
+       */
+      available: {
+        [key: string]: unknown;
+      }[];
+      /**
+       * Current
+       * @default null
+       */
+      current: string | null;
+      /**
+       * Effective Source
+       * @default null
+       */
+      effective_source: string | null;
+      /**
+       * Offload Target
+       * @default null
+       */
+      offload_target: string | null;
+      /**
+       * Cuda Docs Url
+       * @default /docs/runbooks/cuda-setup.md
+       */
+      cuda_docs_url: string;
+    };
+    /**
+     * UpdateInfo
+     * @description Shape returned by GET /api/suite/update.
+     */
+    UpdateInfo: {
+      /** Current */
+      current: string;
+      /** Latest */
+      latest: string;
+      /** Update Available */
+      update_available: boolean;
+      /**
+       * Changelog Url
+       * @default null
+       */
+      changelog_url: string | null;
+      /**
+       * Channel
+       * @default stable
+       */
+      channel: string;
+    };
+    /**
+     * DoctrExportTaskStats
+     * @description Per-task item count for one export.
+     */
+    DoctrExportTaskStats: {
+      /** Item Count */
+      item_count: number;
+    };
+    /**
+     * DoctrExportProject
+     * @description Export record for one project.
+     */
+    DoctrExportProject: {
+      /**
+       * Exported At
+       * Format: date-time
+       */
+      exported_at: string;
+      /** Page Count */
+      page_count: number;
+      /** Tasks */
+      tasks: {
+        [key: string]: components['schemas']['DoctrExportTaskStats'];
+      };
+    };
+    /**
+     * DoctrExportManifest
+     * @description Top-level DocTR export manifest.
+     *
+     *     The JSON key ``"schema"`` maps to the Python field ``schema_id``
+     *     to avoid collision with Pydantic's own ``.model_json_schema()`` method.
+     */
+    DoctrExportManifest: {
+      /**
+       * Schema
+       * @default pdomain.doctr-export-manifest
+       */
+      schema: string;
+      /**
+       * Version
+       * @default 1
+       */
+      version: number;
+      /**
+       * Generated At
+       * Format: date-time
+       */
+      generated_at: string;
+      /** App */
+      app: string;
+      /**
+       * Projects
+       * @default {}
+       */
+      projects: {
+        [key: string]: components['schemas']['DoctrExportProject'];
+      };
+    };
     LaunchResult:
       | components['schemas']['LaunchResultOpened']
       | components['schemas']['LaunchResultRequiresHostConfig'];
@@ -313,6 +435,11 @@ export type StageResult = components['schemas']['StageResult'];
 export type JobStatus = components['schemas']['JobStatus'];
 export type JobEvent = components['schemas']['JobEvent'];
 export type JobSpec = components['schemas']['JobSpec'];
+export type DeviceInfo = components['schemas']['DeviceInfo'];
+export type UpdateInfo = components['schemas']['UpdateInfo'];
+export type DoctrExportTaskStats = components['schemas']['DoctrExportTaskStats'];
+export type DoctrExportProject = components['schemas']['DoctrExportProject'];
+export type DoctrExportManifest = components['schemas']['DoctrExportManifest'];
 export type LaunchResult = components['schemas']['LaunchResult'];
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;

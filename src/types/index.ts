@@ -7,7 +7,7 @@
  *
  * Field names follow the actual pdomain-book-tools JSON Schema output:
  *   - Block uses `block_category` and `items` (not `category`/`children`)
- *   - Page uses `image_path` (not `image_url`) and `items` (not `blocks`)
+ *   - Page uses `items` (not `blocks`); `image_path` is host-supplied, not on Page
  *   - Word has `bounding_box`, `text`, `ocr_confidence`, `review`,
  *     `word_labels`, `text_style_labels`
  *
@@ -55,9 +55,18 @@ export type BlockLike = Pick<Block, 'block_category' | 'bounding_box' | 'items' 
 
 /**
  * Minimum fields required by page-level canvas components.
- * `image_path` is the filesystem path to the page image (see pdomain-book-tools Page model).
+ * `image_path` is the filesystem path to the page image, supplied by the host.
  */
 export type PageLike = Pick<
   Page,
-  'page_index' | 'name' | 'image_path' | 'width' | 'height' | 'items' | 'review'
->;
+  'page_index' | 'name' | 'width' | 'height' | 'items' | 'review'
+> & {
+  /**
+   * Supplied by the host application, not by the Page model.
+   * pdomain-book-tools removed `image_path` from Page in the 0.15 line, along
+   * with ten other operational metadata fields, and the host now carries it on
+   * its own page record. Page itself identifies images by content hash
+   * (`image_blob_hash`, `thumbnail_blob_hash`) instead.
+   */
+  image_path?: string | null;
+};

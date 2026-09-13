@@ -1,14 +1,14 @@
 {
   "pdomain-book-tools": {
-    "version": "0.14.2",
+    "version": "0.28.0",
     "sha256": {
-      "pdomain_book_tools-0.14.2-py3-none-any.whl": "38481af0d680c6c719093ab91649ae11d4cc4c686e8f93f17fed29949cada67e"
+      "pdomain_book_tools-0.28.0-py3-none-any.whl": "2d1f6ce4b9172e2ab8e94e096a740545a20ce6a6f7c7615cc401b4671a3d8655"
     }
   },
   "pdomain-ops": {
-    "version": "0.3.0",
+    "version": "0.11.2",
     "sha256": {
-      "pdomain_ops-0.3.0-py3-none-any.whl": "f4217f11cd441d8ac7e37127a3e633ea809e05a61c6f90628e2b729ae7c59897"
+      "pdomain_ops-0.11.2-py3-none-any.whl": "0d310ef9b78b294fcd29d410cd555149efc1a654eb70bf7a4412a29e7a3602a1"
     }
   }
 }

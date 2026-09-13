@@ -271,8 +271,18 @@ async function main() {
     wheelPathsToInstall.push(wheelPath)
   }
 
-  // Install all verified wheels from the local cache
-  run('uv', ['pip', 'install', '--python', venvDir, ...wheelPathsToInstall])
+  // Install all verified wheels from the local cache. Transitive deps (e.g.
+  // pdomain-book-contracts) live only on the self-hosted index, so it must be
+  // passed here too, not just in the --dry-run preview above.
+  run('uv', [
+    'pip',
+    'install',
+    '--python',
+    venvDir,
+    '--extra-index-url',
+    PD_INDEX_PIP_URL,
+    ...wheelPathsToInstall,
+  ])
 
   console.log('codegen:fetch complete.')
 }

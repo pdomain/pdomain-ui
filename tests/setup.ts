@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 // jsdom doesn't implement ResizeObserver. Provide a no-op stub so
 // components that use it (e.g. PageImageCanvas) don't throw.
