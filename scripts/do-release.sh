@@ -140,6 +140,32 @@ fi
 echo "Pushing master + tag to origin..."
 git push origin master --follow-tags
 
+# ---------------------------------------------------------------------------
+# Pack and publish the GitHub Release
+# ---------------------------------------------------------------------------
+# This used to be done by the release workflow, which was removed on
+# 2026-09-13. The tarball matters beyond the release page: the self-hosted npm
+# registry is generated from release assets, so a release without one
+# publishes nothing installable.
+echo "Packing the tarball..."
+rm -rf dist
+if [ -x /usr/local/bin/mise ]; then
+    /usr/local/bin/mise exec -- pnpm pack --pack-destination dist/
+else
+    pnpm pack --pack-destination dist/
+fi
+
+echo "Creating the GitHub Release for $VERSION..."
+if ! gh release create "$VERSION" dist/*.tgz --generate-notes --verify-tag; then
+    echo "ERROR: Release creation failed; the tag is already pushed." >&2
+    echo "       Retry with: gh release create $VERSION dist/*.tgz --generate-notes --verify-tag" >&2
+    exit 1
+fi
+
+echo ""
+echo "Now republish the registry so consumers can install it:"
+echo "   (cd ../pdomain-index-npm && ./scripts/publish-index.sh)"
+
 echo ""
 echo "Released $VERSION."
 echo "   Repo: https://github.com/pdomain/pdomain-ui"
