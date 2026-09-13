@@ -45,10 +45,12 @@ export function useUpdateCheck(options: UseUpdateCheckOptions = {}): UpdateCheck
 
   // Ref pattern: avoid re-triggers on function identity change
   const fetchUpdateRef = React.useRef(fetchUpdate);
-  fetchUpdateRef.current = fetchUpdate;
-
   const applyUpdateRef = React.useRef(applyUpdate);
-  applyUpdateRef.current = applyUpdate;
+
+  React.useEffect(() => {
+    fetchUpdateRef.current = fetchUpdate;
+    applyUpdateRef.current = applyUpdate;
+  });
 
   const doFetch = React.useCallback(async () => {
     const fn = fetchUpdateRef.current;

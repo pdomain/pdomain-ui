@@ -105,15 +105,12 @@ export function HierarchyTreePanel({
   // Determine initial expanded set.
   // Compute once at mount; subsequent prop changes do not re-seed the state
   // (uncontrolled pattern — mirroring standard React uncontrolled inputs).
-  const initialExpandedRef = useRef<ReadonlySet<string> | null>(null);
-  if (initialExpandedRef.current === null) {
-    initialExpandedRef.current =
-      defaultExpandedIds !== undefined
-        ? new Set(defaultExpandedIds)
-        : new Set(collectExpandable(tree));
-  }
-
-  const [expanded, setExpanded] = useState<ReadonlySet<string>>(initialExpandedRef.current);
+  // Lazy initializer ensures this only runs on the initial render.
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(() =>
+    defaultExpandedIds !== undefined
+      ? new Set(defaultExpandedIds)
+      : new Set(collectExpandable(tree)),
+  );
 
   const handleToggle = useCallback((id: string) => {
     setExpanded((prev) => {

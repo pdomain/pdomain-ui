@@ -206,10 +206,12 @@ export function formatShortcut(keys: string): string[] {
 export function useShortcuts(bindings: ShortcutBinding[], opts?: UseShortcutsOptions): void {
   // Keep a stable ref so the effect doesn't re-run when bindings change identity.
   const bindingsRef = useRef(bindings);
-  bindingsRef.current = bindings;
-
   const enabledRef = useRef(opts?.enabled);
-  enabledRef.current = opts?.enabled;
+
+  useEffect(() => {
+    bindingsRef.current = bindings;
+    enabledRef.current = opts?.enabled;
+  });
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent): void {

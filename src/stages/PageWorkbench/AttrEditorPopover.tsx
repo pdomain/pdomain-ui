@@ -52,10 +52,14 @@ export function AttrEditorPopover({
 }: AttrEditorPopoverProps): React.ReactElement {
   const [draft, setDraft] = React.useState(attr.value);
 
-  // Sync draft when attr.value changes (e.g. external update while open).
-  React.useEffect(() => {
+  // Sync draft when attr.value changes (e.g. external update while open), or
+  // when the popover opens/closes (so reopening starts from the current
+  // committed value). Adjusted during render rather than in an effect.
+  const [prevSyncKey, setPrevSyncKey] = React.useState({ value: attr.value, open });
+  if (prevSyncKey.value !== attr.value || prevSyncKey.open !== open) {
+    setPrevSyncKey({ value: attr.value, open });
     setDraft(attr.value);
-  }, [attr.value, open]);
+  }
 
   const handleApply = React.useCallback(() => {
     onCommit(draft);

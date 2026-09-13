@@ -109,8 +109,12 @@ export const InsertDialog: React.FC<InsertDialogProps> = ({
   const [file, setFile] = React.useState<File | undefined>(undefined);
   const [dragOver, setDragOver] = React.useState(false);
 
-  // Reset state when dialog opens so re-opens start fresh unless defaultAnchor changes.
-  React.useEffect(() => {
+  // Reset state when dialog opens so re-opens start fresh unless defaultAnchor
+  // changes. Adjusted during render rather than in an effect, per "adjusting
+  // state when a prop changes".
+  const [prevResetKey, setPrevResetKey] = React.useState({ open, defaultAnchor });
+  if (prevResetKey.open !== open || prevResetKey.defaultAnchor !== defaultAnchor) {
+    setPrevResetKey({ open, defaultAnchor });
     if (open) {
       setPosition('before');
       setAnchor(defaultAnchor ?? '');
@@ -119,7 +123,7 @@ export const InsertDialog: React.FC<InsertDialogProps> = ({
       setFile(undefined);
       setDragOver(false);
     }
-  }, [open, defaultAnchor]);
+  }
 
   // ── Derived ───────────────────────────────────────────────────────────────
   const noteLen = note.length;

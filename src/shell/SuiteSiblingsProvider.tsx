@@ -32,8 +32,9 @@ export function SuiteSiblingsProvider({ value, children }: SuiteSiblingsProvider
 
   React.useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError(null);
+    // `loading`/`error` already start at their post-reset values (see
+    // useState above); this effect only ever runs once (mount-only), so
+    // there is nothing to reset here — just kick off the fetch.
     fetchInstalled()
       .then((apps) => {
         if (!cancelled) {

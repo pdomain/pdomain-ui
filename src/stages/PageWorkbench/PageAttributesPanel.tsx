@@ -35,10 +35,13 @@ interface AttrRowProps {
 function AttrRow({ attr, onChange, rowTestId }: AttrRowProps): React.ReactElement {
   const [draft, setDraft] = React.useState(attr.value);
 
-  // Sync draft when controlled value changes externally.
-  React.useEffect(() => {
+  // Sync draft when controlled value changes externally. Adjusted during
+  // render rather than in an effect, per "adjusting state when a prop changes".
+  const [prevAttrValue, setPrevAttrValue] = React.useState(attr.value);
+  if (attr.value !== prevAttrValue) {
+    setPrevAttrValue(attr.value);
     setDraft(attr.value);
-  }, [attr.value]);
+  }
 
   const handleCommit = React.useCallback(() => {
     if (draft !== attr.value) {

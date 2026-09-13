@@ -46,9 +46,14 @@ export function DirectoryPickerDialog({
   const errorId = React.useId();
   const [draftPath, setDraftPath] = React.useState(inputPath);
 
-  React.useEffect(() => {
+  // Re-sync the local draft when `inputPath` changes from outside (e.g. Home/Up
+  // navigation updating the parent's state) — adjusted during render rather
+  // than in an effect, per "adjusting state when a prop changes".
+  const [prevInputPath, setPrevInputPath] = React.useState(inputPath);
+  if (inputPath !== prevInputPath) {
+    setPrevInputPath(inputPath);
     setDraftPath(inputPath);
-  }, [inputPath]);
+  }
 
   const applyDraftPath = React.useCallback(() => {
     void onApply(draftPath);

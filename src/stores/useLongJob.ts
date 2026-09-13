@@ -63,21 +63,31 @@ export function useLongJob(jobId: string | null, options: UseLongJobOptions = {}
   const [progress, setProgress] = React.useState<number | null>(null);
   const [events, setEvents] = React.useState<LongJobEvent[]>([]);
 
-  React.useEffect(() => {
-    // When jobId clears or pollFn is absent, reset to idle so no stale fields
-    // from a previous job leak into the next render (#36).
-    if (!jobId || !pollFn) {
-      setStatus('idle');
-      setProgress(null);
-      setEvents([]);
-      return;
-    }
-
-    // Reset eagerly when a new job ID is provided so callers never see the
-    // previous job's progress/events before the first poll settles (#36).
+  // Reset to idle synchronously, during render, whenever the poll identity
+  // (jobId, pollFn, or pollIntervalMs) changes — whether because jobId
+  // cleared, pollFn was removed, or a new job/interval was supplied. This
+  // mirrors "adjusting state when a prop changes": no stale fields from a
+  // previous job ever leak into a render (#36), and unlike the previous
+  // effect-driven reset there is no extra render pass before it takes
+  // effect.
+  const [prevPollKey, setPrevPollKey] = React.useState({ jobId, pollFn, pollIntervalMs });
+  if (
+    prevPollKey.jobId !== jobId ||
+    prevPollKey.pollFn !== pollFn ||
+    prevPollKey.pollIntervalMs !== pollIntervalMs
+  ) {
+    setPrevPollKey({ jobId, pollFn, pollIntervalMs });
     setStatus('idle');
     setProgress(null);
     setEvents([]);
+  }
+
+  React.useEffect(() => {
+    // When jobId clears or pollFn is absent, there is nothing to poll —
+    // the idle reset above already covers the visible state.
+    if (!jobId || !pollFn) {
+      return;
+    }
 
     let cancelled = false;
     let timeoutId: ReturnType<typeof setTimeout> | undefined;

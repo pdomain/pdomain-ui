@@ -43,19 +43,20 @@ function VirtualizedListInner<TItem>(
   const [internalIndex, setInternalIndex] = React.useState<number | null>(null);
 
   const isControlled = controlledSelectedIndex !== undefined;
-  const selectedIndex = isControlled ? controlledSelectedIndex : internalIndex;
 
-  // Clamp internal index when items shrink (e.g. after filtering).
-  // Controlled callers are responsible for clamping their own selectedIndex prop.
-  React.useEffect(() => {
-    if (!isControlled) {
-      setInternalIndex((prev) => {
-        if (prev === null) return null;
-        if (items.length === 0) return null;
-        return prev >= items.length ? items.length - 1 : prev;
-      });
+  // Clamp internal index when items shrink (e.g. after filtering), derived
+  // during render from the current state and items.length rather than via a
+  // syncing effect. Controlled callers are responsible for clamping their
+  // own selectedIndex prop.
+  let clampedInternalIndex = internalIndex;
+  if (!isControlled && internalIndex !== null) {
+    clampedInternalIndex = items.length === 0 ? null : Math.min(internalIndex, items.length - 1);
+    if (clampedInternalIndex !== internalIndex) {
+      setInternalIndex(clampedInternalIndex);
     }
-  }, [isControlled, items.length]);
+  }
+
+  const selectedIndex = isControlled ? controlledSelectedIndex : clampedInternalIndex;
 
   const handleSelect = React.useCallback(
     (idx: number) => {

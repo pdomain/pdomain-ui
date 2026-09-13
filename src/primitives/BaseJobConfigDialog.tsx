@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -56,19 +56,25 @@ export function BaseJobConfigDialog({
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Reset projectName when sourcePath changes
-  useEffect(() => {
+  // Reset projectName when sourcePath changes. Adjusted during render (rather
+  // than in an effect) by comparing against the previously-rendered
+  // sourcePath, per the "adjusting state when a prop changes" pattern.
+  const [prevSourcePath, setPrevSourcePath] = useState(sourcePath);
+  if (sourcePath !== prevSourcePath) {
+    setPrevSourcePath(sourcePath);
     setProjectName(basename(sourcePath));
-  }, [sourcePath]);
+  }
 
   // WS5 fix: reset outputDir (and error) when the dialog opens/reopens.
   // Previously outputDir was never reset so stale values from prior sessions persisted.
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
     if (open) {
       setOutputDir('');
       setError(null);
     }
-  }, [open]);
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

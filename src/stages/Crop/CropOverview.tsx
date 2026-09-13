@@ -141,7 +141,19 @@ function RecentActivity({
   recentActivity,
   'data-testid': testId = CROP_OVERVIEW_ACTIVITY,
 }: RecentActivityProps): React.ReactElement {
-  const now = Date.now();
+  // "now" anchors the relative-time calculations below. Calling Date.now()
+  // directly in the render body is impure (a re-render with unchanged props
+  // would produce a different result). Instead it is captured once at mount,
+  // then refreshed whenever the activity list itself changes — the point at
+  // which stale relative times would otherwise be most noticeable — via the
+  // render-phase "adjusting state when a prop changes" pattern rather than
+  // an effect.
+  const [now, setNow] = React.useState(() => Date.now());
+  const [prevActivity, setPrevActivity] = React.useState(recentActivity);
+  if (recentActivity !== prevActivity) {
+    setPrevActivity(recentActivity);
+    setNow(() => Date.now());
+  }
 
   return (
     <div className="crop-overview__activity" data-testid={testId}>

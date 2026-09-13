@@ -80,11 +80,18 @@ export function CandidateDetail({
   const [suggested, setSuggested] = React.useState(candidate.suggested);
   const [showAll, setShowAll] = React.useState(false);
 
-  // Reset edited value and showAll when the candidate changes
-  React.useEffect(() => {
+  // Reset edited value and showAll when the candidate changes. Adjusted
+  // during render rather than in an effect, per "adjusting state when a
+  // prop changes".
+  const [prevCandidateKey, setPrevCandidateKey] = React.useState({
+    id: candidate.id,
+    suggested: candidate.suggested,
+  });
+  if (prevCandidateKey.id !== candidate.id || prevCandidateKey.suggested !== candidate.suggested) {
+    setPrevCandidateKey({ id: candidate.id, suggested: candidate.suggested });
     setSuggested(candidate.suggested);
     setShowAll(false);
-  }, [candidate.id, candidate.suggested]);
+  }
 
   const visibleContexts = showAll ? contexts : contexts.slice(0, MAX_VISIBLE_CONTEXTS);
   const hasMore = contexts.length > MAX_VISIBLE_CONTEXTS;

@@ -45,13 +45,14 @@ export function useDeviceInfo(options: UseDeviceInfoOptions = {}): DeviceInfoSta
   // Use a ref so the fetch is only triggered once on mount, and is not
   // re-triggered when the caller passes a new function reference each render.
   const fetchDeviceRef = React.useRef(fetchDevice);
-  fetchDeviceRef.current = fetchDevice;
-
   const putDeviceRef = React.useRef(putDevice);
-  putDeviceRef.current = putDevice;
-
   const clearDeviceRef = React.useRef(clearDevice);
-  clearDeviceRef.current = clearDevice;
+
+  React.useEffect(() => {
+    fetchDeviceRef.current = fetchDevice;
+    putDeviceRef.current = putDevice;
+    clearDeviceRef.current = clearDevice;
+  });
 
   React.useEffect(() => {
     const fn = fetchDeviceRef.current;

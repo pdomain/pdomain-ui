@@ -103,12 +103,18 @@ export function PageImageCanvas<
   }, []);
 
   // ── Zoom state ─────────────────────────────────────────────────────────────
-  const [zoom, setZoom] = useState(initialZoom);
-  useEffect(() => {
+  // `fitOnMount` forces zoom to fit (0) at mount, and again any time it
+  // transitions from false to true — this render-phase comparison replaces an
+  // effect-driven `setZoom` so the fit value is committed in the same render
+  // rather than causing an extra render pass.
+  const [zoom, setZoom] = useState(fitOnMount ? 0 : initialZoom);
+  const [prevFitOnMount, setPrevFitOnMount] = useState(fitOnMount);
+  if (fitOnMount !== prevFitOnMount) {
+    setPrevFitOnMount(fitOnMount);
     if (fitOnMount) {
       setZoom(0); // 0 → fit
     }
-  }, [fitOnMount]);
+  }
 
   // ── Page dimension validation (issue #29) ─────────────────────────────────
   // Validate before any dimension arithmetic.  Invalid metadata renders a
@@ -193,10 +199,17 @@ export function PageImageCanvas<
   // A "cancelled" flag acts as a source token to discard late-arriving loads
   // from a prior src (e.g. slow network + rapid src change).
   // onerror keeps imageEl null so a broken image never shows a stale frame.
+  // The src-change reset happens during render (comparing against the
+  // previous committed src) rather than as the first statement of the load
+  // effect, so the stale image is never painted even for a single frame.
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null);
+  const [prevSrc, setPrevSrc] = useState(src);
+  if (src !== prevSrc) {
+    setPrevSrc(src);
+    setImageEl(null);
+  }
   useEffect(() => {
     let cancelled = false;
-    setImageEl(null);
     const img = new window.Image();
     img.src = src;
     img.onload = () => {
