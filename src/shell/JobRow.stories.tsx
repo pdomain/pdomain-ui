@@ -1,5 +1,6 @@
 /**
- * JobRow stories — covers all 4 status variants per AC #355.
+ * JobRow stories — covers all status variants per AC #355, plus cancelled
+ * and the `pausable` capability flag.
  */
 import type { Meta, StoryObj } from '@storybook/react';
 import { JobRow } from './JobRow.js';
@@ -92,6 +93,26 @@ export const NonCancelableHovered: Story = {
   name: 'Running non-cancelable (hovered)',
   args: {
     job: { ...baseJob, cancelable: false },
+    hovered: true,
+  },
+};
+
+export const Cancelled: Story = {
+  args: {
+    job: {
+      ...baseJob,
+      status: 'cancelled',
+      pct: 45,
+      phase: 'Cancelled at OCR — page 15 of 340',
+      cancelable: false,
+    },
+  },
+};
+
+export const NonPausableHovered: Story = {
+  name: 'Running non-pausable (hovered)',
+  args: {
+    job: { ...baseJob, pausable: false },
     hovered: true,
   },
 };

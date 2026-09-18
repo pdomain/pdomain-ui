@@ -45,6 +45,15 @@ const failedJob: Job = {
   cancelable: false,
 };
 
+const cancelledJob: Job = {
+  id: 'job-5',
+  project: 'David Copperfield',
+  phase: 'Cancelled at OCR — page 30 of 340',
+  pct: 45,
+  status: 'cancelled',
+  cancelable: false,
+};
+
 const sampleToasts: JobToast[] = [
   {
     id: 'toast-1',
@@ -92,6 +101,14 @@ export const ExpandedWithFailed: Story = {
   name: 'Expanded — with failed job',
   args: {
     activeJobs: [runningJob, failedJob],
+    mode: 'expanded',
+  },
+};
+
+export const ExpandedWithCancelled: Story = {
+  name: 'Expanded — with cancelled job',
+  args: {
+    activeJobs: [runningJob, cancelledJob],
     mode: 'expanded',
   },
 };

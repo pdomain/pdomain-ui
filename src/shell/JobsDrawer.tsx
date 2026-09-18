@@ -184,6 +184,12 @@ export function JobsDrawer({
     return null;
   }
 
+  // `running` is really "not a successful terminal" — it already groups
+  // `failed` with the actively-running statuses for this header summary/dot,
+  // pre-dating `cancelled`. `cancelled` falls into the same bucket here for
+  // the same reason: singling it out from `failed` would be a new, one-off
+  // inconsistency this task doesn't set out to fix. See JobRow.tsx for the
+  // per-row rendering, which does distinguish `cancelled` from `failed`.
   const running = activeJobs.filter((j) => j.status !== 'done' && j.status !== 'succeeded');
   const done = activeJobs.filter((j) => j.status === 'done' || j.status === 'succeeded');
 
