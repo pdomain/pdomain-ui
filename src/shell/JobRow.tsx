@@ -6,6 +6,16 @@
  * jobs; shows hover actions (Open project, Pause/Resume, Discard) when
  * `hovered` is true and the job is not yet done.
  *
+ * `cancelled` is a terminal status distinct from `failed`: same static
+ * (non-done) treatment — frozen progress bar, delete-eligible, no pulsing
+ * dot — but its own `fuzzy` accent, label ("Cancelled"), and testid, mirroring
+ * the color `JobStatusPip` already uses for `cancelled`
+ * (`src/primitives/JobStatusPip.tsx`).
+ *
+ * The Pause/Resume hover control is gated by `job.pausable` (default `true`)
+ * so a consumer whose backend has no pause/resume concept can omit the
+ * control instead of shipping a dead button.
+ *
  * Part of the shell subpath; ported from design-system/template.jsx.
  * Target path: src/shell/JobRow.tsx (per OQ-5 decision).
  */
@@ -14,7 +24,8 @@ import { ArrowRight, Pause, Play, Trash2 } from '../icons/lucide.js';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-export type JobStatus = 'queued' | 'running' | 'paused' | 'succeeded' | 'done' | 'failed';
+export type JobStatus =
+  'queued' | 'running' | 'paused' | 'succeeded' | 'done' | 'failed' | 'cancelled';
 
 export interface Job {
   /** Stable ID used as the argument to callbacks. */
@@ -29,6 +40,14 @@ export interface Job {
   status: JobStatus;
   /** Whether a Discard/cancel action is available for this job. */
   cancelable: boolean;
+  /**
+   * Whether a Pause/Resume action is available for this job. Omitted or
+   * `true` renders the Pause/Resume hover control, matching every existing
+   * consumer's current appearance. Set `false` for a backend with no
+   * pause/resume concept so JobRow omits the control instead of shipping a
+   * button that does nothing when clicked.
+   */
+  pausable?: boolean;
 }
 
 export interface JobRowProps {
@@ -60,11 +79,23 @@ function isFailed(status: JobStatus): boolean {
   return status === 'failed';
 }
 
-/** Dot/bar accent color based on status. */
+/** A user-initiated cooperative cancel — terminal, distinct from failed. */
+function isCancelled(status: JobStatus): boolean {
+  return status === 'cancelled';
+}
+
+/**
+ * Dot/bar accent color based on status.
+ *
+ * The `cancelled` token mirrors `JobStatusPip`'s state-to-color mapping
+ * (`src/primitives/JobStatusPip.tsx`) rather than inventing a second visual
+ * language for the same idea.
+ */
 function accentVar(status: JobStatus): string {
   if (isDone(status)) return 'var(--exact)';
-  if (isPaused(status)) return 'var(--fuzzy)';
   if (isFailed(status)) return 'var(--mismatch)';
+  if (isCancelled(status)) return 'var(--fuzzy)';
+  if (isPaused(status)) return 'var(--fuzzy)';
   // running / queued
   return 'var(--ocr)';
 }
@@ -82,6 +113,8 @@ export function JobRow({
   const done = isDone(job.status);
   const paused = isPaused(job.status);
   const failed = isFailed(job.status);
+  const cancelled = isCancelled(job.status);
+  const pausable = job.pausable ?? true;
   const accent = accentVar(job.status);
 
   return (
@@ -94,7 +127,9 @@ export function JobRow({
           ? 'color-mix(in oklab, var(--exact) 6%, var(--bg-surface))'
           : failed
             ? 'color-mix(in oklab, var(--mismatch) 6%, var(--bg-surface))'
-            : 'transparent',
+            : cancelled
+              ? 'color-mix(in oklab, var(--fuzzy) 6%, var(--bg-surface))'
+              : 'transparent',
         display: 'flex',
         flexDirection: 'column',
         gap: 6,
@@ -118,7 +153,10 @@ export function JobRow({
             height: 8,
             borderRadius: 99,
             background: accent,
-            animation: !done && !paused && !failed ? 'pgd-pulse 1.4s ease-in-out infinite' : 'none',
+            animation:
+              !done && !paused && !failed && !cancelled
+                ? 'pgd-pulse 1.4s ease-in-out infinite'
+                : 'none',
             flex: '0 0 auto',
           }}
         />
@@ -160,7 +198,9 @@ export function JobRow({
           </button>
         ) : (
           <span
-            data-testid={failed ? 'job-row-status-failed' : undefined}
+            data-testid={
+              failed ? 'job-row-status-failed' : cancelled ? 'job-row-status-cancelled' : undefined
+            }
             style={{
               fontFamily: 'var(--mono-font)',
               fontSize: 11,
@@ -168,7 +208,7 @@ export function JobRow({
               fontWeight: 600,
             }}
           >
-            {failed ? 'Failed' : `${job.pct}%`}
+            {failed ? 'Failed' : cancelled ? 'Cancelled' : `${job.pct}%`}
           </span>
         )}
       </div>
@@ -204,7 +244,13 @@ export function JobRow({
             style={{
               width: `${job.pct}%`,
               height: '100%',
-              background: paused ? 'var(--fuzzy)' : failed ? 'var(--mismatch)' : 'var(--ocr)',
+              background: paused
+                ? 'var(--fuzzy)'
+                : failed
+                  ? 'var(--mismatch)'
+                  : cancelled
+                    ? 'var(--fuzzy)'
+                    : 'var(--ocr)',
               borderRadius: 99,
               backgroundImage: paused
                 ? 'repeating-linear-gradient(45deg, transparent 0 4px, rgba(0,0,0,0.18) 4px 8px)'
@@ -214,8 +260,8 @@ export function JobRow({
         </div>
       ) : null}
 
-      {/* Delete button — shown for done/failed jobs when onJobDelete is provided */}
-      {(done || failed) && onJobDelete !== undefined ? (
+      {/* Delete button — shown for done/failed/cancelled jobs when onJobDelete is provided */}
+      {(done || failed || cancelled) && onJobDelete !== undefined ? (
         <div style={{ display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
           <button
             type="button"
@@ -274,27 +320,29 @@ export function JobRow({
             Open project <ArrowRight size={11} />
           </button>
 
-          <button
-            type="button"
-            onClick={() => onPauseResume?.(job.id)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 4,
-              height: 24,
-              padding: '0 8px',
-              borderRadius: 5,
-              background: 'transparent',
-              color: 'var(--ink-2)',
-              border: '1px solid var(--border-2)',
-              cursor: 'pointer',
-              fontSize: 11,
-              fontWeight: 500,
-            }}
-          >
-            {paused ? <Play size={11} /> : <Pause size={11} />}
-            {paused ? 'Resume' : 'Pause'}
-          </button>
+          {pausable ? (
+            <button
+              type="button"
+              onClick={() => onPauseResume?.(job.id)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                height: 24,
+                padding: '0 8px',
+                borderRadius: 5,
+                background: 'transparent',
+                color: 'var(--ink-2)',
+                border: '1px solid var(--border-2)',
+                cursor: 'pointer',
+                fontSize: 11,
+                fontWeight: 500,
+              }}
+            >
+              {paused ? <Play size={11} /> : <Pause size={11} />}
+              {paused ? 'Resume' : 'Pause'}
+            </button>
+          ) : null}
 
           <span style={{ flex: 1 }} />
 

@@ -6,6 +6,34 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [Unreleased]
+
+### Breaking change
+
+- `JobRow`'s `JobStatus` union (`@pdomain/pdomain-ui/shell`) gains a
+  `'cancelled'` member: `'queued' | 'running' | 'paused' | 'succeeded' |
+  'done' | 'failed' | 'cancelled'`. Any consumer with an exhaustive
+  `switch (job.status)` or a `Record<JobStatus, …>` map over the old
+  six-member union will now fail to compile and must add a `'cancelled'`
+  case. Consumers that only compare `job.status` against specific literals
+  (the common case) are unaffected — a new union member is always assignable
+  wherever the old, narrower literals were.
+
+### Added
+
+- `JobRow` renders `'cancelled'` jobs distinctly from both `'failed'` and
+  `'succeeded'`: its own `--fuzzy` accent (mirroring the color
+  `JobStatusPip` already uses for `cancelled`), a "Cancelled" label and
+  `job-row-status-cancelled` testid, a frozen (non-pulsing) progress bar, and
+  delete-button eligibility — the same static treatment `failed` already
+  gets, just with its own color and label. `JobsDrawer` and `JobsPanelBody`
+  inherit this for free since both compose `JobRow`.
+- `Job.pausable?: boolean` — a capability flag gating `JobRow`'s Pause/Resume
+  hover control. Omitted or `true` renders the control (unchanged appearance
+  for every existing consumer); `false` omits it, for a backend with no
+  pause/resume concept, instead of shipping a button that does nothing when
+  clicked.
+
 ## [0.9.0] — 2026-06-15
 
 ### Breaking change

@@ -77,6 +77,93 @@ describe('JobRow (#355)', () => {
     expect(screen.getByTestId('job-row-status-failed')).toBeTruthy();
   });
 
+  // ─── cancelled status (#job-cancelled-and-pausable) ────────────────────────
+
+  it('renders progress bar for cancelled status', () => {
+    render(<JobRow job={makeJob({ status: 'cancelled', pct: 45 })} />);
+    expect(screen.getByRole('progressbar')).toBeTruthy();
+  });
+
+  it('shows a distinct "Cancelled" indicator for cancelled status', () => {
+    render(<JobRow job={makeJob({ status: 'cancelled', pct: 45 })} />);
+    const el = screen.getByTestId('job-row-status-cancelled');
+    expect(el.textContent).toBe('Cancelled');
+  });
+
+  it('does not use the failed testid/label for cancelled status', () => {
+    render(<JobRow job={makeJob({ status: 'cancelled', pct: 45 })} />);
+    expect(screen.queryByTestId('job-row-status-failed')).toBeNull();
+    expect(screen.queryByText('Failed')).toBeNull();
+  });
+
+  it('does not show the Open button for cancelled status', () => {
+    render(<JobRow job={makeJob({ status: 'cancelled', pct: 100 })} />);
+    expect(screen.queryByTestId('job-row-open')).toBeNull();
+  });
+
+  it('cancelled status dot has no infinite animation', () => {
+    render(<JobRow job={makeJob({ status: 'cancelled', pct: 45 })} />);
+    const dot = screen.getByTestId('job-status-dot');
+    const anim = dot.style.animation;
+    expect(anim === '' || anim === 'none').toBe(true);
+  });
+
+  it('cancelled status dot uses a different accent color than failed', () => {
+    const { unmount } = render(<JobRow job={makeJob({ status: 'cancelled', pct: 45 })} />);
+    const cancelledColor = screen.getByTestId('job-status-dot').style.background;
+    unmount();
+    render(<JobRow job={makeJob({ status: 'failed', pct: 45 })} />);
+    const failedColor = screen.getByTestId('job-status-dot').style.background;
+    expect(cancelledColor).not.toBe(failedColor);
+    expect(cancelledColor).not.toBe('');
+  });
+
+  it('cancelled status dot uses a different accent color than succeeded', () => {
+    const { unmount } = render(<JobRow job={makeJob({ status: 'cancelled', pct: 45 })} />);
+    const cancelledColor = screen.getByTestId('job-status-dot').style.background;
+    unmount();
+    render(<JobRow job={makeJob({ status: 'succeeded', pct: 100 })} />);
+    const succeededColor = screen.getByTestId('job-status-dot').style.background;
+    expect(cancelledColor).not.toBe(succeededColor);
+  });
+
+  it('finished job with onJobDelete shows trash button for cancelled status', () => {
+    const onJobDelete = vi.fn();
+    render(<JobRow job={makeJob({ status: 'cancelled', pct: 45 })} onJobDelete={onJobDelete} />);
+    expect(screen.getByTestId('job-delete-job-1')).toBeTruthy();
+  });
+
+  // ─── pausable capability flag (#job-cancelled-and-pausable) ────────────────
+
+  it('shows Pause/Resume when pausable is omitted (defaults to true)', () => {
+    render(<JobRow job={makeJob({ status: 'running' })} hovered />);
+    expect(screen.getByRole('button', { name: /pause/i })).toBeTruthy();
+  });
+
+  it('shows Pause/Resume when pausable is explicitly true', () => {
+    render(<JobRow job={makeJob({ status: 'running', pausable: true })} hovered />);
+    expect(screen.getByRole('button', { name: /pause/i })).toBeTruthy();
+  });
+
+  it('does not render Pause/Resume when pausable is false', () => {
+    render(<JobRow job={makeJob({ status: 'running', pausable: false })} hovered />);
+    expect(screen.queryByRole('button', { name: /pause/i })).toBeNull();
+    expect(screen.queryByRole('button', { name: /resume/i })).toBeNull();
+  });
+
+  it('does not render Pause/Resume for a paused, non-pausable job', () => {
+    render(<JobRow job={makeJob({ status: 'paused', pausable: false })} hovered />);
+    expect(screen.queryByRole('button', { name: /resume/i })).toBeNull();
+  });
+
+  it('still renders Open project and Discard when pausable is false', () => {
+    render(
+      <JobRow job={makeJob({ status: 'running', pausable: false, cancelable: true })} hovered />,
+    );
+    expect(screen.getByRole('button', { name: /open project/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /discard/i })).toBeTruthy();
+  });
+
   // ─── cancel callback ───────────────────────────────────────────────────────
 
   it('calls onCancel when Discard button clicked (cancelable + hovered)', () => {
