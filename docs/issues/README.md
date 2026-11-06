@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-15
-Last verified: 2026-07-15
+Last verified: 2026-11-06
 Kind: process
 Level: I1
 ---
@@ -14,7 +14,7 @@ Level: I1
 - **Kind:** process
 - **Status:** active
 - **Level:** I1
-- **Last verified:** 2026-07-15
+- **Last verified:** 2026-11-06
 - **Read when:** filing a bug / defect / investigation report, or looking up an
   open issue's status, evidence, or resolution.
 - **Search terms:** issues folder, bug report, defect report, issue template,
@@ -73,14 +73,9 @@ Lead with the **smallest decisive evidence**, separate **observation** from
 
 ## Open issues
 
-- [ComputeTargetPanel shows a raw device id and never tests `local`](./2026-07-15-computetargetpanel-active-device-label.md)
-  — migrated from `ocr-container-meta` #394 (source issue deleted 2026-07-15).
-- [useShortcuts cannot match key sequences like `g p`](./2026-07-15-useshortcuts-chord-sequences.md)
-  — deferred; migrated from `ocr-container-meta` #401 (source issue deleted 2026-07-15).
+- `ComputeTargetPanel` still shows the raw device id. [Issue](./2026-07-15-computetargetpanel-active-device-label.md).
+- `useShortcuts` still cannot match a sequence such as `g p`. Deferred until a consumer names one. [Issue](./2026-07-15-useshortcuts-chord-sequences.md).
 
-## Where resolved work is recorded
+## Resolved issues
 
-- *None tracked here yet.* The 53 closed `pdomain/pdomain-ui` GitHub issues were
-  migrated and deleted on 2026-07-15; that closeout is recorded in the tombstone
-  in [decisions.md](../context/decisions.md), and the durable release/CI behavior
-  lives in [release-and-ci-pipeline.md](../architecture/release-and-ci-pipeline.md).
+Resolved reports are deleted. The GitHub-tracker closeout is the tombstone in [decisions](../context/decisions.md). Current release behavior is [Release and CI pipeline](../architecture/release-and-ci-pipeline.md).

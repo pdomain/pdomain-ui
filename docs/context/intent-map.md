@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-07-13
+Last verified: 2026-11-06
 Kind: context
 ---
 
@@ -17,6 +17,7 @@ Kind: context
 
 ## Active bets
 
+- Show a friendly active-device label in `ComputeTargetPanel`. The panel still renders the raw id. [Plan](../plans/2026-07-21-active-device-label.md). [Issue](../issues/2026-07-15-computetargetpanel-active-device-label.md).
 - Complete or deliberately narrow the remaining PGDP common-component backlog.
 - Decide whether to implement the Field help slot described in the active spec.
 - Keep `writing-docs` plugin routing and lint-deviation governance active.
@@ -33,6 +34,7 @@ Kind: context
 
 ## Deferred work
 
+- Add key sequences to `useShortcuts` only after a named consumer meets the activation criteria. [Plan](../plans/2026-07-21-shortcut-sequences-conditional.md). [Issue](../issues/2026-07-15-useshortcuts-chord-sequences.md).
 - Implement LogViewer only after an owner confirms the draft still matches a
   current consumer need.
 - Run a separate required-section conformance migration for advisory findings.
@@ -79,6 +81,7 @@ None.
 
 ## Needs owner decision
 
+- Decide whether to abandon or replace the dep-refresh auto-land spec. It targets GitHub workflows deleted in commit `0aa42b5` on 2026-09-13, and those acceptance criteria are not implemented. [Spec](../specs/2026-07-16-dep-refresh-auto-land-design.md).
 - Confirm whether continued consumer demand justifies implementing the draft
   LogViewer contract.
 - Decide whether to close the consumer-canary prefs direction: the proposed

@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-07-15
+Last verified: 2026-11-06
 Kind: context
 ---
 
@@ -275,3 +275,24 @@ Kind: context
   in-repo, the shared meta-tracker copies were redundant and were deleted to keep
   that tracker free of resolved pdomain-ui noise.
 - **Remaining work:** #394 and #401 remain open in `docs/issues/`.
+
+### 2026-11-06 — Release and CI moved off GitHub Actions
+
+- **Context:** `docs/architecture/release-and-ci-pipeline.md` described
+  `.github/workflows/ci.yml`, `release.yml`, and `dep-refresh.yml` as the
+  current pipeline. Those files are not in the tree.
+- **Decision:** Rewrite that architecture doc to the local `make ci` gate and
+  `scripts/do-release.sh`. Leave every plan, issue, and the dep-refresh spec
+  in place. None of the three plans is fully implemented.
+- **Rationale:** Commit `0aa42b5` (2026-09-13) deleted the workflows. The
+  dep-refresh spec's acceptance criteria cannot be proven against code that
+  is gone, so the spec stays for an owner decision.
+- **Evidence:** `git log -- .github` shows `0aa42b5`. `Makefile` target `ci`
+  is line 231. `scripts/do-release.sh` builds, packs, and creates the GitHub
+  Release. `src/shell/ComputeTargetPanel.tsx` still renders `current ?? 'auto'`.
+  `src/hooks/useShortcuts.ts` still splits bindings on `+` only. The PGDP
+  backlog still names `SettingsInheritanceBanner`, `StageLifecycleBanner`,
+  `ReviewFilterToolbar`, `ReviewPageGrid`, `InlineReviewEditorShell`,
+  `GatePanel`, `ConfirmAdvancePanel`, and `ArtifactTree`, and none of those
+  files are in `src/`.
+- **Remaining work:** the list in `docs/README.md`.
