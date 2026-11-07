@@ -3,7 +3,7 @@
 #
 # AI=1 captures verbose output to .ci-ai.log; stdout shows pass/fail.
 
-.PHONY: setup install-hooks install lint lint-check typecheck test test-unit test-package build codegen codegen-check theme-check storybook storybook-build ci e2e e2e-ci help \
+.PHONY: setup install-hooks update-hooks install lint lint-check typecheck test test-unit test-package build codegen codegen-check theme-check storybook storybook-build ci e2e e2e-ci help \
         py-lint py-format py-format-check py-typecheck py-static-check \
         format format-check pre-commit-check static-check \
         upgrade-deps update-pdomain-deps \
@@ -40,6 +40,7 @@ endif
 help:
 	@echo "Targets:"
 	@echo "  setup                install project dependencies"
+	@echo "  update-hooks         bump hooks to latest releases, frozen to commit SHAs"
 	@echo "  install              pnpm install --frozen-lockfile"
 	@echo "  lint                 ESLint flat config"
 	@echo "  lint-check           read-only format + ESLint checks"
@@ -86,6 +87,9 @@ help:
 	@echo "  mise-trust-worktrees Trust generated worktree roots for mise"
 	@echo "  mise-setup           Install pinned tools from mise.toml"
 	@echo "  mise-doctor          Show resolved tool versions"
+
+update-hooks:
+	uv run pre-commit autoupdate --freeze
 
 setup: install
 	@$(MAKE) --no-print-directory install-hooks
