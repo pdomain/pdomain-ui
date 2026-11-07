@@ -2,9 +2,12 @@
 Status: active
 Owner: CT
 Created: 2026-07-15
-Last verified: 2026-07-15
+Last verified: 2026-11-07
 Kind: issue
 Level: I2
+verified_against:
+  - "src/shell/ComputeTargetPanel.tsx"
+  - "src/shell/ComputeTargetPanel.test.tsx"
 ---
 
 # ComputeTargetPanel shows a raw device id and never tests the `local` current value
@@ -14,7 +17,7 @@ Level: I2
 - **Kind:** issue
 - **Status:** active
 - **Level:** I2
-- **Last verified:** 2026-07-15
+- **Last verified:** 2026-11-07
 - **Resolution:** Open
 - **Severity:** Low — cosmetic label plus a test-coverage gap, no release urgency
 - **Affected version:** `@pdomain/pdomain-ui` at 2026-07-15

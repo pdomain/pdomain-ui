@@ -3,7 +3,12 @@ kind: process
 status: active
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "docgraph.toml"
+  - "docs/context/current-state.md"
+  - "docs/context/intent-map.md"
+  - "docs/context/decisions.md"
 ---
 
 # DOCGRAPH.md — shared docgraph rules

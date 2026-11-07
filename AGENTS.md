@@ -3,7 +3,14 @@ kind: process
 status: active
 owner: CT
 created: 2026-05-21
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "Makefile"
+  - "package.json"
+  - ".pre-commit-config.yaml"
+  - "eslint.config.js"
+  - "CONVENTIONS.md"
+  - "DOCGRAPH.md"
 ---
 
 <!-- >>> shared-devtools:writing-docs (managed; overwritten on reinstall) -->
@@ -72,15 +79,17 @@ Docs: [`docs/README.md`](docs/README.md)
 | `make release-major` | bump major version, ci, commit, tag, push |
 | `make codegen` | fetch pinned wheels → emit JSON Schema → generate TS types |
 | `make codegen-check` | runs codegen and fails if output differs |
-| `make update-pdomain-deps` | bump `codegen.versions.json` to registry latest + re-run codegen; leaves diff for review |
-| `make ci AI=1` | install + lint + typecheck + test + build |
+| `make update-pdomain-deps` | intended dependency refresh; currently blocked by object-form codegen pins |
+| `make ci AI=1` | install + static checks + unit tests + build + package tests + codegen and theme checks |
 
-`AI=1` captures verbose output to `.ci-ai.log`; stdout shows pass/fail summary.
+`AI=1` currently does not change output: the Makefile defines logging variables,
+but its recipes do not use them. Capture output explicitly when a log is needed.
 
 `pre-commit-check` runs the frontend and Python gates directly rather than
 invoking pre-commit. The hooks in `.pre-commit-config.yaml` cover the Python
 side and the shared file checks; the frontend gates are Make targets, so the
-direct form is the wider check of the two.
+two forms cover different checks. The direct target includes frontend checks;
+the hooks also cover shared file checks, Markdown, and secrets.
 
 ## Hard constraints
 
@@ -98,11 +107,15 @@ direct form is the wider check of the two.
 - **Port-not-copy**: when porting from labeler-spa, read the source once, design the
   slot-based API surface, then port. Do not verbatim-copy labeler-specific logic.
 
+Current code deviates from the deploy-mode constraint: `ComputeTargetPanel`
+returns nothing when `info.mode` is not local. This is an implementation
+deviation to resolve, not an exception to the constraint.
+
 ## Codegen
 
 When bumping `pdomain-book-tools` or `pdomain-ops` in `codegen.versions.json`:
 
-1. Run `pnpm codegen` (fetches wheels → emits JSON Schema → generates TS types).
+1. Run `make codegen` (fetches wheels → emits JSON Schema → generates TS types).
 2. Commit both `codegen.versions.json` and the regenerated `src/types/generated/` in the same PR.
 
 ## Rules
@@ -128,7 +141,11 @@ Cross-cut work tasks are tracked as GH issues in
 Plans under `docs/plans/` in the workspace root are synced there
 via `/decompose-spec --sync`. Milestone naming: `spec: <plan-basename> (#N)`.
 
-When shipping a plan task:
+Pdomain-ui-specific issues migrated into `docs/issues/` on 2026-07-15;
+see `docs/context/decisions.md`. Use the commands below only for cross-cut
+issues that still live in the meta-tracker.
+
+When shipping a cross-cut plan task:
 
 - Before starting: `gh issue view <N> --repo ConcaveTrillion/ocr-container-meta`
 - After completing: `gh issue close <N> --repo ConcaveTrillion/ocr-container-meta`

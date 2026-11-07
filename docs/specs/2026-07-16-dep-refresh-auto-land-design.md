@@ -3,14 +3,23 @@ kind: spec
 status: draft
 owner: CT
 created: 2026-07-16
-last_verified: 2026-07-16
+last_verified: 2026-11-07
 disposition: needs-owner-decision
+verified_against:
+  - "Makefile"
+  - "scripts/do-release.sh"
 ---
 
 # dep-refresh auto-land — design spec
 
 **Date:** 2026-07-16
-**Status:** Spec — not yet implemented
+**Status:** Historical proposal — not implemented; needs owner decision
+
+Verified against the tree on 2026-11-07: commit `0aa42b5` deleted the target
+GitHub workflows on 2026-09-13. The diagnosis and design below describe the
+July workflow, not the current local release pipeline. The owner must decide
+whether to abandon or replace this proposal before implementation. See the
+[intent map](../context/intent-map.md).
 **Touches:** `.github/workflows/ci.yml`, `.github/workflows/dep-refresh.yml`, and the
 `pdomain/pdomain-ui` repository merge settings.
 **Related:** [release and CI pipeline](../architecture/release-and-ci-pipeline.md)

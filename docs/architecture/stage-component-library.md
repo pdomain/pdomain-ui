@@ -3,7 +3,11 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/stages/Source/SourcePageWorkbench.tsx"
+  - "src/stages/PageWorkbench/LabelerCanvas.tsx"
+  - "package.json"
 ---
 
 # Stage component library

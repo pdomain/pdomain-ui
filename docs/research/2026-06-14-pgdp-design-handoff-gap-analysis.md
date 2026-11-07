@@ -3,7 +3,7 @@ kind: research
 status: active
 owner: CT
 created: 2026-06-14
-last_verified: 2026-07-13
+last_verified: 2026-11-07
 ---
 
 # PGDP Design Handoff Gap Analysis
@@ -56,6 +56,13 @@ The original analysis cites PGDP final layouts, statecharts, and `pdomain-ui`
 exports. Current code also shows that the settings kit and WorkbenchLayout have
 shipped. The review-foundation and pack-tail components named in the companion
 backlog remain absent.
+
+**Verification (2026-11-07):** `src/settings/index.ts` exports
+`SettingsCard`, `SettingsRow`, `SettingsValue`, and `SettingSlider`; both
+`src/primitives/index.ts` and `src/index.ts` re-export them. `WorkbenchLayout`
+has implementation, story, tests, and public exports from `src/workbench/` and
+the root barrel. The review-foundation and pack-tail names below remain absent
+from `src/`.
 
 ## Conclusions
 
@@ -116,7 +123,9 @@ The current `pdomain-ui` package already exports broad shared surfaces:
 | Rich badge/status tones                    | `src/primitives/Badge.tsx`; [design-system composition](../architecture/design-system-composition.md)                                                                                                                                                                                                                                           | The older handoff's badge tone gap has been addressed.                                                                                                                                                                    |
 | App shell and job chrome                   | `src/shell/index.ts:27-123`; PGDP `design-system/template.jsx:10-194`, `:293-300`                                                                                                                                                                                                                                                                | `AppShell`, `AppHeader`, `JobsPill`, `JobRow`, `JobsDrawer`, `Breadcrumb`, `TopNav`, drawers, right panel, settings modal, utility dock.                                                                                  |
 | Pipeline/project templates                 | `src/templates/index.ts:11-68`; `src/templates/PipelineTemplate.tsx`; `src/templates/ProjectsLandingTemplate.tsx`; `src/templates/ProjectSettingsTemplate.tsx`                                                                                                                                                                                   | Stage strip, tabs band, projects drawer, pipeline template, project settings template, settings nav, projects landing, stage jump popover, configure frame.                                                               |
+| Settings kit                               | `src/settings/index.ts`; `src/primitives/index.ts`; `src/index.ts`                                                                                                                                                                                                                                                                                | `SettingsCard`, `SettingsRow`, `SettingsValue`, and `SettingSlider` ship publicly. Verify any PGDP preset, inheritance, or dense-layout requirements against this kit before extending it.                              |
 | Canvas/workbench foundation                | `src/canvas/index.ts:15-70`; `src/stages/PageWorkbench/index.ts:15-63`                                                                                                                                                                                                                                                                           | Page image canvas, overlay layers, selection/viewport hooks, `ArtifactViewer`, split/illustration/word/rotate overlays, stage controls, OCR text panel, page attributes panel, labeler canvas.                            |
+| Workbench layout                           | `src/workbench/WorkbenchLayout.tsx`; `src/workbench/index.ts`; `src/index.ts`                                                                                                                                                                                                                                                                     | `WorkbenchLayout` ships with stories and tests. Verify PGDP slot needs before extending it; do not add a parallel shell.                                                                                                      |
 | Existing stage-component slices            | `src/stages/Source/index.ts:9-44`; `src/stages/Grayscale/index.ts:11-41`; `src/stages/Crop/index.ts:9-50`; `src/stages/HyphenJoin/index.ts:6-39`; `src/stages/Validation/index.ts:6-19`; `src/stages/Scannos/index.ts:6-31`; `src/stages/PageReorder/index.ts:6-19`; `src/stages/Upload/index.ts:11-16`; `src/stages/QualityFlags/index.ts:6-11` | These are shipped building blocks, not proof that the full newer PGDP final screen is covered. Treat them as baseline evidence and review partial coverage below.                                                         |
 
 ## Existing stage slices cover only part of the newer designs
@@ -171,15 +180,16 @@ these app-local stages can consume:
 The PGDP component index repeats several helpers across 3-8 final files:
 `Body`, `Card`, `Gate`, `Seg`, `SetRow`, `Stat`, `Toggle2`, `Tree`,
 `SettingRow`, and `SettingSlider` (`COMPONENT_INDEX.md:21-31`). Current
-`pdomain-ui` covers some of these under different names (`Card`, `Segmented`,
-`StatTile`, `Toggle`, `FieldRow`) but not all as reusable, typed exports.
+`pdomain-ui` covers some under different names (`Card`, `Segmented`,
+`StatTile`, `Toggle`, `FieldRow`) and ships the settings kit; the remaining
+gaps are the reusable patterns below.
 
 | Pattern                                  | Current coverage                                                     | Gap                                                                                                                      |
 | ---------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `Body` / stage body padding wrapper      | `PipelineTemplate` has a body slot; stage files hand-roll wrappers   | Add a lightweight `StageBody` or document that templates own body spacing.                                               |
 | `Gate` / confirm panel                   | `Banner`, `QualityBanner`, `CheckIcon`, `Validation.CheckRow` exist  | No generic gate panel for validation/build/zip/submit/archive chains.                                                    |
-| `SetRow` / `SettingRow` / `SettingsCard` | `Field`, `FieldRow`, `ProjectSettingsTemplate`, `StageControlsPanel` | No standardized settings-row/card kit for repeated stage settings tabs.                                                  |
-| `SettingSlider`                          | No primitive slider export found in `src/primitives/index.ts`        | Add range/slider primitive with value label, units, min/max, disabled/error states.                                      |
+| `SetRow` / `SettingRow` / `SettingsCard` | Public `SettingsCard`, `SettingsRow`, and `SettingsValue` from `src/settings/` | Verify PGDP preset, inheritance, and dense-layout requirements before extending the shipped kit. |
+| `SettingSlider`                          | Public `SettingSlider` from `src/settings/`, re-exported from `/primitives` and the root | Verify PGDP units, value labels, and error-state needs before extending the shipped control. |
 | `Tree` / artifact file tree              | No generic tree/list-tree primitive found in public exports          | Add tree component for build/proof/zip/archive package contents.                                                         |
 | Review status dot / flag chip family     | `StatusPip`, `JobStatusPip`, `FlagChip`, stage-specific chips        | Need shared stage-review status/flag model to avoid per-stage chip clones.                                               |
 | Filter toolbar with counts + density     | `FilterToolbar`, `ThumbSizeToggle`, `StageToolbar`                   | Needs a review-page toolbar composition that encodes filters, counts, density, selected count, and actions consistently. |

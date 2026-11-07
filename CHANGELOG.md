@@ -1,12 +1,29 @@
+---
+kind: usage
+status: active
+owner: CT
+created: 2026-05-17
+last_verified: 2026-11-07
+verified_against:
+  - "package.json"
+  - "src/shell/JobRow.tsx"
+  - "src/shell/JobRow.test.tsx"
+---
+
 # Changelog
 
-All notable changes to `@pdomain/pdomain-ui` are documented here.
+Release notes are incomplete between 0.9.0 and 0.13.0. The entries below
+record selected changes; Git history preserves the remaining release history.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
 ## [Unreleased]
+
+No changes recorded.
+
+## [0.13.0] — 2026-09-18
 
 ### Breaking change
 

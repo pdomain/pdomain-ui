@@ -3,7 +3,9 @@ kind: process
 status: active
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "DOCGRAPH.md"
 ---
 
 # CODEX.md — Codex-specific context

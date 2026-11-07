@@ -3,8 +3,11 @@ kind: plan
 status: active
 owner: CT
 created: 2026-07-21
-last_verified: 2026-07-21
+last_verified: 2026-11-07
 disposition: deferred
+verified_against:
+  - "src/hooks/useShortcuts.ts"
+  - "src/hooks/useShortcuts.test.ts"
 ---
 
 # Shortcut Sequences Conditional Implementation Plan

@@ -3,14 +3,22 @@ kind: spec
 status: draft
 owner: CT
 created: 2026-05-21
-last_verified: 2026-07-13
+last_verified: 2026-11-07
 disposition: needs-owner-decision
+verified_against:
+  - "src/primitives/index.ts"
+  - "src/stores/useLongJob.ts"
+  - "package.json"
 ---
 
 # LogViewer — component-API spec
 
 **Date:** 2026-05-21
 **Status:** Spec — not yet implemented
+
+Verified on 2026-11-07: no LogViewer component or public export exists in
+`src/primitives/` or `package.json`. This remains a proposed API; current
+consumer demand and the historical trainer-spa requirement need owner review.
 **Subpath:** `@pdomain/pdomain-ui/primitives`
 **Required by:** `pdomain-ocr-trainer-spa` RunDetailPage (live training-output log)
 **Spec source:** `pdomain-ocr-trainer-spa/specs/03-frontend.md §6.3`
@@ -37,7 +45,7 @@ specific data source.
   virtualized list    — renders only visible lines
 ```
 
-Exported from `@pdomain/pdomain-ui/primitives`.
+Proposed export: `@pdomain/pdomain-ui/primitives`.
 
 ---
 

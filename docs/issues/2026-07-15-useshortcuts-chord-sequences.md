@@ -2,9 +2,12 @@
 Status: active
 Owner: CT
 Created: 2026-07-15
-Last verified: 2026-07-15
+Last verified: 2026-11-07
 Kind: issue
 Level: I1
+verified_against:
+  - "src/hooks/useShortcuts.ts"
+  - "src/hooks/useShortcuts.test.ts"
 ---
 
 # useShortcuts cannot match key sequences like `g p`
@@ -14,7 +17,7 @@ Level: I1
 - **Kind:** issue
 - **Status:** active
 - **Level:** I1
-- **Last verified:** 2026-07-15
+- **Last verified:** 2026-11-07
 - **Resolution:** Open
 - **Severity:** Low — deferred capability gap, conditional on suite demand
 - **Affected version:** `@pdomain/pdomain-ui` at 2026-07-15

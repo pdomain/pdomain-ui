@@ -3,152 +3,185 @@ kind: process
 status: active
 owner: CT
 created: 2026-05-22
-last_verified: 2026-07-13
+last_verified: 2026-11-07
 ---
 
-# Lint-rule Deviations — pdomain-ui
+# Lint-rule deviations
 
-This file lists every standing suppression and per-file rule override in this
-repo. Each entry records the rule, tool, affected file or files, and
-justification. Update the list whenever a suppression is added or removed.
+This register lists every current ESLint suppression, ESLint configuration
+exception, and Ruff ignore in pdomain-ui. It was checked against the source,
+tests, `eslint.config.js`, and `pyproject.toml` on 2026-11-07. Update it with
+the source whenever a deviation changes.
 
-Reference implementation: `pdomain-book-tools/docs/conventions/lint-deviations.md`.
+## Typed empty component props
 
----
+`@typescript-eslint/no-empty-object-type` is suppressed in
+`src/primitives/Card.tsx:4`, `src/primitives/FieldRow.tsx:4`, and
+`src/primitives/Textarea.tsx:5`.
 
-## 1. `@typescript-eslint/no-empty-object-type` — ESLint
+Each component exports a named props interface that extends its native HTML
+attribute type but adds no members. The interface gives consumers a stable type
+to extend. A type alias would work, but the interfaces match the component API.
 
-**Files:**
+## Deliberate `any` boundaries
 
-- `src/primitives/Card.tsx` (line 4)
-- `src/primitives/FieldRow.tsx` (line 4)
-- `src/primitives/Textarea.tsx` (line 4)
+`@typescript-eslint/no-explicit-any` is suppressed in:
 
-**Suppression form:** `// eslint-disable-next-line @typescript-eslint/no-empty-object-type`
+- `src/icons/Icon.tsx:119`, where the icon map accepts React components with
+  differing prop types.
+- `src/icons/Icons.stories.tsx:85`, where the Storybook icon grid accepts both
+  Lucide re-exports and bespoke SVG components.
+- `src/primitives/Accordion.test.tsx:7`, where the helper accepts arbitrary
+  trigger props for test setup.
+- `tests/setup.ts:24`, where the PointerEvent polyfill is assigned through the
+  global object.
 
-**Justification.** These primitive components declare a `Props` interface that
-extends a native HTML attributes type, such as
-`React.HTMLAttributes<HTMLDivElement>`, with no additional members. The
-empty-body interface is intentional. It gives consumers a named export
-(`CardProps`, `FieldRowProps`, `TextareaProps`) that they can extend without
-importing the raw HTML attributes type. The rule fires because the interface
-body is empty.
+These are narrow presentation or test boundaries. The first three lack a
+source-level rationale beyond the surrounding code and should be reconsidered
+when their types change. The test setup must write a global constructor, so its
+cast remains local to that assignment.
 
-Using `type Alias = React.HTMLAttributes<…>` would also work. However, the
-`interface` form matches every other component in this repo that adds props
-over time. New members can be appended without changing the kind.
+## Deprecated and deferred API props
 
----
+`@typescript-eslint/no-unused-vars` is suppressed for retained public props:
 
-## 2. `react-hooks/exhaustive-deps` — ESLint
+- `src/shell/AppHeader.tsx:70,72` and `src/shell/JobsPill.tsx:96,99,101` keep
+  deprecated jobs-popover props for one release while ignoring them.
+- `src/stages/Source/SourcePageWorkbench.tsx:104` keeps `beforeImageUrl` while
+  split comparison remains follow-on work.
+- `src/stages/Validation/CheckRow.tsx:56` keeps `lastRow`; CSS now supplies
+  the last-row border behavior.
+- `src/stages/Grayscale/StageControlsLeft.tsx:41` keeps `backend` while
+  CPU-fallback wiring is deferred.
 
-**Files:**
+The retained props are compatibility surfaces. Remove their suppressions when
+the props are removed or implemented.
 
-- `src/shell/AppShell.tsx` (line 88)
-- `src/shell/SuiteSiblingsProvider.tsx` (line 48)
-- `src/stores/useStageCall.ts` (line 85)
+## Hook dependency exceptions
 
-**Suppression form:** `// eslint-disable-next-line react-hooks/exhaustive-deps`
+`react-hooks/exhaustive-deps` is suppressed in:
 
-**Justifications per file:**
+- `src/shell/AppShell.tsx:122`, which creates a UI preferences store once per
+  mount. Recreating it when `uiPrefsConfig` changes would discard in-flight
+  state.
+- `src/shell/SuiteSiblingsProvider.tsx:54`, which fetches installed apps once
+  on mount.
+- `src/stores/useUpdateCheck.ts:77`, which runs the initial check once for the
+  non-manual policies.
+- `src/hooks/ShortcutsContext.tsx:106,123`, which separates mount/unmount work
+  from re-registering changed bindings.
+- `src/worklist/VirtualizedList.tsx:128`, which suppresses dependency
+  checking for its row-render callback. The callback calls the local `optionId`
+  helper, whose output depends on `uid`; `uid` is already a dependency.
 
-- **`AppShell.tsx` line 88** — `createUIPrefsStore(uiPrefsConfig)` is wrapped
-  in `useMemo` with an intentionally empty dependency array. The store is
-  created once per `AppShell` mount and must never be recreated during later
-  renders. Adding `uiPrefsConfig` to deps would destroy and recreate the store
-  whenever the config object's identity changes. This would lose in-flight
-  preferences state. The pattern follows the Zustand "stable store per mount"
-  convention (spec §4 key API conventions #3).
+The first four locations explain their behavior in nearby comments or code.
+`VirtualizedList` has no comparable source-level rationale for the suppression;
+review whether the helper can be moved inside the callback when it changes.
 
-- **`SuiteSiblingsProvider.tsx` line 48** — The `useEffect` fetches the
-  installed-apps list once on mount. `fetchInstalled` is a prop (callback
-  reference) that callers are expected to stabilise with `useCallback`.
-  Adding it to deps would re-fetch on every render when callers do not memoize
-  the prop. The documented contract is one fetch on mount.
+## Hooks in Storybook render functions
 
-- **`useStageCall.ts` line 85** — The `run` callback is stabilised on
-  `[stageId, pageId]` only. The internal `submit` callback passed at
-  construction is intentionally captured by the closure on the first call.
-  `submit` is expected to be a stable reference under the factory pattern.
-  Adding `submit` would require every caller to memoize it. That requirement
-  would conflict with the public API contract.
+`react-hooks/rules-of-hooks` is suppressed where a Storybook `render` function
+owns local interactive state:
 
----
+- `src/primitives/AttributesPanel.stories.tsx:79,108,110`
+- `src/primitives/Segmented.stories.tsx:80`
+- `src/stages/Grayscale/AdvancedParams.stories.tsx:57`
+- `src/templates/SettingsNav.stories.tsx:40,62,92,114,145,177`
+- `src/templates/TabsBand.stories.tsx:33,158`
 
-## 3. `@typescript-eslint/no-explicit-any` — ESLint
+Storybook calls these render functions outside a named React component. The
+suppressed hooks supply only example-state behavior.
 
-**Files:**
+## Accessibility exceptions in production components
 
-- `src/worklist/hooks/useWorklistSort.ts` (line 32)
-- `src/icons/Icons.stories.tsx` (line 50)
+`jsx-a11y/no-noninteractive-tabindex` is suppressed in
+`src/canvas/PageImageCanvas.tsx:292`. The canvas wrapper receives keyboard
+focus for its hotkeys while retaining `role="img"` as its visual semantic.
 
-**Suppression form:** `// eslint-disable-next-line @typescript-eslint/no-explicit-any`
+The following blocks suppress `jsx-a11y/no-noninteractive-element-interactions`
+and `jsx-a11y/no-noninteractive-tabindex`:
 
-**Justifications per file:**
+- `src/primitives/SlideOverPanel.tsx:182-207`, for the pinned dialog surface.
+  The nearby comment identifies the ARIA dialog pattern that the rule does not
+  recognize.
+- `src/stages/HyphenJoin/HJDecisionCard.tsx:151-298`, for a grouped keyboard
+  shortcut surface. Its comment records the Y/N/F/J/K bindings and why it does
+  not use `role="application"`.
 
-- **`useWorklistSort.ts` line 32** — The sort comparator receives items typed
-  through a generic `TItem` that may or may not be a `WordListItem`. The
-  `sortKey` branches narrow the accessed fields, but TypeScript cannot narrow a
-  generic through a comparator signature. The `any` cast applies only to the
-  sort comparator. All access after the cast uses named typed fields with
-  explicit local annotations (`const ca: number | null | undefined`).
+`jsx-a11y/no-static-element-interactions` and
+`jsx-a11y/click-events-have-key-events` are suppressed for action-slot wrappers
+in `src/primitives/AttributesPanel.tsx:85` and
+`src/stages/Projects/ProjectsAttributesPanel.tsx:163`. Each wrapper stops a
+child action from toggling the section. The elements themselves are not user
+controls.
 
-- **`Icons.stories.tsx` line 50** — `AnyIconComponent` is a story-file
-  utility type used to build an icon catalogue grid. All icon components in
-  `src/icons/` are `React.ComponentType<React.SVGProps<SVGSVGElement>>`.
-  However, the catalogue helper must accept both `lucide-react` re-exports,
-  which are `ForwardRefExoticComponent`, and bespoke SVG components. Using
-  `any` avoids a lengthy union type in a story file that is never part of the
-  published package.
+`jsx-a11y/interactive-supports-focus` is suppressed in
+`src/stages/PageWorkbench/HierarchyTreePanel.tsx:197`. The container owns the
+tree role while its treeitem children are focus targets, following the ARIA tree
+pattern stated on the source line.
 
----
+`jsx-a11y/no-autofocus` is suppressed in
+`src/stages/PageWorkbench/AttrEditorPopover.tsx:109,125` so either edit control
+receives focus when its popover opens. The lines have no further local
+rationale and should be reviewed if focus behavior changes.
 
-## 4. `jsx-a11y/no-noninteractive-tabindex` — ESLint
+## Accessibility exceptions in Konva test mocks
 
-**Files:**
+`jsx-a11y/click-events-have-key-events` is disabled only while each Konva mock
+renders a clickable `<div>`:
 
-- `src/canvas/PageImageCanvas.tsx` (line 207, block disable)
+- `src/stages/Crop/BboxEditor.test.tsx:53-55`
+- `src/stages/Grayscale/PageViewer.test.tsx:52-54`
+- `src/stages/PageWorkbench/ArtifactViewer.test.tsx:56-68`
+- `src/stages/PageWorkbench/ArtifactViewer.integration.test.tsx:51-63`
+- `src/stages/PageWorkbench/LabelerCanvas.test.tsx:55-66`
+- `src/stages/Source/SourcePageWorkbench.test.tsx:51-53`
 
-**Suppression form:** `/* eslint-disable jsx-a11y/no-noninteractive-tabindex */`
+`LabelerCanvas.test.tsx` also disables
+`jsx-a11y/no-static-element-interactions` for the same mock. These test doubles
+need click handlers but do not model keyboard behavior.
 
-**Justification.** The `PageImageCanvas` wrapper div carries `role="img"` and
-`tabIndex={0}`. The a11y rule fires because `role="img"` is not in the list
-of interactive roles. However, the element **is** keyboard-interactive. It
-receives focus to dispatch the hotkeys for select, drag, and zoom mode
-switching that the canvas responds to. This established pattern comes from
-`pdomain-ocr-labeler-spa` and provides real keyboard accessibility. Without
-`tabIndex`, the canvas cannot receive keyboard focus at all. The `role="img"`
-remains because the element's primary semantic is "a visual canvas of page
-image content." The keyboard interaction is secondary.
+## Promise rejection shape in stage-call tests
 
----
+`@typescript-eslint/prefer-promise-reject-errors` is suppressed in
+`src/stores/useStageCall.test.ts:46,79,115,156,197,230`. Each test rejects with
+an object carrying `status: 503` and, in most cases, `retryAfter`. The hook
+reads those fields to exercise its warming and retry behavior. Replacing the
+object with a plain `Error` would no longer exercise that contract.
 
-## 5. `@typescript-eslint/prefer-promise-reject-errors` — ESLint
+## ESLint configuration exceptions
 
-**Files:**
+`eslint.config.js:6-7` globally ignores generated and output directories:
+`dist/`, `storybook-static/`, `.codegen/`, `node_modules/`,
+`tests/fixtures/lint-bad/`, and `src/types/generated/`. The generated and build
+outputs are checked through their own package, code-generation, or theme gates.
+The lint-bad fixture intentionally violates lint rules.
 
-- `src/stores/useStageCall.test.ts` (line 42)
+`eslint.config.js:12-16` excludes all test fixtures from type-aware linting.
+Those fixtures do not have project type information.
 
-**Suppression form:** `// eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors`
+`eslint.config.js:39-44` disables `no-restricted-imports` only for
+`src/icons/lucide.ts`. This boundary is the permitted direct importer of
+`lucide-react`; all other source and test files must import the curated icon
+surface. The same rule bans `class-variance-authority` outside this boundary
+file; disabling the whole rule also exempts this file from the CVA restriction.
 
-**Justification.** The test simulates a 503-like error object `{ status: 503,
-retryAfter: 1000 }` to exercise the `useStageCall` warming-state logic. The
-production code checks `error.status` on caught promise rejections instead of
-`error instanceof Error`. Wrapping the rejection in `new Error()` would require
-stripping the `status` field, which would defeat the test's purpose. This
-suppression is test-only and does not affect production code.
+## Ruff configuration exceptions
 
----
+`pyproject.toml:36-39` ignores Ruff `E501` because this repository does not
+enforce line length, and `COM812` because it conflicts with Ruff formatting.
 
-## 6. `no-restricted-imports` override — ESLint config
+`pyproject.toml:41-43` ignores `PT011` and `S101` in `tests/**/*.py`; tests may
+assert and may raise without a match. It ignores `F401` in `**/__init__.py` for
+intentional re-exports.
 
-**File:** `eslint.config.js` (lines 38–45)
+## Evidence
 
-**Suppression form:** Per-file `rules: { 'no-restricted-imports': 'off' }`
-scoped to `['src/icons/lucide.ts']`.
+Verification read `eslint.config.js`, `pyproject.toml`, and every matching
+suppression in `src/` and `tests/` on 2026-11-07. The scan command was:
 
-**Justification.** The workspace rule bans direct `lucide-react` imports
-everywhere except the single boundary file `src/icons/lucide.ts`, which
-re-exports only the curated icon subset. The intentional exemption for this
-one file makes the boundary-file pattern possible. All other files in `src/`
-and `tests/` remain subject to the ban.
+```sh
+rg -n --glob '*.{ts,tsx,js,mjs,cjs}' \
+  'eslint-(disable|enable)|eslint-disable-line|eslint-disable-next-line' \
+  src tests eslint.config.js
+```

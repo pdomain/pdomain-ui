@@ -3,7 +3,11 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/primitives/JobStatusPip.tsx"
+  - "src/types/job-state.ts"
+  - "src/primitives/JobStatusPip.test.tsx"
 ---
 
 # Job status pip

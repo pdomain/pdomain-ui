@@ -3,7 +3,10 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/primitives/Accordion.tsx"
+  - "src/primitives/Accordion.test.tsx"
 ---
 
 # Accordion trigger slots

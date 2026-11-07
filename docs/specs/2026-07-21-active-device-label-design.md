@@ -3,7 +3,10 @@ kind: spec
 status: active
 owner: CT
 created: 2026-07-21
-last_verified: 2026-07-21
+last_verified: 2026-11-07
+verified_against:
+  - "src/shell/ComputeTargetPanel.tsx"
+  - "src/shell/ComputeTargetPanel.test.tsx"
 ---
 
 # Friendly active-device labels design

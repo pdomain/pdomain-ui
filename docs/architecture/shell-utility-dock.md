@@ -3,7 +3,12 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/shell/AppShell.tsx"
+  - "src/shell/UtilityDock.tsx"
+  - "src/shell/SettingsModal.tsx"
+  - "src/shell/UtilityDockContext.ts"
 ---
 
 # Shell utility dock

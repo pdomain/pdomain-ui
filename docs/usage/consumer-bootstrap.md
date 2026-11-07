@@ -3,10 +3,16 @@ kind: usage
 status: draft
 owner: CT
 created: 2026-05-27
-last_verified: 2026-07-13
+last_verified: 2026-11-07
 references:
   - "pdomain-prep-for-pgdp@d5f1ce09e4059b319a6973a838493ffb6c7f8f56"
   - "pdomain-ocr-labeler-spa@85dc98971d14e56240d69ae4a833d5d70f2ca027"
+verified_against:
+  - "package.json"
+  - "src/shell/types.ts"
+  - "src/shell/AppShell.tsx"
+  - "src/shell/UtilityDockContext.ts"
+  - "theme/tokens.css"
 ---
 
 # Consumer bootstrap pattern
@@ -18,17 +24,20 @@ references:
 - **Read when:** bootstrapping or migrating a consumer SPA.
 - **Search terms:** consumer bootstrap, CSS imports, AppShell, UtilityDock jobs, providers.
 
-These bootstrap contracts match pdomain-ui 0.11.x and React 18 or 19. Before
-this draft becomes canonical across the suite, verify the router, query,
-toaster, font, and consumer-adapter conventions in each current consumer
-repository.
+The library-side contracts were checked against pdomain-ui 0.13.0 on
+2026-11-07 using `package.json`, `src/shell/types.ts`, `AppShell.tsx`,
+`UtilityDockContext.ts`, and the runtime theme files. React peer ranges are
+18 or 19; `react-konva` is a required peer at ^19.0.0. The consumer snapshots
+below remain historical examples, not verification of current consumer code.
+Before this draft becomes canonical across the suite, verify the router, query,
+toaster, font, and consumer-adapter conventions in each current consumer repository.
 
 ## Use this pattern for new or migrated SPAs
 
 Use this pattern to create an SPA that consumes `@pdomain/pdomain-ui` or to
 move an existing SPA to the canonical pattern. A correct bootstrap requires
 `main.tsx`, `index.css`, and `App.tsx` to agree. Each file has load-order
-constraints that fail silently when violated.
+constraints that can affect styling and provider availability.
 
 The pattern comes from the two mature consumers: `pdomain-prep-for-pgdp` and
 `pdomain-ocr-labeler-spa`.
@@ -88,8 +97,8 @@ The provider order matters:
 
 - `<Toaster>` is mounted here, outside `<App>`, so it survives route
   transitions. `<App>` must not also mount a `<Toaster>`.
-- `<BrowserRouter>` wraps `<App>` inside `<QueryClientProvider>` so hooks
-  like `useNavigate` work inside any query callback.
+- `<BrowserRouter>` wraps `<App>` so components under it can call routing
+  hooks such as `useNavigate`. Hooks cannot be called inside query callbacks.
 - `staleTime: 30_000` and `refetchOnWindowFocus: false` are the workspace
   standard QueryClient defaults.
 
@@ -129,9 +138,8 @@ body,
 Source: `pdomain-prep-for-pgdp/frontend/src/index.css:1-18`.
 
 Place `@import "./styles/tokens.css"` before the `@tailwind` directives. This
-order lets Tailwind's just-in-time (JIT) scanner see the `--bg-page` and
-`--ink-1` variables when it resolves the `bg-bg-page` and `text-ink-1` utility
-classes.
+order keeps token and primitive imports before generated utilities. Tailwind
+color utilities also require matching entries in the consumer Tailwind config.
 
 Every app that renders pdomain-ui components must import
 `@pdomain/pdomain-ui/theme/primitives.css`. JavaScript component imports do
@@ -333,7 +341,7 @@ page sizing, but it does not need to provide that test ID.
 // package.json — supported baseline for these APIs
 {
   "dependencies": {
-    "@pdomain/pdomain-ui": "^0.11.0",
+    "@pdomain/pdomain-ui": "^0.13.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@tanstack/react-query": "^5.59.0",
@@ -467,7 +475,7 @@ and row styles.
 The canonical border tokens are `--border-1`, `--border-2`, and `--border-3`.
 The pdomain-ui token set does not include the `--pd-border` shorthand or bare
 `--border`. At runtime, they resolve to `initial` and render invisible borders.
-See `pdomain-ui/src/theme/tokens.css` for the full canonical token list.
+See `pdomain-ui/theme/tokens.css` for the full canonical token list.
 
 **Use inline `<a href="file://...">` for local path display.**
 Display local file paths in UIs with a Copy button and

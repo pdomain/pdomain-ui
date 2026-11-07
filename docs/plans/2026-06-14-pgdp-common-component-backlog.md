@@ -3,7 +3,7 @@ kind: plan
 status: active
 owner: CT
 created: 2026-06-14
-last_verified: 2026-07-13
+last_verified: 2026-11-07
 ---
 
 # PGDP Common Component Backlog
@@ -33,6 +33,11 @@ The settings components `SettingsCard`, `SettingsRow`, `SettingsValue`, and
 `SettingSlider` already ship from `src/settings/`. `WorkbenchLayout` already
 ships from `src/workbench/`. Treat both areas as completed baseline work when
 narrowing this backlog.
+
+**Verification (2026-11-07):** `src/settings/index.ts` exports the four
+settings components; `src/primitives/index.ts` and `src/index.ts` re-export
+them publicly. `src/workbench/WorkbenchLayout.tsx`, its story, and its tests
+exist, and `src/workbench/index.ts` and `src/index.ts` export it.
 
 ## Tech Stack
 
@@ -92,15 +97,18 @@ re-exports PageWorkbench, Source, Grayscale, and Crop in
 
 ### 3. Add `SettingsCard`, `SettingsRow`, and `SettingsValue`
 
+`SettingsCard`, `SettingsRow`, and `SettingsValue` already ship from
+`src/settings/` and are publicly re-exported from
+`@pdomain/pdomain-ui/primitives` and the root barrel. Do not create duplicate
+primitives; use this task to verify whether the shipped API needs an extension.
+
 **Why:** PGDP repeats `SetRow`, `SettingRow`, and settings cards across stage
-settings screens (`COMPONENT_INDEX.md:21-31`). `pdomain-ui` has `FieldRow` but
-lacks a standard dense settings row and card system for stage defaults,
-presets, and inheritance state.
+settings screens (`COMPONENT_INDEX.md:21-31`).
 
-**Target:** `src/primitives/SettingsCard.tsx`,
-`src/primitives/SettingsRow.tsx`, `theme/primitives.css`.
+**Target:** existing settings-kit components in `src/settings/` and their
+public re-exports.
 
-**Acceptance:**
+**Acceptance to verify:**
 
 - Renders title, description, optional badge/status, action slot, and control slot.
 - Supports dense row layout used by PGDP stage settings.
@@ -109,12 +117,16 @@ presets, and inheritance state.
 
 ### 4. Add `SettingSlider`
 
+`SettingSlider` already ships from `src/settings/` and is publicly re-exported
+from `@pdomain/pdomain-ui/primitives` and the root barrel. Do not add a second
+slider; extend the shipped control only if verification finds a gap.
+
 **Why:** PGDP repeats `SettingSlider` in image-stage settings
-(`COMPONENT_INDEX.md:29-31`). Current public primitives do not expose a slider.
+(`COMPONENT_INDEX.md:29-31`).
 
-**Target:** `src/primitives/SettingSlider.tsx`.
+**Target:** the existing `src/settings/SettingSlider.tsx` component.
 
-**Acceptance:**
+**Acceptance to verify:**
 
 - Typed numeric range with min/max/step, unit suffix, value label, disabled
   state, and accessible range semantics.
@@ -285,12 +297,16 @@ across multiple stages (`final/pipeline/page-workbench.jsx:184-227`;
 
 ### 15. Add reusable `WorkbenchLayout`
 
+`WorkbenchLayout` already ships from `src/workbench/`, with a public root
+export, story, and tests. Do not add a second workbench shell; use this task to
+verify whether the shipped layout needs an extension.
+
 **Why:** PGDP page workbench uses a repeated two-pane shell with controls,
 viewer, notes, stat grid, and action footer (`final/pipeline/page-workbench.jsx`).
 
-**Target:** `src/templates/WorkbenchLayout.tsx`.
+**Target:** the existing `src/workbench/WorkbenchLayout.tsx` component.
 
-**Acceptance:**
+**Acceptance to verify:**
 
 - Slots: header, controls panel, viewer, sidecar, footer.
 - Compatible with `StageControlsPanel` and `ArtifactViewer`.

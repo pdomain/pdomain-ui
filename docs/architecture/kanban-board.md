@@ -3,7 +3,11 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/primitives/kanban/KanbanBoard.tsx"
+  - "src/primitives/kanban/KanbanColumn.tsx"
+  - "src/primitives/kanban/PageChip.tsx"
 ---
 
 # Kanban board

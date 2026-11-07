@@ -3,7 +3,13 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "theme/tokens.css"
+  - "theme/primitives.css"
+  - "scripts/sync-design-system.mjs"
+  - "src/stages/Crop/CropCard.tsx"
+  - "src/templates/PipelineTemplate.tsx"
 ---
 
 # Theme and component quality

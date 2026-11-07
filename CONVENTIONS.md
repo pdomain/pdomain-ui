@@ -3,7 +3,12 @@ kind: process
 status: active
 owner: CT
 created: 2026-05-21
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "Makefile"
+  - "pyproject.toml"
+  - "eslint.config.js"
+  - "DOCGRAPH.md"
 ---
 
 # pdomain-ui conventions

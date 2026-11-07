@@ -2,17 +2,23 @@
 Status: active
 Owner: CT
 Created: 2026-05-16
-Last verified: 2026-07-13
+Last verified: 2026-11-07
 Kind: usage
+verified_against:
+  - "package.json"
+  - ".storybook/preview.ts"
+  - "theme/tokens.css"
+  - "theme/reset.css"
+  - "theme/primitives.css"
 ---
 
 # @pdomain/pdomain-ui
 
 `@pdomain/pdomain-ui` is the shared TS/React/Vite frontend library for the
-pdomain-*suite. It provides canvas, worklist, shell, primitives, icons,
-generated types, and store factories. Every pdomain-* end-user SPA
-(labeler-spa, pgdp-prep, trainer-spa) imports components and hooks from this
-package instead of reimplementing them. The library is published to the
+`pdomain-*` suite. It provides canvas, worklist, shell, primitives, icons,
+generated types, and store factories. The library is intended for pdomain-* end-user
+SPAs, including labeler-spa, pgdp-prep, and trainer-spa. Consumer adoption must
+be verified in each application repository. The library is published to the
 self-hosted `pdomain-index-npm` registry at `@pdomain/pdomain-ui`.
 
 For current design records, constraints, and documentation workflow, see [the docs index](docs/README.md).
@@ -25,7 +31,7 @@ For current design records, constraints, and documentation workflow, see [the do
 - [Repository conventions](CONVENTIONS.md)
 - [Docgraph governance](DOCGRAPH.md)
 - [Documentation index](docs/README.md)
-- [Changelog](CHANGELOG.md) — release notes are incomplete after 0.9.0
+- [Changelog](CHANGELOG.md) — release notes are incomplete between 0.9.0 and 0.13.0
 - [Consumer bootstrap draft](docs/usage/consumer-bootstrap.md)
 
 ## Cross-app modules

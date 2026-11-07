@@ -3,7 +3,10 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/templates/PipelineTemplate.tsx"
+  - "src/icons/index.ts"
 ---
 
 # Design-system composition

@@ -3,8 +3,11 @@ kind: spec
 status: active
 owner: CT
 created: 2026-07-21
-last_verified: 2026-07-21
+last_verified: 2026-11-07
 disposition: deferred
+verified_against:
+  - "src/hooks/useShortcuts.ts"
+  - "src/hooks/useShortcuts.test.ts"
 ---
 
 # Shortcut sequences remain deferred until a consumer needs them
@@ -26,7 +29,12 @@ The author checked the decision against the issue, current hook, current tests, 
 
 ## The current API remains unchanged
 
-No current consumer depends on sequence shortcuts. Adding state, timers, and ambiguity rules now would expand a stable shared hook without demonstrated value. Existing strings such as `mod+s`, `shift+?`, and `arrowright` remain single combinations.
+No accepted sequence consumer is recorded in this repository. Current consumer
+demand must be confirmed outside this library before activation.
+
+Adding state, timers, and ambiguity rules now would expand a stable shared hook
+without demonstrated value. Existing strings such as `mod+s`, `shift+?`, and
+`arrowright` remain single combinations.
 
 The issue stays active and deferred. A named consumer with an accepted sequence binding activates the conditional plan.
 

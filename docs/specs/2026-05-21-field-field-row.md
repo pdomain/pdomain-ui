@@ -3,7 +3,12 @@ kind: spec
 status: active
 owner: CT
 created: 2026-05-21
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/primitives/Field.tsx"
+  - "src/primitives/FieldRow.tsx"
+  - "src/primitives/Field.test.tsx"
+  - "src/primitives/Input.tsx"
 ---
 
 # Field / FieldRow — component-API spec
@@ -19,9 +24,9 @@ last_verified: 2026-07-13
 ## 1. Purpose
 
 `Field` gives all pdomain-* app config screens a consistent labelled form-row
-layout. It provides a label, a control slot, an optional expandable help slot,
-and an error slot. It works with the existing pdomain-ui `Input`, `Textarea`,
-`Select`, and `Accordion` primitives.
+layout. It currently provides a label, a control slot, and an error slot.
+The optional expandable help slot is proposed. Existing fields work with the
+pdomain-ui `Input`, `Textarea`, and composed Radix `Select` primitives.
 
 ---
 
@@ -29,7 +34,7 @@ and an error slot. It works with the existing pdomain-ui `Input`, `Textarea`,
 
 | Component | Role |
 |---|---|
-| `<Field>` | Single labelled field: label + control + optional help + optional error |
+| `<Field>` | Single labelled field: label + control + optional error; help is proposed |
 | `<FieldRow>` | Horizontal group of two or more `<Field>` elements on one row |
 
 Both are exported from `@pdomain/pdomain-ui/primitives`.
@@ -39,7 +44,7 @@ Both are exported from `@pdomain/pdomain-ui/primitives`.
 ## 3. Field — target props
 
 The current implementation (`src/primitives/Field.tsx`) covers `label`,
-`htmlFor`, `error`, and `children`. The `help` slot below is **not yet
+`htmlFor`, `error`, `errorId`, and `children`. The `help` slot below is **not yet
 implemented** and is the primary gap blocking trainer-spa usage.
 
 ```ts
@@ -55,7 +60,7 @@ interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
   htmlFor?: string;
 
   /**
-   * Help content — rendered inside a native <details>/<summary> Accordion
+   * Proposed help content — rendered inside a native <details>/<summary>
    * below the control. The summary text is "Help" unless `helpLabel` is set.
    *
    * NOT YET IMPLEMENTED — tracked as a pdomain-ui enhancement.
@@ -71,7 +76,7 @@ interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
   helpLabel?: string;
 
   /**
-   * Error message string. When non-empty, renders in an `<span role="alert">`
+   * Error message string. When non-empty, renders in an `<span role="status">`
    * below the control (and below the help disclosure, if present).
    *
    * Designed to receive a message derived from a FastAPI 422 ErrorEnvelope
@@ -80,6 +85,9 @@ interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
    * Empty string is treated as "no error" (same as undefined).
    */
   error?: string;
+
+  /** Explicit error span id; defaults to `${htmlFor}-error` when htmlFor is set. */
+  errorId?: string;
 
   /**
    * The form control. Typically a pdomain-ui Input, Textarea, or Select.
@@ -134,15 +142,17 @@ strings, and the app always maps the location to a string.
 config cards need this to show expandable documentation for each config
 parameter (learning rate, batch size, vocab, etc.).
 
-**Target implementation:** use the existing pdomain-ui `Accordion` primitive
-(`<details>/<summary>`) as the help disclosure:
+**Proposed implementation:** use native `<details>/<summary>` for the help
+disclosure. The shared `Accordion` is Radix-based and has no `summary` prop;
+it is not the native disclosure described in the original proposal:
 
 ```tsx
 // Field.tsx — addition when help prop is implemented
 {help !== undefined && (
-  <Accordion summary={helpLabel ?? 'Help'} className="field-help">
+  <details className="field-help">
+    <summary>{helpLabel ?? 'Help'}</summary>
     {help}
-  </Accordion>
+  </details>
 )}
 ```
 
@@ -158,8 +168,8 @@ parameter (learning rate, batch size, vocab, etc.).
 ```
 
 Until the help slot is implemented, trainer-spa config cards can use a
-standalone `<Accordion>` below the `<Field>`. The API allows `help` to be added
-later without breaking existing usages.
+standalone native disclosure or composed Radix `Accordion` below the `<Field>`.
+The API allows `help` to be added later without breaking existing usages.
 
 ---
 
@@ -187,8 +197,8 @@ epochs" and "Max epochs."
 | Class | Element |
 |---|---|
 | `.field` | `Field` root |
-| `.field-help` | help `<Accordion>` inside a Field |
-| `.field-error` | error `<span role="alert">` |
+| `.field-help` | proposed help disclosure inside a Field |
+| `.field-error` | error `<span role="status">` |
 | `.field-row` | `FieldRow` root |
 
 All colors from design-system tokens. No hex literals.
@@ -198,15 +208,20 @@ All colors from design-system tokens. No hex literals.
 ## 8. Accessibility
 
 - `<label htmlFor>` association is explicit. The consumer passes matching
-  `htmlFor` / `id` pairs. `Field` does not auto-generate IDs.
-- Error slot has `role="alert"` for screen-reader announcement when the error
+  `htmlFor` / `id` pairs. `Field` does not auto-generate control IDs. It derives
+  an error span ID from `htmlFor` unless an explicit `errorId` is provided.
+- Error slot has `role="status"` for screen-reader announcement when the error
   text changes.
-- Help disclosure uses a native `<details>`/`<summary>` element through
-  `Accordion`. It is keyboard-accessible and needs no JS to open or close.
+- The proposed help disclosure uses native `<details>`/`<summary>`. The
+  current shared `Accordion` is Radix-based, so implementing the help slot
+  requires choosing native disclosure or adapting the existing Radix primitive.
 
 ---
 
 ## 9. Trainer-spa usage examples
+
+The first example requires the proposed help API and does not compile against
+the current `Field`. The second shows the current composed `Select` API.
 
 ```tsx
 // Detection config card (trainer-spa — illustrative)
@@ -223,8 +238,9 @@ All colors from design-system tokens. No hex literals.
 // Profile edit dialog — two fields on one row
 <FieldRow>
   <Field label="Language" htmlFor="lang">
-    <Select id="lang" value={lang} onValueChange={setLang}>
-      <SelectItem value="en">English</SelectItem>
+    <Select value={lang} onValueChange={setLang}>
+      <SelectTrigger id="lang"><SelectValue /></SelectTrigger>
+      <SelectContent><SelectItem value="en">English</SelectItem></SelectContent>
     </Select>
   </Field>
   <Field label="Typeface" htmlFor="typeface">
@@ -239,11 +255,11 @@ All colors from design-system tokens. No hex literals.
 
 - **D-F1** The `error` prop is a plain string, not a React node. This keeps
   error rendering predictable and avoids consumers embedding arbitrary markup
-  inside `role="alert"` regions.
+  inside `role="status"` regions.
 - **D-F2** The `help` slot is a React node to accommodate rich content
   (paragraphs, code snippets, links). The summary button text is kept to a
   short string (`helpLabel`).
-- **D-F3** `Field` does not auto-assign IDs. The consumer controls IDs to
+- **D-F3** `Field` does not auto-assign control IDs. The consumer controls IDs to
   integrate with form libraries, including react-hook-form and manual state.
   Generating random IDs would break SSR hydration and Playwright selectors.
 - **D-F4** `FieldRow` is a layout-only container with no semantic role. It

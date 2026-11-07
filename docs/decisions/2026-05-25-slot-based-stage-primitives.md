@@ -5,9 +5,14 @@ kind: decision
 status: accepted
 owner: ConcaveTrillion
 created: 2026-05-25
-last_verified: 2026-07-13
+last_verified: 2026-11-07
 related:
   - docs/architecture/stage-component-library.md
+verified_against:
+  - "src/primitives/Banner.tsx"
+  - "src/primitives/DiskCostBanner.tsx"
+  - "src/primitives/QualityBanner.tsx"
+  - "src/primitives/Thumbnail.tsx"
 ---
 
 # Slot-based stage primitives
@@ -43,7 +48,9 @@ shape to share chrome usefully.
 ## Naming
 
 - `Banner` — generic primitive. Existing domain-specific primitives
-  (`DiskCostBanner`, `QualityBanner`) remain; they compose `Banner`.
+  (`DiskCostBanner`, `QualityBanner`) remain; the decision calls for them to
+  compose `Banner`.
+  Code verification on 2026-11-07 found that both still render separate shells.
 - `StageToolbar` — distinct from `FilterToolbar` (Phase 1 single-line search box).
 - `Thumbnail` — chosen over `ThumbCard` to avoid collision with the
   already-shipped Source `ThumbCard` (the Source one can be migrated later

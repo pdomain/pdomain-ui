@@ -3,7 +3,15 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "package.json"
+  - "src/records/index.ts"
+  - "src/source-intake/index.ts"
+  - "src/viewport/index.ts"
+  - "src/settings/index.ts"
+  - "src/status/index.ts"
+  - "src/workbench/index.ts"
 ---
 
 # Cross-app common UI modules

@@ -3,7 +3,11 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-07-13
+last_verified: 2026-11-07
+verified_against:
+  - "src/canvas/PageImageCanvas.tsx"
+  - "src/shell/AppShell.tsx"
+  - "src/stages/PageWorkbench/ArtifactViewer.tsx"
 ---
 
 # Canvas and shell extension points
@@ -18,8 +22,9 @@ last_verified: 2026-07-13
 ## Canvas and shell hooks remain opt-in
 
 `PageImageCanvas` calls `onImageNodeReady` with the mounted Konva image node. It
-calls the same callback with `null` when no node is ready. Consumers use this
-escape hatch for behavior that needs the underlying image node.
+calls the same callback with `null` when that mounted image ref unmounts.
+Initial loading or failure before the image mounts does not emit `null`.
+Consumers use this escape hatch for behavior that needs the underlying image node.
 
 The selection layer does not receive pointer events by default.
 `selectionLayerListening` opts into them. ArtifactViewer enables listening for

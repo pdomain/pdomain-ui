@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-11-06
+Last verified: 2026-11-07
 Kind: context
 ---
 
@@ -16,6 +16,10 @@ Kind: context
 - **Search terms:** intent, active bets, deferred work, owner decisions, legacy sweep.
 
 ## Active bets
+
+- Repair `scripts/update-pdomain-deps.sh` to read and update object-form
+  version/hash pins. The current command fails before refreshing dependencies.
+  [Contract](../architecture/codegen-contract.md).
 
 - Show a friendly active-device label in `ComputeTargetPanel`. The panel still renders the raw id. [Plan](../plans/2026-07-21-active-device-label.md). [Issue](../issues/2026-07-15-computetargetpanel-active-device-label.md).
 - Complete or deliberately narrow the remaining PGDP common-component backlog.
