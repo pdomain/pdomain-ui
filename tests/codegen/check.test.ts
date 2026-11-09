@@ -86,6 +86,6 @@ describe('codegen orchestrator', () => {
   it('CLAUDE.md documents codegen bump workflow', () => {
     const claudeMd = readFileSync(join(REPO_ROOT, 'CLAUDE.md'), 'utf-8');
     expect(claudeMd).toContain('codegen.versions.json');
-    expect(claudeMd).toContain('pnpm codegen');
+    expect(claudeMd).toContain('make codegen');
   });
 });
