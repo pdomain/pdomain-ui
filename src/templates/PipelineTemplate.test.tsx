@@ -136,6 +136,16 @@ describe('PipelineTemplate', () => {
     expect(cover).toHaveTextContent('TA');
   });
 
+  it('styles the CoverPlaceholder ink and inset with tokens, not inline RGBA', () => {
+    render(
+      <PipelineTemplate project={SAMPLE_PROJECT} stage="threshold" stages={[...PIPELINE_STAGES]} />,
+    );
+    const style = screen.getByTestId('cover-placeholder').getAttribute('style') ?? '';
+    expect(style).not.toMatch(/rgba?\(/);
+    expect(style).toContain('var(--cover-ink)');
+    expect(style).toContain('var(--shadow-cover-inset)');
+  });
+
   it('renders a status Badge inside the project info band', () => {
     render(
       <PipelineTemplate
