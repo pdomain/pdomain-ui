@@ -52,7 +52,7 @@ Shipped behavior is the architecture list above. These items are still open.
 - LogViewer has no component. Continued demand needs an owner decision. [Spec](specs/2026-05-21-log-viewer.md).
 - Key sequences such as `g p` stay deferred until a consumer names one. [Plan](plans/2026-07-21-shortcut-sequences-conditional.md). [Issue](issues/2026-07-15-useshortcuts-chord-sequences.md).
 - The dep-refresh auto-land spec targets the GitHub workflows deleted in `0aa42b5` (2026-09-13). It needs an owner decision. [Spec](specs/2026-07-16-dep-refresh-auto-land-design.md).
-- CropCard's empty overlay guard, CoverPlaceholder's inline RGBA values, LabelerCanvas's inert mutation contract, and live theme repaint are recorded and still open. [Intent map](context/intent-map.md).
+- LabelerCanvas's inert mutation contract and live theme repaint are recorded and still open; both need an owner decision. The CropCard overlay guard and CoverPlaceholder RGBA residuals were fixed on 2026-11-11. [Theme and component quality](architecture/theme-and-component-quality.md).
 
 ## Decisions
 

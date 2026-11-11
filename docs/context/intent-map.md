@@ -20,11 +20,6 @@ Kind: context
 - Complete or deliberately narrow the remaining PGDP common-component backlog.
 - Decide whether to implement the Field help slot described in the active spec.
 - Keep `writing-docs` plugin routing and lint-deviation governance active.
-- Fix CropCard's empty flag-overlay guard; the current React-element check is
-  always true. Source: the former May 28 audit, promoted to
-  [theme and component quality](../architecture/theme-and-component-quality.md).
-- Replace CoverPlaceholder's remaining inline RGBA foreground and shadow values
-  with theme tokens. Source: the component-audit remediation design.
 - Verify UtilityDock behavior in `pdomain-ocr-simple-gui`,
   `pdomain-prep-for-pgdp`, and `pdomain-ocr-labeler-spa`, especially canvas
   interaction, pinned reflow, and resize behavior. Current evidence covers only

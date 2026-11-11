@@ -3,7 +3,7 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-11-07
+last_verified: 2026-11-11
 verified_against:
   - "theme/tokens.css"
   - "theme/primitives.css"
@@ -35,9 +35,11 @@ explicit live-region choices, typed public APIs, and focused behavior tests.
 
 ## Concrete deviations
 
-The 2026-05-28 audit claimed all findings in scope. However, CropCard still
-installs an empty flag overlay through an always-true React-element check.
-PipelineTemplate also retains inline RGBA values in CoverPlaceholder.
+The 2026-05-28 audit claimed all findings in scope, but two residuals stayed
+until 2026-11-11. CropCard installed an empty flag overlay through an
+always-true React-element check; it now passes the overlay only when a page has
+flags. CoverPlaceholder painted with inline RGBA values; it now uses the
+theme-invariant `--cover-ink` and `--shadow-cover-inset` tokens.
 SourcePageWorkbench keeps an unused `beforeImageUrl`, now tracked by later
 compare-viewer work.
 
