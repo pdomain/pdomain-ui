@@ -1,7 +1,6 @@
 ---
-kind: handoff
-status: "active"
-created: "2026-11-11"
+kind: archive
+status: retired
 created_at: "2026-11-11T04:33:04Z"
 owner: "CT"
 branch: "worktree-fix-compute-panel-and-dep-updater"
@@ -11,9 +10,13 @@ base_commit: "46bfbe63a6afc392ad2c7dbbaa7d6f718ab3f822"
 supersedes: "2026-11-11-032240-compute-panel-and-updater-fixes-docs-staged.md"
 handoff_reason: "stopping"
 host: "claude-code"
+created: "2026-11-11"
+last_verified: "2026-11-11"
 ---
 
 # Compute panel and updater fixes, ready for merge review
+
+> **Retired — superseded by `docs/handoff/2026-11-11-081941-audit-residuals-fixed-on-top-of-compute-panel-branch.md`.**
 
 ## Goal
 
