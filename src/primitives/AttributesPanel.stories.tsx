@@ -76,7 +76,7 @@ export const LightTheme: Story = {
 export const PartiallyCollapsed: Story = {
   name: 'D3 · Partially collapsed · fmt + comments open',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [key, setKey] = React.useState(0);
     // Wrap in a controlled story that pre-collapses bib + pgdp by default.
     // We achieve this by rendering in a simple wrapper — AttributesPanel's
@@ -105,9 +105,9 @@ export const PartiallyCollapsed: Story = {
 export const AllCollapsed: Story = {
   name: 'D4 · All sections collapsed',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const ref = React.useRef<HTMLDivElement>(null);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     React.useEffect(() => {
       if (!ref.current) return;
       const buttons = ref.current.querySelectorAll<HTMLElement>('[role="button"]');

@@ -77,7 +77,7 @@ export const FourOptionWithIcons: Story = {
 export const Controlled: Story = {
   name: 'D · Controlled',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [value, setValue] = React.useState('b');
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

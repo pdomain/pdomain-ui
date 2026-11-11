@@ -51,7 +51,7 @@ export function SuiteSiblingsProvider({ value, children }: SuiteSiblingsProvider
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch the installed-app list once on mount
   }, []);
 
   const launch = React.useCallback(

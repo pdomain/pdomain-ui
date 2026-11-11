@@ -54,7 +54,7 @@ export const WideRange: Story = {
 
 export const Interactive: Story = {
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [params, setParams] = useState<GrayscaleParams>(GRAYSCALE_PARAMS_DEFAULT);
     return (
       <div style={{ maxWidth: '480px' }}>

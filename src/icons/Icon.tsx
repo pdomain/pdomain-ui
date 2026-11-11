@@ -73,6 +73,16 @@ import {
 // Name → component map
 // ---------------------------------------------------------------------------
 
+/** Props every icon-map entry must accept; `Icon` renders each entry with these. */
+interface IconMapProps {
+  size?: number | string;
+  className?: string | undefined;
+  color?: string | undefined;
+  strokeWidth?: number | string | undefined;
+  'aria-label'?: string;
+  'aria-hidden'?: boolean;
+}
+
 const ICON_MAP = {
   upload: Upload,
   folder: Folder,
@@ -116,8 +126,7 @@ const ICON_MAP = {
   sparkles: Sparkles,
   swap: ArrowLeftRight,
   copy: Copy,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as const satisfies Record<string, React.ComponentType<any>>;
+} as const satisfies Record<string, React.ComponentType<IconMapProps>>;
 
 /** All valid design icon name keys. */
 export const ICON_NAMES = Object.keys(ICON_MAP) as IconName[];

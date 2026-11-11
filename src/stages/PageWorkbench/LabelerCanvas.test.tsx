@@ -52,7 +52,7 @@ vi.mock('react-konva', () => ({
     width?: number;
     height?: number;
   }) => {
-    /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+    /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- Konva test double needs a click handler, not keyboard behavior */
     return (
       <div
         data-testid={tid}

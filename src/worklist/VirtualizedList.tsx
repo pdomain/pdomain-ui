@@ -95,7 +95,10 @@ function VirtualizedListInner<TItem>(
   );
 
   /** Stable element id for a given row, used for aria-activedescendant. */
-  const optionId = (index: number) => `${OPTION_ID_PREFIX}-${uid}-${index}`;
+  const optionId = React.useCallback(
+    (index: number) => `${OPTION_ID_PREFIX}-${uid}-${index}`,
+    [uid],
+  );
 
   const renderRow = React.useCallback(
     (index: number, item: TItem) => {
@@ -125,8 +128,7 @@ function VirtualizedListInner<TItem>(
         </div>
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedIndex, renderItem, handleSelect, uid],
+    [selectedIndex, renderItem, handleSelect, optionId],
   );
 
   // Compute the active-descendant id: point at the selected option element.
