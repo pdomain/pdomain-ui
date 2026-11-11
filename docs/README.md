@@ -3,7 +3,7 @@ kind: process
 status: active
 owner: CT
 created: 2026-05-17
-last_verified: 2026-11-06
+last_verified: 2026-11-10
 ---
 
 # Documentation index
@@ -45,9 +45,8 @@ archive only as a last resort.
 
 ## Remaining work
 
-Shipped behavior is the architecture list above. These items are still open. No plan in this pass was fully implemented, so none was retired.
+Shipped behavior is the architecture list above. These items are still open.
 
-- Friendly active-device labels are not implemented. `ComputeTargetPanel` still renders the raw id. [Plan](plans/2026-07-21-active-device-label.md). [Issue](issues/2026-07-15-computetargetpanel-active-device-label.md).
 - The PGDP common-component backlog is partial. The settings kit and `WorkbenchLayout` are in the tree. `package.json` has no `./stages/Projects` export. The inheritance banner, stage-settings audit, review foundation, gate and pack panels, and two-image compare modes are absent. [Plan](plans/2026-06-14-pgdp-common-component-backlog.md). Source: [gap analysis](research/2026-06-14-pgdp-design-handoff-gap-analysis.md).
 - `Field` has no help slot. [Spec](specs/2026-05-21-field-field-row.md).
 - LogViewer has no component. Continued demand needs an owner decision. [Spec](specs/2026-05-21-log-viewer.md).

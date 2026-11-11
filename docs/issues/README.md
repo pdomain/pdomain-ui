@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-15
-Last verified: 2026-11-06
+Last verified: 2026-11-10
 Kind: process
 Level: I1
 ---
@@ -14,7 +14,7 @@ Level: I1
 - **Kind:** process
 - **Status:** active
 - **Level:** I1
-- **Last verified:** 2026-11-06
+- **Last verified:** 2026-11-10
 - **Read when:** filing a bug / defect / investigation report, or looking up an
   open issue's status, evidence, or resolution.
 - **Search terms:** issues folder, bug report, defect report, issue template,
@@ -73,7 +73,6 @@ Lead with the **smallest decisive evidence**, separate **observation** from
 
 ## Open issues
 
-- `ComputeTargetPanel` still shows the raw device id. [Issue](./2026-07-15-computetargetpanel-active-device-label.md).
 - `useShortcuts` still cannot match a sequence such as `g p`. Deferred until a consumer names one. [Issue](./2026-07-15-useshortcuts-chord-sequences.md).
 
 ## Resolved issues

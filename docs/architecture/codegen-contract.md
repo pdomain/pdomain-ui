@@ -3,7 +3,7 @@ kind: architecture
 status: built
 owner: CT
 created: 2026-07-13
-last_verified: 2026-11-07
+last_verified: 2026-11-10
 verified_against:
   - "codegen.versions.json"
   - "scripts/codegen-fetch.mjs"
@@ -64,12 +64,13 @@ duplicating them.
 reruns the pipeline and fails when committed generated output differs. The full
 `make ci AI=1` gate includes `codegen-check` and package-contract tests.
 
-`make update-pdomain-deps` is intended to update codegen pins, regenerate the
-outputs, and stage the pin and generated-file diff for review without committing
-or pushing. The current script does not support the object-form pins now stored
-in `codegen.versions.json`: it prints the whole object as the current version
-and passes that value to `packaging.version.Version`. The updater needs repair
-before this command can perform the documented refresh.
+`make update-pdomain-deps` updates the codegen pins, regenerates the outputs, and
+stages the pin and generated-file diff for review without committing or pushing.
+For each package it takes the newest `py3-none-any` wheel on the index and records
+that wheel's version and SHA-256. A newer release with no such wheel is ignored,
+because `codegen-fetch.mjs` can only install that form. A newest wheel with no
+listed hash stops the command. The command writes pins only after every package
+lookup succeeds.
 
 ## Codegen files and tests provide the evidence
 
@@ -78,5 +79,5 @@ before this command can perform the documented refresh.
 - `scripts/codegen-emit.mjs`
 - `scripts/codegen-tsgen.mjs`
 - `src/types/generated/` and `src/types/index.ts`
-- `tests/codegen/`
+- `tests/codegen/`, including `tests/codegen/update-pdomain-deps.test.ts`
 - `Makefile` and `package.json`

@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-11-06
+Last verified: 2026-11-10
 Kind: context
 ---
 
@@ -265,8 +265,8 @@ Kind: context
     commit `8f0c02a`) and the still-present
     `docs/templates/design_handoff_pd_ui/PROMPT.md`.
   - **#394** (ComputeTargetPanel label + test) — active; migrated to
-    [docs/issues/2026-07-15-computetargetpanel-active-device-label.md](../issues/2026-07-15-computetargetpanel-active-device-label.md)
-    and now tracked in-repo.
+    `docs/issues/2026-07-15-computetargetpanel-active-device-label.md`, resolved
+    by `ab0170d` and retired on 2026-11-10.
   - **#401** (useShortcuts chord support) — active but deferred; migrated to
     [docs/issues/2026-07-15-useshortcuts-chord-sequences.md](../issues/2026-07-15-useshortcuts-chord-sequences.md)
     and now tracked in-repo.
@@ -274,7 +274,7 @@ Kind: context
   specs in architecture, open work in `docs/issues/`. With the durable record
   in-repo, the shared meta-tracker copies were redundant and were deleted to keep
   that tracker free of resolved pdomain-ui noise.
-- **Remaining work:** #394 and #401 remain open in `docs/issues/`.
+- **Remaining work:** #401 remains open in `docs/issues/`.
 
 ### 2026-11-06 — Release and CI moved off GitHub Actions
 
@@ -296,3 +296,47 @@ Kind: context
   `GatePanel`, `ConfirmAdvancePanel`, and `ArtifactTree`, and none of those
   files are in `src/`.
 - **Remaining work:** the list in `docs/README.md`.
+
+### 2026-11-10 — Retired: active-device issue, plan, and spec
+
+- **Old paths:** `docs/issues/2026-07-15-computetargetpanel-active-device-label.md`,
+  `docs/plans/2026-07-21-active-device-label.md`, and
+  `docs/specs/2026-07-21-active-device-label-design.md`.
+- **Outcome:** Implemented and deleted after promotion.
+- **Superseded by:**
+  [canvas and shell extension points](../architecture/canvas-and-shell-extension-points.md).
+- **Evidence:** `src/shell/ComputeTargetPanel.tsx`, its test table for `cpu`,
+  `cuda:0`, `local`, an unknown id, and null, and commit `ab0170d`.
+- **Removal commit:** the commit that adds this entry; find it with
+  `git log -- docs/plans/2026-07-21-active-device-label.md`.
+- **Rationale kept:** The architecture record keeps the fallback order and why
+  unknown identifiers stay visible.
+- **Remaining work:** none.
+
+### 2026-11-10 — ComputeTargetPanel hides on an empty device list
+
+- **Context:** The panel returned nothing when `info.mode` was not local, which
+  broke the deploy-mode constraint in `AGENTS.md`.
+- **Decision:** Hide the panel when `info.available` is empty and stop reading
+  `info.mode`. The panel does not read `AppShell`'s `deployMode` either.
+- **Rationale:** `pdomain-ops` returns an empty `available` list in hosted mode
+  and always lists CPU in local mode, so hosted deployments stay hidden while
+  the mode logic stays in the backend.
+- **Evidence:** `pdomain_ops/suite/device_routes.py`,
+  `pdomain_ops/gpu/device_probe.py`, `src/shell/ComputeTargetPanel.test.tsx`,
+  and commit `d5d017e`.
+- **Remaining work:** none in this repository.
+
+### 2026-11-10 — The codegen updater writes object-form pins
+
+- **Context:** `scripts/update-pdomain-deps.sh` printed the whole pin object as
+  the version, ran under a bare `python3` without `packaging`, and would have
+  written a plain-string pin with no hash.
+- **Decision:** Read and write `{ version, sha256 }` pins, run Python through
+  `uv run`, pin `packaging` in the dev group, and take the hash from the index's
+  `#sha256=` link fragment.
+- **Rationale:** `codegen-fetch.mjs` verifies every listed hash, so a bump that
+  kept the old hash entry could not pass `make codegen`.
+- **Evidence:** `tests/codegen/update-pdomain-deps.test.ts`, commit `86c169e`,
+  and a trial run against the real index on 2026-11-10 whose bump was discarded.
+- **Remaining work:** none.
