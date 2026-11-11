@@ -17,8 +17,22 @@ describe('ComputeTargetPanel', () => {
   it('renders device list in local mode', () => {
     render(<ComputeTargetPanel info={localInfo} onSelect={() => {}} />);
     expect(screen.getByTestId(COMPUTE_TARGET_PANEL)).toBeInTheDocument();
-    expect(screen.getByText('GPU')).toBeInTheDocument();
-    expect(screen.getByText('CPU')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /GPU/ })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /CPU/ })).toBeInTheDocument();
+  });
+
+  it.each([
+    ['cpu', 'CPU'],
+    ['cuda:0', 'GPU'],
+    ['local', 'Local compute target'],
+    ['remote:unexpected', 'remote:unexpected'],
+    [null, 'Automatic'],
+  ] as const)('shows the friendly active label for %s', (current, expected) => {
+    render(<ComputeTargetPanel info={{ ...localInfo, current }} onSelect={() => {}} />);
+
+    expect(screen.getByText('Active:').parentElement).toHaveTextContent(
+      `Active: ${expected} (via auto)`,
+    );
   });
 
   it('hidden when not local mode', () => {
