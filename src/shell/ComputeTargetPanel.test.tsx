@@ -35,12 +35,20 @@ describe('ComputeTargetPanel', () => {
     );
   });
 
-  it('hidden when not local mode', () => {
-    const { container } = render(
-      <ComputeTargetPanel info={{ ...localInfo, mode: 'hosted' }} onSelect={() => {}} />,
-    );
-    expect(container).toBeEmptyDOMElement();
+  it('renders reported devices regardless of info.mode', () => {
+    render(<ComputeTargetPanel info={{ ...localInfo, mode: 'hosted' }} onSelect={() => {}} />);
+    expect(screen.getByTestId(COMPUTE_TARGET_PANEL)).toBeInTheDocument();
   });
+
+  it.each(['local', 'hosted'] as const)(
+    'renders nothing when no devices are reported in %s mode',
+    (mode) => {
+      const { container } = render(
+        <ComputeTargetPanel info={{ ...localInfo, mode, available: [] }} onSelect={() => {}} />,
+      );
+      expect(container).toBeEmptyDOMElement();
+    },
+  );
 
   it('renders device options with correct testids', () => {
     render(<ComputeTargetPanel info={localInfo} onSelect={() => {}} />);

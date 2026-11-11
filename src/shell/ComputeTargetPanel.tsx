@@ -1,7 +1,8 @@
 /**
  * ComputeTargetPanel — device picker for compute-target selection.
  *
- * Local-deploy-mode-gated: returns null when `info.mode !== "local"`.
+ * Returns null when the backend reports no devices, which is how pdomain-ops
+ * signals a hosted deployment; the panel itself never reads the deploy mode.
  * Renders the available device list (CPU + GPU VRAM), unavailable NVIDIA
  * hardware, persistent CPU override controls, and a CUDA setup guide link.
  *
@@ -44,7 +45,7 @@ function activeDeviceLabel(current: string | null, available: DeviceInfo['availa
 
 /**
  * Presentational panel: device list, VRAM, current device, effective source.
- * Hidden when `info.mode !== "local"`.
+ * Hidden when `info.available` is empty.
  */
 export function ComputeTargetPanel({
   info,
@@ -53,7 +54,7 @@ export function ComputeTargetPanel({
   cudaDocsUrl,
   className,
 }: ComputeTargetPanelProps): React.ReactElement | null {
-  if (!info || info.mode !== 'local') return null;
+  if (!info || info.available.length === 0) return null;
 
   const current = info.current ?? null;
   const currentLabel = activeDeviceLabel(current, info.available);
