@@ -1,19 +1,21 @@
 ---
-kind: handoff
-status: "active"
-created: "2026-11-11"
+kind: archive
+status: retired
 created_at: "2026-11-11T03:22:38Z"
 owner: "CT"
 branch: "worktree-fix-compute-panel-and-dep-updater"
 scope: "compute-panel-dep-updater"
 worktree: "/mnt/work/projects/pdomain/pdomain-ui/.claude/worktrees/fix-compute-panel-and-dep-updater"
 base_commit: "86c169ecb6ea62a38ae14533932097c152dd48be"
-supersedes: ""
 handoff_reason: "user_requested"
 host: "claude-code"
+created: "2026-11-11"
+last_verified: "2026-11-11"
 ---
 
 # Compute panel and updater fixes, docs staged
+
+> **Retired — superseded by `docs/handoff/2026-11-11-043304-compute-panel-and-updater-ready-for-merge-review.md`.**
 
 ## Goal
 
