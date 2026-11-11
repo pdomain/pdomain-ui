@@ -168,7 +168,10 @@ export function CropCard({
 
   const bboxOverlay = page.bbox !== undefined ? <BboxOverlay bbox={page.bbox} /> : undefined;
 
-  const flagChipsNode = <FlagChips flags={page.flags} density={density} pageId={page.id} />;
+  const flagChipsNode =
+    page.flags.length > 0 ? (
+      <FlagChips flags={page.flags} density={density} pageId={page.id} />
+    ) : undefined;
 
   const checkbox =
     density !== 's' && onSelect !== undefined ? (
@@ -193,7 +196,7 @@ export function CropCard({
       onClickLabel={`Select page ${page.pageNumber}`}
       statusSlot={statusSlot}
       {...(bboxOverlay !== undefined ? { imageOverlay: bboxOverlay } : {})}
-      {...(flagChipsNode !== null ? { overlayBottomLeft: flagChipsNode } : {})}
+      {...(flagChipsNode !== undefined ? { overlayBottomLeft: flagChipsNode } : {})}
       {...(checkbox !== undefined ? { overlayTopLeft: checkbox } : {})}
       className="crop-card"
       data-testid={testId ?? cropCardTestId(page.id)}
