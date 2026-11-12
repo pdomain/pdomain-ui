@@ -3,7 +3,7 @@ kind: research
 status: active
 owner: CT
 created: 2026-06-14
-last_verified: 2026-11-07
+last_verified: 2026-11-12
 ---
 
 # PGDP Design Handoff Gap Analysis
@@ -26,10 +26,13 @@ and 28 statechart YAMLs. The remaining gaps are concentrated in two places:
    they had no final designs: threshold, deskew, denoise, dewarp, post-crops,
    canvas-map, OCR, text-zones, text-review, illustrations, regex, proof-pack,
    build-package, zip, submit-check, and archive.
-2. Common abstractions that repeat across those app-local stages but are not yet
-   first-class `pdomain-ui` exports: settings rows/cards/sliders, settings
-   inheritance banners, gate/confirm panels, file/tree views, generic review-page
-   grids, and reusable stage lifecycle chrome.
+2. Common abstractions that repeat across those app-local stages. Settings
+   rows, cards, and sliders, plus `WorkbenchLayout`, have since shipped. See
+   [cross-app common UI modules](../architecture/cross-app-common-ui-modules.md).
+   Settings inheritance banners, gate and confirm panels, file and tree views,
+   generic review-page grids, and reusable stage lifecycle chrome are still
+   absent. The living list is the
+   [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md).
 
 Behavioral state machines, backend registry changes, event-log semantics, XState
 implementations, and full PGDP stage tools remain app-owned. `pdomain-ui` should
@@ -73,12 +76,14 @@ export-policy decisions remain open.
 
 ## Next steps
 
-Update the companion backlog in three steps:
+The 2026-11-12 roadmap pass completed the three follow-ups from this analysis:
 
-1. Mark the settings kit and WorkbenchLayout complete.
-2. Reconcile their shipped paths.
-3. Sequence the remaining review-foundation, gate, artifact-tree, and
-   public-export decisions.
+1. Settings kit and WorkbenchLayout are marked complete in
+   [cross-app common UI modules](../architecture/cross-app-common-ui-modules.md).
+2. Their shipped paths are the `./settings` and `./workbench` subpaths, the
+   primitives re-export for settings, and the root barrel.
+3. Remaining review, gate, artifact-tree, and export decisions are sequenced
+   in the [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md).
 
 ## What this does NOT establish
 
@@ -106,7 +111,7 @@ PGDP source paths below are relative to
 
 The current `pdomain-ui` package already exports broad shared surfaces:
 
-- `package.json:28-115` for package subpaths and theme CSS exports.
+- `package.json` exports, lines 28-140, for package subpaths and theme CSS exports.
 - `src/primitives/index.ts:1-260` for primitives and cross-stage molecules.
 - `src/templates/index.ts:1-68` for pipeline/project templates.
 - `src/shell/index.ts:27-123` for suite shell, jobs, settings, dock, update, and compute panels.
@@ -220,15 +225,17 @@ registry, or event-log semantics described in `PROMPT.md:63-83` and
 ### 4. Package exports need explicit stage policies
 
 The `Projects` stage components exist under `src/stages/Projects/`. However,
-`package.json:69-108` has no package subpath for `./stages/Projects`. If these
-components are intended for downstream apps, expose the subpath. Otherwise,
-keep them explicitly internal to templates.
+the stage subpaths in `package.json` (lines 69-108) do not include
+`./stages/Projects`. The current recommendation is in the
+[roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md): move the
+folder to `pdomain-prep-for-pgdp` if only that app uses it, and add the
+subpath only when a second app imports it.
 
 Several existing stage folders are exported in their own barrels. PageWorkbench,
-Source, Grayscale, and Crop are also re-exported from the root barrel
-(`src/index.ts:337-516`). Other stage exports appear to be subpath-only.
-Consumers can use subpaths, but the root-export policy for stage components
-should be documented.
+Source, Grayscale, and Crop are also re-exported from the root barrel in
+`src/index.ts`. Later stage families are subpath-only. That mixed policy is
+recorded in
+[stage component library](../architecture/stage-component-library.md).
 
 ## App-owned behavior should remain outside the library
 

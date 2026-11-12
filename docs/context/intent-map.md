@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-11-07
+Last verified: 2026-11-12
 Kind: context
 ---
 
@@ -17,55 +17,21 @@ Kind: context
 
 ## Active bets
 
-- Repair `scripts/update-pdomain-deps.sh` to read and update object-form
-  version/hash pins. The current command fails before refreshing dependencies.
-  [Contract](../architecture/codegen-contract.md).
+The ordered list is the [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md).
+Active library work there is the unbuilt review, gate, artifact, and compare
+components, the device label, the Field help slot, the codegen pin updater,
+and the CropCard and CoverPlaceholder defects.
 
-- Show a friendly active-device label in `ComputeTargetPanel`. The panel still renders the raw id. [Plan](../plans/2026-07-21-active-device-label.md). [Issue](../issues/2026-07-15-computetargetpanel-active-device-label.md).
-- Complete or deliberately narrow the remaining PGDP common-component backlog.
-- Decide whether to implement the Field help slot described in the active spec.
-- Keep `writing-docs` plugin routing and lint-deviation governance active.
-- Fix CropCard's empty flag-overlay guard; the current React-element check is
-  always true. Source: the former May 28 audit, promoted to
-  [theme and component quality](../architecture/theme-and-component-quality.md).
-- Replace CoverPlaceholder's remaining inline RGBA foreground and shadow values
-  with theme tokens. Source: the component-audit remediation design.
-- Verify UtilityDock behavior in `pdomain-ocr-simple-gui`,
-  `pdomain-prep-for-pgdp`, and `pdomain-ocr-labeler-spa`, especially canvas
-  interaction, pinned reflow, and resize behavior. Current evidence covers only
-  the pdomain-ui implementation and unit tests. Source: the former utility
-  design, promoted to [shell utility dock](../architecture/shell-utility-dock.md).
+Keep `writing-docs` plugin routing and lint-deviation governance active.
+[Lint deviations](../process/lint-deviations.md).
 
 ## Deferred work
 
-- Add key sequences to `useShortcuts` only after a named consumer meets the activation criteria. [Plan](../plans/2026-07-21-shortcut-sequences-conditional.md). [Issue](../issues/2026-07-15-useshortcuts-chord-sequences.md).
-- Implement LogViewer only after an owner confirms the draft still matches a
-  current consumer need.
-- Run a separate required-section conformance migration for advisory findings.
-- Revisit a richer ColorField picker or URL-addressable settings panels only
-  after a consumer demonstrates the need. Source: the former shared-settings
-  spec; current truth is [shell utility dock](../architecture/shell-utility-dock.md).
-- Remove AppShell's deprecated `drawer` and `rightPanel` compatibility surface
-  only after downstream consumers migrate. Current code retains both for
-  compatibility. Source: the right-side utility-panel design § Constraints.
-- Remove the SettingsModal shim/export and inert JobsPill/AppHeader compatibility
-  props after their compatibility window and consumer migration complete.
-  Current shell code still exports the shim and accepts ignored legacy props.
-  Source: `docs/architecture/shell-utility-dock.md`.
-- Migrate consumers to the records, source-intake, viewport, settings, status,
-  and workbench subpaths after app-specific integration plans validate each
-  boundary. Current evidence proves package exports and library tests, not
-  adoption. Source: the former common-module spec's migration notes; current
-  truth is [cross-app common UI](../architecture/cross-app-common-ui-modules.md).
-- Migrate the labeler accordion wrapper to `AccordionTrigger` slots and validate
-  interactive trailing-content keyboard behavior in the consumer. Current
-  repository tests prove the shared slots but not labeler adoption. Source: the
-  former Accordion spec's consumer follow-up; current truth is
-  [Accordion trigger slots](../architecture/accordion-trigger-slots.md).
-- Split `theme/primitives.css` only if continued growth makes the single file
-  unwieldy; preserve one runtime entry and the existing sync gate. Current
-  practice still uses one authoritative primitive stylesheet. Source: the
-  component-audit remediation plan's CSS coordination guidance.
+Deferred consumer and compatibility work is the roadmap section
+[Deferred until a consumer asks](../plans/2026-06-14-pgdp-common-component-backlog.md#deferred-until-a-consumer-asks).
+
+One documentation task stays here rather than on that product list. Run a
+separate required-section conformance migration for advisory findings.
 
 ## Rejected directions
 
@@ -85,27 +51,16 @@ None.
 
 ## Needs owner decision
 
-- Decide whether to abandon or replace the dep-refresh auto-land spec. It targets GitHub workflows deleted in commit `0aa42b5` on 2026-09-13, and those acceptance criteria are not implemented. [Spec](../specs/2026-07-16-dep-refresh-auto-land-design.md).
-- Confirm whether continued consumer demand justifies implementing the draft
-  LogViewer contract.
-- Decide whether to close the consumer-canary prefs direction: the proposed
-  `system` theme and local persistence adapter never shipped, and the utility
-  dock superseded the shared centered-modal direction.
-- Decide whether the remaining PGDP backlog should stay one plan or split into
-  smaller active specs.
-- Decide whether LabelerCanvas should implement drag-to-create and handle
-  mutation or remove/narrow its inert `onBlocksChange` contract. Source: the
-  Phase 2 stage-component catalog.
-- Confirm whether the labeler SPA migrated its annotation chrome to
-  ArtifactViewer or still needs a cross-repository migration issue. Source:
-  the Phase 2 catalog OQ-P2-3.
-- Decide whether mounted Konva canvases must repaint immediately on a live
-  theme change; if so, add an explicit theme-change subscription. Source: the
-  component-audit remediation design § Out of scope / open questions.
-- Adjudicate SourcePageWorkbench's retained but unused `beforeImageUrl`: either
-  implement the promised compare contract or remove/narrow the prop. Current
-  code explicitly discards it, while later PGDP backlog work proposes compare
-  modes. Source: the Phase 2 stage-component catalog and component-audit design.
+The questions, with their specs, are in the roadmap section
+[Owner decisions](../plans/2026-06-14-pgdp-common-component-backlog.md#owner-decisions).
+
+They cover dep-refresh auto-land after commit `0aa42b5`, LogViewer demand,
+the unshipped consumer-canary prefs, LabelerCanvas `onBlocksChange`,
+labeler ArtifactViewer adoption, live Konva theme repaint, and
+`SourcePageWorkbench` `beforeImageUrl`.
+
+The roadmap stays one plan. Split a component into its own spec when someone
+starts building it.
 
 ## Legacy-unverified sweep
 

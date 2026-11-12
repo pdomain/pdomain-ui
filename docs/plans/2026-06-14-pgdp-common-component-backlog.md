@@ -3,340 +3,368 @@ kind: plan
 status: active
 owner: CT
 created: 2026-06-14
-last_verified: 2026-11-07
+last_verified: 2026-11-12
+verified_against:
+  - "package.json"
+  - "src/settings/index.ts"
+  - "src/workbench/WorkbenchLayout.tsx"
+  - "src/index.ts"
+  - "src/stages/Projects/index.ts"
+  - "docs/context/intent-map.md"
 ---
 
-# PGDP Common Component Backlog
+# The single list of remaining pdomain-ui work
+
+This file is the single list of remaining pdomain-ui work.
 
 > **For agentic workers:** use `superpowers:subagent-driven-development` for
 > implementation work. Keep stage folders and common-component folders as
 > separate tasks so reviewers can tell whether a pattern is truly reusable.
 
-**Goal:** Flesh out the reusable `pdomain-ui` components still needed by the
-newer PGDP design handoff, without duplicating components already shipped.
+Shipped behavior lives in the architecture docs.
 
-**Source gap analysis:** `docs/research/2026-06-14-pgdp-design-handoff-gap-analysis.md`
+Open specs, plans, and issues linked below keep their own acceptance detail.
+
+## Agent Index
+
+- **Kind:** plan
+- **Status:** active
+- **Read when:** choosing the next library change, or deciding whether work belongs in another repo.
+- **Search terms:** roadmap, PGDP backlog, settings kit, review foundation, separate repos.
 
 ## Goal
 
-Complete the reusable pdomain-ui component gaps that remain in the newer PGDP
-design handoff without duplicating components that have already shipped.
+Finish the shared presentation components the PGDP designs still need.
+
+Keep product screens, state machines, and domain algorithms out of this library.
 
 ## Architecture
 
-Build typed, presentation-only primitives and module components for repeated
-settings, review, gate, artifact, and workbench patterns. Keep full stage tools
-and orchestration app-local. Move a component into the library only when it
-serves at least two stage families or more than one consumer app.
+Build typed, presentation-only primitives for repeated settings, review, gate, and artifact patterns.
 
-The settings components `SettingsCard`, `SettingsRow`, `SettingsValue`, and
-`SettingSlider` already ship from `src/settings/`. `WorkbenchLayout` already
-ships from `src/workbench/`. Treat both areas as completed baseline work when
-narrowing this backlog.
+Keep full stage tools and orchestration in the app that owns them.
 
-**Verification (2026-11-07):** `src/settings/index.ts` exports the four
-settings components; `src/primitives/index.ts` and `src/index.ts` re-export
-them publicly. `src/workbench/WorkbenchLayout.tsx`, its story, and its tests
-exist, and `src/workbench/index.ts` and `src/index.ts` export it.
+Move a component into this library only when it serves at least two stage families or more than one consumer app.
+
+Shipped settings and workbench behavior is recorded in
+[cross-app common UI modules](../architecture/cross-app-common-ui-modules.md).
+
+Stage export policy and slot primitives are recorded in
+[stage component library](../architecture/stage-component-library.md).
 
 ## Tech Stack
 
-Typed React component APIs, Storybook stories, Vitest coverage, token-only
-styles in `theme/primitives.css`, and package and Vite exports for public
-modules.
+The stack is typed React component APIs, Storybook stories, Vitest coverage, token-only styles in `theme/primitives.css`, and package and Vite exports for public modules.
 
 ## Global Constraints
 
-Treat shipped stage and common-module work as the baseline instead of
-re-porting it. Keep state machines, backend registry, SSE, event logs, routes,
-domain algorithms, and stage-specific machine behavior outside pdomain-ui.
+Treat shipped stage and common-module work as the baseline.
 
-## Principles
+Do not re-port Source, Grayscale, Crop, HyphenJoin, Validation, QualityFlags, Scannos, PageReorder, Upload, PageWorkbench, shell, templates, or core primitives.
 
-- Treat current `pdomain-ui` work as baseline. Do not re-port Source,
-  Grayscale, Crop, HyphenJoin, Validation, QualityFlags, Scannos, PageReorder,
-  Upload, PageWorkbench, shell, templates, or core primitives unless the newer
-  PGDP final designs require extension.
-- Promote a component to `src/primitives/` or `src/templates/` only when it is
-  used by at least two stage families or by more than one consumer app.
-- Keep PGDP state machines, backend registry, SSE, event-log, and route behavior
-  app-owned. The library renders typed state; it does not own orchestration.
-- Keep full PGDP stage tools app-local unless there is a second consumer or a
-  repeated visual pattern worth extracting. `pdomain-ui` should supply the
-  shared pieces that those stages compose.
-- Every new component needs a typed API, Storybook stories, Vitest coverage, and
-  token-only styling in `theme/primitives.css`.
+Re-port from that list only when a newer PGDP design requires an extension.
 
-## P0 - Reconcile Public Surface
+Keep state machines, backend registry, SSE, event logs, routes, domain
+algorithms, and stage-specific machine behavior outside pdomain-ui.
 
-### 1. Decide whether `src/stages/Projects` is public
+Every new component needs a typed API, Storybook stories, Vitest coverage,
+and token-only styling in `theme/primitives.css`.
 
-**Evidence:** `src/stages/Projects/index.ts` exports `PipelineMini`,
-`ProjectsEmpty`, and `ProjectsAttributesPanel`. However,
-`package.json:69-108` has no `./stages/Projects` subpath.
+## Components already shipped
 
-**Work:**
+These former backlog tasks are done.
 
-- Either add a package subpath and Vite entry for `./stages/Projects`, or
-  document that these components are internal to `ProjectsLandingTemplate`.
-- Add package/export contract tests either way.
+Do not add a second copy.
 
-### 2. Document root-barrel policy for stage exports
+- `SettingsCard`, `SettingsRow`, `SettingsValue`, and `SettingSlider` ship from `src/settings/`. The same barrel also ships `SettingsAsyncSection`, `PreferencePathRow`, `StatusActionRow`, and `GuidancePanel`.
+- `WorkbenchLayout` ships from `src/workbench/WorkbenchLayout.tsx` with slots `header`, `toolbar`, `navigation`, `viewer`, `inspector`, and `footer`.
+- The older acceptance names "controls panel" and "sidecar" were not added as separate slots.
+- `Banner`, `StageToolbar`, and `Thumbnail` ship as slot primitives.
+- Known composition gaps are in the stage architecture doc.
 
-**Evidence:** Many stages have subpaths. The root barrel also directly
-re-exports PageWorkbench, Source, Grayscale, and Crop in
-`src/index.ts:337-516`.
+A gap check is still useful for the original settings and slider acceptance lists.
 
-**Work:**
+- Check dense rows, the named story states, and label and control association.
+- Check slider keyboard, clamping, decimal step, and aria value text.
 
-- Decide whether stage components are root exports or subpath-only exports.
-- Update `README.md` or `docs/usage/consumer-bootstrap.md` so consumers know the
-  intended import path.
+That check extends the shipped components.
 
-## P1 - Common Settings Kit
+It does not create new ones.
 
-### 3. Add `SettingsCard`, `SettingsRow`, and `SettingsValue`
+Source of the original gap list:
+[PGDP design handoff gap analysis](../research/2026-06-14-pgdp-design-handoff-gap-analysis.md).
 
-`SettingsCard`, `SettingsRow`, and `SettingsValue` already ship from
-`src/settings/` and are publicly re-exported from
-`@pdomain/pdomain-ui/primitives` and the root barrel. Do not create duplicate
-primitives; use this task to verify whether the shipped API needs an extension.
+## Library components still to add
 
-**Why:** PGDP repeats `SetRow`, `SettingRow`, and settings cards across stage
-settings screens (`COMPONENT_INDEX.md:21-31`).
+Build these in pdomain-ui.
 
-**Target:** existing settings-kit components in `src/settings/` and their
-public re-exports.
+Each one stays presentation-only.
 
-**Acceptance to verify:**
+The new target files named below are not in the tree.
 
-- Renders title, description, optional badge/status, action slot, and control slot.
-- Supports dense row layout used by PGDP stage settings.
-- Stories cover default, modified, preset, danger, disabled, and long text.
-- Tests cover label/control association and action slot behavior.
+Components named as ingredients, such as `FilterToolbar` and `ArtifactViewer`, already ship.
 
-### 4. Add `SettingSlider`
+The contracts come from `pdomain-prep-for-pgdp` `docs/plans/design_handoff_pgdp_app/statecharts/`.
 
-`SettingSlider` already ships from `src/settings/` and is publicly re-exported
-from `@pdomain/pdomain-ui/primitives` and the root barrel. Do not add a second
-slider; extend the shipped control only if verification finds a gap.
+That folder has no `statecharts/README.md`.
 
-**Why:** PGDP repeats `SettingSlider` in image-stage settings
-(`COMPONENT_INDEX.md:29-31`).
+Do not cite the copy of `COMPONENT_INDEX.md` in this repo for these contracts. Its line ranges are a different inventory.
 
-**Target:** the existing `src/settings/SettingSlider.tsx` component.
+### Settings inheritance banner
 
-**Acceptance to verify:**
+`tool-source.yaml` defines a reusable settings region with states `default`, `modified`, and `preset`.
 
-- Typed numeric range with min/max/step, unit suffix, value label, disabled
-  state, and accessible range semantics.
-- Can be used inside `SettingsRow`.
-- Tests cover keyboard changes, clamping, decimal steps, and aria value text.
+The note in that file says every stage Settings tab uses the same banner.
 
-### 5. Add `SettingsInheritanceBanner`
+Put the banner in `src/primitives/SettingsInheritanceBanner.tsx`, or in a stage-settings shell if that shell owns the layout.
 
-**Why:** The statecharts specify `default | modified | preset` inheritance for
-every stage settings tab (`statecharts/README.md:158-161`).
+- `default` copy is "Using project default · Standard quality preset".
+- `modified` copy is "Modified · N changes vs project default".
+- `preset` copy is "Using preset · IA / JP2 archive scans" and says it is not the project default.
+- From `modified`: save as default, revert, and save as preset.
+- From `preset`: reset to default.
+- From `default`: load a preset.
+- Do not add a "view affected stages" action. That action is not in `tool-source.yaml`.
 
-**Target:** `src/primitives/SettingsInheritanceBanner.tsx` or
-`src/templates/StageSettingsShell.tsx` if it owns layout.
+### Stage settings audit
 
-**Acceptance:**
+Source, Validation, PageReorder, and Scannos cover parts of older designs. They do not cover the newer PGDP screens.
 
-- States: `default`, `modified`, `preset`.
-- Optional stale/downstream warning copy and affected-stage count.
-- Actions: save as default, revert, reset, view affected stages.
-- Replaces one-off inheritance banners in future stage settings components.
+1. Compare current exports with the names in the gap analysis tables.
+2. Classify each missing piece as reuse, promote, or keep app-local.
 
-### 6. Audit partial existing stage settings coverage
+Do not move stage machine behavior into this library.
 
-**Why:** Existing slices such as Source, Validation, PageReorder, and Scannos
-cover useful parts of prior designs but do not fully cover the newer PGDP final
-screens.
+Source: [gap analysis](../research/2026-06-14-pgdp-design-handoff-gap-analysis.md).
 
-**Work:**
+- Source against `SourceFiles`, `SourceMetadata`, `SourceOverview`,
+  `SourceStageControlsLeft`, and `SourceViewer`.
+- PageReorder against page-order naming, the unified ledger, ribbon, and
+  spine, roles, and run-leaf management.
+- Scannos against Scannocheck pages, overview, settings, suspects, and the
+  list builder.
+- Validation against `VALMain` and `VALSettings`.
 
-- For Source, compare current `src/stages/Source` exports to PGDP
-  `SourceFiles`, `SourceMetadata`, `SourceOverview`, `SourceStageControlsLeft`,
-  and `SourceViewer`.
-- For PageReorder, compare the four current exports to PGDP page-order naming,
-  unified ledger/ribbon/spine, roles, and run-leaf management.
-- For Scannos, compare token/detail/rule primitives to PGDP Scannocheck pages,
-  overview, settings, suspects, and list builder.
-- For Validation, compare current row/footer/header primitives to PGDP `VALMain`
-  and `VALSettings`.
+### Image-review banner, filters, grid, and editor
 
-**Acceptance:**
+Image review stages share lifecycle chrome, filters, a page grid, and an inline editor (`tool-image-stage-review.yaml`).
 
-- A follow-up note classifies each missing piece as `reuse existing`,
-  `promote common component`, or `keep app-local`.
-- No stage-specific PGDP machine behavior is moved into `pdomain-ui`.
+Current `FilterToolbar`, `ThumbSizeToggle`, `StageToolbar`, `ThumbGrid`, and `Thumbnail` cover pieces of this, not the whole composition.
 
-## P1 - Stage Review Foundation
+`StageLifecycleBanner` is unbuilt. The target file is `src/primitives/StageLifecycleBanner.tsx`.
 
-### 7. Add `StageLifecycleBanner`
+It has two projections, and they do not share one state list.
 
-**Why:** PGDP stage tools share `running -> review -> settled` banners with
-progress, counts, stale warnings, and confirm affordances
-(`statecharts/README.md:151-157`).
+- Stage runner (`stage-runner.yaml`): `notrun`, `queued`, `running`, `clean`, `flagged`, `stale`, and `error`.
+- Image-review banner (`tool-image-stage-review.yaml`): `running`, `review`, and `done`, plus a stale variant.
+- The machine state that shows the done banner is named `settled`. Use `done` as the banner label.
+- The banner has slots for a primary action, a secondary action, and stage-specific detail.
+- The banner uses existing `Badge`, `Progress`, `Button`, and status tokens.
 
-**Target:** `src/primitives/StageLifecycleBanner.tsx`.
+`ReviewFilterToolbar` is unbuilt. The target file is `src/templates/ReviewFilterToolbar.tsx` or `src/primitives/ReviewFilterToolbar.tsx`.
 
-**Acceptance:**
+`tool-image-stage-review.yaml` already names the data.
 
-- States: idle/not-run, queued, running, review, settled, error, stale.
-- Slots for primary action, secondary action, and stage-specific detail.
-- Uses existing `Badge`, `Progress`, `Button`, and status tokens.
+- Filter values are `all`, `flagged`, `clean`, or a flag kind.
+- Density values are `S`, `M`, or `L`.
+- The named data includes a selected-row list.
 
-### 8. Add `ReviewFilterToolbar`
+- Filters show counts from the stage totals and an active state.
+- Density control delegates to `ThumbSizeToggle` or the existing density primitives.
+- The toolbar has an optional selected count and an action slot.
+- The toolbar needs keyboard and aria tests for the interactive filters.
 
-**Why:** Image review stages repeat filter chips, flag counts, density S/M/L,
-selected counts, and toolbar actions. The current `FilterToolbar`,
-`ThumbSizeToggle`, and `StageToolbar` provide useful pieces but not the whole
-review toolbar.
+`ReviewPageGrid` is unbuilt. The target file is `src/templates/ReviewPageGrid.tsx`.
 
-**Target:** `src/templates/ReviewFilterToolbar.tsx` or
-`src/primitives/ReviewFilterToolbar.tsx`.
+`imageStageReview` covers seven stages: threshold, deskew, denoise, dewarp, post-transform crop, post-OCR crop, and canvas map.
 
-**Acceptance:**
+- The grid composes `ThumbGrid`, `Thumbnail`, `FlagChip`, and status indicators.
+- Row states from that machine are `running`, `clean`, `flagged`, `failed`, and `reviewed`.
+- Density is `S`, `M`, and `L`.
+- The grid also has selection.
+- Stage-specific overlays stay slots.
 
-- Typed filters with counts and active state.
-- Density control delegates to `ThumbSizeToggle` or existing density primitives.
-- Optional selected count and action slot.
-- Keyboard and aria state tests for interactive filters.
+`InlineReviewEditorShell` is unbuilt. The target file is `src/templates/InlineReviewEditorShell.tsx`.
 
-### 9. Add `ReviewPageGrid`
+The image-review editor is one expanded row. That row is a wipe compare, stage controls, and apply-to scope `this`, `selected`, or `sameIssue` (`tool-image-stage-review.yaml`).
 
-**Why:** `imageStageReview` requires a reusable flag-grid/page-grid for seven
-stages (`statecharts/README.md:119-124`). Current `ThumbGrid` and `Thumbnail`
-exist, but stage pages still need a typed review composition.
-
-**Target:** `src/templates/ReviewPageGrid.tsx`.
-
-**Acceptance:**
-
-- Composes `ThumbGrid`, `Thumbnail`, `FlagChip`, and status indicators.
-- Supports density S/M/L, selection, loading skeletons,
-  failed/running/reviewed states, and custom thumbnail overlay slots.
-- Stage-specific visual overlays remain slots, not hard-coded.
-
-### 10. Add `InlineReviewEditorShell`
-
-**Why:** Shared image review needs an exclusive inline editor with apply scope:
-this page, selected, same issue (`statecharts/README.md:121`, `:151-157`).
-
-**Target:** `src/templates/InlineReviewEditorShell.tsx`.
-
-**Acceptance:**
-
-- Header, before/after or viewer slot, controls slot, apply-scope segmented
-  control, cancel/apply footer, warning/gate slot.
-- Does not know crop/deskew/dewarp math.
+- Wipe compare stays in this shell. It is not an `ArtifactViewer` mode.
+- The shell has a controls slot, an apply-scope control, and cancel, accept, and re-run actions.
+- The shell does not know crop, deskew, or dewarp math. Those controls are passed in per stage.
 - Tests cover scope changes and action callbacks.
 
-## P1 - Gate And Pack Tail Components
+### Unbuilt gate panels and artifact tree
 
-### 11. Add `GatePanel`
+`GatePanel` is unbuilt. The target file is `src/primitives/GatePanel.tsx`.
 
-**Why:** PGDP repeats `Gate` across build, proof, validation, submit, archive,
-regex, and zip surfaces (`COMPONENT_INDEX.md:21-31`; pack chain at
-`statecharts/README.md:176-184`).
+Validation rule levels are `pass`, `warn`, and `error` (`tool-validation.yaml`).
 
-**Target:** `src/primitives/GatePanel.tsx`.
+The panel may also show that machine's `blocked` and `passed` states.
 
-**Acceptance:**
+- Do not replace `BuildPackagePanel` or `RunAllDirtyPanel`. Those pack launchers already ship.
+- The panel has a title, a description, an icon or status slot, and optional actions.
+- It can render as a list item or a full panel.
 
-- Tones: pass, warning, error, running, neutral.
-- Title, description, icon/status slot, optional actions.
-- Can render as a list item or full panel.
+`ConfirmAdvancePanel` is unbuilt. The target file is `src/templates/ConfirmAdvancePanel.tsx`.
 
-### 12. Add `ConfirmAdvancePanel`
+Image review gates "Confirm and advance" on every flag being reviewed (`tool-image-stage-review.yaml`).
 
-**Why:** Compose/text/pack stages share gated "confirm and advance" behavior
-(`statecharts/README.md:162-184`).
+- It receives blocker count, resolved count, target stage label, primary action, and disabled reason.
+- It uses `GatePanel` internally.
+- Shared stories cover clean, blockers present, and primary action disabled with a reason.
+- Dry-run failed, dry-run passed, and submitted are submit-check states (`tool-submit-check.yaml`).
+- Write those stories only on the PGDP app's submit-check screen.
 
-**Target:** `src/templates/ConfirmAdvancePanel.tsx`.
+`ArtifactTree` is unbuilt. The target file is `src/primitives/ArtifactTree.tsx`.
 
-**Acceptance:**
+- Proof pack renders a contents tree (`tool-proof-pack.yaml`).
+- Zip renders a contents tree and the archive checksum (`tool-zip.yaml`).
+- Archive renders a keep/drop list of `name`, `meta`, and `keep`, plus
+  kept and dropped sizes (`tool-archive.yaml`).
 
-- Receives blocker count, resolved count, target stage label, primary action, and
-  disabled reason.
-- Uses `GatePanel` internally.
-- Stories cover clean, blockers, dry-run failed, dry-run passed, and submitted.
+### Second image on the page workbench
 
-### 13. Add `ArtifactTree`
+`ArtifactViewer` already has `overlayMode` values `view`, `split`, `illust`, `rotate`, and `words`.
 
-**Why:** Proof pack, build package, zip, submit check, and archive repeat file
-tree/package manifest displays (`COMPONENT_INDEX.md:56-61`, `:255-265`,
-`:303-313`, `:372-382`).
+`split` is a one-image divider.
 
-**Target:** `src/primitives/ArtifactTree.tsx`.
+Do not reuse those names for before/after compare.
 
-**Acceptance:**
+The PGDP page workbench viewer is `single` or `comparing` (`page-workbench.yaml`).
 
-- Tree/list hybrid with file/folder/status/checksum/size fields.
-- Collapsible groups and row action slots.
-- Can represent keep/drop retention lists for archive.
+Comparing is a curtain or a side-by-side pair, with a second image source.
 
-## P2 - Workbench And Comparison Extensions
+Add that compare as its own prop on `src/stages/PageWorkbench/ArtifactViewer.tsx`, or as a companion viewer.
 
-### 14. Extend `ArtifactViewer` with explicit compare modes
+Keep the wipe compare in `InlineReviewEditorShell`.
 
-**Why:** PGDP page workbench calls for before/after compare and split views
-across multiple stages (`final/pipeline/page-workbench.jsx:184-227`;
-`statecharts/README.md:86`, `:122`).
+- This must not regress current labeler and PageWorkbench consumers.
 
-**Target:** `src/stages/PageWorkbench/ArtifactViewer.tsx` or a companion
-`CompareViewer`.
+`SourcePageWorkbench` still discards `beforeImageUrl`.
 
-**Acceptance:**
+Decide that prop together with this compare work.
 
-- Supports before, after, split, overlay modes with two image sources.
-- Keeps stage-specific overlays as slots.
-- Does not regress existing labeler/PageWorkbench consumers.
+See owner decisions below.
 
-### 15. Add reusable `WorkbenchLayout`
+## Other open work in this repo
 
-`WorkbenchLayout` already ships from `src/workbench/`, with a public root
-export, story, and tests. Do not add a second workbench shell; use this task to
-verify whether the shipped layout needs an extension.
+- Friendly active-device labels. `ComputeTargetPanel` still renders the raw
+  id. [Plan](2026-07-21-active-device-label.md).
+  [Issue](../issues/2026-07-15-computetargetpanel-active-device-label.md).
+- The same panel returns nothing unless `info.mode` is local. That breaks
+  the deploy-mode rule in `AGENTS.md`.
+- `Field` has no help slot.
+  [Spec](../specs/2026-05-21-field-field-row.md).
+- Repair `scripts/update-pdomain-deps.sh` so it can read object-form
+  codegen pins. `make update-pdomain-deps` fails before it refreshes
+  anything. [Contract](../architecture/codegen-contract.md).
+- CropCard's empty flag-overlay guard treats a React element check as always true.
+- CoverPlaceholder still uses inline RGBA foreground and shadow values.
 
-**Why:** PGDP page workbench uses a repeated two-pane shell with controls,
-viewer, notes, stat grid, and action footer (`final/pipeline/page-workbench.jsx`).
+Both are recorded in [theme and component quality](../architecture/theme-and-component-quality.md).
 
-**Target:** the existing `src/workbench/WorkbenchLayout.tsx` component.
+- Several lint suppressions still lack a local rationale. The register
+  itself matches the source.
+  [Lint deviations](../process/lint-deviations.md).
 
-**Acceptance to verify:**
+## Deferred until a consumer asks
 
-- Slots: header, controls panel, viewer, sidecar, footer.
-- Compatible with `StageControlsPanel` and `ArtifactViewer`.
-- Stories cover narrow/wide and long-controls states.
+- Key sequences such as `g p` in `useShortcuts`.
+  [Plan](2026-07-21-shortcut-sequences-conditional.md).
+  [Issue](../issues/2026-07-15-useshortcuts-chord-sequences.md).
+- LogViewer.
+  [Spec](../specs/2026-05-21-log-viewer.md).
+- A richer ColorField picker, or settings panels addressed by URL.
+- Removing AppShell `drawer` and `rightPanel`, the SettingsModal shim, and
+  the inert JobsPill and AppHeader props. Current code still keeps them.
+  [Shell utility dock](../architecture/shell-utility-dock.md).
+- Splitting `theme/primitives.css`. Keep one runtime entry until the file
+  becomes unwieldy.
+- Consumer migration that this repo cannot prove:
+  - UtilityDock in `pdomain-ocr-simple-gui`, `pdomain-prep-for-pgdp`, and `pdomain-ocr-labeler-spa`.
+  - The labeler accordion on `AccordionTrigger` slots.
+  - Adoption of the records, source-intake, viewport, settings, status, and workbench subpaths.
 
-## P2 - PGDP App-Local Stage Consumption Map
+## Owner decisions
 
-Build these in `pdomain-prep-for-pgdp` after the common components above. This
-order keeps the app-local stage implementations thin. The table is a
-consumption map, not a `pdomain-ui` package-subpath backlog.
+- Abandon or replace the dep-refresh auto-land spec. It targets GitHub
+  workflows deleted in commit `0aa42b5` on 2026-09-13.
+  [Spec](../specs/2026-07-16-dep-refresh-auto-land-design.md).
+- Confirm that a current consumer still needs the draft LogViewer contract.
+- Close or revive the consumer-canary prefs direction. The proposed `system` theme and local persistence adapter never shipped. The utility dock replaced the shared centered modal.
+- Decide LabelerCanvas drag-to-create. The component renders blocks and
+  handles but does not call `onBlocksChange`.
+- Confirm whether the labeler SPA moved its annotation chrome to
+  ArtifactViewer.
+- Decide whether a mounted Konva canvas must repaint on a live theme change.
+- Decide what to do with `SourcePageWorkbench`'s unused `beforeImageUrl`: implement the compare contract or remove the prop.
 
-| Family       | PGDP app-local stages                                                                       | Shared `pdomain-ui` base to consume                                                                      |
-| ------------ | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+This file stays the one roadmap.
+
+Split a component into its own spec when someone starts building it.
+
+## App-local stages stay in pdomain-prep-for-pgdp
+
+Build these stages in `pdomain-prep-for-pgdp` after the shared components above exist.
+
+The table is a consumption map, not a package-subpath backlog.
+
+| Family       | PGDP app-local stages                                                                       | Shared pdomain-ui base                                                                 |
+| ------------ | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Image review | `Threshold`, `Deskew`, `Denoise`, `Dewarp`, `PostTransformCrop`, `PostOcrCrop`, `CanvasMap` | `StageLifecycleBanner`, `ReviewFilterToolbar`, `ReviewPageGrid`, `InlineReviewEditorShell`, settings kit |
-| OCR and text | `OCR`, `TextZones`, `TextReview`, `Illustrations`, `Regex`                                  | Workbench layout, gate panel, settings kit, specialized worklist/text components                         |
-| Pack tail    | `ProofPack`, `BuildPackage`, `Zip`, `SubmitCheck`, `Archive`                                | `GatePanel`, `ConfirmAdvancePanel`, `ArtifactTree`, settings kit                                         |
+| OCR and text | `OCR`, `TextZones`, `TextReview`, `Illustrations`, `Regex`                                  | Workbench layout, gate panel, settings kit, specialized worklist and text components |
+| Pack tail    | `ProofPack`, `BuildPackage`, `Zip`, `SubmitCheck`, `Archive`                                | `GatePanel`, `ConfirmAdvancePanel`, `ArtifactTree`, settings kit                     |
 
-Each app-local stage implementation should get:
+Each app-local stage needs local route files, stories for the PGDP `DCArtboard` states, and tests for interaction and accessibility.
 
-- Local route/component files in `pdomain-prep-for-pgdp`.
-- Storybook stories corresponding to PGDP `DCArtboard` states.
-- Unit tests for interaction props and accessibility.
-- Only stage-specific domain visuals, not duplicated toolbar/settings/gate code.
+It needs only the visuals that are specific to that stage.
 
-## Out Of Scope For `pdomain-ui`
+## Where the other work belongs
 
-- XState v5 machine implementations from `statecharts/*.yaml`.
-- Backend registry re-cut, project-stage state, event log, SSE, and reindex
-  behavior.
-- PGDP-specific route mutations: submit, archive, library promotion, page-set
-  mutation.
-- Domain algorithms and geometry: dewarp mesh solving, OCR confidence scoring,
-  validation rules, package manifest generation, regex engine behavior.
+Do not start a second component library.
+
+Shared presentation stays here.
+
+The items below already have a home, or they need a new repo only when a second app shares them.
+
+**Move, rather than publish, the Projects stage.** `PipelineMini`, `ProjectsEmpty`, and `ProjectsAttributesPanel` live under `src/stages/Projects/`.
+
+They are not exported.
+
+If only the PGDP app uses them, move that folder to `pdomain-prep-for-pgdp`.
+
+Add `./stages/Projects` only when a second app imports it.
+
+**Move the design-reference bundle.** `docs/templates/design_handoff_pd_ui/` is the PGDP design input for this library.
+
+Docgraph ignores `docs/templates/`.
+
+A newer handoff path is cited by the gap analysis under `pdomain-prep-for-pgdp`.
+
+Keep one copy with the app's design docs.
+
+Delete this copy only after that home is confirmed.
+
+**Keep PGDP route mutations in the PGDP app.** Submit, archive, library promotion, and page-set mutation stay in `pdomain-prep-for-pgdp`.
+
+**Keep suite infrastructure in pdomain-ops.** That repo is in-process suite registry, shared UI preferences, the sibling launcher, and GPU dispatch.
+
+It is not a project-stage event log.
+
+Do not add SSE, reindex, or the project event log there unless the owner expands that charter.
+
+**Keep geometry and OCR contracts where they already are.**
+
+- Pure-Python geometry, typography, matching, OCR result types, and PGDP round readers live in `pdomain-book-contracts`.
+- Scan imaging and OCR tooling live in `pdomain-book-tools`.
+- Font-free PGDP measurement lives in `pdomain-pgdp-measure`.
+- The DP project mirror lives in `pdomain-pgdp-api-client`.
+- Dewarp mesh solving, OCR confidence scoring, validation rule definitions, and regex engine behavior belong with those tools or with the PGDP app. They do not belong in pdomain-ui. They do not need a new repo.
+
+**Add a workflow package only for a second consumer.** XState v5 machines for the statechart YAMLs stay in `pdomain-prep-for-pgdp` while that app is the only runner.
+
+A small workflow package is worth it when another app must run the same machines.
+
+That package is not a pdomain-ui module.
+
+**Add a project-state service only for a second consumer.** Backend registry re-cuts, project-stage state, the event log, SSE, and reindex stay in the PGDP app's backend. They stay there until another app needs the same log.

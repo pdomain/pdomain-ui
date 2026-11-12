@@ -3,7 +3,7 @@ kind: process
 status: active
 owner: CT
 created: 2026-05-17
-last_verified: 2026-11-06
+last_verified: 2026-11-12
 ---
 
 # Documentation index
@@ -45,15 +45,14 @@ archive only as a last resort.
 
 ## Remaining work
 
-Shipped behavior is the architecture list above. These items are still open. No plan in this pass was fully implemented, so none was retired.
+Shipped behavior is the architecture list above. The single remaining-work
+list is the [roadmap](plans/2026-06-14-pgdp-common-component-backlog.md).
 
-- Friendly active-device labels are not implemented. `ComputeTargetPanel` still renders the raw id. [Plan](plans/2026-07-21-active-device-label.md). [Issue](issues/2026-07-15-computetargetpanel-active-device-label.md).
-- The PGDP common-component backlog is partial. The settings kit and `WorkbenchLayout` are in the tree. `package.json` has no `./stages/Projects` export. The inheritance banner, stage-settings audit, review foundation, gate and pack panels, and two-image compare modes are absent. [Plan](plans/2026-06-14-pgdp-common-component-backlog.md). Source: [gap analysis](research/2026-06-14-pgdp-design-handoff-gap-analysis.md).
-- `Field` has no help slot. [Spec](specs/2026-05-21-field-field-row.md).
-- LogViewer has no component. Continued demand needs an owner decision. [Spec](specs/2026-05-21-log-viewer.md).
-- Key sequences such as `g p` stay deferred until a consumer names one. [Plan](plans/2026-07-21-shortcut-sequences-conditional.md). [Issue](issues/2026-07-15-useshortcuts-chord-sequences.md).
-- The dep-refresh auto-land spec targets the GitHub workflows deleted in `0aa42b5` (2026-09-13). It needs an owner decision. [Spec](specs/2026-07-16-dep-refresh-auto-land-design.md).
-- CropCard's empty overlay guard, CoverPlaceholder's inline RGBA values, LabelerCanvas's inert mutation contract, and live theme repaint are recorded and still open. [Intent map](context/intent-map.md).
+That roadmap holds the unbuilt review, gate, and compare components, the
+other open library defects, deferred consumer work, owner decisions, and
+the work that belongs in other repositories. The settings kit and
+`WorkbenchLayout` are already shipped and are recorded in
+[cross-app common UI modules](architecture/cross-app-common-ui-modules.md).
 
 ## Decisions
 

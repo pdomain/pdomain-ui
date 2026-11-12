@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-11-06
+Last verified: 2026-11-12
 Kind: context
 ---
 
@@ -296,3 +296,26 @@ Kind: context
   `GatePanel`, `ConfirmAdvancePanel`, and `ArtifactTree`, and none of those
   files are in `src/`.
 - **Remaining work:** the list in `docs/README.md`.
+
+### 2026-11-12 — One roadmap, shipped behavior in architecture
+
+- **Context:** Remaining work was restated in the docs index, the intent map,
+  and the PGDP common-component backlog. The backlog still carried settings
+  and workbench tasks that the code had already shipped.
+- **Decision:** Keep
+  `docs/plans/2026-06-14-pgdp-common-component-backlog.md` as the single
+  roadmap. Record the shipped settings kit, `WorkbenchLayout` slots, mixed
+  stage exports, and slot primitives in the architecture docs. Point the
+  index, current state, and intent map at that roadmap instead of copying
+  the list. Do not retire the plan: the review, gate, compare, and export
+  work is not implemented.
+- **Rationale:** One list stops the three copies from drifting. Architecture
+  stays the record of what the package does today.
+- **Evidence:** `src/settings/index.ts`, `src/workbench/WorkbenchLayout.tsx`,
+  `src/stages/Projects/index.ts`, `src/index.ts`, and `package.json`, read
+  on 2026-11-12. `SettingsInheritanceBanner`, `StageLifecycleBanner`,
+  `ReviewFilterToolbar`, `ReviewPageGrid`, `InlineReviewEditorShell`,
+  `GatePanel`, `ConfirmAdvancePanel`, and `ArtifactTree` are still absent
+  from `src/`.
+- **Remaining work:** the roadmap. Separate-repo recommendations in that
+  file are proposals, not new repositories.

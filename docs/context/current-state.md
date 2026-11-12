@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-11-07
+Last verified: 2026-11-12
 Kind: context
 ---
 
@@ -27,7 +27,10 @@ has the adjacent design-system mirror.
 
 ## In-flight work
 
-Open items are the [remaining-work list](../README.md#remaining-work). No plan was fully implemented, so none was retired.
+Open items are the [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md).
+The docs index points at that same list. No plan was fully implemented, so
+none was retired. Shipped settings, workbench, and slot-primitive behavior
+was copied into the architecture docs on 2026-11-12.
 
 ## Risks
 
