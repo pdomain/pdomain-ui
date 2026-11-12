@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from './cn.js';
 import { useFieldContext } from './FieldContext.js';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- named props interface gives consumers a stable type to extend
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(

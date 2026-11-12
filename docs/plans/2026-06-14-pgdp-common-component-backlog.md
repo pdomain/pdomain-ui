@@ -248,23 +248,25 @@ See owner decisions below.
 
 ## Other open work in this repo
 
-- Friendly active-device labels. `ComputeTargetPanel` still renders the raw
-  id. [Plan](2026-07-21-active-device-label.md).
-  [Issue](../issues/2026-07-15-computetargetpanel-active-device-label.md).
-- The same panel returns nothing unless `info.mode` is local. That breaks
-  the deploy-mode rule in `AGENTS.md`.
 - `Field` has no help slot.
   [Spec](../specs/2026-05-21-field-field-row.md).
-- Repair `scripts/update-pdomain-deps.sh` so it can read object-form
-  codegen pins. `make update-pdomain-deps` fails before it refreshes
-  anything. [Contract](../architecture/codegen-contract.md).
-- CropCard's empty flag-overlay guard treats a React element check as always true.
-- CoverPlaceholder still uses inline RGBA foreground and shadow values.
 
-Both are recorded in [theme and component quality](../architecture/theme-and-component-quality.md).
+## Fixes from the open branches
 
-- Several lint suppressions still lack a local rationale. The register
-  itself matches the source.
+These defects landed with `night-audit-residuals` (`ab0170d` through `3ca2679`).
+That range includes `worktree-fix-compute-panel-and-dep-updater`.
+
+- Friendly active-device labels and the empty-device-list gate are in
+  `ComputeTargetPanel` (`ab0170d`, `d5d017e`). The active-device issue, plan,
+  and spec were retired on that branch. The record is
+  [canvas and shell extension points](../architecture/canvas-and-shell-extension-points.md).
+- `scripts/update-pdomain-deps.sh` reads object-form codegen pins (`86c169e`).
+  [Contract](../architecture/codegen-contract.md).
+- CropCard passes the bottom-left flag overlay only when the page has flags
+  (`70927e3`).
+- CoverPlaceholder uses `--cover-ink` and `--shadow-cover-inset` (`c380728`).
+  [Theme and component quality](../architecture/theme-and-component-quality.md).
+- Lint suppressions that remain have a local rationale (`159d64a`).
   [Lint deviations](../process/lint-deviations.md).
 
 ## Deferred until a consumer asks

@@ -34,7 +34,7 @@ export const LocalModeGPUActive: Story = {
   },
 };
 
-export const HiddenInHostedMode: Story = {
+export const HiddenWhenNoDevicesReported: Story = {
   args: {
     info: { mode: 'hosted', available: [], current: null, effective_source: null },
     onSelect: () => {},

@@ -146,7 +146,7 @@ export function CoverPlaceholder({ author, size = 56 }: CoverPlaceholderProps) {
         height: Math.round(size * 1.35),
         borderRadius: 4,
         background: `linear-gradient(160deg, oklch(0.62 0.07 ${hue}), oklch(0.42 0.06 ${hue2}))`,
-        color: 'rgba(255,255,255,0.92)',
+        color: 'var(--cover-ink)',
         flexShrink: 0,
         display: 'grid',
         placeItems: 'center',
@@ -154,7 +154,7 @@ export function CoverPlaceholder({ author, size = 56 }: CoverPlaceholderProps) {
         fontWeight: 600,
         fontSize: Math.round(size * 0.28),
         letterSpacing: '0.04em',
-        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08), inset -2px 0 0 rgba(0,0,0,0.18)',
+        boxShadow: 'var(--shadow-cover-inset)',
       }}
     >
       {initials}

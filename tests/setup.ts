@@ -21,6 +21,5 @@ if (typeof globalThis.PointerEvent === 'undefined') {
       this.pointerType = init?.pointerType ?? 'mouse';
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as Record<string, any>)['PointerEvent'] = PointerEventPolyfill;
+  Object.assign(globalThis, { PointerEvent: PointerEventPolyfill });
 }

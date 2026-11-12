@@ -82,8 +82,8 @@ type Story = StoryObj<typeof meta>;
 
 // ── Icon grid helper ──────────────────────────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyIconComponent = React.ComponentType<any>;
+/** Lucide re-exports and bespoke SVG icons both accept these grid props. */
+type AnyIconComponent = React.ComponentType<{ size?: number; color?: string }>;
 
 function IconGrid({
   title,

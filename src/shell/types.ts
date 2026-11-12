@@ -260,7 +260,7 @@ export interface DeviceEntry {
 /**
  * Response from `GET /api/suite/device`.
  * - Local mode: `mode === "local"`, `available` list populated.
- * - Non-local mode: `mode !== "local"`, `available` is empty, panel hides itself.
+ * - Non-local mode: `mode !== "local"`, `available` is empty, so `ComputeTargetPanel` renders nothing.
  */
 export interface DeviceInfo {
   mode: 'local' | 'hosted';

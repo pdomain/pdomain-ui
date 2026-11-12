@@ -289,7 +289,7 @@ export function PageImageCanvas<
     );
   }
 
-  /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+  /* eslint-disable jsx-a11y/no-noninteractive-tabindex -- the focusable viewport region receives the canvas keyboard shortcuts */
   return (
     <CanvasInternalContext.Provider value={ctxValue}>
       <div
@@ -490,6 +490,7 @@ export function PageImageCanvas<
       </div>
     </CanvasInternalContext.Provider>
   );
+  /* eslint-enable jsx-a11y/no-noninteractive-tabindex */
 }
 
 PageImageCanvas.displayName = 'PageImageCanvas';

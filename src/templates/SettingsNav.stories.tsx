@@ -37,7 +37,7 @@ const SidebarWrapper = ({ children }: { children: React.ReactNode }) => (
 export const Default: Story = {
   name: 'D · Default 8-item layout (dark)',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('general');
     return (
       <SidebarWrapper>
@@ -59,7 +59,7 @@ export const Default: Story = {
 export const DangerActive: Story = {
   name: 'D · Danger zone active',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('danger');
     return (
       <SidebarWrapper>
@@ -89,7 +89,7 @@ const ACCOUNT_GROUPS: SettingsNavGroup[] = [
 export const CustomGroups: Story = {
   name: 'D · Custom groups (account settings)',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('profile');
     return (
       <SidebarWrapper>
@@ -111,7 +111,7 @@ export const CustomGroups: Story = {
 export const NoLabel: Story = {
   name: 'D · No label prop',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('general');
     return (
       <SidebarWrapper>
@@ -142,7 +142,7 @@ export const LightTheme: Story = {
     ),
   ],
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('general');
     return (
       <SidebarWrapper>
@@ -174,7 +174,7 @@ export const LightDangerActive: Story = {
     ),
   ],
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('danger');
     return (
       <SidebarWrapper>

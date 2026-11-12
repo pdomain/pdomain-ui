@@ -43,7 +43,7 @@ describe('useStageCall (#166)', () => {
   });
 
   it('goes warming when submit rejects with 503-like error', async () => {
-    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the hook reads status and retryAfter from the rejected object
     const submit = vi.fn(() => Promise.reject({ status: 503, retryAfter: 1000 }));
     const { result } = renderHook(() => useStageCall('stage1', 'p1', { submit }));
     await act(() => {
@@ -76,7 +76,7 @@ describe('useStageCall warming retry (#23)', () => {
     const submit = vi.fn(() => {
       callCount++;
       if (callCount === 1) {
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the hook reads status and retryAfter from the rejected object
         return Promise.reject({ status: 503, retryAfter: 2000 });
       }
       return Promise.resolve({ text: 'ok' });
@@ -112,7 +112,7 @@ describe('useStageCall warming retry (#23)', () => {
 
   it('warming→retry→fail: exhausts retries and goes error', async () => {
     const submit = vi.fn(
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the hook reads status and retryAfter from the rejected object
       () => Promise.reject({ status: 503, retryAfter: 500 }),
     );
 
@@ -153,7 +153,7 @@ describe('useStageCall warming retry (#23)', () => {
     const submit = vi.fn(() => {
       callCount++;
       if (callCount <= 2) {
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the hook reads status and retryAfter from the rejected object
         return Promise.reject({ status: 503, retryAfter: 5000 });
       }
       return Promise.resolve({ text: 'fresh' });
@@ -194,7 +194,7 @@ describe('useStageCall warming retry (#23)', () => {
 
   it('unmount cancels the pending retry timer (no setState after unmount)', async () => {
     const submit = vi.fn(
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the hook reads status and retryAfter from the rejected object
       () => Promise.reject({ status: 503, retryAfter: 1000 }),
     );
 
@@ -227,7 +227,7 @@ describe('useStageCall warming retry (#23)', () => {
     const submit = vi.fn(() => {
       callCount++;
       if (callCount === 1) {
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- the hook reads status and retryAfter from the rejected object
         return Promise.reject({ status: 503 }); // no retryAfter field
       }
       return Promise.resolve({ text: 'default-delay' });

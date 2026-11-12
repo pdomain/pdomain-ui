@@ -50,7 +50,7 @@ vi.mock('react-konva', () => ({
     role?: string;
     onClick?: () => void;
   }) => (
-    /* eslint-disable jsx-a11y/click-events-have-key-events */
+    /* eslint-disable jsx-a11y/click-events-have-key-events -- Konva test double needs a click handler, not keyboard behavior */
     <div data-testid={tid} role={role} onClick={onClick} />
     /* eslint-enable jsx-a11y/click-events-have-key-events */
   ),

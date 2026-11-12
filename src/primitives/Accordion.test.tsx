@@ -4,8 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion.js';
 import type { AccordionTone, AccordionTriggerProps } from './Accordion.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderTrigger(triggerProps: Partial<AccordionTriggerProps> & Record<string, any> = {}) {
+function renderTrigger(
+  triggerProps: Partial<AccordionTriggerProps> & Record<string, unknown> = {},
+) {
   return render(
     <Accordion type="single" collapsible defaultValue="a">
       <AccordionItem value="a">

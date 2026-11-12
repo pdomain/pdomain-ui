@@ -120,6 +120,21 @@ describe('CropCard', () => {
       expect(container.querySelectorAll('.crop-card__flag-chip')).toHaveLength(0);
     });
 
+    it.each(['s', 'm', 'l'] as const)(
+      'density %s: no empty bottom-left overlay when flags is empty',
+      (density) => {
+        const { container } = render(<CropCard page={makePage({ flags: [] })} density={density} />);
+        expect(container.querySelector('.thumbnail__corner--bl')).not.toBeInTheDocument();
+      },
+    );
+
+    it('renders the bottom-left overlay when flags are present', () => {
+      const { container } = render(
+        <CropCard page={makePage({ flags: ['overCrop'] })} density="m" />,
+      );
+      expect(container.querySelector('.thumbnail__corner--bl')).toBeInTheDocument();
+    });
+
     it('density m: shows up to 2 chips', () => {
       const { container } = render(
         <CropCard

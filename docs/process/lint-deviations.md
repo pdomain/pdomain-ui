@@ -3,15 +3,18 @@ kind: process
 status: active
 owner: CT
 created: 2026-05-22
-last_verified: 2026-11-07
+last_verified: 2026-11-11
 ---
 
 # Lint-rule deviations
 
 This register lists every current ESLint suppression, ESLint configuration
 exception, and Ruff ignore in pdomain-ui. It was checked against the source,
-tests, `eslint.config.js`, and `pyproject.toml` on 2026-11-07. Update it with
+tests, `eslint.config.js`, and `pyproject.toml` on 2026-11-11. Update it with
 the source whenever a deviation changes.
+
+Every remaining suppression states its reason on the directive itself, using
+ESLint's `-- reason` description, or in a comment beside it.
 
 ## Typed empty component props
 
@@ -23,23 +26,14 @@ Each component exports a named props interface that extends its native HTML
 attribute type but adds no members. The interface gives consumers a stable type
 to extend. A type alias would work, but the interfaces match the component API.
 
-## Deliberate `any` boundaries
+## No `any` suppressions
 
-`@typescript-eslint/no-explicit-any` is suppressed in:
-
-- `src/icons/Icon.tsx:119`, where the icon map accepts React components with
-  differing prop types.
-- `src/icons/Icons.stories.tsx:85`, where the Storybook icon grid accepts both
-  Lucide re-exports and bespoke SVG components.
-- `src/primitives/Accordion.test.tsx:7`, where the helper accepts arbitrary
-  trigger props for test setup.
-- `tests/setup.ts:24`, where the PointerEvent polyfill is assigned through the
-  global object.
-
-These are narrow presentation or test boundaries. The first three lack a
-source-level rationale beyond the surrounding code and should be reconsidered
-when their types change. The test setup must write a global constructor, so its
-cast remains local to that assignment.
+No source or test file suppresses `@typescript-eslint/no-explicit-any`. The icon
+map in `src/icons/Icon.tsx`, the Storybook icon grid in
+`src/icons/Icons.stories.tsx`, the trigger helper in
+`src/primitives/Accordion.test.tsx`, and the PointerEvent polyfill in
+`tests/setup.ts` used `any` until 2026-11-11. They now use the props each one
+passes, or `Object.assign` for the global, so they need no suppression.
 
 ## Deprecated and deferred API props
 
@@ -70,13 +64,11 @@ the props are removed or implemented.
   non-manual policies.
 - `src/hooks/ShortcutsContext.tsx:106,123`, which separates mount/unmount work
   from re-registering changed bindings.
-- `src/worklist/VirtualizedList.tsx:128`, which suppresses dependency
-  checking for its row-render callback. The callback calls the local `optionId`
-  helper, whose output depends on `uid`; `uid` is already a dependency.
 
-The first four locations explain their behavior in nearby comments or code.
-`VirtualizedList` has no comparable source-level rationale for the suppression;
-review whether the helper can be moved inside the callback when it changes.
+Each location explains its behavior on the directive or in a nearby comment.
+`src/worklist/VirtualizedList.tsx` no longer needs a suppression: its
+`optionId` helper is memoized on `uid` and listed as a dependency of the
+row-render callback.
 
 ## Hooks in Storybook render functions
 
@@ -95,8 +87,9 @@ suppressed hooks supply only example-state behavior.
 ## Accessibility exceptions in production components
 
 `jsx-a11y/no-noninteractive-tabindex` is suppressed in
-`src/canvas/PageImageCanvas.tsx:292`. The canvas wrapper receives keyboard
-focus for its hotkeys while retaining `role="img"` as its visual semantic.
+`src/canvas/PageImageCanvas.tsx:292-493`, from the start of the rendered
+viewport to the end of the component. The viewport wrapper keeps
+`role="region"` and receives keyboard focus for the canvas shortcuts.
 
 The following blocks suppress `jsx-a11y/no-noninteractive-element-interactions`
 and `jsx-a11y/no-noninteractive-tabindex`:
@@ -122,8 +115,8 @@ pattern stated on the source line.
 
 `jsx-a11y/no-autofocus` is suppressed in
 `src/stages/PageWorkbench/AttrEditorPopover.tsx:109,125` so either edit control
-receives focus when its popover opens. The lines have no further local
-rationale and should be reviewed if focus behavior changes.
+receives focus when the user opens its popover. The directives state that
+reason.
 
 ## Accessibility exceptions in Konva test mocks
 
@@ -178,7 +171,7 @@ intentional re-exports.
 ## Evidence
 
 Verification read `eslint.config.js`, `pyproject.toml`, and every matching
-suppression in `src/` and `tests/` on 2026-11-07. The scan command was:
+suppression in `src/` and `tests/` on 2026-11-11. The scan command was:
 
 ```sh
 rg -n --glob '*.{ts,tsx,js,mjs,cjs}' \

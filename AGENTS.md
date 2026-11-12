@@ -3,7 +3,7 @@ kind: process
 status: active
 owner: CT
 created: 2026-05-21
-last_verified: 2026-11-07
+last_verified: 2026-11-10
 verified_against:
   - "Makefile"
   - "package.json"
@@ -79,7 +79,7 @@ Docs: [`docs/README.md`](docs/README.md)
 | `make release-major` | bump major version, ci, commit, tag, push |
 | `make codegen` | fetch pinned wheels → emit JSON Schema → generate TS types |
 | `make codegen-check` | runs codegen and fails if output differs |
-| `make update-pdomain-deps` | intended dependency refresh; currently blocked by object-form codegen pins |
+| `make update-pdomain-deps` | bump codegen pins to the registry's latest wheels, run codegen, and stage the diff |
 | `make ci AI=1` | install + static checks + unit tests + build + package tests + codegen and theme checks |
 
 `AI=1` currently does not change output: the Makefile defines logging variables,
@@ -106,10 +106,6 @@ the hooks also cover shared file checks, Markdown, and secrets.
   in pdomain-ops adapters.
 - **Port-not-copy**: when porting from labeler-spa, read the source once, design the
   slot-based API surface, then port. Do not verbatim-copy labeler-specific logic.
-
-Current code deviates from the deploy-mode constraint: `ComputeTargetPanel`
-returns nothing when `info.mode` is not local. This is an implementation
-deviation to resolve, not an exception to the constraint.
 
 ## Codegen
 

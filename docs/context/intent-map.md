@@ -19,8 +19,7 @@ Kind: context
 
 The ordered list is the [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md).
 Active library work there is the unbuilt review, gate, artifact, and compare
-components, the device label, the Field help slot, the codegen pin updater,
-and the CropCard and CoverPlaceholder defects.
+components, and the Field help slot.
 
 Keep `writing-docs` plugin routing and lint-deviation governance active.
 [Lint deviations](../process/lint-deviations.md).

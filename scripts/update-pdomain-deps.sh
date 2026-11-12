@@ -13,8 +13,9 @@
 #   1. For each codegen sibling (pdomain-book-tools, pdomain-ops):
 #      a. Reads codegen.versions.json for the current pinned version.
 #      b. Queries pdomain-index-pip (PEP 503) for the latest version.
-#      c. If latest > current, updates codegen.versions.json.
-#   2. If any version changed, runs make codegen to regenerate TS types.
+#      c. If the newest universal wheel is newer, records its version and SHA-256.
+#   2. If any version changed, writes codegen.versions.json and runs make codegen
+#      to regenerate TS types.
 #   3. Leaves the diff staged (codegen.versions.json + regenerated output).
 #      Does NOT commit.
 #   4. Idempotent: prints "✓ <name> already at X" for each sibling at latest.
@@ -28,9 +29,76 @@ PD_INDEX_PIP="https://pdomain.github.io/pdomain-index-pip"
 # ─────────────────────────────────────────────────────────────────────────────
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-VERSIONS_JSON="$REPO_ROOT/codegen.versions.json"
+# CODEGEN_VERSIONS_PATH is the same test override codegen-fetch.mjs honors.
+VERSIONS_JSON="${CODEGEN_VERSIONS_PATH:-$REPO_ROOT/codegen.versions.json}"
+
+readonly READ_PIN_PY='
+import json
+import sys
+
+path, package = sys.argv[1:3]
+with open(path) as handle:
+    entry = json.load(handle).get(package)
+version = entry if isinstance(entry, str) else (entry or {}).get("version")
+if not version:
+    sys.exit(f"{package} has no version in {path}")
+print(version)
+'
+
+readonly SELECT_WHEEL_PY='
+import re
+import sys
+
+from packaging.version import InvalidVersion, Version
+
+package, current = sys.argv[1:3]
+wheel_name = re.compile(rf"^{re.escape(package)}-(.+)-py3-none-any\.whl$")
+newest = None
+for href in re.findall(r"href=\"([^\"]*)\"", sys.stdin.read()):
+    url, _, fragment = href.partition("#")
+    match = wheel_name.match(url.rsplit("/", 1)[-1])
+    if match is None:
+        continue
+    try:
+        version = Version(match.group(1))
+    except InvalidVersion:
+        continue
+    if newest is None or version > newest[0]:
+        newest = (version, match.group(1), fragment)
+if newest is None:
+    sys.exit(f"no universal wheel listed for {package}")
+version, version_text, fragment = newest
+if version <= Version(current):
+    print(version_text, "-", "current")
+    sys.exit(0)
+digest = re.fullmatch(r"sha256=([0-9a-f]{64})", fragment)
+if digest is None:
+    sys.exit(f"no sha256 listed for {package} {version_text}")
+print(version_text, digest.group(1), "newer")
+'
+
+readonly WRITE_PINS_PY='
+import json
+import os
+import sys
+
+path, *updates = sys.argv[1:]
+with open(path) as handle:
+    pins = json.load(handle)
+for index in range(0, len(updates), 3):
+    package, version, digest = updates[index : index + 3]
+    wheel_prefix = package.replace("-", "_")
+    wheel = f"{wheel_prefix}-{version}-py3-none-any.whl"
+    pins[package] = {"version": version, "sha256": {wheel: digest}}
+with open(f"{path}.tmp", "w") as handle:
+    json.dump(pins, handle, indent=2)
+    handle.write("\n")
+os.replace(f"{path}.tmp", path)
+'
 
 say() { echo "[update-pdomain-deps] $*"; }
+
+pin_python() { uv run --quiet --project "$REPO_ROOT" python -c "$@"; }
 
 # ─── Validate codegen.versions.json exists ───────────────────────────────────
 if [[ ! -f "$VERSIONS_JSON" ]]; then
@@ -38,28 +106,19 @@ if [[ ! -f "$VERSIONS_JSON" ]]; then
   exit 1
 fi
 
-# ─── Step 1: Query pdomain-index-pip and bump each sibling ────────────────────────
-ANY_CHANGED=false
+# ─── Step 1: Query pdomain-index-pip for each sibling ────────────────────────
+# Pins are collected here and written after every sibling succeeds, so a failed
+# lookup leaves codegen.versions.json untouched.
+PENDING_PINS=()
 
 for sibling in "${CODEGEN_SIBLINGS[@]}"; do
-  # Read current pinned version
-  current=$(python3 -c "
-import json, sys
-with open('$VERSIONS_JSON') as f:
-  d = json.load(f)
-v = d.get('$sibling', '')
-if not v:
-  print('ERROR: $sibling not found in codegen.versions.json', file=sys.stderr)
-  sys.exit(1)
-print(v)
-" 2>&1) || {
+  current=$(pin_python "$READ_PIN_PY" "$VERSIONS_JSON" "$sibling") || {
     echo "ERROR: failed to read $sibling from $VERSIONS_JSON" >&2
     exit 1
   }
 
   say "→ current $sibling = $current"
 
-  # Query pdomain-index-pip for latest version
   index_url="$PD_INDEX_PIP/simple/$sibling/"
   say "→ querying $index_url"
 
@@ -70,78 +129,31 @@ print(v)
     exit 1
   }
 
-  # Parse: extract all href filenames, pull version segment, find max.
-  # Handles both wheel (<name>-<ver>-py3-none-any.whl) and sdist (<name>-<ver>.tar.gz).
-  pkg_norm="${sibling//-/_}"
-  latest=$(
-    echo "$html" \
-      | grep -oP 'href="[^"]*"' \
-      | sed 's/href="//;s/"//' \
-      | grep -oP "${pkg_norm}-[0-9][^/\"#]*" \
-      | sed "s/${pkg_norm}-//" \
-      | python3 -c "
-import sys, re
-vers = []
-for line in sys.stdin:
-  line = line.strip()
-  # strip trailing filename junk: everything from first non-version char
-  m = re.match(r'^([0-9]+(?:\.[0-9]+)*(?:[._-]?(?:a|b|rc|alpha|beta|dev)[0-9]*)?).*', line)
-  if m:
-    vers.append(m.group(1))
-if vers:
-  from packaging.version import Version
-  print(str(max(Version(v) for v in vers)))
-"
-  )
-
-  if [[ -z "$latest" ]]; then
-    echo "ERROR: pdomain-index-pip returned a page for $sibling but no wheel/sdist found." >&2
-    echo "       Index may not be seeded yet. No changes made." >&2
+  selection=$(printf '%s' "$html" | pin_python "$SELECT_WHEEL_PY" "${sibling//-/_}" "$current") || {
+    echo "ERROR: could not choose a wheel for $sibling from $index_url." >&2
+    echo "       No changes made." >&2
     exit 1
-  fi
+  }
+  read -r latest digest status <<<"$selection"
 
   say "   latest $sibling = $latest"
 
-  # Check if already at latest
-  is_latest=$(python3 -c "
-from packaging.version import Version
-cur = Version('$current')
-lat = Version('$latest')
-print('yes' if lat <= cur else 'no')
-" 2>&1) || {
-    echo "ERROR: failed to compare versions ($current vs $latest)" >&2
-    exit 1
-  }
-
-  if [[ "$is_latest" == "yes" ]]; then
+  if [[ "$status" == "current" ]]; then
     say "   ✓ $sibling already at $current — skipping"
     continue
   fi
 
   say "   pinning $sibling: $current → $latest"
-
-  # Update the version in codegen.versions.json
-  python3 -c "
-import json
-
-with open('$VERSIONS_JSON') as f:
-  d = json.load(f)
-
-d['$sibling'] = '$latest'
-
-with open('$VERSIONS_JSON', 'w') as f:
-  json.dump(d, f, indent=2)
-  f.write('\n')
-"
-
-  ANY_CHANGED=true
+  PENDING_PINS+=("$sibling" "$latest" "$digest")
 done
 
-# ─── Step 2: Re-run codegen if anything changed ──────────────────────────────
-if [[ "$ANY_CHANGED" == "false" ]]; then
+# ─── Step 2: Write pins and re-run codegen if anything changed ───────────────
+if [[ ${#PENDING_PINS[@]} -eq 0 ]]; then
   say "✓ all codegen inputs already at latest — no codegen needed"
   exit 0
 fi
+
+pin_python "$WRITE_PINS_PY" "$VERSIONS_JSON" "${PENDING_PINS[@]}"
 
 say "→ updated $VERSIONS_JSON"
 say "→ running make codegen (fetch wheels → emit JSON → generate TS)"

@@ -1,7 +1,8 @@
 /**
  * ComputeTargetPanel — device picker for compute-target selection.
  *
- * Local-deploy-mode-gated: returns null when `info.mode !== "local"`.
+ * Returns null when the backend reports no devices, which is how pdomain-ops
+ * signals a hosted deployment; the panel itself never reads the deploy mode.
  * Renders the available device list (CPU + GPU VRAM), unavailable NVIDIA
  * hardware, persistent CPU override controls, and a CUDA setup guide link.
  *
@@ -34,9 +35,17 @@ function isUsableCuda(device: DeviceInfo['available'][number]): boolean {
   return device.available !== false && (device.kind === 'cuda' || device.id.startsWith('cuda:'));
 }
 
+function activeDeviceLabel(current: string | null, available: DeviceInfo['available']): string {
+  if (current === null) return 'Automatic';
+  const knownDevice = available.find((device) => device.id === current);
+  if (knownDevice) return knownDevice.label;
+  if (current === 'local') return 'Local compute target';
+  return current;
+}
+
 /**
  * Presentational panel: device list, VRAM, current device, effective source.
- * Hidden when `info.mode !== "local"`.
+ * Hidden when `info.available` is empty.
  */
 export function ComputeTargetPanel({
   info,
@@ -45,9 +54,10 @@ export function ComputeTargetPanel({
   cudaDocsUrl,
   className,
 }: ComputeTargetPanelProps): React.ReactElement | null {
-  if (!info || info.mode !== 'local') return null;
+  if (!info || info.available.length === 0) return null;
 
   const current = info.current ?? null;
+  const currentLabel = activeDeviceLabel(current, info.available);
   const effectiveSource = info.effective_source ?? 'auto';
   const unavailableNvidiaDevices = info.available.filter(isUnavailableNvidia);
   const showCudaGuide = info.available.some(isUsableCuda) || unavailableNvidiaDevices.length > 0;
@@ -160,7 +170,7 @@ export function ComputeTargetPanel({
 
       {/* Current device + effective source */}
       <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--fg-subtle)' }}>
-        Active: <strong style={{ color: 'var(--fg)' }}>{current ?? 'auto'}</strong>
+        Active: <strong style={{ color: 'var(--fg)' }}>{currentLabel}</strong>
         {effectiveSource && <span> (via {effectiveSource})</span>}
       </p>
 

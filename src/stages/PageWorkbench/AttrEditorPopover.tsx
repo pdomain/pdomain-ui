@@ -106,7 +106,7 @@ export function AttrEditorPopover({
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               aria-label={`Edit ${attr.label}`}
-              // eslint-disable-next-line jsx-a11y/no-autofocus
+              // eslint-disable-next-line jsx-a11y/no-autofocus -- focus the edit control when the user opens the popover
               autoFocus
             >
               {attr.options.map((opt: { value: string; label: string }) => (
@@ -122,7 +122,7 @@ export function AttrEditorPopover({
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               aria-label={`Edit ${attr.label}`}
-              // eslint-disable-next-line jsx-a11y/no-autofocus
+              // eslint-disable-next-line jsx-a11y/no-autofocus -- focus the edit control when the user opens the popover
               autoFocus
             />
           )}

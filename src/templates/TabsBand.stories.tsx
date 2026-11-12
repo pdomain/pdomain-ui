@@ -30,7 +30,7 @@ const PIPELINE_TABS: TabsBandItem[] = [
 export const Default: Story = {
   name: 'D · Default (dark)',
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('pages');
     return (
       <div style={{ width: '100%' }}>
@@ -155,7 +155,7 @@ export const LightTheme: Story = {
     ),
   ],
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Storybook calls this render function as a component; the hook holds example state
     const [current, setCurrent] = React.useState('pages');
     return <TabsBand items={PIPELINE_TABS} current={current} onTabChange={setCurrent} />;
   },
