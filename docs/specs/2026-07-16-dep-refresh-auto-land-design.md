@@ -6,7 +6,7 @@ created: 2026-07-16
 last_verified: 2026-11-07
 disposition: needs-owner-decision
 verified_against:
-  - "Makefile"
+  - "justfile"
   - "scripts/do-release.sh"
 ---
 
