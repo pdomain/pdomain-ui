@@ -5,7 +5,7 @@ owner: CT
 created: 2026-05-21
 last_verified: 2026-11-10
 verified_against:
-  - "Makefile"
+  - "justfile"
   - "package.json"
   - ".pre-commit-config.yaml"
   - "eslint.config.js"
@@ -54,42 +54,47 @@ Docs: [`docs/README.md`](docs/README.md)
 
 ## Commands
 
-| target | does |
+| recipe | does |
 |---|---|
-| `make install` | `pnpm install --frozen-lockfile` |
-| `make lint` | ESLint flat config on `src/` + `tests/` |
-| `make typecheck` | `tsc --noEmit` |
-| `make test` | Vitest (jsdom) |
-| `make build` | Vite library build → `dist/` |
-| `make format` | apply Prettier to `src/` + `tests/` |
-| `make format-check` | check Prettier formatting without writing |
-| `make pre-commit-check` | lint + typecheck + format-check + Python static checks |
-| `make install-hooks` | (re)install the pre-commit and commit-msg git hooks |
-| `make upgrade-deps` | `pnpm update --latest` |
-| `make frontend-build` | alias for `build` |
-| `make frontend-install` | alias for `install` |
-| `make frontend-dev` | Vite dev server |
-| `make frontend-test` | alias for `test` |
-| `make frontend-lint` | alias for `lint` |
-| `make frontend-format` | alias for `format` |
-| `make frontend-format-check` | alias for `format-check` |
-| `make frontend-knip` | knip dead-export scan |
-| `make release-patch` | bump patch version, ci, commit, tag, push |
-| `make release-minor` | bump minor version, ci, commit, tag, push |
-| `make release-major` | bump major version, ci, commit, tag, push |
-| `make codegen` | fetch pinned wheels → emit JSON Schema → generate TS types |
-| `make codegen-check` | runs codegen and fails if output differs |
-| `make update-pdomain-deps` | bump codegen pins to the registry's latest wheels, run codegen, and stage the diff |
-| `make ci AI=1` | install + static checks + unit tests + build + package tests + codegen and theme checks |
+| `just install` | `pnpm install --frozen-lockfile` |
+| `just lint` | fix ESLint findings with `eslint . --fix` |
+| `just lint-check` | read-only `eslint . --max-warnings 0` |
+| `just typecheck` | `tsc --noEmit` |
+| `just test` | Vitest (jsdom) |
+| `just build` | Vite library build → `dist/` |
+| `just format` | apply Prettier to `src/` + `tests/` |
+| `just format-check` | check Prettier formatting without writing |
+| `just pre-commit-check` | `uv run pre-commit run --all-files` |
+| `just install-hooks` | (re)install the pre-commit and commit-msg git hooks |
+| `just upgrade-deps` | `pnpm update --latest` |
+| `just frontend-build` | alias for `build` |
+| `just frontend-install` | alias for `install` |
+| `just frontend-dev` | Vite dev server |
+| `just frontend-test` | alias for `test` |
+| `just frontend-lint` | alias for `lint` |
+| `just frontend-format` | alias for `format` |
+| `just frontend-format-check` | alias for `format-check` |
+| `just frontend-knip` | knip dead-export scan |
+| `just release-patch` | bump patch version, ci, commit, tag, push |
+| `just release-minor` | bump minor version, ci, commit, tag, push |
+| `just release-major` | bump major version, ci, commit, tag, push |
+| `just codegen` | fetch pinned wheels → emit JSON Schema → generate TS types |
+| `just codegen-check` | runs codegen and fails if output differs |
+| `just update-pdomain-deps` | bump codegen pins to the registry's latest wheels, run codegen, and stage the diff |
+| `AI=1 just ci` | install + lint/format/type/Python checks + unit tests + build + package tests + codegen + theme + knip + strict docgraph |
 
-`AI=1` currently does not change output: the Makefile defines logging variables,
-but its recipes do not use them. Capture output explicitly when a log is needed.
+`just ci` is the default gate. It runs `install`, `lint-check`,
+`format-check`, `typecheck`, `py-static-check`, `test-unit`, `build`,
+`test-package`, `codegen-check`, `theme-check`, `knip`, and
+`docgraph check --strict`, in that order.
 
-`pre-commit-check` runs the frontend and Python gates directly rather than
-invoking pre-commit. The hooks in `.pre-commit-config.yaml` cover the Python
-side and the shared file checks; the frontend gates are Make targets, so the
-two forms cover different checks. The direct target includes frontend checks;
-the hooks also cover shared file checks, Markdown, and secrets.
+Prefix any public recipe with `AI=1` to capture its full output in
+`.ci-ai.log`. Success prints one pass line; failure prints the result and
+the log tail. Use `AI=1 just ci`, not a trailing Make variable assignment.
+
+`pre-commit-check` runs the configured hooks on all files. Those hooks cover
+Python, shared file checks, Markdown, and secrets. Frontend checks run through
+their own just recipes in `ci`.
 
 ## Hard constraints
 
@@ -111,13 +116,13 @@ the hooks also cover shared file checks, Markdown, and secrets.
 
 When bumping `pdomain-book-tools` or `pdomain-ops` in `codegen.versions.json`:
 
-1. Run `make codegen` (fetches wheels → emits JSON Schema → generates TS types).
+1. Run `just codegen` (fetches wheels → emits JSON Schema → generates TS types).
 2. Commit both `codegen.versions.json` and the regenerated `src/types/generated/` in the same PR.
 
 ## Rules
 
-- Always run `make ci AI=1` before committing.
-- Make targets first; fall back to direct `pnpm exec` only when no target exists.
+- Always run `AI=1 just ci` before committing.
+- Just recipes first; fall back to direct `pnpm exec` only when no recipe exists.
 - Specs are the source of truth. Code that disagrees with a spec is wrong — change the spec first.
 - Radix UI is only used for the behavior-heavy primitives listed in spec §4.
 - `theme/tokens.css` and `theme/primitives.css` are the runtime source-of-truth; edited here,
@@ -211,7 +216,7 @@ change any step below.
    worktree path + branch, use the `finishing-a-development-branch` skill to
    decide how to integrate.
 9. **TDD.** Write the failing test first where the plan calls for it.
-10. **Verify before committing.** Focused verification plus `make ci`.
+10. **Verify before committing.** Focused verification plus `just ci`.
 11. **Commit locally; do not push** without explicit say-so.
 
 <!-- workspace-process:end -->
@@ -228,8 +233,8 @@ change any step below.
 <!-- >>> repo-setup:commands-and-gates sha256:9aeb7ef0ecad17d14dac24c6b048062f7b83c4be0f869309d20c193044d0cd39 -->
 ## Approved commands and gates
 
-- `make test` runs the repository test target.
-- `make lint` runs the repository lint target.
+- `just test` runs the repository test target.
+- `just lint` runs the repository lint target.
 - `npm test` is the allowed JavaScript test-command family.
 <!-- <<< repo-setup:commands-and-gates -->
 

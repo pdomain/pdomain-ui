@@ -1,8 +1,8 @@
 # Tool versions for contributors who use mise.
 #
-# Optional — `make install` and pnpm work without mise as long as node/pnpm
+# Optional — `just install` and pnpm work without mise as long as node/pnpm
 # are on PATH. If you prefer pinned versions, install mise
-# (https://mise.jdx.dev/) and run `make mise-setup`.
+# (https://mise.jdx.dev/) and run `just mise-setup`.
 #
 # Consumers importing @pdomain/pdomain-ui don't need mise — they consume
 # the published npm package from pdomain-index-npm.

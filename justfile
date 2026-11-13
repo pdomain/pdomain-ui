@@ -352,7 +352,7 @@ mise-download:
     else \
         echo "Downloading mise to $HOME/.local/bin/mise..."; \
         curl -fsSL https://mise.run | sh; \
-        echo "mise downloaded. Run 'make mise-setup' next to install pinned tools."; \
+        echo "mise downloaded. Run 'just mise-setup' next to install pinned tools."; \
     fi
 
 mise-trust-worktrees:
@@ -395,7 +395,7 @@ mise-doctor:
         echo "  path: $mise"; \
         "$mise" current 2>/dev/null | sed 's/^/  /' || echo "  (no mise.toml resolved)"; \
     else \
-        echo "  not installed (run 'make mise-setup')"; \
+        echo "  not installed (run 'just mise-setup')"; \
     fi
     echo "-- tools on PATH --"
     command -v node  >/dev/null 2>&1 && echo "  node:  $(node --version)"  || echo "  node:  not on PATH"

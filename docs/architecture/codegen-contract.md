@@ -10,7 +10,7 @@ verified_against:
   - "scripts/codegen-emit.mjs"
   - "scripts/codegen-tsgen.mjs"
   - "scripts/update-pdomain-deps.sh"
-  - "Makefile"
+  - "justfile"
 ---
 
 # Generated type contract
@@ -58,13 +58,13 @@ hash-verifies their wheels. This repository therefore inherits later Page and
 PageRecord ownership changes from the upstream schema emitters instead of
 duplicating them.
 
-## Make targets reproduce and update generated output
+## Just recipes reproduce and update generated output
 
-`make codegen` runs fetch, emit, and TypeScript generation. `make codegen-check`
+`just codegen` runs fetch, emit, and TypeScript generation. `just codegen-check`
 reruns the pipeline and fails when committed generated output differs. The full
-`make ci AI=1` gate includes `codegen-check` and package-contract tests.
+`AI=1 just ci` gate includes `codegen-check` and package-contract tests.
 
-`make update-pdomain-deps` updates the codegen pins, regenerates the outputs, and
+`just update-pdomain-deps` updates the codegen pins, regenerates the outputs, and
 stages the pin and generated-file diff for review without committing or pushing.
 For each package it takes the newest `py3-none-any` wheel on the index and records
 that wheel's version and SHA-256. A newer release with no such wheel is ignored,
@@ -80,4 +80,4 @@ lookup succeeds.
 - `scripts/codegen-tsgen.mjs`
 - `src/types/generated/` and `src/types/index.ts`
 - `tests/codegen/`, including `tests/codegen/update-pdomain-deps.test.ts`
-- `Makefile` and `package.json`
+- `justfile` and `package.json`

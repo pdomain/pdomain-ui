@@ -17,7 +17,7 @@ Kind: context
 
 ## What matters now
 
-Shipped behavior is the architecture list in the [docs index](../README.md). The release gate is local `make ci`, recorded in [Release and CI pipeline](../architecture/release-and-ci-pipeline.md).
+Shipped behavior is the architecture list in the [docs index](../README.md). The release gate is local `just ci`, recorded in [Release and CI pipeline](../architecture/release-and-ci-pipeline.md).
 
 On 2026-11-07, `make ci AI=1` passed on master: formatting, lint with one
 existing `react-hooks/incompatible-library` warning, TypeScript and Python
@@ -44,7 +44,7 @@ slot-primitive behavior was copied into the architecture docs on 2026-11-12.
 
 - Codegen pins match the registry checked on 2026-11-13:
   `pdomain-book-tools` 0.31.0 and `pdomain-ops` 0.12.2.
-  `make update-pdomain-deps` performs that bump.
+  `just update-pdomain-deps` performs that bump.
 - `typescript` stays at 6.0.3. typescript-eslint 8.72.2 accepts
   `>=4.8.4 <6.1.0`, and TypeScript 7.0.2 ships no API for that parser yet.
 - The historical security review is stale; verify each finding against current

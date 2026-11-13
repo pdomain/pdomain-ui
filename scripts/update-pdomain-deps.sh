@@ -14,13 +14,13 @@
 #      a. Reads codegen.versions.json for the current pinned version.
 #      b. Queries pdomain-index-pip (PEP 503) for the latest version.
 #      c. If the newest universal wheel is newer, records its version and SHA-256.
-#   2. If any version changed, writes codegen.versions.json and runs make codegen
+#   2. If any version changed, writes codegen.versions.json and runs just codegen
 #      to regenerate TS types.
 #   3. Leaves the diff staged (codegen.versions.json + regenerated output).
 #      Does NOT commit.
 #   4. Idempotent: prints "✓ <name> already at X" for each sibling at latest.
 #
-# Usage: make update-pdomain-deps   (or ./scripts/update-pdomain-deps.sh directly)
+# Usage: just update-pdomain-deps   (or ./scripts/update-pdomain-deps.sh directly)
 set -euo pipefail
 
 # ─── Config ──────────────────────────────────────────────────────────────────
@@ -156,8 +156,8 @@ fi
 pin_python "$WRITE_PINS_PY" "$VERSIONS_JSON" "${PENDING_PINS[@]}"
 
 say "→ updated $VERSIONS_JSON"
-say "→ running make codegen (fetch wheels → emit JSON → generate TS)"
-make -C "$REPO_ROOT" codegen
+say "→ running just codegen (fetch wheels → emit JSON → generate TS)"
+just --justfile "$REPO_ROOT/justfile" codegen
 
 # ─── Step 3: Stage the diff for human review ─────────────────────────────────
 say "→ staging codegen.versions.json and generated types"

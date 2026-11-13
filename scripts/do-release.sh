@@ -3,7 +3,7 @@
 #
 # Uses `pnpm version --no-git-tag-version` to update package.json, then:
 #   1. Verifies repo state (clean tree / on main / up-to-date with origin).
-#   2. Runs the full pre-flight (`make ci`).
+#   2. Runs the full pre-flight (`just ci`).
 #   3. Commits the package.json version bump.
 #   4. Creates an annotated tag vMAJOR.MINOR.PATCH.
 #   5. Pushes main + tag to origin.
@@ -19,7 +19,7 @@
 set -eu
 
 # pnpm reaches this script through mise in the devcontainer, exactly as the
-# Makefile invokes it. A bare `pnpm` is not on PATH here.
+# justfile invokes it. A bare `pnpm` is not on PATH here.
 pnpm_run() {
     if [ -x /usr/local/bin/mise ]; then
         /usr/local/bin/mise exec -- pnpm "$@"
@@ -110,11 +110,11 @@ echo "Next tag:   $VERSION (bump=$BUMP)"
 # Pre-flight (NEVER skipped, even with FORCE=1)
 # ---------------------------------------------------------------------------
 echo ""
-echo "Running pre-flight: make ci"
+echo "Running pre-flight: just ci"
 echo ""
-if ! make ci; then
+if ! just ci; then
     echo "" >&2
-    echo "ERROR: Pre-flight (make ci) failed. No version bump or tag created." >&2
+    echo "ERROR: Pre-flight (just ci) failed. No version bump or tag created." >&2
     exit 1
 fi
 

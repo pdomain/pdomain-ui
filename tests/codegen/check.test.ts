@@ -6,11 +6,11 @@
  * 2. The codegen:check script exits non-zero when generated file is out of sync
  * 3. src/types/generated/book-tools.ts is committed (not gitignored)
  * 4. .codegen/ is gitignored
- * 5. The Makefile has functional codegen + codegen-check targets
+ * 5. The justfile has functional codegen + codegen-check recipes
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync, existsSync } from 'fs';
-import { execSync } from 'child_process';
+import { execFileSync, execSync } from 'child_process';
 import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -55,25 +55,28 @@ describe('codegen orchestrator', () => {
     expect(gitignore).toMatch(/\.codegen/);
   });
 
-  it('Makefile has codegen target that calls pnpm codegen', () => {
-    const makefile = readFileSync(join(REPO_ROOT, 'Makefile'), 'utf-8');
-    expect(makefile).toContain('codegen');
-    // Should no longer be a placeholder
-    expect(makefile).not.toContain('codegen placeholder — wired in M4');
+  it('just codegen calls pnpm codegen', () => {
+    const recipe = execFileSync('just', ['--show', 'codegen'], {
+      cwd: REPO_ROOT,
+      encoding: 'utf-8',
+    });
+    expect(recipe).toContain('just --quiet _pnpm run codegen');
   });
 
-  it('Makefile has codegen-check target that calls pnpm codegen:check', () => {
-    const makefile = readFileSync(join(REPO_ROOT, 'Makefile'), 'utf-8');
-    expect(makefile).toContain('codegen-check');
-    expect(makefile).not.toContain('codegen-check placeholder — wired in M4');
+  it('just codegen-check calls pnpm codegen:check', () => {
+    const recipe = execFileSync('just', ['--show', 'codegen-check'], {
+      cwd: REPO_ROOT,
+      encoding: 'utf-8',
+    });
+    expect(recipe).toContain('just --quiet _pnpm run codegen:check');
   });
 
-  it('Makefile ci target includes codegen-check', () => {
-    const makefile = readFileSync(join(REPO_ROOT, 'Makefile'), 'utf-8');
-    // Look for the ci: line and verify codegen-check is there
-    const ciLine = makefile.split('\n').find((l) => l.startsWith('ci:'));
-    expect(ciLine).toBeDefined();
-    expect(ciLine).toContain('codegen-check');
+  it('just ci includes codegen-check after package tests', () => {
+    const recipe = execFileSync('just', ['--show', 'ci'], {
+      cwd: REPO_ROOT,
+      encoding: 'utf-8',
+    });
+    expect(recipe).toMatch(/test-package codegen-check/);
   });
 
   it('generated book-tools.ts has AUTO-GENERATED header', () => {
@@ -86,6 +89,6 @@ describe('codegen orchestrator', () => {
   it('CLAUDE.md documents codegen bump workflow', () => {
     const claudeMd = readFileSync(join(REPO_ROOT, 'CLAUDE.md'), 'utf-8');
     expect(claudeMd).toContain('codegen.versions.json');
-    expect(claudeMd).toContain('make codegen');
+    expect(claudeMd).toContain('just codegen');
   });
 });

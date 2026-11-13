@@ -1,5 +1,5 @@
 /**
- * Runs scripts/update-pdomain-deps.sh against fake curl, make and git on PATH,
+ * Runs scripts/update-pdomain-deps.sh against fake curl, just and git on PATH,
  * so no test reaches the real package index or regenerates types.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -70,7 +70,8 @@ page="${tmpDir}/$package.html"
 [ -f "$page" ] || exit 22
 cat "$page"`,
     );
-    writeExecutable(join(binDir, 'make'), `echo "make $*" >> "${callLog}"`);
+    writeExecutable(join(binDir, 'just'), `echo "just $*" >> "${callLog}"`);
+    writeExecutable(join(binDir, 'make'), 'echo "Unexpected make invocation" >&2; exit 1');
     writeExecutable(join(binDir, 'git'), `echo "git $*" >> "${callLog}"`);
   });
 
@@ -127,7 +128,7 @@ cat "$page"`,
         sha256: { 'pdomain_ops-0.12.0-py3-none-any.whl': NEW_OPS_HASH },
       },
     });
-    expect(calls()).toContain(`make -C ${REPO_ROOT} codegen`);
+    expect(calls()).toContain(`just --justfile ${join(REPO_ROOT, 'justfile')} codegen`);
     expect(calls()).toContain('add codegen.versions.json src/types/generated/');
   });
 

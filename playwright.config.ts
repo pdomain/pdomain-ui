@@ -3,9 +3,9 @@
  *
  * Tests run against the pre-built Storybook static site (`storybook-static/`).
  *
- * Make targets:
- *   `make e2e`    — builds Storybook, starts static server, runs tests
- *   `make e2e-ci` — assumes storybook-static exists; same but uses HTML reporter
+ * just recipes:
+ *   `just e2e`    — builds Storybook, starts static server, runs tests
+ *   `just e2e-ci` — assumes storybook-static exists; same but uses HTML reporter
  *
  * Architecture:
  *   Tests load `iframe.html?viewMode=story&id=<storyId>` directly (without

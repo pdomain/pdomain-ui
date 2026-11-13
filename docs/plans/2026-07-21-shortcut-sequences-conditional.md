@@ -18,7 +18,7 @@ verified_against:
 
 **Architecture:** Parse a binding into ordered `ParsedCombo` steps, then keep pending progress and one timeout inside the hook effect. Existing one-step bindings retain immediate matching and editable-target behavior.
 
-**Tech Stack:** TypeScript, React hooks, browser keyboard events, Vitest fake timers, Testing Library, pnpm, Make.
+**Tech Stack:** TypeScript, React hooks, browser keyboard events, Vitest fake timers, Testing Library, pnpm, just.
 
 ---
 
@@ -41,13 +41,13 @@ Parse bindings into ordered combo steps. Keep pending progress and one timeout i
 
 ## Tech Stack
 
-TypeScript, React hooks, browser keyboard events, Vitest fake timers, Testing Library, pnpm, and Make.
+TypeScript, React hooks, browser keyboard events, Vitest fake timers, Testing Library, pnpm, and just.
 
 ## Global Constraints
 
 - Do not execute without recorded activation evidence.
 - Preserve exact-binding precedence and current editable-target defaults.
-- Use TDD and run `make ci AI=1` before each implementation commit.
+- Use TDD and run `AI=1 just ci` before each implementation commit.
 
 ## Activation gate
 
@@ -230,7 +230,7 @@ Expected: PASS for new sequence cases and all existing modifier-combo cases.
 
 - [ ] **Step 6: Run full verification**
 
-Run: `make ci AI=1`
+Run: `AI=1 just ci`
 
 Expected: exit 0 with the repository's success summary.
 

@@ -16,5 +16,6 @@
   "ignoreDependencies": [
     "openapi-typescript"
   ],
+  "ignoreBinaries": ["just"],
   "ignoreExportsUsedInFile": true
 }
