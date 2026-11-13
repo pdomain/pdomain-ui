@@ -19,7 +19,8 @@ Kind: context
 
 The ordered list is the [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md).
 Active library work there is the unbuilt review, gate, artifact, and compare
-components. The Field help slot is shipped.
+components. The Field API, including help, is shipped. Its contract is in
+[Field and FieldRow architecture](../architecture/field-primitives.md).
 
 Keep `writing-docs` plugin routing and lint-deviation governance active.
 [Lint deviations](../process/lint-deviations.md).
@@ -68,8 +69,7 @@ starts building it.
   [JobStatusPip architecture](../architecture/job-status-pip.md) and
   [kanban architecture](../architecture/kanban-board.md). Link-impact checks
   found no inbound references before deletion.
-- **still-active:** `docs/specs/2026-05-21-field-field-row.md`,
-  `docs/plans/2026-06-14-pgdp-common-component-backlog.md`,
+- **still-active:** `docs/plans/2026-06-14-pgdp-common-component-backlog.md`,
   `docs/process/lint-deviations.md` and
   `docs/research/2026-06-14-pgdp-design-handoff-gap-analysis.md`.
 - **needs-owner-review:** `docs/specs/2026-05-21-log-viewer.md`; the former May
@@ -86,3 +86,16 @@ starts building it.
   and [Accordion trigger slots](../architecture/accordion-trigger-slots.md).
   Every deleted path and retained residual is recorded in the grouped
   [decisions tombstones](decisions.md).
+
+## Migration verified on 2026-11-13
+
+Fresh read-only analyzers checked every indexed document against relevant code,
+tests, and history. No `legacy_unverified` findings were present. Field is now
+retired after promotion; two intermediate retired handoffs were superseded and
+deleted. The research, roadmap, LogViewer, dep-refresh, and sequence documents
+retain their unresolved or deferred intent. Prior owner decisions are unchanged.
+
+The research also retains open reuse questions about template/body spacing,
+a shared review status and flag model, and list-builder reuse across scannos,
+word, and hyphen tools. These require consumer evidence and remain design
+questions, not implemented shared-library behavior.

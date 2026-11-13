@@ -363,3 +363,42 @@ Kind: context
   from `src/`.
 - **Remaining work:** the roadmap. Separate-repo recommendations in that
   file are proposals, not new repositories.
+
+### 2026-11-13 — Retired: implemented Field contract and superseded handoffs
+
+- **Old path:** `docs/specs/2026-05-21-field-field-row.md`.
+- **Outcome:** Implemented and deleted after architecture promotion.
+- **Superseded by:** [Field and FieldRow contracts](../architecture/field-primitives.md).
+- **Evidence:** `src/primitives/Field.tsx`, `FieldContext.ts`, `FieldRow.tsx`,
+  `Field.test.tsx`, `Input.tsx`, and `Textarea.tsx`; the final help disclosure
+  shipped in `38a86980` after accessibility refinements `fe657bd4` and `14872a04`.
+- **Review prerequisite:** The former spec contains a populated Adversarial
+  Review source/finding record covering label, error, row, help, and accessibility.
+  It is not claimed to be a separate independent panel report. Fresh migration
+  analysis compared its requirements with code and focused test definitions.
+- **Rationale kept:** The architecture preserves plain-string errors, rich
+  help content, consumer-owned IDs, app-owned 422 mapping, layout-only rows,
+  and the exact Input/Textarea versus Select association boundary. Its API is
+  current truth rather than an active implementation proposal.
+- **Remaining work:** None for this Field API. Consumer form wiring remains
+  the consuming application's responsibility.
+- **Removal commit:** The migration commit adding this entry; locate it with
+  `git log -- docs/specs/2026-05-21-field-field-row.md`.
+
+The same pass deleted two already-retired intermediate handoffs:
+
+- `docs/_archive/handoff/2026-11-11-032240-compute-panel-and-updater-fixes-docs-staged.md`
+- `docs/_archive/handoff/2026-11-11-043304-compute-panel-and-updater-ready-for-merge-review.md`
+
+Both are superseded by the final retired handoff
+`docs/handoff/2026-11-11-081941-audit-residuals-fixed-on-top-of-compute-panel-branch.md`,
+merge `58f7b3b`, and current architecture. Compute-panel labels/visibility and
+codegen-updater behavior remain in
+[canvas and shell extension points](../architecture/canvas-and-shell-extension-points.md)
+and the [generated type contract](../architecture/codegen-contract.md).
+The pin bump subsequently landed in `964b6ef`. Graph inspection found no live
+inbound links to either intermediate handoff. Git preserves their dated logs, CPU/quota notes, and patch pointers. The final
+retired handoff remains available for additional historical context. That context
+includes the earlier CODEX consolidation question and shell-format validation gap. Current product owner questions remain
+in the roadmap and intent map; the historical handoff is not a new instruction
+to consolidate CODEX. No new feature or owner decision follows from deletion.

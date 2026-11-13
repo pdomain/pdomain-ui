@@ -31,7 +31,10 @@ moves only that item.
 
 Each `KanbanColumn` is a droppable, virtualized listbox. It renders fixed-height
 40-pixel rows with five-row overscan through `@tanstack/react-virtual`.
-`PageChip` is a sortable option with selected, pending, and dragging states.
+The standalone chip is publicly exported as `KanbanPageChip`. It is a sortable
+option with selected, pending, and dragging states. Board-generated chips and
+`renderChip` calls currently receive `isPending=false`; consumers do not get
+staged pending presentation automatically through the board.
 Columns and chips accept caller-provided test IDs. The family defines no
 application-specific built-in IDs.
 
@@ -58,3 +61,7 @@ The board does not call an API or provide Apply and Discard controls.
   listbox labeling, option states, and dragging class
 - Commit: `84dcb62dceeb1cabe819d766990b062b7ea9f179` (component family)
 - Verified: 2026-07-13 by repository code, tests, history, and docgraph migration analysis
+
+Source and test inspection on 2026-11-13 confirms the configured sensors and
+announcements. The focused tests cover rendering and selection; they do not
+exercise pointer or keyboard move gestures.

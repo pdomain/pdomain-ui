@@ -28,7 +28,9 @@ verified_against:
 
 `codegen.versions.json` pins released `pdomain-book-tools` and `pdomain-ops`
 wheels by version and SHA-256. `scripts/codegen-fetch.mjs` verifies the wheels
-and installs them into an isolated `.codegen/venv`. This temporary environment
+and installs them into an isolated `.codegen/venv`. The pinned primary wheels
+come from GitHub Release assets; the self-hosted pip index supplies transitive
+dependencies. This temporary environment
 does not make either Python package a runtime dependency of pdomain-ui.
 
 `scripts/codegen-emit.mjs` invokes `pdomain_book_tools.schemas.emit` and
@@ -68,7 +70,7 @@ reruns the pipeline and fails when committed generated output differs. The full
 stages the pin and generated-file diff for review without committing or pushing.
 For each package it takes the newest `py3-none-any` wheel on the index and records
 that wheel's version and SHA-256. A newer release with no such wheel is ignored,
-because `codegen-fetch.mjs` can only install that form. A newest wheel with no
+because `codegen-fetch.mjs` can only install that form. A newer selected wheel with no
 listed hash stops the command. The command writes pins only after every package
 lookup succeeds.
 

@@ -10,7 +10,7 @@ last_verified: 2026-11-12
 
 **Date:** 2026-06-14
 **Scope:** Compare `pdomain-ui` against the newer PGDP app design package at
-`/workspaces/ocr-container/pdomain-prep-for-pgdp/docs/plans/design_handoff_pgdp_app`.
+`../pdomain-prep-for-pgdp/docs/plans/design_handoff_pgdp_app`.
 **Output:** Gaps only where the shared component library still needs work. This
 is not a blank-slate port plan; substantial `pdomain-ui` work already exists.
 
@@ -20,7 +20,7 @@ is not a blank-slate port plan; substantial `pdomain-ui` work already exists.
 foundation includes tokens, primitives, shell chrome, pipeline/project templates,
 canvas, worklists, and several stage slices. The newer PGDP handoff is broader:
 it contains 24 wired pipeline stages, a Projects surface, the pipeline shell,
-and 28 statechart YAMLs. The remaining gaps are concentrated in two places:
+and 31 statechart YAMLs in the current sibling checkout. The remaining gaps are concentrated in two places:
 
 1. New PGDP app-local stage surfaces that were previously out of scope because
    they had no final designs: threshold, deskew, denoise, dewarp, post-crops,
@@ -39,7 +39,8 @@ implementations, and full PGDP stage tools remain app-owned. `pdomain-ui` should
 expose presentational building blocks and typed component contracts. It should
 not expose PGDP-specific orchestration or one-off stage screens. The handoff
 defines this boundary: promote generic atoms/chrome to `pdomain-ui`, while stage
-tools stay app-local (`PROMPT.md:79-82`).
+tools stay app-local. The original `PROMPT.md:79-82` citation is historical;
+that overview file is absent from the current sibling checkout.
 
 ## Goal
 
@@ -94,12 +95,16 @@ behavioral conformance with the newer PGDP designs.
 
 ## PGDP and package sources define the comparison
 
-The PGDP handoff says `final/` is authoritative for look and layout.
-`statecharts/` is authoritative for behavior. The handoff describes 24 pipeline
+The original handoff assigned look and layout to `final/` and behavior to
+`statecharts/`. Its overview described 24 pipeline
 stages, Projects, the pipeline shell, and the app-shell template:
 
 PGDP source paths below are relative to
-`/workspaces/ocr-container/pdomain-prep-for-pgdp/docs/plans/design_handoff_pgdp_app/`.
+`../pdomain-prep-for-pgdp/docs/plans/design_handoff_pgdp_app/`.
+
+The following overview citations are retained from the original analysis as
+historical evidence. Their files are absent in the current checkout; they are
+not current verification inputs.
 
 - `README.md:9-20`
 - `README.md:34-41`
@@ -108,6 +113,14 @@ PGDP source paths below are relative to
 - `statecharts/README.md:8-16`
 - `statecharts/README.md:80-107`
 - `statecharts/README.md:113-184`
+
+Current verification on 2026-11-13 reads the concrete YAML contracts instead:
+`stage-runner.yaml`, `tool-image-stage-review.yaml`, `page-workbench.yaml`,
+`tool-source.yaml`, `tool-validation.yaml`, `tool-build-package.yaml`,
+`tool-zip.yaml`, `tool-submit-check.yaml`, and `tool-archive.yaml` under
+`statecharts/`. That directory contains 31 YAML files. The handoff root's
+`README.md` and `PROMPT.md`, and `statecharts/README.md`, are absent. These
+source checks establish proposed behavior, not implemented library components.
 
 The current `pdomain-ui` package already exports broad shared surfaces:
 
@@ -206,21 +219,23 @@ The statecharts identify reusable behavior patterns. The machines belong in the
 app, but their visual projections need common components:
 
 - `stageRunner` lifecycle projects into StageStrip dots and PipelineMini
-  (`statecharts/README.md:80-107`, `:233-235`).
+  (`statecharts/stage-runner.yaml`).
 - `imageStageReview` recurs across seven stages and requires flag-grid, bulk
   bar, exclusive inline editor, apply scope, and confirm gate
-  (`statecharts/README.md:119-124`, `:151-157`).
+  (`statecharts/tool-image-stage-review.yaml`).
 - `pageWorkbench` recurs across twelve stages and uses stage-control schemas as
-  data (`statecharts/README.md:86`, `:122`, `:233-235`).
+  data (`statecharts/page-workbench.yaml`).
 - Settings inheritance is repeated for every stage's Settings tab
-  (`statecharts/README.md:158-161`).
+  (`statecharts/tool-source.yaml` and `tool-image-stage-review.yaml`).
 - Confirm-and-advance gates and the pack chain connect validation, build, zip,
-  submit-check, and archive (`statecharts/README.md:162-184`).
+  submit-check, and archive (`statecharts/tool-validation.yaml`, `tool-build-package.yaml`,
+  `tool-zip.yaml`, `tool-submit-check.yaml`, and `tool-archive.yaml`).
 
 `pdomain-ui` should expose components that render these projections from typed
 data. It should not own the `XState` actors, SSE reconciliation, backend stage
-registry, or event-log semantics described in `PROMPT.md:63-83` and
-`PROMPT.md:123-157`.
+registry, or event-log semantics. The original analysis attributed that
+boundary to `PROMPT.md:63-83` and `PROMPT.md:123-157`; those unavailable
+overview citations remain historical rather than current implementation proof.
 
 ### 4. Package exports need explicit stage policies
 

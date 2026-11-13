@@ -47,8 +47,12 @@ pass through to the root element.
 ## Evidence
 
 - Code: `src/primitives/JobStatusPip.tsx`, `src/types/job-state.ts`
-- Tests: `src/primitives/JobStatusPip.test.tsx` — all five token mappings,
+- Tests: `src/primitives/JobStatusPip.test.tsx` — four token-mapping assertions,
   running animation class, default/custom labels, class merging, and ref forwarding
 - Commits: `dee027951f591ae10f1df7ecc21f4c34d6bf94dc` (component),
   `780c950b81e9f065dc40aabd5c2b8f8f5d69a6de` (generated `JobState` integration)
 - Verified: 2026-07-13 by repository code, tests, history, and docgraph migration analysis
+
+Verification on 2026-11-13 distinguishes source from tests: the component maps
+all five states, while the running-state test asserts its animation class rather
+than its color token. The earlier verification date above remains historical.

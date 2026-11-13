@@ -29,6 +29,12 @@ On 2026-11-11, `make ci AI=1` exited 0 on `night-audit-residuals`. It passed
 the same gates with 2,920 unit tests and 279 package tests. Theme checks
 skipped comparison because no design-system mirror exists beside that checkout.
 
+The local task-runner migration is complete in `69064b8`, `3266ee1`, and
+`23e351a`: current commands use just, the Makefile is gone, and historical
+Make evidence remains historical. Field/FieldRow now has a dedicated
+[architecture contract](../architecture/field-primitives.md); its implemented
+spec and two superseded intermediate handoffs were retired in this pass.
+
 ## In-flight work
 
 Open items are the [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md).

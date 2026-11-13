@@ -73,6 +73,20 @@ The [roadmap](../plans/2026-06-14-pgdp-common-component-backlog.md) tracks them.
 
 `HierarchyTreePanel` is a block tree, not a file tree of pack artifacts.
 
+## Settings controls preserve caller-owned values and accessibility
+
+`SettingsRow` supplies label, description, and error associations to its
+control slot. It preserves explicit accessible names and descriptions and
+propagates disabled state. For cloned controls, a row error forces
+`aria-invalid=true`. Render-function controls receive the invalid flag and
+apply their own markup. The consumer still owns the setting value and update.
+
+`SettingSlider` is controlled. It clamps values to the configured bounds,
+provides unit-aware value text, and handles arrow, Home, and End keys. Focused
+settings tests cover integer stepping, clamp boundaries, associations, disabled
+controls, and default unit text. Decimal-step and Home/End acceptance remain
+unverified by dedicated assertions; those remaining audits stay in the roadmap.
+
 ## How the shipped modules differ from the design
 
 Implementation review refined the design. It did not redirect it.
@@ -106,3 +120,8 @@ No second workbench shell exists.
   `src/workbench/WorkbenchLayout.tsx`, and `src/index.ts`. The test suite was
   not re-run for this documentation pass.
 - History: commit `ed0f56f` and June 15 review-fix commits
+
+Settings contract evidence: `src/settings/SettingsRow.tsx`,
+`src/settings/SettingSlider.tsx`, and `src/settings/SettingsKit.test.tsx`;
+implementation/refinement commits `ed0f56f7` and `cfbdd6f2`. Source and test
+inspection on 2026-11-13 does not establish adoption in other applications.

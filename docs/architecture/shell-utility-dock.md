@@ -33,6 +33,22 @@ Settings always includes Appearance and accepts typed app panels through
 SettingsModal remains temporarily exported, but the shell does not currently
 use it as its presentation path.
 
+## Dock interaction and compatibility remain separate contracts
+
+The active utility surface is ephemeral. Pin state and width persist through
+the consumer-configured UI-preferences store. Width defaults to 420 pixels and
+is clamped between 320 and 640 pixels. Resizing is available only while pinned.
+
+The dock has no scrim and does not close on an outside click. Escape closes it
+unless a nested handler prevents the event's default action. Closing returns
+focus to the opening trigger. Focused AppShell and SlideOverPanel tests cover
+these interaction boundaries.
+
+Deprecated `drawer` and `rightPanel` slots still render, and standalone
+`SettingsModal` remains exported. The deprecated JobsPill `open`, `onViewAll`,
+and `hoverPopover` props and AppHeader `jobsOpen`/`jobsHoverPopover` props are
+inert. Removing them or migrating downstream consumers remains deferred.
+
 ## Concrete deviations
 
 The original settings design specified a centered modal and direct
@@ -54,4 +70,9 @@ remain inert.
 - Code/tests: `src/shell/AppShell.tsx`, `src/shell/UtilityDock.tsx`,
   `src/shell/SettingsPanel.tsx`, `src/shell/SettingsModalShim.test.tsx`,
   `src/shell/AppShell.utilityDock.test.tsx`
-- History: June 2 utility-dock implementation commits and `7bf0082`
+- History: `78d1c1a7`, `2efe9039`, `71697ef7`, and `00850f8c` implement and
+  refine the dock; `7dca0c6d` and `b9c456c9` cover panel interaction; `7bf0082`
+  adds the job-delete contract.
+- Additional evidence: `src/primitives/SlideOverPanel.tsx`,
+  `SlideOverPanel.test.tsx`, `src/shell/AppShell.deprecated.test.tsx`, and
+  `src/shell/JobsPill.test.tsx`, inspected on 2026-11-13.

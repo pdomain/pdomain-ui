@@ -8,7 +8,8 @@ branch: "night-audit-residuals"
 scope: "audit-residuals"
 worktree: "/mnt/work/projects/pdomain/pdomain-ui/.claude/worktrees/audit-residuals"
 base_commit: "36fe81d586b71ca40c689757362ea213a13cefdd"
-supersedes: "2026-11-11-043304-compute-panel-and-updater-ready-for-merge-review.md"
+supersedes: "../context/decisions.md#2026-11-13--retired-implemented-field-contract-and-superseded-handoffs"
+last_verified: 2026-11-13
 handoff_reason: "stopping"
 host: "claude-code"
 ---
@@ -16,6 +17,12 @@ host: "claude-code"
 # Audit residuals fixed on top of the compute panel branch
 
 > Retired on 2026-11-12. `night-audit-residuals` merged to local master, including `worktree-fix-compute-panel-and-dep-updater` (`ab0170d` through `3ca2679`). The resume step to merge is done.
+
+Reference repair on 2026-11-13: the former supersedes value was
+`2026-11-11-043304-compute-panel-and-updater-ready-for-merge-review.md`.
+That intermediate handoff was deleted after its outcomes were captured in
+architecture and the [retirement tombstone](../context/decisions.md#2026-11-13--retired-implemented-field-contract-and-superseded-handoffs).
+The dated handoff evidence and retired status below remain unchanged.
 
 ## Goal
 

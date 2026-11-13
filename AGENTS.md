@@ -126,7 +126,7 @@ When bumping `pdomain-book-tools` or `pdomain-ops` in `codegen.versions.json`:
 - Specs are the source of truth. Code that disagrees with a spec is wrong — change the spec first.
 - Radix UI is only used for the behavior-heavy primitives listed in spec §4.
 - `theme/tokens.css` and `theme/primitives.css` are the runtime source-of-truth; edited here,
-  synced back to `docs/design-system/` via `scripts/sync-design-system.mjs`.
+  synced back to the workspace `../docs/design-system/` via `scripts/sync-design-system.mjs`.
 
 ## Sibling repos
 

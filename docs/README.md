@@ -30,6 +30,7 @@ archive only as a last resort.
 - [Generated type contract](architecture/codegen-contract.md)
 - [Cross-app common UI modules](architecture/cross-app-common-ui-modules.md)
 - [Design-system composition](architecture/design-system-composition.md)
+- [Field and FieldRow contracts](architecture/field-primitives.md)
 - [JobStatusPip](architecture/job-status-pip.md)
 - [Kanban board](architecture/kanban-board.md)
 - [Release and CI pipeline](architecture/release-and-ci-pipeline.md)
