@@ -248,8 +248,10 @@ See owner decisions below.
 
 ## Other open work in this repo
 
-- `Field` has no help slot.
-  [Spec](../specs/2026-05-21-field-field-row.md).
+The Field help slot is shipped. `Field` renders optional help in a native
+disclosure under the control. The summary reads "Help" unless `helpLabel` is
+set, the disclosure starts closed, and an error still appears under it.
+[Spec](../specs/2026-05-21-field-field-row.md).
 
 ## Fixes from the open branches
 

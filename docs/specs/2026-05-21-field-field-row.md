@@ -3,7 +3,7 @@ kind: spec
 status: active
 owner: CT
 created: 2026-05-21
-last_verified: 2026-11-07
+last_verified: 2026-11-12
 verified_against:
   - "src/primitives/Field.tsx"
   - "src/primitives/FieldRow.tsx"
@@ -14,7 +14,7 @@ verified_against:
 # Field / FieldRow — component-API spec
 
 **Date:** 2026-05-21
-**Status:** Partially implemented — help slot is missing; see §5
+**Status:** Implemented — label, control, help disclosure, and error slot; see §5
 **Subpath:** `@pdomain/pdomain-ui/primitives`
 **Required by:** `pdomain-ocr-trainer-spa` config cards, profile edit dialog
 **Spec source:** `pdomain-ocr-trainer-spa/specs/03-frontend.md §6.3`
@@ -24,9 +24,9 @@ verified_against:
 ## 1. Purpose
 
 `Field` gives all pdomain-* app config screens a consistent labelled form-row
-layout. It currently provides a label, a control slot, and an error slot.
-The optional expandable help slot is proposed. Existing fields work with the
-pdomain-ui `Input`, `Textarea`, and composed Radix `Select` primitives.
+layout. It provides a label, a control slot, an optional help disclosure, and
+an error slot. Existing fields work with the pdomain-ui `Input`, `Textarea`,
+and composed Radix `Select` primitives.
 
 ---
 
@@ -34,7 +34,7 @@ pdomain-ui `Input`, `Textarea`, and composed Radix `Select` primitives.
 
 | Component | Role |
 |---|---|
-| `<Field>` | Single labelled field: label + control + optional error; help is proposed |
+| `<Field>` | Single labelled field: label + control + optional help disclosure + optional error |
 | `<FieldRow>` | Horizontal group of two or more `<Field>` elements on one row |
 
 Both are exported from `@pdomain/pdomain-ui/primitives`.
@@ -44,8 +44,7 @@ Both are exported from `@pdomain/pdomain-ui/primitives`.
 ## 3. Field — target props
 
 The current implementation (`src/primitives/Field.tsx`) covers `label`,
-`htmlFor`, `error`, `errorId`, and `children`. The `help` slot below is **not yet
-implemented** and is the primary gap blocking trainer-spa usage.
+`htmlFor`, `help`, `helpLabel`, `error`, `errorId`, and `children`.
 
 ```ts
 interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -60,10 +59,10 @@ interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
   htmlFor?: string;
 
   /**
-   * Proposed help content — rendered inside a native <details>/<summary>
-   * below the control. The summary text is "Help" unless `helpLabel` is set.
+   * Help content — rendered inside a native <details>/<summary>
+   * below the control and above the error. The summary text is "Help" unless
+   * `helpLabel` is set. The disclosure starts closed.
    *
-   * NOT YET IMPLEMENTED — tracked as a pdomain-ui enhancement.
    * Trainer-spa config cards use this to expose per-field documentation
    * (e.g. "What is learning rate?").
    */
@@ -136,18 +135,15 @@ strings, and the app always maps the location to a string.
 
 ---
 
-## 5. Gap: help slot
+## 5. Help disclosure
 
-**Current state:** `Field` has no `help` or `helpLabel` prop. The trainer-spa
-config cards need this to show expandable documentation for each config
-parameter (learning rate, batch size, vocab, etc.).
-
-**Proposed implementation:** use native `<details>/<summary>` for the help
-disclosure. The shared `Accordion` is Radix-based and has no `summary` prop;
-it is not the native disclosure described in the original proposal:
+`Field` renders `help` in a native `<details>/<summary>` when `help` is set.
+The summary reads `helpLabel`, or "Help" when `helpLabel` is omitted. The
+disclosure starts closed. It sits under the control and above the error.
+When `help` is omitted, no disclosure is rendered. The shared `Accordion` is
+Radix-based and is not this disclosure.
 
 ```tsx
-// Field.tsx — addition when help prop is implemented
 {help !== undefined && (
   <details className="field-help">
     <summary>{helpLabel ?? 'Help'}</summary>
@@ -167,9 +163,8 @@ it is not the native disclosure described in the original proposal:
 └──────────────────────────────────┘
 ```
 
-Until the help slot is implemented, trainer-spa config cards can use a
-standalone native disclosure or composed Radix `Accordion` below the `<Field>`.
-The API allows `help` to be added later without breaking existing usages.
+Pass `help` and, when the summary should not read "Help", `helpLabel`.
+Omitting `help` leaves existing label, control, and error behavior unchanged.
 
 ---
 
@@ -197,7 +192,7 @@ epochs" and "Max epochs."
 | Class | Element |
 |---|---|
 | `.field` | `Field` root |
-| `.field-help` | proposed help disclosure inside a Field |
+| `.field-help` | help disclosure inside a Field |
 | `.field-error` | error `<span role="status">` |
 | `.field-row` | `FieldRow` root |
 
@@ -212,16 +207,15 @@ All colors from design-system tokens. No hex literals.
   an error span ID from `htmlFor` unless an explicit `errorId` is provided.
 - Error slot has `role="status"` for screen-reader announcement when the error
   text changes.
-- The proposed help disclosure uses native `<details>`/`<summary>`. The
-  current shared `Accordion` is Radix-based, so implementing the help slot
-  requires choosing native disclosure or adapting the existing Radix primitive.
+- The help disclosure uses native `<details>`/`<summary>`. The shared
+  `Accordion` stays the Radix primitive and is not this slot.
 
 ---
 
 ## 9. Trainer-spa usage examples
 
-The first example requires the proposed help API and does not compile against
-the current `Field`. The second shows the current composed `Select` API.
+The first example uses the help disclosure. The second shows the composed
+`Select` API.
 
 ```tsx
 // Detection config card (trainer-spa — illustrative)
@@ -270,7 +264,6 @@ the current `Field`. The second shows the current composed `Select` API.
 
 **Stage / sources:** This active partial-implementation review covers
 `Field.tsx`, FieldContext, focused tests, and implementation history.
-**Accepted findings / residual risk:** The label, error, row, and accessibility
-behavior are proven, but the help slot remains unimplemented. Keep this spec
-active. Require owner review before adding that API or moving the residual
-intent elsewhere.
+**Accepted findings / residual risk:** The label, error, row, help disclosure,
+and accessibility behavior are proven. Keep this spec active as the Field API
+contract.

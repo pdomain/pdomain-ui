@@ -7,6 +7,13 @@ export interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
   /** The htmlFor attribute — links the label to the input by id */
   htmlFor?: string;
+  /**
+   * Help content. When set, renders a native disclosure under the control
+   * and above the error. The summary reads "Help" unless `helpLabel` is set.
+   */
+  help?: React.ReactNode;
+  /** Summary text for the help disclosure. Used only when `help` is set. */
+  helpLabel?: string;
   /** Error message — renders the error slot when set */
   error?: string;
   /**
@@ -19,7 +26,7 @@ export interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Field = React.forwardRef<HTMLDivElement, FieldProps>(function Field(
-  { className, label, htmlFor, error, errorId: errorIdProp, children, ...props },
+  { className, label, htmlFor, help, helpLabel, error, errorId: errorIdProp, children, ...props },
   ref,
 ) {
   const hasError = error !== undefined && error !== '';
@@ -38,6 +45,12 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(function Field
       <div ref={ref} className={cn('field', className)} {...props}>
         {label !== undefined && <label htmlFor={htmlFor}>{label}</label>}
         {children}
+        {help !== undefined && (
+          <details className="field-help">
+            <summary>{helpLabel ?? 'Help'}</summary>
+            {help}
+          </details>
+        )}
         {hasError && (
           // WS6: role=status (not alert) — alert announces on every render including
           // mount, which disrupts page-load AT flow. role=status is still live but

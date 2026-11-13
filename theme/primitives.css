@@ -481,6 +481,13 @@
   text-transform: uppercase;
   color: var(--ink-3);
 }
+.field .field-help {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.field .field-help > summary {
+  cursor: pointer;
+}
 .field .field-error {
   font-size: 11px;
   color: var(--mismatch);

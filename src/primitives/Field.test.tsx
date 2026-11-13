@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { Field } from './Field.js';
 import { FieldRow } from './FieldRow.js';
@@ -96,6 +97,88 @@ describe('Field', () => {
     const el = screen.getByTestId('f');
     expect(el.classList.contains('field')).toBe(true);
     expect(el.classList.contains('extra')).toBe(true);
+  });
+
+  it('shows a closed Help disclosure under the control and reveals the help when opened', async () => {
+    const user = userEvent.setup();
+    render(
+      <Field label="Learning rate" htmlFor="lr" help={<p>Lower values stay stable.</p>}>
+        <Input id="lr" />
+      </Field>,
+    );
+
+    const summary = screen.getByText('Help');
+    expect(summary.tagName).toBe('SUMMARY');
+    const details = summary.closest('details');
+    expect(details).not.toBeNull();
+    expect(details?.classList.contains('field-help')).toBe(true);
+    expect(details?.open).toBe(false);
+    const input = screen.getByLabelText('Learning rate');
+    expect(
+      input.compareDocumentPosition(details as HTMLElement) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+
+    await user.click(summary);
+    expect(details?.open).toBe(true);
+    expect(screen.getByText('Lower values stay stable.')).toBeTruthy();
+  });
+
+  it('uses helpLabel as the disclosure summary', () => {
+    render(
+      <Field
+        label="Learning rate"
+        htmlFor="lr"
+        help={<p>Stable range.</p>}
+        helpLabel="What is learning rate?"
+      >
+        <Input id="lr" />
+      </Field>,
+    );
+    expect(screen.getByText('What is learning rate?').tagName).toBe('SUMMARY');
+    expect(screen.queryByText('Help')).toBeNull();
+  });
+
+  it('keeps the error available when help is also set', async () => {
+    const user = userEvent.setup();
+    render(
+      <Field
+        label="Learning rate"
+        htmlFor="lr"
+        help={<p>Stable range.</p>}
+        error="value is not a valid float"
+      >
+        <Input id="lr" />
+      </Field>,
+    );
+
+    const error = screen.getByRole('status');
+    expect(error.textContent).toBe('value is not a valid float');
+    expect(error.id).toBe('lr-error');
+    const details = screen.getByText('Help').closest('details');
+    expect(
+      (details as HTMLElement).compareDocumentPosition(error) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    const input = screen.getByLabelText('Learning rate');
+    expect(input.getAttribute('aria-describedby')).toBe('lr-error');
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+
+    await user.click(screen.getByText('Help'));
+    expect(screen.getByRole('status').textContent).toBe('value is not a valid float');
+    expect(screen.getByText('Stable range.')).toBeTruthy();
+  });
+
+  it('renders no help disclosure when help is omitted', () => {
+    render(
+      <Field label="Name" htmlFor="name">
+        <Input id="name" />
+      </Field>,
+    );
+    expect(document.querySelector('details')).toBeNull();
+    expect(screen.queryByText('Help')).toBeNull();
+    const input = screen.getByLabelText('Name');
+    expect(input.id).toBe('name');
+    expect(input.getAttribute('aria-describedby')).toBeNull();
+    expect(input.getAttribute('aria-invalid')).toBeNull();
   });
 });
 
