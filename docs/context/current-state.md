@@ -2,7 +2,7 @@
 Status: active
 Owner: CT
 Created: 2026-07-13
-Last verified: 2026-11-12
+Last verified: 2026-11-13
 Kind: context
 ---
 
@@ -42,9 +42,11 @@ slot-primitive behavior was copied into the architecture docs on 2026-11-12.
 - The lint-deviation register matches the source. Since 2026-11-11 every
   remaining suppression states its reason on the directive or beside it.
 
-- Codegen pins trail the registry. On 2026-11-10 the pins were
-  `pdomain-book-tools` 0.28.0 and `pdomain-ops` 0.11.2; the index listed 0.30.1
-  and 0.12.0. `make update-pdomain-deps` now performs that bump when wanted.
+- Codegen pins match the registry checked on 2026-11-13:
+  `pdomain-book-tools` 0.31.0 and `pdomain-ops` 0.12.2.
+  `make update-pdomain-deps` performs that bump.
+- `typescript` stays at 6.0.3. typescript-eslint 8.72.2 accepts
+  `>=4.8.4 <6.1.0`, and TypeScript 7.0.2 ships no API for that parser yet.
 - The historical security review is stale; verify each finding against current
   code before acting on it.
 - Missing-section and orphan findings remain advisory during conformance

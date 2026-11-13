@@ -69,9 +69,8 @@ export type components = {
       /**
        * Registered At
        * Format: date-time
-       * @default null
        */
-      registered_at: string;
+      registered_at?: string;
     };
     /**
      * LayerColors
@@ -139,16 +138,14 @@ export type components = {
        * @default null
        */
       update_policy: ('notify' | 'auto' | 'manual') | null;
-      /** @default null */
-      layer_colors: components['schemas']['LayerColors'];
+      layer_colors?: components['schemas']['LayerColors'];
     };
     /**
      * UIPrefs
      * @description Shared cross-app UI preferences.
      */
     UIPrefs: {
-      /** @default null */
-      common: components['schemas']['CommonUIPrefs'];
+      common?: components['schemas']['CommonUIPrefs'];
       /**
        * Apps
        * @default {}

@@ -359,6 +359,42 @@ export type components = {
       note: string | null;
     };
     /**
+     * GlyphAnnotations
+     * @description Parallel annotation structure attached to a Word (spec section 2.3).
+     *
+     *     Records glyph-level facts about the printed page without mutating the
+     *     canonical ground-truth string.  See module docstring for the
+     *     ``None`` vs ``GlyphAnnotations()`` semantics contract.
+     *
+     *     Args:
+     *         ligatures: List of ligature occurrences found in this word.
+     *         long_s_positions: Char indices in GT where a printed U+017F (long-s) was
+     *             normalised to ``s``.  The index refers to the GT string.
+     *         swash: ``True`` iff at least one glyph in the word is a swash variant
+     *             (coarse bool; per-glyph refinement is a future extension).
+     *         source: Object-level provenance for this annotation set -- how the
+     *             top-level signals got here.  One of ``"human"``, ``"predicted"``,
+     *             or ``"human_confirmed"``.  Defaults to ``"human"``.  Provenance is
+     *             per-``GlyphAnnotations`` object, not per-mark (ADR D-044).
+     */
+    GlyphAnnotations: {
+      /** Ligatures */
+      ligatures?: components['schemas']['LigatureMark'][];
+      /** Long S Positions */
+      long_s_positions?: number[];
+      /**
+       * Source
+       * @default human
+       * @enum {string}
+       */
+      source: 'human' | 'predicted' | 'human_confirmed';
+      /**
+       * Swash
+       * @default false
+       */
+      swash: boolean;
+    };
+    /**
      * LabelingBundle
      * @description Complete portable review input for a page, optionally with geometry.
      */
@@ -1061,6 +1097,54 @@ export type components = {
      */
     ReviewState: 'unreviewed' | 'reviewed' | 'reviewed_regular' | 'quarantined' | 'deferred';
     /**
+     * LigatureKind
+     * @description Controlled vocabulary for ligature types found in early-modern printing.
+     *
+     *     Values are UPPERCASE plain strings so JSON serialization yields bare
+     *     human-readable strings without extra encoding.
+     *
+     *     Adding a new value requires a PR with: the printed form (image/fixture
+     *     reference), the GT decomposition, and a note on the corpus it appeared in.
+     *     Speculative additions are explicitly disallowed.
+     *
+     *     Changed in plan #163: values uppercased; LONG_S_T renamed to LONG_ST;
+     *     OE and AE added per pdomain-ocr-labeler-spa spec 20 §3.
+     * @enum {string}
+     */
+    LigatureKind:
+      | 'FI'
+      | 'FL'
+      | 'FF'
+      | 'FFI'
+      | 'FFL'
+      | 'CT'
+      | 'ST'
+      | 'LONG_ST'
+      | 'LONG_S_S'
+      | 'LONG_S_I'
+      | 'SP'
+      | 'QU'
+      | 'OE'
+      | 'AE';
+    /**
+     * LigatureMark
+     * @description A single ligature occurrence within a Word's ground-truth text.
+     *
+     *     Args:
+     *         kind: Which ligature type this mark records.
+     *         char_span: ``[start, end)`` char indices into ``Word.ground_truth_text``.
+     *             ``None`` means "we know this ligature is somewhere in the word but
+     *             don't know exactly where" (e.g. coarse-grained synth labels).
+     */
+    LigatureMark: {
+      /**
+       * Char Span
+       * @default null
+       */
+      char_span: [number, number] | null;
+      kind: components['schemas']['LigatureKind'];
+    };
+    /**
      * RegionType
      * @description Region categories the reorg / illustration extractor consume.
      *
@@ -1100,6 +1184,7 @@ export type CoordinateTransform = components['schemas']['CoordinateTransform'];
 export type CoordinateTransformStage = components['schemas']['CoordinateTransformStage'];
 export type CorrectionBundle = components['schemas']['CorrectionBundle'];
 export type Evidence = components['schemas']['Evidence'];
+export type GlyphAnnotations = components['schemas']['GlyphAnnotations'];
 export type LabelingBundle = components['schemas']['LabelingBundle'];
 export type LayoutRegion = components['schemas']['LayoutRegion'];
 export type ModelRun = components['schemas']['ModelRun'];
@@ -1128,6 +1213,8 @@ export type CorrectionDecision = components['schemas']['CorrectionDecision'];
 export type LabelState = components['schemas']['LabelState'];
 export type ReviewDecision = components['schemas']['ReviewDecision'];
 export type ReviewState = components['schemas']['ReviewState'];
+export type LigatureKind = components['schemas']['LigatureKind'];
+export type LigatureMark = components['schemas']['LigatureMark'];
 export type RegionType = components['schemas']['RegionType'];
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
