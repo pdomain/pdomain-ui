@@ -25,7 +25,7 @@
 
 import { readFileSync, existsSync, mkdirSync, createReadStream } from 'fs'
 import { execFileSync } from 'child_process'
-import { resolve, dirname, join, basename } from 'path'
+import { resolve, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { createHash } from 'crypto'
 import { pipeline } from 'stream/promises'

@@ -5,7 +5,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { ProjectsEmpty } from './ProjectsEmpty.js';
+import { ProjectsEmpty } from './index.js';
 
 const meta = {
   title: 'Stages/Projects/ProjectsEmpty',

@@ -9,8 +9,8 @@
 
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { PipelineMini } from './PipelineMini.js';
-import type { PipelineMiniStage, PipelineMiniStageStatus } from './PipelineMini.js';
+import { PipelineMini } from './index.js';
+import type { PipelineMiniStage, PipelineMiniStageStatus } from './index.js';
 
 // ─── Stage-name catalog (matches real pdomain-* pipeline) ────────────────────
 

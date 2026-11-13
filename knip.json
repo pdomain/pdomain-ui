@@ -11,6 +11,7 @@
     "src/stores/index.ts",
     "src/testids/index.ts"
   ],
+  "ignore": ["src/types/generated/**"],
   "project": ["src/**/*.{ts,tsx}"],
   "ignoreDependencies": [
     "openapi-typescript"

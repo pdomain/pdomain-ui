@@ -148,7 +148,9 @@ object with a plain `Error` would no longer exercise that contract.
 `dist/`, `storybook-static/`, `.codegen/`, `node_modules/`,
 `tests/fixtures/lint-bad/`, and `src/types/generated/`. The generated and build
 outputs are checked through their own package, code-generation, or theme gates.
-The lint-bad fixture intentionally violates lint rules.
+The lint-bad fixture intentionally violates lint rules. Local Python dependencies
+and nested agent worktrees (`.venv/`, `.claire/worktrees/`,
+`.claude/worktrees/`, and `.worktrees/`) are also excluded.
 
 `eslint.config.js:12-16` excludes all test fixtures from type-aware linting.
 Those fixtures do not have project type information.
@@ -178,3 +180,23 @@ rg -n --glob '*.{ts,tsx,js,mjs,cjs}' \
   'eslint-(disable|enable)|eslint-disable-line|eslint-disable-next-line' \
   src tests eslint.config.js
 ```
+
+## TanStack Virtual compiler boundary
+
+`react-hooks/incompatible-library` is suppressed at the `useVirtualizer` call in
+`src/primitives/kanban/KanbanColumn.tsx`. The component uses `'use no memo'`
+because TanStack Virtual returns functions that cannot be memoized safely.
+The directive prevents compiler memoization; the local ESLint exception records
+that boundary while keeping the rule active elsewhere.
+
+In eslint-plugin-react-hooks 7.1.1, `processFn` logs compile errors before it
+returns for an opt-out directive. The lint rule's `makeRule` reports those
+events without checking the directive. A focused run with `--no-inline-config`
+still reports this warning with the directive present. This checker limitation
+requires the local exception; the virtualizer's mutable methods are not manually
+memoized or passed to memoized children.
+
+[React's directive reference](https://react.dev/reference/react-compiler/directives/use-no-memo)
+confirms that a leading `'use no memo'` excludes the function from optimization.
+Remove the exception when the checker respects that boundary or the library
+provides a compiler-compatible API.

@@ -8,8 +8,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { ProjectsAttributesPanel } from './ProjectsAttributesPanel.js';
-import type { AttributesPanelSection } from './ProjectsAttributesPanel.js';
+import { ProjectsAttributesPanel } from './index.js';
+import type { AttributesPanelSection } from './index.js';
 
 const meta = {
   title: 'Stages/Projects/ProjectsAttributesPanel',

@@ -4,7 +4,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 
 export default tseslint.config(
   // Global ignores
-  { ignores: ['dist/**', 'storybook-static/**', '.codegen/**', 'node_modules/**', 'tests/fixtures/lint-bad/**', 'src/types/generated/**'] },
+  { ignores: ['.venv/**', '.claire/worktrees/**', '.claude/worktrees/**', '.worktrees/**', 'dist/**', 'storybook-static/**', '.codegen/**', 'node_modules/**', 'tests/fixtures/lint-bad/**', 'src/types/generated/**'] },
 
   // Base TS parser config for ALL files (no type-checking yet)
   ...tseslint.configs.recommended,

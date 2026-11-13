@@ -11,12 +11,15 @@ const DEFAULT_ROW_HEIGHT = 40;
 function KanbanColumnInner<TColumn extends KanbanColumnDef, TItem extends KanbanItemDef>(
   props: KanbanColumnProps<TColumn, TItem>,
 ): React.ReactElement {
+  'use no memo'; // TanStack Virtual exposes mutable functions that cannot be memoized safely.
+
   const { column, items, renderHeader, renderChip, selectedIds, onSelect, className } = props;
   const testid = props['data-testid'];
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- use no memo keeps TanStack Virtual outside compiler memoization.
   const rowVirtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => scrollRef.current,

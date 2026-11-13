@@ -165,7 +165,7 @@ async function main() {
     // Prettier's canonical form and git diff --exit-code always fails.
     const formatted = execFileSync(
       prettierBin,
-      ['--stdin-filepath', typesOut, '--parser', 'typescript'],
+      ['--ignore-path', '/dev/null', '--stdin-filepath', typesOut, '--parser', 'typescript'],
       { input: withHeader, encoding: 'utf-8', cwd: REPO_ROOT },
     )
 
@@ -208,7 +208,7 @@ async function main() {
       const opsWithHeader = OPS_GENERATED_HEADER + '\n' + opsResult
       const opsFormatted = execFileSync(
         prettierBin,
-        ['--stdin-filepath', opsTypesOut, '--parser', 'typescript'],
+        ['--ignore-path', '/dev/null', '--stdin-filepath', opsTypesOut, '--parser', 'typescript'],
         { input: opsWithHeader, encoding: 'utf-8', cwd: REPO_ROOT },
       )
       writeFileSync(opsTypesOut, opsFormatted, 'utf-8')
